@@ -1,0 +1,14 @@
+/* HEADER */
+header {
+    position: sticky;
+    top: 0;
+    padding: 16px;
+    z-index: 1000;
+    background: rgb(255, 255, 255);
+}
+
+
+.header__img {
+    height: 64px;
+    width: 64px;
+}
