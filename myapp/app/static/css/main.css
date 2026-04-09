@@ -15,3 +15,8 @@ header {
 span {
     font-style: italic;
 }
+
+
+ol {
+    list-style: lower-latin;
+}
