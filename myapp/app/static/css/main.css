@@ -2,14 +2,13 @@
 header {
     position: sticky;
     top: 0;
-    padding: 16px;
-    z-index: 1000;
-    background: rgb(255, 255, 255);
+    padding: 0px;
+    background: rgb(176, 19, 19);
 }
 
 .header__img {
-    height: 64px;
-    width: 64px;
+    height: 76px;
+    width: 76px;
 }
 
 span {
@@ -19,4 +18,8 @@ span {
 
 ol {
     list-style: lower-latin;
+}
+
+* {
+    margin: 1.5px;
 }
