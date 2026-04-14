@@ -3,23 +3,32 @@ header {
     position: sticky;
     top: 0;
     padding: 0px;
-    background: rgb(176, 19, 19);
+    background: rgb(226, 225, 191);
 }
 
 .header__img {
-    height: 76px;
-    width: 76px;
+    height: 128px;
+    width: 128px;
 }
 
 span {
     font-style: italic;
 }
 
-
-ol {
-    list-style: lower-latin;
-}
-
 * {
     margin: 1.5px;
+}
+
+.list-conteiner {
+    display: inline-block;
+    border-style: solid;
+    border-color: rgb(187, 139, 81);
+    border-width: 3px;
+    padding-right: 16px;
+
+}
+
+.list-conteiner>p {
+    text-shadow: 88cm;
+    font-weight: bold;
 }
