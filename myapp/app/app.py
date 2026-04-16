@@ -1,6 +1,45 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, session
 
 app = Flask(__name__)
+app.secret_key = "supersecretkey"  # пізніше заміню на свій
+users = {}
+
+
+@app.route("register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        name = request.form["name"]
+        email = request.form["email"]
+        password = request.form["password"]
+        age = request.form["age"]
+        height = request.form["height"]
+        weight = request.form["weight"]
+        gender = request.form["gender"]
+        activity = request.form["activity"]
+
+        if email in users:
+            return "Користувач з такою поштою вже існує"
+
+        users[email] = {
+            "name": name,
+            "password": password,
+            "age": age,
+            "height": height,
+            "weight": weight,
+            "gender": gender,
+            "activity": activity,
+        }
+
+        session["user"] = email
+        return redirect("/dashboard")
+
+    return render_template("register/html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form
 
 
 @app.route("/")
