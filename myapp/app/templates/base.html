@@ -1,52 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Nosi Dashboard{% endblock %}</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+  </head>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <body class="d-flex">
+    <!-- ========== LEFT SIDEBAR ========== -->
+    <aside
+      class="sidebar bg-dark text-white p-3"
+      style="width: 240px; min-height: 100vh"
+    >
+      <h3 class="mb-4">NosiFit</h3>
 
-    <title>{% block title %}NosiFit{% endblock %}</title>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2">
+          <a href="/dashboard" class="nav-link text-white">🏠 Dashboard</a>
+        </li>
 
-</head>
+        <li class="nav-item mb-2">
+          <a href="/sport" class="nav-link text-white">🏋️ Спорт</a>
+        </li>
 
-<body>
+        <li class="nav-item mb-2">
+          <a href="/diet_page" class="nav-link text-white">🍎 Харчування</a>
+        </li>
 
-    <!-- Контейнер над навбаром -->
-    <div class="container mt-4">
-        <h2>NosiFit</h2>
-    </div>
+        <li class="nav-item mb-2">
+          <a href="/recovery" class="nav-link text-white">😴 Відновлення</a>
+        </li>
 
-    <!-- Навбар -->
+        <hr class="text-secondary" />
 
-    <header class="site-header">
-        <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
-            <div class="col-md-3 mb-2 mb-md-0">
-                <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-                    <img class="header__img"
-                        src="{{ url_for('static', filename='img/Screenshot_20250710_090855_Pinterest.jpg') }}"
-                        alt="Header_image">
-                </a>
-            </div>
-    </header>
+        <li class="nav-item mb-2">
+          <a href="#" class="nav-link text-white">📰 Новини</a>
+        </li>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="diet_page" class="nav-link px-2 link-secondary">Поради харчуванння</a></li>
-        <li><a href="sport" class="nav-link px-2">Фізична активність</a></li>
-        <li><a href="recovery" class="nav-link px-2">Відновлення</a></li>
-    </ul>
+        <li class="nav-item mb-2">
+          <a href="#" class="nav-link text-white">ℹ️ Про сайт</a>
+        </li>
 
-    <div class="col-md-3 text-end">
-        <button type="button" class="btn btn-outline-primary me-2">Login</button>
-        <button type="button" class="btn btn-primary">Sign-up</button>
-    </div>
-    </div>
+        <li class="nav-item mb-2">
+          <a href="#" class="nav-link text-white">🔐 Вхід / Вихід</a>
+        </li>
+      </ul>
+    </aside>
 
-    {% block body %}{% endblock %}
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="flex-grow-1">
+      <!-- HEADER -->
+      <header
+        class="p-3 border-bottom d-flex justify-content-between align-items-center bg-white"
+        style="
+          position: fixed;
+          top: 0;
+          left: 240px;
+          right: 0;
+          z-index: 1000;
+          height: 70px;
+        "
+      >
+        >
+        <h4 class="m-0">
+          {% block header_title %}Панель керування{% endblock %}
+        </h4>
 
-</body>
+        <div>
+          <span class="me-3 text-muted">Привіт, користувач!</span>
+          <button class="btn btn-outline-primary btn-sm">Профіль</button>
+        </div>
+      </header>
 
+      <!-- PAGE CONTENT -->
+      <section class="p-4" style="margin-top: 90px">
+        {% block body %} {% endblock %}
+      </section>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

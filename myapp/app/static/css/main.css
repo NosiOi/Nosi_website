@@ -1,29 +1,59 @@
-/* HEADER */
-header {
-    position: sticky;
-    top: 0;
-    padding: 0px;
-    background: rgb(226, 225, 191);
+:root {
+    --primary: #FFD43B;
+    /* Жовтий */
+    --secondary: #9B5DE5;
+    /* Фіолетовий */
+    --accent: #00BBF9;
+    /* Бірюзовий */
+
+    --text-dark: #1a1a1a;
+    --text-light: #ffffff;
+
+    --bg-light: #f8f9fa;
+    --bg-dark: #1f1f1f;
 }
 
-.header__img {
-    height: 128px;
-    width: 128px;
+/* Кнопки */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--text-dark);
 }
 
-span {
-    font-style: italic;
+.btn-primary:hover {
+    background-color: #e6bf35;
+    border-color: #e6bf35;
 }
 
-* {
-    margin: 1.5px;
+/* Акцентні кнопки */
+.btn-accent {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--text-light);
 }
 
-.list-conteiner {
-    display: inline-block;
-    border-style: solid;
-    border-color: rgb(187, 139, 81);
-    border-width: 3px;
-    padding-right: 16px;
+.btn-accent:hover {
+    background-color: #00a5db;
+}
 
+/* Заголовки */
+h1,
+h2,
+h3,
+h4,
+h5 {
+    color: var(--secondary);
+}
+
+/* Лінії графіка */
+.chart-sport {
+    color: var(--secondary);
+}
+
+.chart-nutrition {
+    color: var(--primary);
+}
+
+.chart-recovery {
+    color: var(--accent);
 }
