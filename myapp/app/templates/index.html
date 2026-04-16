@@ -1,20 +1,54 @@
-{% extends 'base.html' %} {% block title %} NosiFit - Головна{% endblock %} {%
-block header_title %} Головна сторінка{% endblock %} {% block body %}
+{% extends "base.html" %} {% block title %}NosiFit — Головна{% endblock %} {%
+block header_title %}Головна сторінка{% endblock %} {% block body %}
 
-<div class="container text-center" style="max-width: 700px">
-  <h1 class="mb-4" style="color: var(--secondary); font-weight: 700px;" 
-    Ласкаво просимо до NosiFit
+<div class="container text-center" style="max-width: 750px">
+  <!-- ЛОГО / НАЗВА -->
+  <h1 class="mb-4" style="font-weight: 800; color: var(--secondary)">
+    NosiFit
   </h1>
 
-  <p class="mb-4" style="color: var(--text-dark)">
-    Твій персональний фітнес-помічник, який допоможе контролювати:
-    <span style="color: #ffd43b">спорт,</span>
+  <!-- КОРОТКИЙ ОПИС -->
+  <p class="lead mb-4" style="font-size: 1.3rem; color: var(--text-dark)">
+    Твій персональний фітнес‑помічник для контролю
+    <span style="color: #ffd43b">спорту</span>,
     <span style="color: #00bbf9">харчування</span>
     та
-    <span style="color: #9b5de5">відновлення</span>
+    <span style="color: #9b5de5">відновлення</span>.
   </p>
-  <button class="btn btn-primary btn-lg" onclick="location.href = '/dashboard'">
-    Перейти до панелі керування
+
+  <!-- ТРИ КОЛЬОРОВІ АКЦЕНТИ -->
+  <div class="d-flex justify-content-center gap-3 mb-4">
+    <div
+      style="width: 18px; height: 18px; background: #ffd43b; border-radius: 50%"
+    ></div>
+    <div
+      style="width: 18px; height: 18px; background: #00bbf9; border-radius: 50%"
+    ></div>
+    <div
+      style="width: 18px; height: 18px; background: #9b5de5; border-radius: 50%"
+    ></div>
+  </div>
+
+  <!-- КНОПКИ -->
+  <button
+    class="btn btn-primary btn-lg w-100 mb-3"
+    onclick="location.href = '/register'"
+  >
+    Почати зараз
   </button>
+
+  <button
+    class="btn btn-outline-secondary w-100"
+    onclick="location.href = '/login'"
+  >
+    У мене вже є акаунт
+  </button>
+
+  <!-- ДОДАТКОВИЙ ТЕКСТ -->
+  <p class="mt-4 text-muted">
+    Створи акаунт, щоб отримати доступ до персонального плану тренувань,
+    харчування та відновлення.
+  </p>
 </div>
+
 {% endblock %}
