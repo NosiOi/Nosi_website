@@ -1,0 +1,22 @@
+{% extends "base.html" %} {% block title%}Акаунт{% endblock %} {% block
+header_title %}Мій акаунт{% endblock %} {% block body %}
+
+<div class="container" style="max-width: 600px">
+  <h2 class="mb-4" style="color: var(--secondary); font-weight: 700">
+    Дані профілю
+  </h2>
+
+  <div class="card p-4 shadow-sm">
+    <p><strong>Ім'я:</strong> {{ user.name }}</p>
+    <p><strong>Email:</strong> {{ user_email }}</p>
+    <p><strong>Вік:</strong> {{ user.age }}</p>
+    <p><strong>Ріст:</strong> {{ user.height }} см</p>
+    <p><strong>Вага:</strong> {{ user.weight }} кг</p>
+    <p><strong>Стать:</strong> {{ user.gender }}</p>
+    <p><strong>Активність:</strong> {{ user.activity }}</p>
+
+    <a href="/logout" class="btn btn-primary mt-3 w-100">Вийти</a>
+  </div>
+</div>
+
+{% endblock %}

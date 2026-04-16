@@ -5,7 +5,7 @@ app.secret_key = "supersecretkey"  # пізніше заміню на свій
 users = {}
 
 
-@app.route("register", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         name = request.form["name"]
@@ -39,7 +39,36 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form
+        email = request.form["email"]
+        password = request.form["password"]
+
+        if email not in users:
+            return "Користувача не знайдено"
+
+        if users[email]["password"] != password:
+            return "Невірний пароль"
+
+        session["user"] = email
+        return redirect("/dashboard")
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect("/")
+
+
+@app.route("/account")
+def account():
+    if "user" not in session:
+        return redirect("/login")
+
+    email = session["user"]
+    user = user[email]
+
+    return render_template("account.html", user=user, user_email=email)
 
 
 @app.route("/")
