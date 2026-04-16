@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Вхід{% endblock %}
+{% block header_title %}Авторизація{% endblock %}
+
+{% block body %}
+
+<div class="container" style="max-width: 450px;">
+
+    <h2 class="mb-4" dtyle="color: var(--secondary); font-weight: 700;">Вхід</h2>
+
+    <form method="POST" action="/login">
+
+        <div class="mb-3">
+            <label class="form-label">Електронна пошта</label>
+            <input type="email" class="form-control" name="email" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Пароль</label>
+            <input type="email" class="form-control" name="password" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100">Увійти</button>
+
+        <p class="mt-3 text-center"
+            Немає акаунту? <a href="register" style="color: var(--secondary);">Зареєструватися</a>
+    </form>
+
+</div>
+
+{% endblock %}

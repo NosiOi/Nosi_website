@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Реєстрація{% endblock %}
+{% block header_title %}Створення акаунту{% endblock %}
+
+{% block body %}
+
+<div class="container" style="max-width: 600px;">
+
+    <h2 class="mb-4" style="color: var(--secondary); font-weight: 700px;">Реєстрація</h2>
+
+    <from method="POST" action="register">
+
+        <div class="mb-3">
+            <label class="form-label">Ім'я</label>
+            <input type="text" class="form-control" name="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Електронна пошта</label>
+            <input type="text" class="form-control" name="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Пароль</label>
+            <input type="text" class="form-control" name="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Вік</label>
+            <input type="text" class="form-control" name="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ріст (см)</label>
+            <input type="text" class="form-control" name="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Вага (кг)</label>
+            <input type="text" class="form-control" name="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Стать</label>
+            <input type="text" class="form-control" name="name" required>
+            <select class="form-select" name="gender" required>
+                <option value="male">Чоловіча</option>
+                <option value="male">Жіноча</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Рівень активності</label>
+            <select class="form-select" name="gender" required>
+                <option value="male">Низький</option>
+                <option value="male">Середній</option>
+                <option value="male">Високий</option>
+            </select>
+        </div>
+        <button type="sumbit" class="btn btn-primary w-100">Зареєструватися</button>
+
+        <p class="mt-3 text-center">
+            <a href="/login" style="color: var(--secondary);">Увійти</a>
+        </p>
+    </form>
+</div>
