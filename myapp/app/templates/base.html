@@ -103,11 +103,7 @@
         "
       >
         <div class="d-flex align-items-center gap-3">
-          {% if request.path != '/dashboard' %}
-          <a href="/dashboard" class="btn btn-outline-primary btn-sm"
-            >← На головну</a
-          >
-          {% endif %}
+          <a href="/" class="btn btn-outline-primary btn-sm">← На головну</a>
 
           <h4 class="m-0">
             {% block header_title %}Панель керування{% endblock %}
