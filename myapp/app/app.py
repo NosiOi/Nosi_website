@@ -31,7 +31,7 @@ def register():
         }
 
         session["user"] = email
-        return redirect("/dashboard")
+        return redirect("/dashboard", active_page="register")
 
     return render_template("register/html")
 
@@ -51,7 +51,7 @@ def login():
         session["user"] = email
         return redirect("/dashboard")
 
-    return render_template("login.html")
+    return render_template("login.html", active_page="login")
 
 
 @app.route("/logout")
@@ -68,32 +68,34 @@ def account():
     email = session["user"]
     user = user[email]
 
-    return render_template("account.html", user=user, user_email=email)
+    return render_template(
+        "account.html", user=user, user_email=email, active_page="account"
+    )
 
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", active_page="index")
 
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+    return render_template("dashboard.html", active_page="dashboard")
 
 
 @app.route("/diet_page")
 def diet():
-    return render_template("diet_page.html")
+    return render_template("diet_page.html", active_page="diet_page")
 
 
 @app.route("/sport")
 def sport():
-    return render_template("sport.html")
+    return render_template("sport.html", active_page="sport")
 
 
 @app.route("/recovery")
 def recovery():
-    return render_template("recovery.html")
+    return render_template("recovery.html", active_page="recovery")
 
 
 if __name__ == "__main__":

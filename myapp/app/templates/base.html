@@ -28,23 +28,48 @@
 
       <ul class="nav flex-column">
         <li class="nav-item mb-2">
-          <a href="/dashboard" class="nav-link text-white">🏠 Dashboard</a>
+          <a
+            href="/dashboard"
+            class="nav-link px-3 {% if active_page == 'dashboard' %}active{% endif %}"
+          >
+            🏠 Dashboard</a
+          >
         </li>
 
         <li>
-          <a href="/account" class="nav-link px-3">>👤 Акаунт</a>
+          <a
+            href="/account"
+            class="nav-link px-3 {% if active_page == 'account' %}active{% endif %}"
+          >
+            👤 Акаунт</a
+          >
         </li>
 
         <li class="nav-item mb-2">
-          <a href="/sport" class="nav-link text-white">🏋️ Спорт</a>
+          <a
+            href="/sport"
+            class="nav-link px-3 {% if active_page == 'sport' %}active{% endif %}"
+          >
+            >🏋️ Спорт</a
+          >
         </li>
 
         <li class="nav-item mb-2">
-          <a href="/diet_page" class="nav-link text-white">🍎 Харчування</a>
+          <a
+            href="/diet_page"
+            class="nav-link p-3 {% if activate_page == 'nutrition' %}activate{% endif %}"
+          >
+            🍎 Харчування</a
+          >
         </li>
 
         <li class="nav-item mb-2">
-          <a href="/recovery" class="nav-link text-white">😴 Відновлення</a>
+          <a
+            href="/recovery"
+            class="nav-link p-3 {% if activate_page == 'recovery' %}activate{% endif %}"
+          >
+            😴 Відновлення</a
+          >
         </li>
 
         <hr class="text-secondary" />

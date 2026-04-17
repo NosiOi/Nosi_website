@@ -57,3 +57,8 @@ h5 {
 .chart-recovery {
     color: var(--accent);
 }
+
+.nav-link.active {
+    color: var(--secondary);
+    font-weight: 700;
+}
