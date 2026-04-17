@@ -59,6 +59,16 @@ h5 {
 }
 
 .nav-link.active {
-    color: var(--secondary);
+    color: var(--secondary) !important;
     font-weight: 700;
+}
+
+.nav-link {
+    color: #b6b6b6;
+    font-weight: 500;
+    transition: 0.2s
+}
+
+.nav-link:hover {
+    color: var(--secondary);
 }

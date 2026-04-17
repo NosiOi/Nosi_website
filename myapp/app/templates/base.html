@@ -30,7 +30,7 @@
         <li class="nav-item mb-2">
           <a
             href="/dashboard"
-            class="nav-link px-3 {% if active_page == 'dashboard' %}active{% endif %}"
+            class="nav-link {% if request.path == '/dashboard' %}active{% endif %}"
           >
             🏠 Dashboard</a
           >
@@ -39,7 +39,7 @@
         <li>
           <a
             href="/account"
-            class="nav-link px-3 {% if active_page == 'account' %}active{% endif %}"
+            class="nav-link {% if request.path == '/account' %}active{% endif %}"
           >
             👤 Акаунт</a
           >
@@ -48,7 +48,7 @@
         <li class="nav-item mb-2">
           <a
             href="/sport"
-            class="nav-link px-3 {% if active_page == 'sport' %}active{% endif %}"
+            class="nav-link {% if request.path == '/sport' %}active{% endif %}"
           >
             >🏋️ Спорт</a
           >
@@ -57,7 +57,7 @@
         <li class="nav-item mb-2">
           <a
             href="/diet_page"
-            class="nav-link p-3 {% if activate_page == 'nutrition' %}activate{% endif %}"
+            class="nav-link {% if request.path == '/diet_page' %}active{% endif %}"
           >
             🍎 Харчування</a
           >
@@ -66,7 +66,7 @@
         <li class="nav-item mb-2">
           <a
             href="/recovery"
-            class="nav-link p-3 {% if activate_page == 'recovery' %}activate{% endif %}"
+            class="nav-link {% if request.path == '/recovery' %}active{% endif %}"
           >
             😴 Відновлення</a
           >
