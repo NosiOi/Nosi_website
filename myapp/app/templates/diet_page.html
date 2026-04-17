@@ -1,34 +1,14 @@
-{% extends "base.html" %} {% block title%}Харчування{% endblock %} {% block
+{% extends "base.html" %} {% block title %}Харчування{% endblock %} {% block
 header_title %}Харчування{% endblock %} {% block body %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h6>
-      Калорії залежно від цілі
-      <a href="diet_page.html">Підтримання ваги:</a>
-      Calories = TDEE Схуднення: Calories = TDEE × 0.8 – 0.9 Набір маси:
-      Calories = TDEE × 1.1 – 1.15 БЖУ (білки, жири, вуглеводи) Підтримання
-      форми Білок = 1.6 г × вага Жири = 1 г × вага Вуглеводи = решта калорій
-      Схуднення Білок = 1.8 – 2.2 г × вага Жири = 0.8 – 1 г × вага Вуглеводи =
-      решта калорій Набір м'язів Білок = 1.6 – 2 г × вага Жири = 1 г × вага
-      Вуглеводи = решта калорій
-      <ol>
-        <h5>Калорійність макронутрієнтів</h5>
-        <ol>
-          <li>1 г білка = 4 ккал</li>
-        </ol>
-        <li>1 г вуглеводів = 4 ккал</li>
-        <li>1 г жирів = 9 ккал</li>
-      </ol>
-      Вода Рекомендована кількість води: 30–35 мл × вага (кг) Наприклад: 70 кг ×
-      35 мл = 2450 мл ≈ 2.4 літра води на день. Клітковина 25–30 г на день або
-      14 г на кожні 1000 ккал.
-    </h6>
-  </body>
-</html>
+
+<div class="container">
+  <h3 class="mb-4">Ваше харчування</h3>
+
+  <div class="card p-4 shadow-sm">
+    <p class="text-muted">
+      Тут буде інформація про калорії, макроси, плани харчування та поради.
+    </p>
+  </div>
+</div>
+
 {% endblock %}

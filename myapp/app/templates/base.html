@@ -50,7 +50,7 @@
             href="/sport"
             class="nav-link {% if request.path == '/sport' %}active{% endif %}"
           >
-            >🏋️ Спорт</a
+            🏋️ Спорт</a
           >
         </li>
 
@@ -102,10 +102,17 @@
           height: 70px;
         "
       >
-        >
-        <h4 class="m-0">
-          {% block header_title %}Панель керування{% endblock %}
-        </h4>
+        <div class="d-flex align-items-center gap-3">
+          {% if request.path != '/dashboard' %}
+          <a href="/dashboard" class="btn btn-outline-primary btn-sm"
+            >← На головну</a
+          >
+          {% endif %}
+
+          <h4 class="m-0">
+            {% block header_title %}Панель керування{% endblock %}
+          </h4>
+        </div>
 
         <div>
           <span class="me-3 text-muted">Привіт, користувач!</span>
