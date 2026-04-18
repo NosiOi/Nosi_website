@@ -1,8 +1,14 @@
 from flask import Flask, render_template, request, redirect, session
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from config import Config
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"  # пізніше заміню на свій
-users = {}
+app.config.from_object(Config)
+
+db = SQLAlchemy(app)
+
+from models import User, Workout, Nutrition, Recovery
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -17,20 +23,19 @@ def register():
         gender = request.form["gender"]
         activity = request.form["activity"]
 
-        if email in users:
+        # Перевірка чи існує користувач
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
             return "Користувач з такою поштою вже існує"
 
-        users[email] = {
-            "name": name,
-            "password": password,
-            "age": age,
-            "height": height,
-            "weight": weight,
-            "gender": gender,
-            "activity": activity,
-        }
+        hashed_password = generate_password_hash(password)
 
-        session["user"] = email
+        new_user = User(username=name, email=email, password=hashed_password)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        session["user"] = new_user.id
         return redirect("/dashboard")
 
     return render_template("register.html")
@@ -42,13 +47,15 @@ def login():
         email = request.form["email"]
         password = request.form["password"]
 
-        if email not in users:
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
             return "Користувача не знайдено"
 
-        if users[email]["password"] != password:
+        if not check_password_hash(user.password, password):
             return "Невірний пароль"
 
-        session["user"] = email
+        session["user"] = user.id
         return redirect("/dashboard")
 
     return render_template("login.html")
@@ -65,10 +72,8 @@ def account():
     if "user" not in session:
         return redirect("/login")
 
-    email = session["user"]
-    user = users[email]
-
-    return render_template("account.html", user=user, user_email=email)
+    user = User.query.get(session["user"])
+    return render_template("account.html", user=user)
 
 
 @app.route("/")
@@ -78,6 +83,9 @@ def index():
 
 @app.route("/dashboard")
 def dashboard():
+    if "user" not in session:
+        return redirect("/login")
+
     return render_template("dashboard.html")
 
 
@@ -92,7 +100,7 @@ def sport():
 
 
 @app.route("/recovery")
-def recovery():
+def recovery_page():
     return render_template("recovery.html")
 
 
