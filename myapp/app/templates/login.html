@@ -1,32 +1,26 @@
-{% extends "base.html" %}
+{% extends "base_auth.html" %} {% block title %}Вхід{% endblock %} {% block
+header_title %}Авторизація{% endblock %} {% block body %}
 
-{% block title %}Вхід{% endblock %}
-{% block header_title %}Авторизація{% endblock %}
-
-{% block body %}
-
-<div class="container" style="max-width: 450px;">
-
-    <h2 class="mb-4" dtyle="color: var(--secondary); font-weight: 700;">Вхід</h2>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-brand">NosiFit</div>
+    <h2 class="auth-title">Вхід</h2>
 
     <form method="POST" action="/login">
+      <label class="auth-label">Електронна пошта</label>
+      <input type="email" name="email" class="auth-input" required />
 
-        <div class="mb-3">
-            <label class="form-label">Електронна пошта</label>
-            <input type="email" class="form-control" name="email" required>
-        </div>
+      <label class="auth-label">Пароль</label>
+      <input type="password" name="password" class="auth-input" required />
 
-        <div class="mb-3">
-            <label class="form-label">Пароль</label>
-            <input type="email" class="form-control" name="password" required>
-        </div>
-        
-        <button type="submit" class="btn btn-primary w-100">Увійти</button>
+      <button type="submit" class="auth-btn">Увійти</button>
 
-        <p class="mt-3 text-center"
-            Немає акаунту? <a href="register" style="color: var(--secondary);">Зареєструватися</a>
+      <p class="auth-text">
+        Немає акаунту?
+        <a href="/register" class="auth-link">Зареєструватися</a>
+      </p>
     </form>
-
+  </div>
 </div>
 
 {% endblock %}
