@@ -3,150 +3,60 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NosiFit — Твій фітнес-помічник</title>
-
-    <!-- Bootstrap -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-
-    <!-- Custom CSS -->
+    <title>NosiFit — Твій персональний фітнес-помічник</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/main.css') }}"
+      href="{{ url_for('static', filename='landing.css') }}"
     />
   </head>
 
-  <body class="bg-light">
-    <!-- HERO SECTION -->
-    <section class="py-5 text-center">
-      <div class="container" style="max-width: 800px">
-        <h1 class="fw-bold mb-3" style="color: #9b5de5; font-size: 3rem">
-          NosiFit
-        </h1>
+  <body>
+    <header class="header">
+      <div class="logo">Nosi<span>Fit</span></div>
+      <nav>
+        <a href="/login">Увійти</a>
+        <a href="/register" class="btn">Створити акаунт</a>
+      </nav>
+    </header>
 
-        <p class="text-muted mb-4" style="font-size: 1.2rem">
-          Розумний фітнес‑помічник, який допомагає контролювати тренування,
-          харчування та відновлення — все в одному місці.
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Твій шлях до кращої форми починається тут</h1>
+        <p>
+          Персональні тренування, харчування, відновлення та аналітика — все в
+          одному місці.
         </p>
 
-        <a
-          href="/register"
-          class="btn btn-warning btn-lg px-5 mb-3"
-          style="font-weight: 600"
-        >
-          Почати зараз
-        </a>
-
-        <div>
-          <a href="/login" class="text-decoration-none" style="color: #9b5de5">
-            У мене вже є акаунт
-          </a>
+        <div class="hero-buttons">
+          <a href="/demo" class="btn demo">Спробувати демо</a>
+          <a href="/register" class="btn primary">Почати зараз</a>
         </div>
+      </div>
+
+      <div class="hero-image">
+        <div class="circle"></div>
+        <img
+          src="{{ url_for('static', filename='img/fitness.png') }}"
+          alt="Fitness"
+        />
       </div>
     </section>
 
-    <!-- FEATURES SECTION -->
-    <section class="py-5 bg-white">
-      <div class="container">
-        <h2 class="text-center fw-bold mb-5">Чому саме NosiFit?</h2>
+    <section class="features">
+      <div class="feature">
+        <h3>Тренування</h3>
+        <p>Створюй власні тренування або користуйся готовими програмами.</p>
+      </div>
 
-        <div class="row g-4">
-          <div class="col-md-4">
-            <div class="card shadow-sm p-4 h-100 text-center">
-              <h3 class="mb-3">🎯 Персоналізація</h3>
-              <p class="text-muted">
-                Додаток адаптується під ваші цілі: схуднення, набір маси або
-                підтримка форми.
-              </p>
-            </div>
-          </div>
+      <div class="feature">
+        <h3>Харчування</h3>
+        <p>Відстежуй калорії, макроси та формуй здорові звички.</p>
+      </div>
 
-          <div class="col-md-4">
-            <div class="card shadow-sm p-4 h-100 text-center">
-              <h3 class="mb-3">📊 Аналітика</h3>
-              <p class="text-muted">
-                Відстежуйте прогрес у спорті, харчуванні та відновленні в одному
-                зручному місці.
-              </p>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card shadow-sm p-4 h-100 text-center">
-              <h3 class="mb-3">⚡ Простота</h3>
-              <p class="text-muted">
-                Мінімалістичний інтерфейс, швидкий доступ до всіх функцій та
-                інтуїтивна навігація.
-              </p>
-            </div>
-          </div>
-        </div>
+      <div class="feature">
+        <h3>Відновлення</h3>
+        <p>Контролюй сон, стрес і відновлення для максимального прогресу.</p>
       </div>
     </section>
-
-    <!-- FUNCTIONALITY SECTION -->
-    <section class="py-5">
-      <div class="container">
-        <h2 class="text-center fw-bold mb-5">Що всередині?</h2>
-
-        <div class="row g-4">
-          <div class="col-md-4">
-            <div class="card shadow-sm p-4 h-100">
-              <h4 class="mb-2">🏋️ Спорт</h4>
-              <p class="text-muted">
-                Тренування, прогрес, статистика та рекомендації.
-              </p>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card shadow-sm p-4 h-100">
-              <h4 class="mb-2">🍎 Харчування</h4>
-              <p class="text-muted">
-                Калорії, макроси, плани харчування та поради.
-              </p>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card shadow-sm p-4 h-100">
-              <h4 class="mb-2">😴 Відновлення</h4>
-              <p class="text-muted">Сон, відпочинок, баланс та рекомендації.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="py-5 bg-white">
-      <div class="container">
-        <h2 class="text-center fw-bold mb-5">Як це працює?</h2>
-
-        <div class="row g-4">
-          <div class="col-md-4 text-center">
-            <h1>1</h1>
-            <p class="text-muted">Створюєш акаунт</p>
-          </div>
-
-          <div class="col-md-4 text-center">
-            <h1>2</h1>
-            <p class="text-muted">Отримуєш персональний план</p>
-          </div>
-
-          <div class="col-md-4 text-center">
-            <h1>3</h1>
-            <p class="text-muted">Відстежуєш прогрес</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="py-4 text-center text-muted">
-      <p>NosiFit © 2026. Усі права захищені.</p>
-    </footer>
   </body>
 </html>
