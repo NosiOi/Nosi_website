@@ -1,17 +1,21 @@
 import pytest
-from myapp.app.app import app as flask_app
+from myapp.app.app import create_app
+from myapp.app.extensions import db
 
 
 @pytest.fixture
-def app():
-    flask_app.config.update(
-        {
-            "TESTING": True,
-        }
-    )
-    yield flask_app
+def test_app():
+    app = create_app()
+    app.config["TESTING"] = True
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.session.remove()
+        db.drop_all()
 
 
 @pytest.fixture
-def client(app):
-    return app.test_client()
+def test_db(test_app):
+    return db
