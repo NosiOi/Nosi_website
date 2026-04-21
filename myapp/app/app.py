@@ -1,6 +1,7 @@
 from flask import Flask
 from myapp.app.config import Config
 from myapp.app.extensions import db
+from flask_migrate import Migrate
 
 
 def create_app():
@@ -9,10 +10,7 @@ def create_app():
 
     db.init_app(app)
 
-    with app.app_context():
-        from myapp.app.models import User, Workout, Nutrition, Recovery
-
-        db.create_all()
+    from myapp.app.models import User, Workout, Nutrition, Recovery
 
     from myapp.app.routes.auth import auth_bp
     from myapp.app.routes.dashboard import dashboard_bp
@@ -24,6 +22,8 @@ def create_app():
 
 
 app = create_app()
+
+migrate = Migrate(app, db)
 
 
 if __name__ == "__main__":
