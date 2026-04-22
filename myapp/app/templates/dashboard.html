@@ -1,97 +1,98 @@
-{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
-header_title %}Панель керування{% endblock %} {% block body %}
+{% extends "base.html" %} {% block title %}Панель керування{% endblock %} {%
+block header_title %}NosiFit — Панель користувача{% endblock %} {% block body %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/dashboard.css') }}"
+/>
 
-<div class="container-fluid">
-  <!-- ====== THREE MAIN BLOCKS ====== -->
-  <div class="row mb-4">
-    <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-      <div
-        class="card shadow-sm p-3"
-        style="min-height: 150px; border-left: 6px solid #ffd43b"
-      >
-        <h5 class="mb-2">🏋️ Спорт</h5>
-        <p class="text-muted">Ваш прогрес тренувань</p>
-        <button
-          class="btn btn-primary btn-sm"
-          onclick="location.href = '/sport'"
-        >
-          Перейти
-        </button>
-      </div>
+<div class="dashboard-container">
+  <!-- HEADER SECTION -->
+  <div class="dash-header">
+    <div class="dash-logo">
+      <span class="logo-main">Nosi</span><span class="logo-accent">Fit</span>
     </div>
 
-    <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-      <div
-        class="card shadow-sm p-3"
-        style="min-height: 150px; border-left: 6px solid #00bbf9"
-      >
-        <h5 class="mb-2">🍓 Харчування</h5>
-        <p class="text-muted">Ваше харчування за тиждень</p>
-        <button
-          class="btn btn-primary btn-sm"
-          onclick="location.href = '/diet_page'"
-        >
-          Перейти
-        </button>
-      </div>
-    </div>
-
-    <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-      <div
-        class="card shadow-sm p-3"
-        style="min-height: 150px; border-left: 6px solid #9b5de5"
-      >
-        <h5 class="mb-2">😴 Відновлення</h5>
-        <p class="text-muted">Якість сну та відпочинку</p>
-        <button
-          class="btn btn-primary btn-sm"
-          onclick="location.href = '/recovery'"
-        >
-          Перейти
-        </button>
-      </div>
+    <div class="dash-user">
+      <span class="user-icon">👤</span>
+      <span class="username">{{ username }}</span>
     </div>
   </div>
 
-  <!-- ====== MAIN CHART ====== -->
-  <div class="card shadow-sm p-4">
-    <h5 class="mb-3">Загальний прогрес</h5>
-    <canvas id="progressChart" height="250"></canvas>
+  <!-- GREETING -->
+  <div class="dash-greeting">
+    <h2>Привіт, {{ username }} 👋</h2>
+    <p>Готовий прокачати свій прогрес сьогодні?</p>
+  </div>
+
+  <!-- MAIN ACTION BUTTON -->
+  <div class="main-action">
+    <a href="/plan" class="btn-generate">📋 Згенерувати мій план</a>
+  </div>
+
+  <!-- FEATURE GRID -->
+  <div class="feature-grid">
+    <div class="feature-card" onclick="location.href = '/sport'">
+      <div class="icon">🏋️</div>
+      <h3>Тренування</h3>
+      <p>Прогрес, вправи, аналітика</p>
+    </div>
+
+    <div class="feature-card" onclick="location.href = '/diet_page'">
+      <div class="icon">🥗</div>
+      <h3>Харчування</h3>
+      <p>Калорії, макроси, меню</p>
+    </div>
+
+    <div class="feature-card" onclick="location.href = '/recovery'">
+      <div class="icon">😴</div>
+      <h3>Відновлення</h3>
+      <p>Сон, стрес, баланс</p>
+    </div>
+
+    <div class="feature-card" onclick="location.href = '/profile'">
+      <div class="icon">⚙️</div>
+      <h3>Профіль</h3>
+      <p>Особисті дані та налаштування</p>
+    </div>
+  </div>
+
+  <!-- PROGRESS SECTION -->
+  <div class="progress-section">
+    <h3>📈 Твій тижневий прогрес</h3>
+    <canvas id="progressChart" height="200"></canvas>
   </div>
 </div>
 
-<!-- ====== CHART.JS SCRIPT ====== -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
   const ctx = document.getElementById("progressChart").getContext("2d");
 
-  const progressChart = new Chart(ctx, {
+  new Chart(ctx, {
     type: "line",
     data: {
       labels: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"],
       datasets: [
         {
-          label: "Спорт",
+          label: "Тренування",
           data: [40, 50, 60, 55, 70, 65, 80],
-          borderColor: "#FFD43B",
-          backgroundColor: "rgba(255, 77, 109, 0.2)",
+          borderColor: "#4cc9f0",
+          backgroundColor: "rgba(76, 201, 240, 0.2)",
           tension: 0.4,
           borderWidth: 3,
         },
         {
           label: "Харчування",
           data: [60, 65, 70, 68, 75, 80, 78],
-          borderColor: "#00BBF9",
-          backgroundColor: "rgba(77, 171, 247, 0.2)",
+          borderColor: "#f9c74f",
+          backgroundColor: "rgba(249, 199, 79, 0.2)",
           tension: 0.4,
           borderWidth: 3,
         },
         {
           label: "Відновлення",
           data: [50, 55, 58, 60, 62, 70, 72],
-          borderColor: "#9B5DE5",
-          backgroundColor: "rgba(105, 219, 124, 0.2)",
+          borderColor: "#9b5de5",
+          backgroundColor: "rgba(155, 93, 229, 0.2)",
           tension: 0.4,
           borderWidth: 3,
         },
@@ -99,15 +100,8 @@ header_title %}Панель керування{% endblock %} {% block body %}
     },
     options: {
       responsive: true,
-      plugins: {
-        legend: { position: "top" },
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 100,
-        },
-      },
+      plugins: { legend: { position: "top" } },
+      scales: { y: { beginAtZero: true, max: 100 } },
     },
   });
 </script>
