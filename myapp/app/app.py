@@ -2,11 +2,12 @@ from flask import Flask
 from myapp.app.config import Config
 from myapp.app.extensions import db
 from flask_migrate import Migrate
+from myapp.app.routes.plan_api import plan_api
 
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object("myapp.app.config.Config")
 
     db.init_app(app)
 
@@ -17,6 +18,7 @@ def create_app():
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
+    app.register_blueprint(plan_api)
 
     return app
 
