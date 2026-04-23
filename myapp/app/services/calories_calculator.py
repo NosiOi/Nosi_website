@@ -5,14 +5,14 @@ def calculate_bmr(weight, height, age, gender):
 
 
 def calculate_tdee(bmr, activity):
-    return bmr * activity
+    return float(bmr) * float(activity)
 
 
 def calculate_calories_goal(tdee, goal):
-    if goal == "maintain":
+    if goal in ("maintain", "maintenance"):
         return tdee
-    if goal == "lose":
+    if goal in ("lose", "fat_loss", "cut"):
         return tdee * 0.85
-    if goal == "gain":
+    if goal in ("gain", "muscle_gain", "bulk"):
         return tdee * 1.12
     raise ValueError("Unknown goal")

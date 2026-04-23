@@ -1,18 +1,27 @@
-def generate_training_plan(goal, experience, workouts_per_week):
+def generate_training_plan(experience: str, workouts_per_week: int, goal: str):
+    workouts_per_week = int(workouts_per_week)
+
+    frequency = min(workouts_per_week, 5)
+
     if experience == "beginner":
-        frequency = min(workouts_per_week, 3)
-        plan_type = "full_body"
+        base_exercises = ["Присідання", "Жим лежачи", "Тяга верхнього блока", "Планка"]
     elif experience == "intermediate":
-        frequency = min(workouts_per_week, 4)
-        plan_type = "upper_lower"
+        base_exercises = [
+            "Присідання зі штангою",
+            "Жим лежачи",
+            "Тяга штанги в нахилі",
+            "Румунська тяга",
+        ]
     else:
-        frequency = min(workouts_per_week, 5)
-        plan_type = "split"
+        base_exercises = [
+            "Фронтальні присідання",
+            "Жим на похилій",
+            "Тяга Т-грифа",
+            "Станова тяга",
+        ]
 
-    workout_structure = {
-        "warmup": "5–10 хвилин кардіо + мобільність",
-        "main": "40–50 хвилин силових вправ",
-        "cooldown": "5–10 хвилин розтяжки",
-    }
+    plan = []
+    for i in range(frequency):
+        plan.append({"day": i + 1, "exercises": base_exercises})
 
-    return {"frequency": frequency, "type": plan_type, "structure": workout_structure}
+    return plan

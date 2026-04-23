@@ -1,4 +1,6 @@
 def calculate_macros(weight, calories, goal):
+    print("DEBUG CALCULATE_MACROS CALLED")
+    print("MACROS FILE:", __file__)
     if goal == "maintain":
         protein = 1.6 * weight
         fat = 1.0 * weight

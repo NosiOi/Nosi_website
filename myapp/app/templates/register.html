@@ -1,63 +1,77 @@
 {% extends "base.html" %} {% block title %}Реєстрація{% endblock %} {% block
-header_title %}Створення акаунту{% endblock %} {% block body %}
+body %}
 
-<div class="container" style="max-width: 600px">
-  <h2 class="mb-4" style="color: var(--secondary); font-weight: 700px">
-    Реєстрація
-  </h2>
+<link rel="stylesheet" href="/static/css/register.css" />
 
-  <form method="POST" action="/register">
-    <div class="mb-3">
-      <label class="form-label">Ім'я</label>
-      <input type="text" class="form-control" name="name" required />
-    </div>
+<div class="register-wrapper">
+  <div class="register-card">
+    <h2>Створити акаунт</h2>
 
-    <div class="mb-3">
-      <label class="form-label">Електронна пошта</label>
-      <input type="text" class="form-control" name="email" required />
-    </div>
+    <form method="POST" action="/register">
+      <label>Ім'я користувача</label>
+      <input type="text" name="username" required />
 
-    <div class="mb-3">
-      <label class="form-label">Пароль</label>
-      <input type="text" class="form-control" name="password" required />
-    </div>
+      <label>Email</label>
+      <input type="email" name="email" required />
 
-    <div class="mb-3">
-      <label class="form-label">Вік</label>
-      <input type="text" class="form-control" name="age" required />
-    </div>
+      <label>Пароль</label>
+      <input type="password" name="password" required />
 
-    <div class="mb-3">
-      <label class="form-label">Ріст (см)</label>
-      <input type="text" class="form-control" name="height" required />
-    </div>
+      <div class="row-3">
+        <div>
+          <label>Вік</label>
+          <input type="number" name="age" required />
+        </div>
 
-    <div class="mb-3">
-      <label class="form-label">Вага (кг)</label>
-      <input type="text" class="form-control" name="weight" required />
-    </div>
+        <div>
+          <label>Ріст (см)</label>
+          <input type="number" name="height" required />
+        </div>
 
-    <div class="mb-3">
-      <label class="form-label">Стать</label>
-      <select class="form-select" name="gender" required>
+        <div>
+          <label>Вага (кг)</label>
+          <input type="number" name="weight" required />
+        </div>
+      </div>
+
+      <label>Стать</label>
+      <select name="gender" required>
         <option value="male">Чоловіча</option>
         <option value="female">Жіноча</option>
       </select>
-    </div>
 
-    <div class="mb-3">
-      <label class="form-label">Рівень активності</label>
-      <select class="form-select" name="activity" required>
-        <option value="low">Низький</option>
-        <option value="medium">Середній</option>
-        <option value="high">Високий</option>
+      <label>Рівень активності</label>
+      <select name="activity" required>
+        <option value="1.2">Низький</option>
+        <option value="1.375">Середній</option>
+        <option value="1.55">Високий</option>
+        <option value="1.725">Дуже високий</option>
       </select>
-    </div>
-    <button type="submit" class="btn btn-primary w-100">Зареєструватися</button>
 
-    <p class="mt-3 text-center">
-      <a href="/login" style="color: var(--secondary)">Увійти</a>
-    </p>
-  </form>
+      <label>Ціль</label>
+      <select name="goal" required>
+        <option value="lose">Схуднути</option>
+        <option value="gain">Набрати м’язи</option>
+        <option value="maintain">Підтримувати вагу</option>
+      </select>
+
+      <label>Досвід</label>
+      <select name="experience" required>
+        <option value="beginner">Початківець</option>
+        <option value="intermediate">Середній</option>
+        <option value="advanced">Просунутий</option>
+      </select>
+
+      <label>Тренувань на тиждень</label>
+      <input type="number" name="workouts_per_week" min="1" max="14" required />
+
+      <button type="submit">Зареєструватися</button>
+
+      <div class="login-link">
+        <a href="/login">Увійти</a>
+      </div>
+    </form>
+  </div>
 </div>
+
 {% endblock %}

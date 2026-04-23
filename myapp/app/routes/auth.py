@@ -14,8 +14,11 @@ def login():
 
         user = User.query.filter_by(email=email).first()
 
-        if not user or not check_password_hash(user.password, password):
-            return "Невірний email або пароль"
+        if not user:
+            return "Користувача не знайдено"
+
+        if not check_password_hash(user.password, password):
+            return "Невірний пароль"
 
         session["user"] = user.id
         return redirect("/dashboard")
@@ -26,21 +29,41 @@ def login():
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        name = request.form["name"]
+        username = request.form["username"]
         email = request.form["email"]
         password = request.form["password"]
+        age = int(request.form["age"])
+        height = int(request.form["height"])
+        weight = int(request.form["weight"])
+        gender = request.form["gender"]
+        activity = float(request.form.get("activity"))
 
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
+        # Перевірка на існуючий email
+        if User.query.filter_by(email=email).first():
             return "Користувач з такою поштою вже існує"
 
+        # Хешуємо пароль
         hashed_password = generate_password_hash(password)
-        new_user = User(username=name, email=email, password=hashed_password)
 
-        db.session.add(new_user)
+        # Створюємо користувача
+        user = User(
+            username=username,
+            email=email,
+            password=hashed_password,
+            age=age,
+            height=height,
+            weight=weight,
+            gender=gender,
+            activity=activity,
+            goal=request.form.get("goal"),
+            experience=request.form.get("experience"),
+            workouts_per_week=int(request.form.get("workouts_per_week")),
+        )
+
+        db.session.add(user)
         db.session.commit()
 
-        session["user"] = new_user.id
+        session["user"] = user.id
         return redirect("/dashboard")
 
     return render_template("register.html")

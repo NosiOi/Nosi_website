@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block content %}
+
+<h2>Твій персональний план</h2>
+
+<h3>Харчування</h3>
+<p>Калорії: {{ nutrition.calories }}</p>
+<p>Білки: {{ nutrition.protein }} г</p>
+<p>Жири: {{ nutrition.fats }} г</p>
+<p>Вуглеводи: {{ nutrition.carbs }} г</p>
+
+<h3>Тренування</h3>
+<p>{{ workout.plan }}</p>
+
+<h3>Відновлення</h3>
+<p>{{ recovery.plan }}</p>
+
+<a href="/dashboard" class="btn btn-secondary">Назад</a>
+
+{% endblock %}
