@@ -28,15 +28,14 @@ class PlanGenerator:
         self.experience = experience
         self.workouts_per_week = int(workouts_per_week)
 
-    # -----------------------------
-    # SLEEP
-    # -----------------------------
     def calculate_sleep(self):
-        return calculate_sleep(self.age)
+        sleep = calculate_sleep(self.age)
 
-    # -----------------------------
-    # CALORIES
-    # -----------------------------
+        if isinstance(sleep, (tuple, list)):
+            sleep = sum(sleep) / len(sleep)
+
+        return int(round(float(sleep)))
+
     def calculate_calories(self):
         if self.sex == "male":
             bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5
@@ -47,27 +46,18 @@ class PlanGenerator:
         calories = calculate_calories_goal(tdee, self.goal)
         return round(calories)
 
-    # -----------------------------
-    # MACROS
-    # -----------------------------
     def calculate_macros(self):
         calories = self.calculate_calories()
         macros = calculate_macros(self.weight, calories, self.goal)
         return {
-            "protein": macros["protein"],
-            "fats": macros["fat"],
-            "carbs": macros["carbs"],
+            "protein": round(macros["protein"]),
+            "fats": round(macros["fat"]),
+            "carbs": round(macros["carbs"]),
         }
 
-    # -----------------------------
-    # WATER
-    # -----------------------------
     def calculate_water(self):
-        return calculate_water(self.weight, self.activity)
+        return round(float(calculate_water(self.weight, self.activity)), 2)
 
-    # -----------------------------
-    # TRAINING PLAN
-    # -----------------------------
     def calculate_training_plan(self):
         return generate_training_plan(
             experience=self.experience,
@@ -75,17 +65,15 @@ class PlanGenerator:
             goal=self.goal,
         )
 
-    # -----------------------------
-    # FINAL OUTPUT
-    # -----------------------------
     def generate(self):
-        print("DEBUG MACROS:", self.calculate_macros())
+        macros = self.calculate_macros()
+
         return {
             "sleep": self.calculate_sleep(),
             "calories": self.calculate_calories(),
-            "protein": self.calculate_macros()["protein"],
-            "fats": self.calculate_macros()["fats"],
-            "carbs": self.calculate_macros()["carbs"],
+            "protein": macros["protein"],
+            "fats": macros["fats"],
+            "carbs": macros["carbs"],
             "water": self.calculate_water(),
             "training_plan": self.calculate_training_plan(),
         }

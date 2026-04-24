@@ -9,12 +9,11 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
+    app.secret_key = "supersecretkey"
     Migrate(app, db)
 
-    # Імпортуємо всі моделі
     from myapp.app import models
 
-    # Blueprints
     from myapp.app.routes.auth import auth_bp
     from myapp.app.routes.dashboard import dashboard_bp
     from myapp.app.routes.plan_api import plan_api

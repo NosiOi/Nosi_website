@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for
+from flask import Blueprint, render_template, session, redirect
 from myapp.app.models import User, WorkoutPlan, NutritionPlan, RecoveryPlan
 from myapp.app.extensions import db
 from myapp.app.services.plan_generator import PlanGenerator
@@ -34,9 +34,21 @@ def plan_page():
     if not workout or not nutrition or not recovery:
         return redirect("/generate_plan")
 
-    return render_template(
-        "plan.html", user=user, workout=workout, nutrition=nutrition, recovery=recovery
-    )
+    # Розбираємо recovery.plan
+    sleep = float(recovery.plan.split("Сон: ")[1].split(" год")[0])
+    water = float(recovery.plan.split("Вода: ")[1].split(" л")[0])
+
+    plan = {
+        "sleep": sleep,
+        "water": water,
+        "calories": nutrition.calories,
+        "protein": nutrition.protein,
+        "fats": nutrition.fats,
+        "carbs": nutrition.carbs,
+        "training_plan": workout.plan,
+    }
+
+    return render_template("plan.html", plan=plan, user=user)
 
 
 @dashboard_bp.route("/generate_plan")
@@ -46,6 +58,7 @@ def generate_plan():
 
     user = User.query.get(session["user"])
 
+    # Якщо план вже існує — просто показуємо його
     if (
         WorkoutPlan.query.filter_by(user_id=user.id).first()
         and NutritionPlan.query.filter_by(user_id=user.id).first()

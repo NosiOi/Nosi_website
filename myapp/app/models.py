@@ -7,26 +7,21 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    # Основні дані
     username = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
-    # Антропометрія — тепер правильні типи
     age = db.Column(db.Integer, nullable=False)
     height = db.Column(db.Float, nullable=False)  # см
     weight = db.Column(db.Float, nullable=False)  # кг
     gender = db.Column(db.String(10), nullable=False)
 
-    # Рівень активності — тепер float (1.2, 1.375, 1.55...)
     activity = db.Column(db.Float, nullable=False)
 
-    # Цілі та досвід
     goal = db.Column(db.String(50), nullable=False)
     experience = db.Column(db.String(50), nullable=False)
     workouts_per_week = db.Column(db.Integer, nullable=False)
 
-    # Зв'язки з планами
     workout_plan = db.relationship("WorkoutPlan", backref="user", lazy=True)
     nutrition_plan = db.relationship("NutritionPlan", backref="user", lazy=True)
     recovery_plan = db.relationship("RecoveryPlan", backref="user", lazy=True)
