@@ -52,9 +52,12 @@ class PlanGenerator:
     # -----------------------------
     def calculate_macros(self):
         calories = self.calculate_calories()
-        protein, fats, carbs = calculate_macros(self.weight, calories, self.goal)
-
-        return {"protein": protein, "fats": fats, "carbs": carbs}
+        macros = calculate_macros(self.weight, calories, self.goal)
+        return {
+            "protein": macros["protein"],
+            "fats": macros["fat"],
+            "carbs": macros["carbs"],
+        }
 
     # -----------------------------
     # WATER
