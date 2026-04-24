@@ -5,9 +5,42 @@
   href="{{ url_for('static', filename='css/plan.css') }}"
 />
 
+<script>
+  function showLoader() {
+    const loader = document.getElementById("loader");
+    loader.style.display = "block";
+  }
+</script>
+
 <div class="plan-wrapper">
+  <!-- TITLE -->
   <h1 class="plan-title">Твій персональний план</h1>
   <p class="plan-subtitle">Тренування • Харчування • Відновлення</p>
+
+  <!-- GENERATE NEW PLAN BUTTON -->
+  <div class="center" style="margin-bottom: 20px">
+    <a
+      href="/generate_plan"
+      onclick="showLoader()"
+      class="btn btn-primary btn-lg"
+    >
+      🔄 Згенерувати новий план
+    </a>
+  </div>
+
+  <!-- LOADER -->
+  <div
+    id="loader"
+    style="
+      display: none;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 18px;
+      color: #777;
+    "
+  >
+    Генеруємо новий план...
+  </div>
 
   <!-- NUTRITION -->
   <section class="section">
@@ -71,10 +104,10 @@
     </div>
   </section>
 
+  <!-- BACK BUTTON -->
   <div class="center">
     <a href="/dashboard" class="back-btn">Повернутись</a>
   </div>
 </div>
 
 {% endblock %}
-<!-- TEST 999 -->

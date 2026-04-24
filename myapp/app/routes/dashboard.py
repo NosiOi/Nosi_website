@@ -58,14 +58,6 @@ def generate_plan():
 
     user = User.query.get(session["user"])
 
-    # Якщо план вже існує — просто показуємо його
-    if (
-        WorkoutPlan.query.filter_by(user_id=user.id).first()
-        and NutritionPlan.query.filter_by(user_id=user.id).first()
-        and RecoveryPlan.query.filter_by(user_id=user.id).first()
-    ):
-        return redirect("/plan")
-
     generator = PlanGenerator(
         age=user.age,
         sex=user.gender,
@@ -79,17 +71,23 @@ def generate_plan():
 
     plan = generator.generate()
 
-    workout = WorkoutPlan(user_id=user.id, plan=plan["training_plan"])
-    nutrition = NutritionPlan(
-        user_id=user.id,
-        calories=plan["calories"],
-        protein=plan["protein"],
-        fats=plan["fats"],
-        carbs=plan["carbs"],
-    )
-    recovery = RecoveryPlan(
-        user_id=user.id, plan=f"Сон: {plan['sleep']} годин, Вода: {plan['water']} л"
-    )
+    workout = WorkoutPlan.query.filter_by(user_id=user.id).first()
+    nutrition = NutritionPlan.query.filter_by(user_id=user.id).first()
+    recovery = RecoveryPlan.query.filter_by(user_id=user.id).first()
+
+    if not workout:
+        workout = WorkoutPlan(user_id=user.id)
+    if not nutrition:
+        nutrition = NutritionPlan(user_id=user.id)
+    if not recovery:
+        recovery = RecoveryPlan(user_id=user.id)
+
+    workout.plan = plan["training_plan"]
+    nutrition.calories = plan["calories"]
+    nutrition.protein = plan["protein"]
+    nutrition.fats = plan["fats"]
+    nutrition.carbs = plan["carbs"]
+    recovery.plan = f"Сон: {plan['sleep']} годин, Вода: {plan['water']} л"
 
     db.session.add(workout)
     db.session.add(nutrition)
