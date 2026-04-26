@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, session, redirect
 from myapp.app.models import User, WorkoutPlan, NutritionPlan, RecoveryPlan
 from myapp.app.extensions import db
 from myapp.app.services.plan_generator import PlanGenerator
+from myapp.app.utils.decorators import login_required
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
@@ -12,19 +13,15 @@ def index():
 
 
 @dashboard_bp.route("/dashboard")
+@login_required
 def dashboard():
-    if "user" not in session:
-        return redirect("/login")
-
     user = User.query.get(session["user"])
     return render_template("dashboard.html", user=user)
 
 
 @dashboard_bp.route("/plan")
+@login_required
 def plan_page():
-    if "user" not in session:
-        return redirect("/login")
-
     user = User.query.get(session["user"])
 
     workout = WorkoutPlan.query.filter_by(user_id=user.id).first()
@@ -34,7 +31,6 @@ def plan_page():
     if not workout or not nutrition or not recovery:
         return redirect("/generate_plan")
 
-    # Розбираємо recovery.plan
     sleep = float(recovery.plan.split("Сон: ")[1].split(" год")[0])
     water = float(recovery.plan.split("Вода: ")[1].split(" л")[0])
 
@@ -52,10 +48,8 @@ def plan_page():
 
 
 @dashboard_bp.route("/generate_plan")
+@login_required
 def generate_plan():
-    if "user" not in session:
-        return redirect("/login")
-
     user = User.query.get(session["user"])
 
     generator = PlanGenerator(

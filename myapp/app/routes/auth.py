@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from myapp.app.extensions import db
 from myapp.app.models import User
 
-auth_bp = Blueprint("auth", __name__)
+auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
@@ -38,14 +38,11 @@ def register():
         gender = request.form["gender"]
         activity = float(request.form.get("activity"))
 
-        # Перевірка на існуючий email
         if User.query.filter_by(email=email).first():
             return "Користувач з такою поштою вже існує"
 
-        # Хешуємо пароль
         hashed_password = generate_password_hash(password)
 
-        # Створюємо користувача
         user = User(
             username=username,
             email=email,

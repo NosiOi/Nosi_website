@@ -16,7 +16,7 @@ def create_app():
 
     from myapp.app.routes.auth import auth_bp
     from myapp.app.routes.dashboard import dashboard_bp
-    from myapp.app.routes.plan_api import plan_api
+    from myapp.app.routes.plan import plan_api
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
