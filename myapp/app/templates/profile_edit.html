@@ -1,0 +1,52 @@
+<h1>Редагування профілю</h1>
+
+<form method="POST">
+  <label>Ім'я</label>
+  <input name="username" value="{{ user.username }}" />
+
+  <label>Email</label>
+  <input name="email" value="{{ user.email }}" />
+
+  <label>Вік</label>
+  <input name="age" type="number" value="{{ user.age }}" />
+
+  <label>Зріст</label>
+  <input name="height" type="number" value="{{ user.height }}" />
+
+  <label>Вага</label>
+  <input name="weight" type="number" value="{{ user.weight }}" />
+
+  <label>Стать</label>
+  <select name="gender">
+    <option
+      value="male"
+      selected="{{ 'selected' if user.gender == 'male' else '' }}"
+    >
+      Чоловік
+    </option>
+    <option
+      value="female"
+      selected="{{ 'selected' if user.gender == 'female' else '' }}"
+    >
+      Жінка
+    </option>
+  </select>
+
+  <label>Активність</label>
+  <input name="activity" type="number" step="0.1" value="{{ user.activity }}" />
+
+  <label>Ціль</label>
+  <input name="goal" value="{{ user.goal }}" />
+
+  <label>Досвід</label>
+  <input name="experience" value="{{ user.experience }}" />
+
+  <label>Тренувань на тиждень</label>
+  <input
+    name="workouts_per_week"
+    type="number"
+    value="{{ user.workouts_per_week }}"
+  />
+
+  <button type="submit">Зберегти</button>
+</form>

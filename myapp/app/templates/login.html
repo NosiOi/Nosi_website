@@ -6,7 +6,7 @@ header_title %}Авторизація{% endblock %} {% block body %}
     <div class="auth-brand">NosiFit</div>
     <h2 class="auth-title">Вхід</h2>
 
-    <form method="POST" action="/login">
+    <form method="POST" action="/auth/login">
       <label class="auth-label">Електронна пошта</label>
       <input type="email" name="email" class="auth-input" required />
 
@@ -17,7 +17,7 @@ header_title %}Авторизація{% endblock %} {% block body %}
 
       <p class="auth-text">
         Немає акаунту?
-        <a href="/register" class="auth-link">Зареєструватися</a>
+        <a href="/auth/register" class="auth-link">Зареєструватися</a>
       </p>
     </form>
   </div>
