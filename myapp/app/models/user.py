@@ -1,4 +1,4 @@
-from myapp.app.extensions import db
+from myapp.app import db
 
 
 class User(db.Model):
@@ -21,6 +21,4 @@ class User(db.Model):
     experience = db.Column(db.String(50), nullable=False)
     workouts_per_week = db.Column(db.Integer, nullable=False)
 
-    workout_plan = db.relationship("WorkoutPlan", backref="user", lazy=True)
-    nutrition_plan = db.relationship("NutritionPlan", backref="user", lazy=True)
-    recovery_plan = db.relationship("RecoveryPlan", backref="user", lazy=True)
+    training_plans = db.relationship("TrainingPlan", backref="user", lazy=True)

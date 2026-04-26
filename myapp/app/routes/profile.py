@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, request
 from myapp.app.models import User, WorkoutPlan, NutritionPlan, RecoveryPlan
-from myapp.app.extensions import db
+from myapp.app import db
 from myapp.app.services.plan_generator import PlanGenerator
 from myapp.app.utils.decorators import login_required
 

@@ -1,3 +1,5 @@
+from myapp.app import db
+
 from .user import User
 from .workout_plan import WorkoutPlan
 from .nutrition_plan import NutritionPlan

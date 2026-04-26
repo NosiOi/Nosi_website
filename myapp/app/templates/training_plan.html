@@ -1,0 +1,20 @@
+<h2>Твій тренувальний план</h2>
+
+<p>Тип програми: {{ plan.program_type }}</p>
+<p>Локація: {{ plan.location }}</p>
+<p>Тренувань на тиждень: {{ plan.days_per_week }}</p>
+
+{% for day in plan.days %}
+<h3>{{ day.name }}</h3>
+<ul>
+  {% for ex in day.exercises %}
+  <li>
+    <strong>{{ ex.name }}</strong><br />
+    Підходи: {{ ex.sets }}<br />
+    Повторення: {{ ex.reps }}<br />
+    Відпочинок: {{ ex.rest_seconds }} сек<br />
+    Примітка: {{ ex.notes }}
+  </li>
+  {% endfor %}
+</ul>
+{% endfor %}
