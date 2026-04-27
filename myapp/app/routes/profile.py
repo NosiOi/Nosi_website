@@ -14,6 +14,24 @@ def profile():
     return render_template("profile.html", user=user)
 
 
+@profile_bp.route("/equipment")
+@login_required
+def equipment_page():
+    from myapp.app.models.equipment import Equipment
+    from myapp.app.models.user_equipment import UserEquipment
+
+    all_equipment = Equipment.query.all()
+    user_eq_ids = [
+        ue.equipment_id for ue in UserEquipment.query.filter_by(user_id=current_user.id)
+    ]
+
+    return render_template(
+        "profile/equipment.html",
+        equipment=all_equipment,
+        user_equipment_ids=user_eq_ids,
+    )
+
+
 @profile_bp.route("/profile/edit", methods=["GET", "POST"])
 @login_required
 def edit_profile():

@@ -1,5 +1,9 @@
 from myapp.app import db
 
+users = db.relationship(
+    "UserEquipment", back_populates="equipment", cascade="all, delete-orphan"
+)
+
 
 class Equipment(db.Model):
     __tablename__ = "equipment"

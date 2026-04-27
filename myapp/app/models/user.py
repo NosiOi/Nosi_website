@@ -22,3 +22,7 @@ class User(db.Model):
     workouts_per_week = db.Column(db.Integer, nullable=False)
 
     training_plans = db.relationship("TrainingPlan", backref="user", lazy=True)
+
+    equipment = db.relationship(
+        "UserEquipment", back_populates="user", cascade="all, delete-orphan"
+    )

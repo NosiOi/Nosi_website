@@ -7,7 +7,6 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
 
-
 from myapp.app.models.user import User
 
 
@@ -26,8 +25,7 @@ def create_app():
 
     login_manager.login_view = "auth.login"
 
-    from myapp.app.models.user import User
-    from myapp.app import models  # noqa
+    from myapp.app import models
 
     from myapp.app.routes.auth import auth_bp
     from myapp.app.routes.dashboard import dashboard_bp
@@ -35,6 +33,7 @@ def create_app():
     from myapp.app.routes.profile import profile_bp
     from myapp.app.routes.assessment import assessment_bp
     from myapp.app.routes.training import training_bp
+    from myapp.app.routes.equipment import equipment_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
@@ -42,5 +41,6 @@ def create_app():
     app.register_blueprint(profile_bp)
     app.register_blueprint(assessment_bp)
     app.register_blueprint(training_bp)
+    app.register_blueprint(equipment_bp)
 
     return app
