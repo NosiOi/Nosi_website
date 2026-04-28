@@ -1,0 +1,105 @@
+{% extends "public/base_public.html" %} {% block content %}
+
+<section class="hero">
+  <div class="hero-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+
+  <div class="hero-container">
+    <div class="hero-left">
+      <div class="logo">
+        <span class="logo-nos">Nosi</span><span class="logo-fit">Fit</span>
+      </div>
+
+      <h1 class="hero-title">Твій персональний<br />фітнес‑помічник</h1>
+
+      <p class="hero-sub">
+        Мінімалістичний, динамічний та розумний сервіс для тренувань,
+        харчування, відновлення та аналітики. Все в одному місці.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="{{ url_for('auth.register') }}" class="btn-primary">
+          Почати зараз
+        </a>
+
+        <a href="{{ url_for('dashboard.demo') }}" class="btn-outline">
+          Спробувати демо
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="progress-card">
+        <div class="progress-header">
+          <div class="progress-label">Прогрес сьогодні</div>
+          <div class="progress-tag">+32%</div>
+        </div>
+
+        <div class="progress-main">
+          <div class="progress-value">32%</div>
+        </div>
+
+        <div class="progress-bar"><span></span></div>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-item training-card">
+          <div class="icon">💪</div>
+          <div class="feature-title">Тренування</div>
+          <div class="feature-sub">Структура і прогрес</div>
+        </div>
+
+        <div class="feature-item nutrition-card">
+          <div class="icon">🍽️</div>
+          <div class="feature-title">Харчування</div>
+          <div class="feature-sub">Калорії та макроси</div>
+        </div>
+
+        <div class="feature-item recovery-card">
+          <div class="icon">💤</div>
+          <div class="feature-title">Відновлення</div>
+          <div class="feature-sub">Сон і баланс</div>
+        </div>
+
+        <div class="feature-item analytics-card">
+          <div class="icon">📊</div>
+          <div class="feature-title">Аналітика</div>
+          <div class="feature-sub">Графіки та інсайти</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll(".feature-item").forEach((card) => {
+    card.addEventListener("mouseenter", () => {
+      const bg = document.querySelector(".hero-bg");
+      bg.className = "hero-bg";
+
+      if (card.classList.contains("training-card")) {
+        bg.classList.add("yellow-glow");
+      }
+      if (card.classList.contains("recovery-card")) {
+        bg.classList.add("blue-glow");
+      }
+      if (card.classList.contains("nutrition-card")) {
+        bg.classList.add("violet-glow");
+      }
+      if (card.classList.contains("analytics-card")) {
+        bg.classList.add("mix-glow");
+      }
+    });
+
+    card.addEventListener("mouseleave", () => {
+      const bg = document.querySelector(".hero-bg");
+      bg.className = "hero-bg";
+    });
+  });
+</script>
+
+{% endblock %}

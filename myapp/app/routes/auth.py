@@ -23,7 +23,7 @@ def login():
         session["user"] = user.id
         return redirect("/dashboard")
 
-    return render_template("login.html")
+    return render_template("auth/login.html")
 
 
 @auth_bp.route("/register", methods=["GET", "POST"])
@@ -63,7 +63,7 @@ def register():
         session["user"] = user.id
         return redirect("/dashboard")
 
-    return render_template("register.html")
+    return render_template("auth/register.html")
 
 
 @auth_bp.route("/logout")

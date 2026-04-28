@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>NosiFit</title>
+
+    <!-- Головні стилі -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/Nosi_Logo.png') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/public/landing.css') }}"
+    />
+  </head>
+
+  <body>
+    {% include "components/public_nav.html" %} {% block content %}{% endblock %}
+  </body>
+</html>

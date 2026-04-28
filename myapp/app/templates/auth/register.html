@@ -1,0 +1,84 @@
+{% extends "auth/base_auth.html" %} {% block title %}Реєстрація{% endblock %} {%
+block header_title %}Створення акаунту{% endblock %} {% block body %}
+
+<div class="auth-wrapper">
+  <div class="auth-card wide">
+    <div class="auth-brand">NosiFit</div>
+    <h2 class="auth-title">Створити акаунт</h2>
+
+    <form method="POST" action="/auth/register">
+      <label class="auth-label">Ім'я користувача</label>
+      <input type="text" name="username" class="auth-input" required />
+
+      <label class="auth-label">Email</label>
+      <input type="email" name="email" class="auth-input" required />
+
+      <label class="auth-label">Пароль</label>
+      <input type="password" name="password" class="auth-input" required />
+
+      <div class="auth-row">
+        <div>
+          <label class="auth-label">Вік</label>
+          <input type="number" name="age" class="auth-input" required />
+        </div>
+
+        <div>
+          <label class="auth-label">Ріст (см)</label>
+          <input type="number" name="height" class="auth-input" required />
+        </div>
+
+        <div>
+          <label class="auth-label">Вага (кг)</label>
+          <input type="number" name="weight" class="auth-input" required />
+        </div>
+      </div>
+
+      <label class="auth-label">Стать</label>
+      <select name="gender" class="auth-input" required>
+        <option value="male">Чоловіча</option>
+        <option value="female">Жіноча</option>
+      </select>
+
+      <label class="auth-label">Рівень активності</label>
+      <select name="activity" class="auth-input" required>
+        <option value="1.2">Низький</option>
+        <option value="1.375">Середній</option>
+        <option value="1.55">Високий</option>
+        <option value="1.725">Дуже високий</option>
+      </select>
+
+      <label class="auth-label">Ціль</label>
+      <select name="goal" class="auth-input" required>
+        <option value="lose">Схуднути</option>
+        <option value="gain">Набрати м’язи</option>
+        <option value="maintain">Підтримувати вагу</option>
+      </select>
+
+      <label class="auth-label">Досвід</label>
+      <select name="experience" class="auth-input" required>
+        <option value="beginner">Початківець</option>
+        <option value="intermediate">Середній</option>
+        <option value="advanced">Просунутий</option>
+      </select>
+
+      <label class="auth-label">Тренувань на тиждень</label>
+      <input
+        type="number"
+        name="workouts_per_week"
+        class="auth-input"
+        min="1"
+        max="14"
+        required
+      />
+
+      <button type="submit" class="auth-btn">Зареєструватися</button>
+
+      <p class="auth-text">
+        Вже маєш акаунт?
+        <a href="/auth/login" class="auth-link">Увійти</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
