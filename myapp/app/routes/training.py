@@ -1,23 +1,20 @@
-from flask import Blueprint, render_template
-from flask_login import login_required, current_user
-from myapp.app.models.training_plan import TrainingPlan
-import json
+from flask import Blueprint, render_template, session, redirect
+from myapp.app.models import User, WorkoutPlan
 
-training_bp = Blueprint("training", __name__)
+training_bp = Blueprint("training", __name__, url_prefix="/training")
 
 
-@training_bp.route("/training")
-@login_required
-def training_plan():
-    plan = (
-        TrainingPlan.query.filter_by(user_id=current_user.id)
-        .order_by(TrainingPlan.id.desc())
-        .first()
+@training_bp.route("/")
+def training_overview():
+    if "user" not in session:
+        return redirect("/auth/login")
+
+    user = User.query.get(session["user"])
+    workout = WorkoutPlan.query.filter_by(user_id=user.id).first()
+
+    if not workout or not workout.plan:
+        return redirect("/plan/generate")
+
+    return render_template(
+        "app/training_overview.html", user=user, training_plan=workout.plan
     )
-
-    if not plan:
-        return "План ще не створено. Пройди тести."
-
-    plan_data = json.loads(plan.plan_json)
-
-    return render_template("training_plan.html", plan=plan_data)

@@ -29,18 +29,20 @@ def create_app():
 
     from myapp.app.routes.auth import auth_bp
     from myapp.app.routes.dashboard import dashboard_bp
-    from myapp.app.routes.plan import plan_api
+    from myapp.app.routes.plan import plan_bp
     from myapp.app.routes.profile import profile_bp
     from myapp.app.routes.assessment import assessment_bp
     from myapp.app.routes.training import training_bp
     from myapp.app.routes.equipment import equipment_bp
+    from myapp.app.routes.questionnaire import questionnaire_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
-    app.register_blueprint(plan_api)
+    app.register_blueprint(plan_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(assessment_bp)
     app.register_blueprint(training_bp)
     app.register_blueprint(equipment_bp)
+    app.register_blueprint(questionnaire_bp)
 
     return app
