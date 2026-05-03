@@ -1,0 +1,119 @@
+.brand {
+    text-align: center;
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s ease;
+}
+
+.brand-icon {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 10px;
+    animation: floatLogo 4s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.brand-title {
+    font-size: 38px;
+    font-weight: 800;
+}
+
+.brand-title span:first-child {
+    color: var(--yellow);
+}
+
+.brand-title span:last-child {
+    color: var(--purple);
+}
+
+.brand-subtitle {
+    margin-top: 4px;
+    font-size: 15px;
+    opacity: 0.7;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    animation: fadeUp 0.7s ease;
+}
+
+.password-shell {
+    position: relative;
+}
+
+.password-shell input {
+    padding-right: 90px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--yellow);
+    cursor: pointer;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.toggle-password:hover {
+    color: var(--purple);
+}
+
+.oauth-box {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.oauth-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.oauth-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.oauth-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-3px);
+}
+
+.google:hover {
+    border-color: var(--yellow);
+}
+
+.github:hover {
+    border-color: var(--purple);
+}

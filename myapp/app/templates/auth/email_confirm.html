@@ -1,0 +1,25 @@
+{% extends "auth/auth_base.html" %} {% block title %}Підтвердження Email{%
+endblock %} {% block styles %}
+<link rel="stylesheet" href="/static/css/auth/email_confirm.css" />
+{% endblock %} {% block body %}
+
+<div class="auth-card">
+  <div class="brand">
+    <img src="/static/img/Nosi_Logo.png" class="brand-icon" alt="logo" />
+    <h1 class="brand-title"><span>Nosi</span>Fit</h1>
+    <p class="brand-subtitle">Підтвердження акаунта</p>
+  </div>
+
+  <h2 class="auth-title">Перевір свою пошту</h2>
+
+  <p class="confirm-text">
+    Ми надіслали лист із підтвердженням на твою електронну адресу. Перейди за
+    посиланням у листі, щоб активувати акаунт.
+  </p>
+
+  <div class="auth-link">
+    Не отримав лист? <a href="/auth/resend">Надіслати повторно</a>
+  </div>
+</div>
+
+{% endblock %}

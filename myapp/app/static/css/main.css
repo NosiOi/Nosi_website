@@ -13,10 +13,11 @@ body {
     width: 100%;
     min-height: 100%;
     overflow-x: hidden;
-    background: #050509;
     font-family: "Inter", sans-serif;
     color: #f5f5f5;
+    background: transparent;
 }
+
 
 /* ========================= */
 /*        GLOBAL             */
@@ -190,4 +191,8 @@ nav {
         padding: 6px 16px;
         font-size: 13px;
     }
+}
+
+body.homepage {
+    background: #050509;
 }

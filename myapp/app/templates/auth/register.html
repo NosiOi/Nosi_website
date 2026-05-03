@@ -1,84 +1,228 @@
-{% extends "auth/base_auth.html" %} {% block title %}Реєстрація{% endblock %} {%
-block header_title %}Створення акаунту{% endblock %} {% block body %}
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Реєстрація — NosiFit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/auth/register.css" />
+  </head>
 
-<div class="auth-wrapper">
-  <div class="auth-card wide">
-    <div class="auth-brand">NosiFit</div>
-    <h2 class="auth-title">Створити акаунт</h2>
+  <body>
+    <div class="bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
-    <form method="POST" action="/auth/register">
-      <label class="auth-label">Ім'я користувача</label>
-      <input type="text" name="username" class="auth-input" required />
-
-      <label class="auth-label">Email</label>
-      <input type="email" name="email" class="auth-input" required />
-
-      <label class="auth-label">Пароль</label>
-      <input type="password" name="password" class="auth-input" required />
-
-      <div class="auth-row">
-        <div>
-          <label class="auth-label">Вік</label>
-          <input type="number" name="age" class="auth-input" required />
-        </div>
-
-        <div>
-          <label class="auth-label">Ріст (см)</label>
-          <input type="number" name="height" class="auth-input" required />
-        </div>
-
-        <div>
-          <label class="auth-label">Вага (кг)</label>
-          <input type="number" name="weight" class="auth-input" required />
-        </div>
+    <div class="auth-card">
+      <div class="brand">
+        <img src="/static/img/Nosi_Logo.png" class="brand-icon" />
+        <h1 class="brand-title">
+          <span class="nos">Nosi</span><span class="fit">Fit</span>
+        </h1>
       </div>
 
-      <label class="auth-label">Стать</label>
-      <select name="gender" class="auth-input" required>
-        <option value="male">Чоловіча</option>
-        <option value="female">Жіноча</option>
-      </select>
+      <h2 class="title">Створити акаунт</h2>
 
-      <label class="auth-label">Рівень активності</label>
-      <select name="activity" class="auth-input" required>
-        <option value="1.2">Низький</option>
-        <option value="1.375">Середній</option>
-        <option value="1.55">Високий</option>
-        <option value="1.725">Дуже високий</option>
-      </select>
+      <form method="POST" class="form">
+        <div class="field">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="example@gmail.com"
+            required
+          />
+        </div>
 
-      <label class="auth-label">Ціль</label>
-      <select name="goal" class="auth-input" required>
-        <option value="lose">Схуднути</option>
-        <option value="gain">Набрати м’язи</option>
-        <option value="maintain">Підтримувати вагу</option>
-      </select>
+        <div class="field">
+          <label>Ім’я</label>
+          <input type="text" name="username" placeholder="Твоє ім’я" required />
+        </div>
 
-      <label class="auth-label">Досвід</label>
-      <select name="experience" class="auth-input" required>
-        <option value="beginner">Початківець</option>
-        <option value="intermediate">Середній</option>
-        <option value="advanced">Просунутий</option>
-      </select>
+        <div class="field">
+          <label>Пароль</label>
+          <div class="pass-wrap">
+            <input
+              type="password"
+              id="p1"
+              name="password"
+              placeholder="Мінімум 8 символів"
+              required
+            />
+            <button type="button" class="toggle" data-target="p1">
+              Показати
+            </button>
+          </div>
+        </div>
 
-      <label class="auth-label">Тренувань на тиждень</label>
-      <input
-        type="number"
-        name="workouts_per_week"
-        class="auth-input"
-        min="1"
-        max="14"
-        required
-      />
+        <div class="field">
+          <label>Підтвердження пароля</label>
+          <div class="pass-wrap">
+            <input
+              type="password"
+              id="p2"
+              name="confirm_password"
+              placeholder="Повтори пароль"
+              required
+            />
+            <button type="button" class="toggle" data-target="p2">
+              Показати
+            </button>
+          </div>
+        </div>
 
-      <button type="submit" class="auth-btn">Зареєструватися</button>
+        <div class="row">
+          <div class="field small">
+            <label>Вік</label>
+            <input
+              type="number"
+              name="age"
+              min="14"
+              max="90"
+              placeholder="18"
+              required
+              oninput="
+                if (this.value.length > 2) this.value = this.value.slice(0, 2);
+              "
+            />
+          </div>
 
-      <p class="auth-text">
-        Вже маєш акаунт?
-        <a href="/auth/login" class="auth-link">Увійти</a>
-      </p>
-    </form>
-  </div>
-</div>
+          <div class="field small">
+            <label>Зріст (см)</label>
+            <input
+              type="number"
+              name="height"
+              min="120"
+              max="230"
+              placeholder="180"
+              required
+              oninput="
+                if (this.value.length > 3) this.value = this.value.slice(0, 3);
+              "
+            />
+          </div>
 
-{% endblock %}
+          <div class="field small">
+            <label>Вага (кг)</label>
+            <input
+              type="number"
+              name="weight"
+              min="35"
+              max="200"
+              placeholder="75"
+              required
+              oninput="
+                if (this.value.length > 3) this.value = this.value.slice(0, 3);
+              "
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field small">
+            <label>Стать</label>
+            <select name="gender" required>
+              <option value="" disabled selected>Оберіть</option>
+              <option value="male">Чоловіча</option>
+              <option value="female">Жіноча</option>
+            </select>
+          </div>
+
+          <div class="field small">
+            <label>Активність</label>
+            <select name="activity" required>
+              <option value="" disabled selected>Оберіть</option>
+              <option value="1.2">Мінімальна</option>
+              <option value="1.375">Легка</option>
+              <option value="1.55">Середня</option>
+              <option value="1.725">Висока</option>
+              <option value="1.9">Дуже висока</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field small">
+            <label>Ціль</label>
+            <select name="goal" required>
+              <option value="" disabled selected>Оберіть</option>
+              <option value="fat_loss">Схуднення</option>
+              <option value="muscle_gain">Набір м’язів</option>
+              <option value="recomposition">Рекомпозиція</option>
+              <option value="performance">Продуктивність</option>
+            </select>
+          </div>
+
+          <div class="field small">
+            <label>Досвід</label>
+            <select name="experience" required>
+              <option value="" disabled selected>Оберіть</option>
+              <option value="beginner">Початківець</option>
+              <option value="intermediate">Середній</option>
+              <option value="advanced">Просунутий</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Тренувань на тиждень</label>
+          <select name="workouts_per_week" required>
+            <option value="" disabled selected>Оберіть</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" required />
+          Я погоджуюсь з <a href="/privacy">політикою конфіденційності</a>
+        </label>
+
+        <div class="oauth-box">
+          <button class="oauth-btn google">
+            <img src="/static/img/google.svg" alt="" />
+            Увійти через Google
+          </button>
+
+          <button class="oauth-btn github">
+            <img src="/static/img/github.svg" alt="" />
+            Увійти через GitHub
+          </button>
+        </div>
+
+        <div class="divider">
+          <span>або</span>
+        </div>
+
+        <button type="submit" class="btn">Створити акаунт</button>
+      </form>
+
+      <div class="bottom">
+        Вже маєш акаунт? <a href="/auth/login">Увійти</a>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll(".toggle").forEach((btn) => {
+        btn.onclick = () => {
+          const id = btn.dataset.target;
+          const input = document.getElementById(id);
+          input.type = input.type === "password" ? "text" : "password";
+          btn.textContent =
+            input.type === "password" ? "Показати" : "Приховати";
+        };
+      });
+
+      const btn = document.querySelector(".btn");
+      btn.addEventListener("mouseenter", () =>
+        document.body.classList.add("btn-hover"),
+      );
+      btn.addEventListener("mouseleave", () =>
+        document.body.classList.remove("btn-hover"),
+      );
+    </script>
+  </body>
+</html>

@@ -1,26 +1,102 @@
-{% extends "auth/base_auth.html" %} {% block title %}Вхід{% endblock %} {% block
-header_title %}Авторизація{% endblock %} {% block body %}
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Вхід — NosiFit</title>
 
-<div class="auth-wrapper">
-  <div class="auth-card">
-    <div class="auth-brand">NosiFit</div>
-    <h2 class="auth-title">Вхід</h2>
+    <link rel="stylesheet" href="/static/css/auth/login.css" />
+  </head>
 
-    <form method="POST" action="/auth/login">
-      <label class="auth-label">Електронна пошта</label>
-      <input type="email" name="email" class="auth-input" required />
+  <body>
+    <div class="blink-teal"></div>
 
-      <label class="auth-label">Пароль</label>
-      <input type="password" name="password" class="auth-input" required />
+    <div class="auth-wrapper">
+      <div class="auth-card">
+        <div class="brand">
+          <img src="/static/img/Nosi_Logo.png" class="brand-icon" alt="logo" />
+          <h1 class="brand-title">
+            <span class="nos">Nosi</span><span class="fit">Fit</span>
+          </h1>
+          <p class="brand-subtitle">Радий бачити тебе знову</p>
+        </div>
 
-      <button type="submit" class="auth-btn">Увійти</button>
+        {% if error %}
+        <div class="error-box">{{ error }}</div>
+        {% endif %}
 
-      <p class="auth-text">
-        Немає акаунту?
-        <a href="/auth/register" class="auth-link">Зареєструватися</a>
-      </p>
-    </form>
-  </div>
-</div>
+        <h2 class="auth-title">Увійти</h2>
 
-{% endblock %}
+        <form method="POST" class="auth-form">
+          <div class="input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="example@gmail.com"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Пароль</label>
+            <div class="password-shell">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Введи пароль"
+                required
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                data-target="password"
+              >
+                Показати
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary">Увійти</button>
+        </form>
+
+        <div class="oauth-box">
+          <button class="oauth-btn google">
+            <img src="/static/img/google.svg" />
+            Увійти через Google
+          </button>
+
+          <button class="oauth-btn github">
+            <img src="/static/img/github.svg" />
+            Увійти через GitHub
+          </button>
+        </div>
+
+        <div class="auth-link">
+          Забув пароль? <a href="/auth/reset_password">Відновити</a>
+        </div>
+
+        <div class="auth-link">
+          Немає акаунта? <a href="/auth/register">Створити</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll(".toggle-password").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-target");
+          const input = document.getElementById(id);
+
+          if (input.type === "password") {
+            input.type = "text";
+            btn.textContent = "Приховати";
+          } else {
+            input.type = "password";
+            btn.textContent = "Показати";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
