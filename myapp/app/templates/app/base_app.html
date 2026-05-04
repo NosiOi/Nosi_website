@@ -10,7 +10,19 @@
     {% block styles %}{% endblock %}
   </head>
 
+  <script>
+    document.querySelectorAll("[data-glow]").forEach((btn) => {
+      btn.addEventListener("mouseenter", () => {
+        document.body.setAttribute("data-glow", btn.dataset.glow);
+      });
+    });
+  </script>
+
   <body class="app-page">
+    <div class="nf-orb nf-orb-1"></div>
+    <div class="nf-orb nf-orb-2"></div>
+    <div class="nf-orb nf-orb-3"></div>
+
     {% include "components/sidebar.html" %}
 
     <div class="main-content">
