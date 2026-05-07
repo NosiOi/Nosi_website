@@ -14,8 +14,6 @@ body {
     background: #050509;
 }
 
-
-
 a {
     text-decoration: none;
     color: inherit;
@@ -28,13 +26,11 @@ button {
     outline: none;
 }
 
-
 .container {
     max-width: 1300px;
     margin: 0 auto;
     padding: 0 40px;
 }
-
 
 nav {
     width: 100%;
@@ -54,7 +50,6 @@ nav {
     justify-content: space-between;
     align-items: center;
 }
-
 
 .nav-left,
 .nav-right {
@@ -84,14 +79,6 @@ nav {
     object-fit: contain;
 }
 
-
-.nav-logo {
-    display: flex;
-    align-items: center;
-    min-width: 140px;
-}
-
-
 .nav-link {
     font-size: 15px;
     color: #cbcbcb;
@@ -117,7 +104,6 @@ nav {
 .nav-link:hover::after {
     width: 100%;
 }
-
 
 .nav-btn {
     padding: 8px 20px;
@@ -147,7 +133,6 @@ nav {
     box-shadow: 0 0 22px rgba(255, 212, 59, 0.55);
 }
 
-
 @media (max-width: 720px) {
     .nav-wrapper {
         padding: 14px 20px;
@@ -175,6 +160,23 @@ body.homepage {
     background: #050509;
 }
 
+body.app-page {
+    margin: 0;
+    padding: 0;
+    background: #05070b;
+    color: #fff;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.main-content {
+    margin-left: 260px;
+    min-height: 100vh;
+    padding: 24px;
+    box-sizing: border-box;
+    position: relative;
+    overflow-x: hidden;
+    z-index: 10;
+}
 
 .nf-orb {
     position: fixed;
@@ -183,7 +185,7 @@ body.homepage {
     opacity: 0.65;
     pointer-events: none;
     mix-blend-mode: screen;
-    z-index: -1;
+    z-index: 0;
     transition: background 0.45s ease, transform 0.45s ease, opacity 0.45s ease;
     animation-duration: 26s;
     animation-timing-function: ease-in-out;
@@ -195,7 +197,7 @@ body.homepage {
     width: 420px;
     height: 420px;
     left: 40%;
-    top: -140px;
+    top: -40px;
     background: radial-gradient(circle, rgba(255, 212, 59, 0.18), transparent 60%);
     animation-name: orbFloat1;
 }
@@ -231,6 +233,74 @@ body[data-glow="purple"] .nf-orb-1 {
 body[data-glow="teal"] .nf-orb-1 {
     background: radial-gradient(circle, rgba(0, 199, 190, 0.32), transparent 60%);
     transform: translate3d(5px, -5px, 0);
+}
+
+.nf-orb,
+.nf-bg-orb {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+.nf-sidebar {
+    width: 260px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 10;
+}
+
+@media (max-width: 1024px) {
+    .nf-sidebar {
+        width: 72px;
+        padding: 20px 0;
+    }
+
+    .nf-logo-text {
+        display: none;
+    }
+
+    .nf-nav-label {
+        display: none;
+    }
+
+    .nf-nav-item {
+        justify-content: center;
+        padding: 14px 0;
+    }
+
+    .main-content {
+        margin-left: 72px;
+    }
+}
+
+@media (max-width: 600px) {
+    .nf-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        width: 240px;
+        z-index: 999;
+    }
+
+    .nf-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 16px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .main-content {
+        margin-left: 260px;
+        padding: 32px 48px;
+        max-width: 1600px;
+    }
 }
 
 @keyframes orbFloat1 {

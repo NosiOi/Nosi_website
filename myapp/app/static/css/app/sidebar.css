@@ -1,29 +1,184 @@
-.nf-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 260px;
-    height: 100vh;
-    background: #050712;
-    padding: 24px;
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+.nf-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.nf-logo-img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+}
+
+.nf-logo-text {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    z-index: 100;
+    line-height: 1;
 }
 
-.nf-nav-item.active {
-    background: rgba(255, 255, 255, 0.08);
-    border-left: 3px solid var(--accent-color);
+.nf-logo-main {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
 }
 
-.nf-nav-item.active .nf-nav-label {
+.nf-logo-accent {
+    font-size: 14px;
     font-weight: 600;
+    color: #fee440;
+    letter-spacing: 1px;
+}
+
+.nf-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    gap: 4px;
+}
+
+.nf-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 22px;
+    color: #c7c9d3;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: all 0.25s ease;
+    border-radius: 6px;
+}
+
+.nf-nav-item:hover {
+    background: rgba(255, 255, 255, 0.06);
     color: #fff;
 }
 
-.main-content {
-    margin-left: 260px;
-    padding: 20px;
+.nf-nav-item.active {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-left: 3px solid #fee440;
+}
+
+.nf-nav-icon {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nf-nav-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: #c7c9d3;
+    transition: fill 0.25s ease;
+}
+
+.nf-nav-item:hover svg,
+.nf-nav-item.active svg {
+    fill: #fff;
+}
+
+
+.nf-sidebar-footer {
+    margin-top: auto;
+    padding: 20px 22px 10px 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nf-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.nf-user-avatar {
+    width: 38px;
+    height: 38px;
+    background: #fee440;
+    color: #0d0f14;
+    font-weight: 700;
+    font-size: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nf-user-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.nf-user-name {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.nf-user-status {
+    color: #7f8291;
+    font-size: 13px;
+}
+
+.nf-logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ff6b6b;
+    text-decoration: none;
+    padding: 10px 0;
+    font-size: 15px;
+    transition: opacity 0.25s ease;
+}
+
+.nf-logout:hover {
+    opacity: 0.8;
+}
+
+.nf-logout-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: #ff6b6b;
+}
+
+.nf-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 998;
+}
+
+.nf-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+
+@media (max-width: 600px) {
+
+    .nf-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        width: 260px;
+        z-index: 999;
+    }
+
+    .nf-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
 }

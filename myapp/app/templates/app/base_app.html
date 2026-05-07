@@ -14,15 +14,9 @@
     {% block styles %}{% endblock %}
   </head>
 
-  <script>
-    document.querySelectorAll("[data-glow]").forEach((btn) => {
-      btn.addEventListener("mouseenter", () => {
-        document.body.setAttribute("data-glow", btn.dataset.glow);
-      });
-    });
-  </script>
-
   <body class="app-page">
+    <div class="nf-overlay" onclick="toggleSidebar()"></div>
+
     <div class="nf-orb nf-orb-1"></div>
     <div class="nf-orb nf-orb-2"></div>
     <div class="nf-orb nf-orb-3"></div>
@@ -31,10 +25,17 @@
 
     <div class="main-content">
       <div class="page-content">{% block body %}{% endblock %}</div>
-
       {% include "components/footer.html" %}
     </div>
 
     {% block scripts %}{% endblock %}
+
+    <script>
+      document.querySelectorAll("[data-glow]").forEach((btn) => {
+        btn.addEventListener("mouseenter", () => {
+          document.body.setAttribute("data-glow", btn.dataset.glow);
+        });
+      });
+    </script>
   </body>
 </html>
