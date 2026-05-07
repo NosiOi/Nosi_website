@@ -22,7 +22,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 18px 16px 16px 16px;
-    position: relative;
+    position: fixed;
     z-index: 5;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
 }
@@ -55,7 +55,7 @@ body {
     height: 36px;
     border-radius: 12px;
     object-fit: contain;
-    background-image: url("/static/img/Nosi_Logo.png");
+    background-image: url("static\img\Nosi_Logo.png");
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;

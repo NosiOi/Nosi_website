@@ -1,0 +1,23 @@
+.public-hero {
+    padding: 80px 0;
+    text-align: center;
+}
+
+.public-section {
+    padding: 60px 0;
+}
+
+.public-section.alt {
+    background: #f7f7f7;
+}
+
+.public-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.public-list li {
+    margin: 8px 0;
+    font-size: 18px;
+}

@@ -1,0 +1,42 @@
+.public-hero {
+    padding: 80px 0;
+    text-align: center;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.contact-item {
+    padding: 20px;
+    border-radius: 10px;
+    background: #f7f7f7;
+    text-align: center;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.btn-primary {
+    padding: 12px;
+    background: #0077ff;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}

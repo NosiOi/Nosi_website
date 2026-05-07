@@ -6,7 +6,6 @@
 
     <title>NosiFit</title>
 
-    <!-- Головні стилі -->
     <link
       rel="icon"
       type="image/png"
@@ -17,10 +16,8 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/main.css') }}"
     />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/public/landing.css') }}"
-    />
+
+    {% block styles %}{% endblock %}
   </head>
 
   <body>

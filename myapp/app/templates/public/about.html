@@ -1,0 +1,52 @@
+{% extends "public/base_public.html" %} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/public/about.css') }}"
+/>
+{% endblock %} {% block content %}
+
+<section class="public-hero">
+  <div class="container">
+    <h1>Про NosiFit</h1>
+    <p>
+      Персоналізовані фітнес-рішення, які допомагають людям ставати кращими
+      щодня.
+    </p>
+  </div>
+</section>
+
+<section class="public-section">
+  <div class="container">
+    <h2>Місія застосунку</h2>
+    <p>
+      Кожна людина може досягти своїх цілей, якщо має правильний план, підтримку
+      та інструменти. Саме тому NosiFit поєднує науку, технології та
+      індивідуальний підхід.
+    </p>
+  </div>
+</section>
+
+<section class="public-section alt">
+  <div class="container">
+    <h2>Що пропонує NosiFit</h2>
+    <ul class="public-list">
+      <li>Персональні тренувальні програми</li>
+      <li>Плани харчування</li>
+      <li>Оцінка фізичної форми</li>
+      <li>Трекінг прогресу</li>
+      <li>Рекомендації з відновлення</li>
+    </ul>
+  </div>
+</section>
+
+<section class="public-section">
+  <div class="container">
+    <h2>Чому саме NosiFit?</h2>
+    <p>
+      Це не тільки поради — це створення повноцінної системи, яка адаптується
+      під вас. Ваші цілі стають нашими цілями.
+    </p>
+  </div>
+</section>
+
+{% endblock %}

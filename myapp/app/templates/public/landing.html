@@ -1,4 +1,9 @@
-{% extends "public/base_public.html" %} {% block content %}
+{% extends "public/base_public.html" %} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/public/landing.css') }}"
+/>
+{% endblock %} {% block content %}
 
 <section class="hero">
   <div class="hero-bg">

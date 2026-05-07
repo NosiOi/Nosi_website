@@ -1,7 +1,3 @@
-/* ========================= */
-/*        THEME & TOKENS     */
-/* ========================= */
-
 :root {
     --bg: #020308;
     --bg-soft: #050712;
@@ -31,9 +27,6 @@
     --blur-strong: 40px;
 }
 
-/* ========================= */
-/*        HERO SECTION       */
-/* ========================= */
 
 .hero {
     position: relative;
@@ -43,7 +36,6 @@
     overflow: hidden;
 }
 
-/* bottom fade FIXED */
 .hero::after {
     content: "";
     position: absolute;
@@ -59,9 +51,6 @@
     pointer-events: none;
 }
 
-/* ========================= */
-/*        BACKGROUND FX      */
-/* ========================= */
 
 .hero-bg {
     position: absolute;
@@ -156,9 +145,6 @@
     mix-blend-mode: soft-light;
 }
 
-/* ========================= */
-/*        LAYOUT             */
-/* ========================= */
 
 .hero-container {
     max-width: 1300px;
@@ -173,9 +159,6 @@
     align-items: center;
 }
 
-/* ========================= */
-/*        LEFT SIDE          */
-/* ========================= */
 
 .logo {
     font-size: 34px;
@@ -209,9 +192,6 @@
     line-height: 1.6;
 }
 
-/* ========================= */
-/*        BUTTONS FIXED      */
-/* ========================= */
 
 .hero-buttons {
     margin-top: 40px;
@@ -232,7 +212,6 @@
     transition: 0.25s ease;
 }
 
-/* visible, bright, centered */
 .btn-primary {
     background: linear-gradient(135deg, #FFD43B, #FFB800);
     color: #151515;
@@ -257,9 +236,6 @@
     transform: translateY(-3px);
 }
 
-/* ========================= */
-/*        RIGHT SIDE         */
-/* ========================= */
 
 .hero-right {
     display: flex;
@@ -267,9 +243,6 @@
     gap: 18px;
 }
 
-/* ========================= */
-/*        PROGRESS CARD      */
-/* ========================= */
 
 .progress-card {
     background: radial-gradient(circle at top left, #15172b, #050712);
@@ -333,9 +306,6 @@
     animation: grow 1.4s ease-out;
 }
 
-/* ========================= */
-/*        FEATURE GRID       */
-/* ========================= */
 
 .features-grid {
     display: grid;
@@ -368,7 +338,6 @@
     line-height: 1;
 }
 
-/* titles */
 .feature-title {
     font-size: 14px;
     font-weight: 600;
@@ -381,9 +350,6 @@
     margin: 0;
 }
 
-/* ========================= */
-/*        COLOR ROLES        */
-/* ========================= */
 
 .feature-item.training-card .icon {
     background: radial-gradient(circle at 0 0, var(--yellow-soft), var(--yellow));
@@ -511,9 +477,6 @@
 }
 
 
-/* ========================= */
-/*        ANIMATIONS         */
-/* ========================= */
 
 @keyframes float {
     0% {
@@ -543,9 +506,6 @@
     }
 }
 
-/* ========================= */
-/*        RESPONSIVE         */
-/* ========================= */
 
 @media (max-width: 1100px) {
     .hero-container {
