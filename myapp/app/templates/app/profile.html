@@ -1,14 +1,21 @@
-<h1>Профіль</h1>
+{% extends "app/base_app.html" %} {% block title %}Профіль — NOSIFIT{% endblock
+%} {% block body %}
 
-<p>Ім'я: {{ user.username }}</p>
-<p>Email: {{ user.email }}</p>
-<p>Вік: {{ user.age }}</p>
-<p>Зріст: {{ user.height }}</p>
-<p>Вага: {{ user.weight }}</p>
-<p>Стать: {{ user.gender }}</p>
-<p>Активність: {{ user.activity }}</p>
-<p>Ціль: {{ user.goal }}</p>
-<p>Досвід: {{ user.experience }}</p>
-<p>Тренувань на тиждень: {{ user.workouts_per_week }}</p>
+<h2 class="page-title">Профіль</h2>
 
-<a href="/profile/edit">Редагувати</a>
+<div class="profile-card">
+  <p><strong>Ім'я:</strong> {{ user.username }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><strong>Вік:</strong> {{ user.age }}</p>
+  <p><strong>Зріст:</strong> {{ user.height }}</p>
+  <p><strong>Вага:</strong> {{ user.weight }}</p>
+  <p><strong>Стать:</strong> {{ user.gender }}</p>
+  <p><strong>Активність:</strong> {{ user.activity }}</p>
+  <p><strong>Ціль:</strong> {{ user.goal }}</p>
+  <p><strong>Досвід:</strong> {{ user.experience }}</p>
+  <p><strong>Тренувань на тиждень:</strong> {{ user.workouts_per_week }}</p>
+
+  <a href="/profile/edit" class="btn-primary">Редагувати</a>
+</div>
+
+{% endblock %}

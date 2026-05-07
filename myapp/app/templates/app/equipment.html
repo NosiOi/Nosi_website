@@ -1,58 +1,7 @@
-{% extends "base.html" %} {% block content %}
+{% extends "app/base_app.html" %} {% block title %}Обладнання — NOSIFIT{%
+endblock %} {% block body %}
 
-<div class="max-w-xl mx-auto mt-10 bg-white shadow-lg rounded-xl p-8">
-  <h2 class="text-2xl font-bold mb-6 text-gray-800">Ваше обладнання</h2>
-
-  <form id="equipment-form" class="space-y-4">
-    {% for item in equipment %}
-    <label
-      class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
-    >
-      <input
-        type="checkbox"
-        name="equipment"
-        value="{{ item.id }}"
-        class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
-        {%
-        if
-        item.id
-        in
-        user_equipment_ids
-        %}checked{%
-        endif
-        %}
-      />
-      <span class="text-gray-700 text-lg">{{ item.display_name }}</span>
-    </label>
-    {% endfor %}
-
-    <button
-      type="submit"
-      class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg text-lg font-semibold transition"
-    >
-      Зберегти
-    </button>
-  </form>
-</div>
-
-<script>
-  document
-    .getElementById("equipment-form")
-    .addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const selected = [
-        ...document.querySelectorAll("input[name='equipment']:checked"),
-      ].map((el) => parseInt(el.value));
-
-      await fetch("/api/equipment/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ equipment_ids: selected }),
-      });
-
-      alert("Збережено!");
-    });
-</script>
+<h2 class="page-title">Обладнання</h2>
+<p class="page-sub">Тут буде список доступного обладнання.</p>
 
 {% endblock %}

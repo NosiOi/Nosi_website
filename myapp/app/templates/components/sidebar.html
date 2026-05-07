@@ -14,7 +14,25 @@
   </div>
 
   <nav class="nf-nav">
-    <a href="/dashboard" class="nf-nav-item" data-glow="primary">
+    <a
+      href="/"
+      class="nf-nav-item {% if request.path == '/' %}active{% endif %}"
+      data-glow="yellow"
+    >
+      <span class="nf-nav-icon">
+        <svg viewBox="0 0 26 26">
+          <path d="M4 12 L13 4 L22 12" />
+          <rect x="8" y="12" width="10" height="10" />
+        </svg>
+      </span>
+      <span class="nf-nav-label">Головна</span>
+    </a>
+
+    <a
+      href="/dashboard"
+      class="nf-nav-item {% if request.path.startswith('/dashboard') %}active{% endif %}"
+      data-glow="primary"
+    >
       <span class="nf-nav-icon">
         <svg viewBox="0 0 26 26">
           <rect x="1" y="9" width="4" height="8" />
@@ -25,7 +43,11 @@
       <span class="nf-nav-label">Дашборд</span>
     </a>
 
-    <a href="/plan" class="nf-nav-item" data-glow="purple">
+    <a
+      href="/plan"
+      class="nf-nav-item {% if request.path.startswith('/plan') %}active{% endif %}"
+      data-glow="purple"
+    >
       <span class="nf-nav-icon">
         <svg viewBox="0 0 26 26">
           <rect x="4" y="4" width="6" height="6" />
@@ -37,7 +59,11 @@
       <span class="nf-nav-label">План</span>
     </a>
 
-    <a href="/sport" class="nf-nav-item" data-glow="purple">
+    <a
+      href="/sport"
+      class="nf-nav-item {% if request.path.startswith('/sport') %}active{% endif %}"
+      data-glow="purple"
+    >
       <span class="nf-nav-icon">
         <svg viewBox="0 0 26 26">
           <rect x="1" y="9" width="4" height="8" />
@@ -48,7 +74,11 @@
       <span class="nf-nav-label">Тренування</span>
     </a>
 
-    <a href="/diet_page" class="nf-nav-item" data-glow="yellow">
+    <a
+      href="/diet_page"
+      class="nf-nav-item {% if request.path.startswith('/diet_page') %}active{% endif %}"
+      data-glow="yellow"
+    >
       <span class="nf-nav-icon">
         <svg viewBox="0 0 26 26">
           <circle cx="13" cy="13" r="8" />
@@ -58,7 +88,11 @@
       <span class="nf-nav-label">Харчування</span>
     </a>
 
-    <a href="/recovery" class="nf-nav-item" data-glow="teal">
+    <a
+      href="/recovery"
+      class="nf-nav-item {% if request.path.startswith('/recovery') %}active{% endif %}"
+      data-glow="teal"
+    >
       <span class="nf-nav-icon">
         <svg viewBox="0 0 26 26">
           <path d="M4 16 C8 20, 18 20, 22 16" />
@@ -68,7 +102,11 @@
       <span class="nf-nav-label">Відновлення</span>
     </a>
 
-    <a href="/assessment" class="nf-nav-item" data-glow="purple">
+    <a
+      href="/assessment"
+      class="nf-nav-item {% if request.path.startswith('/assessment') %}active{% endif %}"
+      data-glow="purple"
+    >
       <span class="nf-nav-icon">
         <svg viewBox="0 0 26 26">
           <line x1="5" y1="20" x2="5" y2="10" />
@@ -79,7 +117,11 @@
       <span class="nf-nav-label">Статистика</span>
     </a>
 
-    <a href="/support" class="nf-nav-item" data-glow="teal">
+    <a
+      href="/support"
+      class="nf-nav-item {% if request.path.startswith('/support') %}active{% endif %}"
+      data-glow="teal"
+    >
       <span class="nf-nav-icon">
         <svg viewBox="0 0 26 26">
           <rect x="4" y="4" width="18" height="14" rx="2" />
@@ -87,16 +129,6 @@
         </svg>
       </span>
       <span class="nf-nav-label">Підтримка</span>
-    </a>
-
-    <a href="/" class="nf-nav-item" data-glow="yellow">
-      <span class="nf-nav-icon">
-        <svg viewBox="0 0 26 26">
-          <path d="M4 12 L13 4 L22 12" />
-          <rect x="8" y="12" width="10" height="10" />
-        </svg>
-      </span>
-      <span class="nf-nav-label">Головна</span>
     </a>
   </nav>
 

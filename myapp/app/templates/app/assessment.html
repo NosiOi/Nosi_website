@@ -1,6 +1,9 @@
-<h2>Тест фізичної підготовки</h2>
+{% extends "app/base_app.html" %} {% block title %}Тест фізичної підготовки —
+NOSIFIT{% endblock %} {% block body %}
 
-<form method="POST">
+<h2 class="page-title">Тест фізичної підготовки</h2>
+
+<form method="POST" class="form-card">
   <label>Максимум віджимань за 1 підхід:</label>
   <input type="number" name="pushups" required />
 
@@ -10,5 +13,7 @@
   <label>Планка (секунди):</label>
   <input type="number" name="plank" required />
 
-  <button type="submit">Завершити тест</button>
+  <button type="submit" class="btn-primary">Завершити тест</button>
 </form>
+
+{% endblock %}
