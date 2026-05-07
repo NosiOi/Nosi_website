@@ -55,12 +55,39 @@ class PlanGenerator:
 
     def calculate_macros(self):
         calories = self.calculate_calories()
-        macros = calculate_macros(self.weight, calories, self.goal)
+
+        GOAL_MAP = {
+            "Схуднення": "lose",
+            "схуднення": "lose",
+            "lose": "lose",
+
+            "Підтримка": "maintain",
+            "підтримка": "maintain",
+            "maintain": "maintain",
+
+            "Набір ваги": "gain",
+            "набір ваги": "gain",
+            "gain": "gain",
+
+            "Сила": "gain",
+            "Витривалість": "maintain",
+            "Маса": "gain",
+
+            "": "maintain",
+            None: "maintain",
+        }
+
+        normalized_goal = GOAL_MAP.get(self.goal, "maintain")
+
+        macros = calculate_macros(self.weight, calories, normalized_goal)
+
         return {
             "protein": round(macros["protein"]),
             "fats": round(macros["fat"]),
             "carbs": round(macros["carbs"]),
         }
+
+
 
     def calculate_water(self):
         return round(float(calculate_water(self.weight, self.activity)), 2)
