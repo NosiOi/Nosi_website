@@ -1,4 +1,4 @@
-from myapp.app.extensions import db
+from myapp.app import db
 from sqlalchemy.dialects.postgresql import JSONB
 
 
