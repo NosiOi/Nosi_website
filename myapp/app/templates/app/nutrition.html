@@ -1,0 +1,137 @@
+{% extends "app/base_app.html" %} {% block title %}Харчування{% endblock %} {%
+block body %}
+
+<div class="nf-top">
+  <div class="nf-top-left">
+    <div class="nf-top-title">Харчування</div>
+    <div class="nf-top-sub">Розрахунок калорій та щоденний трекінг</div>
+  </div>
+</div>
+
+<div class="nf-row nf-row-main">
+  <div class="nf-col nf-col-2">
+    <div class="nf-card">
+      <div class="nf-card-title">Розрахунок калорій</div>
+
+      <form method="POST" action="/nutrition/calc" class="nf-form">
+        <div class="nf-form-group">
+          <label>Вага (кг)</label>
+          <input type="number" name="weight" required />
+        </div>
+
+        <div class="nf-form-group">
+          <label>Зріст (см)</label>
+          <input type="number" name="height" required />
+        </div>
+
+        <div class="nf-form-group">
+          <label>Вік</label>
+          <input type="number" name="age" required />
+        </div>
+
+        <div class="nf-form-group">
+          <label>Стать</label>
+          <select name="gender">
+            <option value="male">Чоловік</option>
+            <option value="female">Жінка</option>
+          </select>
+        </div>
+
+        <div class="nf-form-group">
+          <label>Активність</label>
+          <select name="activity">
+            <option value="1.2">Мінімальна</option>
+            <option value="1.375">Легка</option>
+            <option value="1.55">Середня</option>
+            <option value="1.725">Висока</option>
+            <option value="1.9">Екстремальна</option>
+          </select>
+        </div>
+
+        <div class="nf-form-group">
+          <label>Ціль</label>
+          <select name="goal">
+            <option value="maintain">Підтримка</option>
+            <option value="lose">Схуднення</option>
+            <option value="gain">Набір</option>
+          </select>
+        </div>
+
+        <button class="nf-quick-btn" type="submit">Розрахувати</button>
+      </form>
+    </div>
+
+    {% if result %}
+    <div class="nf-card">
+      <div class="nf-card-title">Результати</div>
+
+      <div class="nf-metric">
+        <div class="nf-metric-label">BMR</div>
+        <div class="nf-metric-value">{{ result.bmr }}</div>
+      </div>
+
+      <div class="nf-metric">
+        <div class="nf-metric-label">TDEE</div>
+        <div class="nf-metric-value">{{ result.tdee }}</div>
+      </div>
+
+      <div class="nf-metric">
+        <div class="nf-metric-label">Цільові калорії</div>
+        <div class="nf-metric-value">{{ result.goal_calories }}</div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="nf-col nf-col-1">
+    <div class="nf-card">
+      <div class="nf-card-title">Щоденний трекінг</div>
+
+      <form method="POST" action="/nutrition/add">
+        <div class="nf-form-group">
+          <label>Калорії</label>
+          <input type="number" name="calories" required />
+        </div>
+
+        <div class="nf-form-group">
+          <label>Білки (г)</label>
+          <input type="number" name="protein" />
+        </div>
+
+        <div class="nf-form-group">
+          <label>Жири (г)</label>
+          <input type="number" name="fat" />
+        </div>
+
+        <div class="nf-form-group">
+          <label>Вуглеводи (г)</label>
+          <input type="number" name="carbs" />
+        </div>
+
+        <button class="nf-quick-btn" type="submit">Зберегти</button>
+      </form>
+    </div>
+
+    <div class="nf-status-item">
+      <div class="nf-status-label">Калорії</div>
+
+      <div class="nf-status-bar">
+        <div
+          class="nf-status-fill"
+          data-width="{{ progress.calories_percent }}"
+        ></div>
+      </div>
+
+      <div class="nf-status-foot">
+        {{ progress.calories }}/{{ result.goal_calories }}
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll(".nf-status-fill").forEach((el) => {
+        el.style.width = el.dataset.width + "%";
+      });
+    </script>
+  </div>
+</div>
+{% endblock %}

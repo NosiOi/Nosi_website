@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect
+from flask import Blueprint, render_template, session, redirect, request
 from myapp.app.models import User, WorkoutPlan, NutritionPlan, RecoveryPlan
 from myapp.app import db
 from myapp.app.services.plan_generator import PlanGenerator
@@ -41,11 +41,72 @@ def sport_page():
     return render_template("app/sport.html", user=user)
 
 
-@dashboard_bp.route("/diet_page")
+from datetime import date
+from myapp.app.models.nutrition_plan import NutritionPlan
+
+@dashboard_bp.route("/nutrition")
 @login_required
-def diet_page():
+def nutrition_page():
     user = User.query.get(session["user"])
-    return render_template("app/diet_page.html", user=user)
+
+    base_plan = NutritionPlan.query.filter_by(user_id=user.id).first()
+    goal = base_plan.calories if base_plan else 0
+
+    today_entry = NutritionPlan.query.filter_by(
+        user_id=user.id,
+        date=date.today()
+    ).first()
+
+    if today_entry:
+        calories = today_entry.calories
+        percent = round((calories / goal) * 100, 1) if goal > 0 else 0
+    else:
+        calories = 0
+        percent = 0
+
+    progress = {
+        "calories": calories,
+        "calories_percent": percent
+    }
+
+    result = {
+        "goal_calories": goal
+    }
+
+    return render_template(
+        "app/nutrition.html",
+        user=user,
+        progress=progress,
+        result=result
+    )
+
+
+
+@dashboard_bp.route("/nutrition/add", methods=["POST"])
+@login_required
+def add_nutrition():
+    user = User.query.get(session["user"])
+
+    calories = int(request.form["calories"])
+    protein = int(request.form.get("protein", 0))
+    fats = int(request.form.get("fat", 0))
+    carbs = int(request.form.get("carbs", 0))
+
+    entry = NutritionPlan(
+        calories=calories,
+        protein=protein,
+        fats=fats,
+        carbs=carbs,
+        user_id=user.id,
+        date=date.today()
+    )
+
+    db.session.add(entry)
+    db.session.commit()
+
+    return redirect("/nutrition")
+
+
 
 
 @dashboard_bp.route("/recovery")

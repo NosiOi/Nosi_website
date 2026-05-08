@@ -1,4 +1,5 @@
 from myapp.app import db
+from datetime import date
 
 
 class NutritionPlan(db.Model):
@@ -10,3 +11,4 @@ class NutritionPlan(db.Model):
     fats = db.Column(db.Integer, nullable=False)
     carbs = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    date = db.Column(db.Date, nullable=False, default=date.today)
