@@ -1,137 +1,545 @@
-{% extends "app/base_app.html" %} {% block title %}Харчування{% endblock %} {%
-block body %}
+{% extends "app/base_app.html" %} {% block title %}Харчування — NOSIFIT{%
+endblock %} {% block body %}
+<div class="nutrition-page">
+  <div class="nutrition-header">
+    <div class="nutrition-header-main">
+      <h1 class="nutrition-title">Харчування</h1>
+      <p class="nutrition-subtitle">
+        Щоденний раціон, макроси та прийоми їжі в одному чистому екрані.
+      </p>
+    </div>
 
-<div class="nf-top">
-  <div class="nf-top-left">
-    <div class="nf-top-title">Харчування</div>
-    <div class="nf-top-sub">Розрахунок калорій та щоденний трекінг</div>
+    <div class="nutrition-header-actions">
+      <div class="nutrition-header-meta">
+        <div class="nutrition-date-block">
+          <div class="nutrition-date-label">Дата</div>
+          <input
+            type="date"
+            class="nf-input nf-input-date"
+            value="{{ current_date or '' }}"
+          />
+        </div>
+        <div class="nutrition-today-summary">
+          <span class="nutrition-today-kcal">
+            {{ progress.calories or 0 }} / {{ result.goal_calories or 0 }} ккал
+          </span>
+          <span class="nutrition-today-macros">
+            Б {{ progress.protein or 0 }} г • Ж {{ progress.fat or 0 }} г • В {{
+            progress.carbs or 0 }} г
+          </span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="nf-btn nf-btn-primary"
+        data-open-modal="#nutrition-meal-modal"
+      >
+        + Додати прийом їжі
+      </button>
+    </div>
+  </div>
+
+  <div class="nutrition-layout">
+    <section class="nutrition-section">
+      <div class="section-header">
+        <h2>Щоденний прогрес</h2>
+        <div class="section-header-actions">
+          <button
+            type="button"
+            class="nf-chip nf-chip-ghost"
+            data-info-target="#info-overview"
+          >
+            ? <span>Пояснення</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="nutrition-progress-wrapper">
+        <div class="nutrition-ring-card">
+          <div class="nutrition-ring">
+            <svg viewBox="0 0 160 160" class="ring-svg">
+              <circle class="ring-bg" cx="80" cy="80" r="60"></circle>
+
+              <circle
+                class="ring-segment ring-segment-carbs"
+                cx="80"
+                cy="80"
+                r="60"
+                data-percent="{{ progress.carbs_percent or 0 }}"
+              ></circle>
+
+              <circle
+                class="ring-segment ring-segment-fat"
+                cx="80"
+                cy="80"
+                r="60"
+                data-percent="{{ progress.fat_percent or 0 }}"
+              ></circle>
+
+              <circle
+                class="ring-segment ring-segment-protein"
+                cx="80"
+                cy="80"
+                r="60"
+                data-percent="{{ progress.protein_percent or 0 }}"
+              ></circle>
+            </svg>
+
+            <div class="ring-center">
+              <div class="ring-center-label">Калорії</div>
+              <div class="ring-center-value">
+                {{ progress.calories or 0 }} / {{ result.goal_calories or 0 }}
+              </div>
+              <div class="ring-center-percent">
+                {{ progress.calories_percent or 0 }}%
+              </div>
+            </div>
+          </div>
+
+          <div class="ring-legend">
+            <div class="ring-legend-item">
+              <span class="legend-dot legend-dot-protein"></span>
+              <span class="legend-label">Білки</span>
+              <span class="legend-value">
+                {{ progress.protein or 0 }} г з {{ result.goal_protein or 0 }} г
+                ({{ progress.protein_percent or 0 }}%)
+              </span>
+            </div>
+            <div class="ring-legend-item">
+              <span class="legend-dot legend-dot-fat"></span>
+              <span class="legend-label">Жири</span>
+              <span class="legend-value">
+                {{ progress.fat or 0 }} г з {{ result.goal_fat or 0 }} г ({{
+                progress.fat_percent or 0 }}%)
+              </span>
+            </div>
+            <div class="ring-legend-item">
+              <span class="legend-dot legend-dot-carbs"></span>
+              <span class="legend-label">Вуглеводи</span>
+              <span class="legend-value">
+                {{ progress.carbs or 0 }} г з {{ result.goal_carbs or 0 }} г ({{
+                progress.carbs_percent or 0 }}%)
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nutrition-side-cards">
+          <div class="nf-card nf-card-soft" id="info-overview">
+            <div class="nf-card-header">
+              <h3>Як читати цей екран</h3>
+            </div>
+            <div class="nf-card-body">
+              <p>
+                Кільце показує співвідношення Б/Ж/В за день. Ціль — плавно
+                наближатися до 100% без різких стрибків.
+              </p>
+            </div>
+          </div>
+
+          <div class="nf-card nf-card-soft">
+            <div class="nf-card-header">
+              <h3>Розподіл макросів</h3>
+            </div>
+            <div class="nf-card-body macros-ratio">
+              <div class="macro-ratio-row">
+                <span>Білки</span>
+                <span>{{ macros_ratio.protein or 0 }}%</span>
+              </div>
+              <div class="macro-ratio-row">
+                <span>Жири</span>
+                <span>{{ macros_ratio.fat or 0 }}%</span>
+              </div>
+              <div class="macro-ratio-row">
+                <span>Вуглеводи</span>
+                <span>{{ macros_ratio.carbs or 0 }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="nutrition-section">
+      <div class="section-header">
+        <h2>Прийоми їжі за сьогодні</h2>
+        <p class="section-subtitle">
+          Кожен прийом — окрема картка. Можна додавати продукти, змінювати
+          грамовку, копіювати та видаляти.
+        </p>
+      </div>
+
+      {% if meals %}
+      <div class="meals-grid">
+        {% for meal in meals %}
+        <article class="nf-card meal-card">
+          <header class="meal-card-header">
+            <div class="meal-title-block">
+              <h3>Прийом їжі {{ loop.index }}</h3>
+              <div class="meal-meta">
+                <span class="meal-time">
+                  {% if meal.time %} {{ meal.time.strftime("%H:%M") }} {% else
+                  %} без часу {% endif %}
+                </span>
+                <button
+                  type="button"
+                  class="nf-chip nf-chip-ghost"
+                  data-info-target="#info-meal-{{ meal.id }}"
+                >
+                  ?
+                </button>
+              </div>
+            </div>
+
+            <div class="meal-actions">
+              <form action="/nutrition/copy_meal" method="post">
+                <input type="hidden" name="meal_id" value="{{ meal.id }}" />
+                <button type="submit" class="nf-btn nf-btn-ghost">
+                  Копіювати
+                </button>
+              </form>
+
+              <form action="/nutrition/delete_meal" method="post">
+                <input type="hidden" name="meal_id" value="{{ meal.id }}" />
+                <button type="submit" class="nf-btn nf-btn-danger">
+                  Видалити
+                </button>
+              </form>
+            </div>
+          </header>
+
+          <div class="meal-summary">
+            <div class="meal-summary-item">
+              <span class="label">Ккал</span>
+              <span class="value">{{ meal.total_calories or 0 }}</span>
+            </div>
+            <div class="meal-summary-item">
+              <span class="label">Б</span>
+              <span class="value">{{ meal.total_protein or 0 }} г</span>
+            </div>
+            <div class="meal-summary-item">
+              <span class="label">Ж</span>
+              <span class="value">{{ meal.total_fat or 0 }} г</span>
+            </div>
+            <div class="meal-summary-item">
+              <span class="label">В</span>
+              <span class="value">{{ meal.total_carbs or 0 }} г</span>
+            </div>
+          </div>
+
+          <div class="meal-items">
+            {% if meal.items %}
+            <table class="meal-items-table">
+              <thead>
+                <tr>
+                  <th>Продукт</th>
+                  <th>Ккал</th>
+                  <th>Б</th>
+                  <th>Ж</th>
+                  <th>В</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in meal.items %}
+                <tr>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.calories or 0 }}</td>
+                  <td>{{ item.protein or 0 }}</td>
+                  <td>{{ item.fat or 0 }}</td>
+                  <td>{{ item.carbs or 0 }}</td>
+                  <td class="cell-actions">
+                    <form action="/nutrition/delete_item" method="post">
+                      <input
+                        type="hidden"
+                        name="item_id"
+                        value="{{ item.id }}"
+                      />
+                      <button type="submit" class="nf-btn-icon">×</button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <div class="meal-empty">Ще немає продуктів у цьому прийомі.</div>
+            {% endif %}
+          </div>
+
+          <div class="meal-add-item">
+            <form
+              action="/nutrition/add_item"
+              method="post"
+              class="meal-add-form"
+            >
+              <input type="hidden" name="meal_id" value="{{ meal.id }}" />
+
+              <input
+                type="text"
+                name="name"
+                class="nf-input nf-input-wide"
+                placeholder="Назва продукту"
+                required
+              />
+
+              <div class="meal-add-grid">
+                <div class="nf-input-group">
+                  <label>Ккал</label>
+                  <div class="nf-stepper">
+                    <button
+                      type="button"
+                      class="nf-stepper-btn"
+                      data-stepper="-10"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      name="calories"
+                      class="nf-input nf-input-stepper"
+                      min="0"
+                      step="10"
+                    />
+                    <button
+                      type="button"
+                      class="nf-stepper-btn"
+                      data-stepper="10"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div class="nf-input-group">
+                  <label>Білки, г</label>
+                  <div class="nf-stepper">
+                    <button
+                      type="button"
+                      class="nf-stepper-btn"
+                      data-stepper="-1"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      name="protein"
+                      class="nf-input nf-input-stepper"
+                      min="0"
+                      step="1"
+                    />
+                    <button
+                      type="button"
+                      class="nf-stepper-btn"
+                      data-stepper="1"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div class="nf-input-group">
+                  <label>Жири, г</label>
+                  <div class="nf-stepper">
+                    <button
+                      type="button"
+                      class="nf-stepper-btn"
+                      data-stepper="-1"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      name="fat"
+                      class="nf-input nf-input-stepper"
+                      min="0"
+                      step="1"
+                    />
+                    <button
+                      type="button"
+                      class="nf-stepper-btn"
+                      data-stepper="1"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div class="nf-input-group">
+                  <label>Вуглеводи, г</label>
+                  <div class="nf-stepper">
+                    <button
+                      type="button"
+                      class="nf-stepper-btn"
+                      data-stepper="-1"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      name="carbs"
+                      class="nf-input nf-input-stepper"
+                      min="0"
+                      step="1"
+                    />
+                    <button
+                      type="button"
+                      class="nf-stepper-btn"
+                      data-stepper="1"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="nf-btn nf-btn-primary-small">
+                Додати продукт
+              </button>
+            </form>
+          </div>
+
+          <div
+            class="nf-card nf-card-soft meal-info"
+            id="info-meal-{{ meal.id }}"
+          >
+            <div class="nf-card-body">
+              <p>
+                Цей блок показує суму калорій та макросів для конкретного
+                прийому їжі.
+              </p>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <p>Сьогодні ще немає жодного прийому їжі.</p>
+        <button
+          type="button"
+          class="nf-btn nf-btn-primary"
+          data-open-modal="#nutrition-meal-modal"
+        >
+          Додати перший прийом
+        </button>
+      </div>
+      {% endif %}
+    </section>
   </div>
 </div>
 
-<div class="nf-row nf-row-main">
-  <div class="nf-col nf-col-2">
-    <div class="nf-card">
-      <div class="nf-card-title">Розрахунок калорій</div>
-
-      <form method="POST" action="/nutrition/calc" class="nf-form">
-        <div class="nf-form-group">
-          <label>Вага (кг)</label>
-          <input type="number" name="weight" required />
+<div class="nf-modal" id="nutrition-meal-modal">
+  <div class="nf-modal-backdrop" data-close-modal></div>
+  <div class="nf-modal-dialog">
+    <div class="nf-modal-header">
+      <h2>Новий прийом їжі</h2>
+      <button type="button" class="nf-btn-icon" data-close-modal>×</button>
+    </div>
+    <div class="nf-modal-body">
+      <form action="/nutrition/add_meal" method="post" class="nf-form">
+        <div class="nf-input-group">
+          <label>Час</label>
+          <input
+            type="time"
+            name="time"
+            class="nf-input"
+            value="{{ default_time or '' }}"
+          />
         </div>
 
-        <div class="nf-form-group">
-          <label>Зріст (см)</label>
-          <input type="number" name="height" required />
-        </div>
+        <p class="nf-modal-note">
+          Після створення прийому ти зможеш додати продукти та налаштувати
+          макроси.
+        </p>
 
-        <div class="nf-form-group">
-          <label>Вік</label>
-          <input type="number" name="age" required />
+        <div class="nf-modal-actions">
+          <button type="button" class="nf-btn nf-btn-ghost" data-close-modal>
+            Скасувати
+          </button>
+          <button type="submit" class="nf-btn nf-btn-primary">
+            Створити прийом
+          </button>
         </div>
-
-        <div class="nf-form-group">
-          <label>Стать</label>
-          <select name="gender">
-            <option value="male">Чоловік</option>
-            <option value="female">Жінка</option>
-          </select>
-        </div>
-
-        <div class="nf-form-group">
-          <label>Активність</label>
-          <select name="activity">
-            <option value="1.2">Мінімальна</option>
-            <option value="1.375">Легка</option>
-            <option value="1.55">Середня</option>
-            <option value="1.725">Висока</option>
-            <option value="1.9">Екстремальна</option>
-          </select>
-        </div>
-
-        <div class="nf-form-group">
-          <label>Ціль</label>
-          <select name="goal">
-            <option value="maintain">Підтримка</option>
-            <option value="lose">Схуднення</option>
-            <option value="gain">Набір</option>
-          </select>
-        </div>
-
-        <button class="nf-quick-btn" type="submit">Розрахувати</button>
       </form>
     </div>
-
-    {% if result %}
-    <div class="nf-card">
-      <div class="nf-card-title">Результати</div>
-
-      <div class="nf-metric">
-        <div class="nf-metric-label">BMR</div>
-        <div class="nf-metric-value">{{ result.bmr }}</div>
-      </div>
-
-      <div class="nf-metric">
-        <div class="nf-metric-label">TDEE</div>
-        <div class="nf-metric-value">{{ result.tdee }}</div>
-      </div>
-
-      <div class="nf-metric">
-        <div class="nf-metric-label">Цільові калорії</div>
-        <div class="nf-metric-value">{{ result.goal_calories }}</div>
-      </div>
-    </div>
-    {% endif %}
   </div>
+</div>
+{% endblock body %} {% block scripts %}
+<script>
+  const RING_CIRCUMFERENCE = 2 * Math.PI * 60;
 
-  <div class="nf-col nf-col-1">
-    <div class="nf-card">
-      <div class="nf-card-title">Щоденний трекінг</div>
+  document.querySelectorAll(".ring-segment").forEach((segment) => {
+    const percent = Math.min(
+      100,
+      Math.max(0, parseFloat(segment.dataset.percent || "0")),
+    );
+    const offset = RING_CIRCUMFERENCE * (1 - percent / 100);
+    segment.style.strokeDasharray = RING_CIRCUMFERENCE;
+    segment.style.strokeDashoffset = RING_CIRCUMFERENCE;
+    requestAnimationFrame(() => {
+      segment.style.transition = "stroke-dashoffset 1s ease-out";
+      segment.style.strokeDashoffset = offset;
+    });
+  });
 
-      <form method="POST" action="/nutrition/add">
-        <div class="nf-form-group">
-          <label>Калорії</label>
-          <input type="number" name="calories" required />
-        </div>
+  document.querySelectorAll("[data-open-modal]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-open-modal");
+      const modal = document.querySelector(target);
+      if (modal) {
+        modal.classList.add("nf-modal-open");
+        document.body.classList.add("nf-modal-active");
+      }
+    });
+  });
 
-        <div class="nf-form-group">
-          <label>Білки (г)</label>
-          <input type="number" name="protein" />
-        </div>
+  document.querySelectorAll("[data-close-modal]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const modal = btn.closest(".nf-modal");
+      if (modal) {
+        modal.classList.remove("nf-modal-open");
+        document.body.classList.remove("nf-modal-active");
+      }
+    });
+  });
 
-        <div class="nf-form-group">
-          <label>Жири (г)</label>
-          <input type="number" name="fat" />
-        </div>
+  document.querySelectorAll(".nf-modal-backdrop").forEach((backdrop) => {
+    backdrop.addEventListener("click", () => {
+      const modal = backdrop.closest(".nf-modal");
+      if (modal) {
+        modal.classList.remove("nf-modal-open");
+        document.body.classList.remove("nf-modal-active");
+      }
+    });
+  });
 
-        <div class="nf-form-group">
-          <label>Вуглеводи (г)</label>
-          <input type="number" name="carbs" />
-        </div>
-
-        <button class="nf-quick-btn" type="submit">Зберегти</button>
-      </form>
-    </div>
-
-    <div class="nf-status-item">
-      <div class="nf-status-label">Калорії</div>
-
-      <div class="nf-status-bar">
-        <div
-          class="nf-status-fill"
-          data-width="{{ progress.calories_percent }}"
-        ></div>
-      </div>
-
-      <div class="nf-status-foot">
-        {{ progress.calories }}/{{ result.goal_calories }}
-      </div>
-    </div>
-
-    <script>
-      document.querySelectorAll(".nf-status-fill").forEach((el) => {
-        el.style.width = el.dataset.width + "%";
+  document.querySelectorAll(".nf-stepper").forEach((stepper) => {
+    const input = stepper.querySelector("input");
+    stepper.querySelectorAll(".nf-stepper-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const step = parseFloat(btn.dataset.stepper || "1");
+        const current = parseFloat(input.value || "0");
+        const next = Math.max(0, current + step);
+        input.value = next;
       });
-    </script>
-  </div>
-</div>
-{% endblock %}
+    });
+  });
+
+  document.querySelectorAll("[data-info-target]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-info-target");
+      const block = document.querySelector(target);
+      if (!block) return;
+      const isActive = block.classList.contains("nf-card-visible");
+      document
+        .querySelectorAll(".nf-card.nf-card-soft.nf-card-visible")
+        .forEach((el) => el.classList.remove("nf-card-visible"));
+      if (!isActive) {
+        block.classList.add("nf-card-visible");
+      }
+    });
+  });
+</script>
+{% endblock scripts %}

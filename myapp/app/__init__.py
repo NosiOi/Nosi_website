@@ -35,6 +35,7 @@ def create_app():
     from myapp.app.routes.training import training_bp
     from myapp.app.routes.equipment import equipment_bp
     from myapp.app.routes.questionnaire import questionnaire_bp
+    from myapp.app.routes.nutrition import nutrition_bp 
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
@@ -44,5 +45,6 @@ def create_app():
     app.register_blueprint(training_bp)
     app.register_blueprint(equipment_bp)
     app.register_blueprint(questionnaire_bp)
+    app.register_blueprint(nutrition_bp)
 
     return app
