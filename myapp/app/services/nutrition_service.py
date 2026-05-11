@@ -15,6 +15,13 @@ def get_goals(user_id):
     return 0, 0, 0, 0
 
 
+def recalc_meal_totals(meal: Meal):
+    meal.total_calories = sum(i.calories for i in meal.items)
+    meal.total_protein = sum(i.protein for i in meal.items)
+    meal.total_fat = sum(i.fat for i in meal.items)
+    meal.total_carbs = sum(i.carbs for i in meal.items)
+
+
 def get_daily_nutrition_data(user_id):
     today = date.today()
 
@@ -104,12 +111,11 @@ def add_item_service(user_id, form):
         carbs=int(form.get("carbs", 0)),
     )
 
-    meal.total_calories += item.calories
-    meal.total_protein += item.protein
-    meal.total_fat += item.fat
-    meal.total_carbs += item.carbs
-
     db.session.add(item)
+    db.session.flush()
+
+    recalc_meal_totals(meal)
+
     db.session.add(meal)
     db.session.commit()
 
@@ -131,12 +137,12 @@ def delete_item_service(user_id, item_id):
         return
 
     meal = item.meal
-    meal.total_calories -= item.calories
-    meal.total_protein -= item.protein
-    meal.total_fat -= item.fat
-    meal.total_carbs -= item.carbs
 
     db.session.delete(item)
+    db.session.flush()
+
+    recalc_meal_totals(meal)
+
     db.session.add(meal)
     db.session.commit()
 
@@ -150,10 +156,10 @@ def copy_meal_service(user_id, meal_id):
         user_id=user_id,
         date=date.today(),
         time=datetime.now().time(),
-        total_calories=source.total_calories,
-        total_protein=source.total_protein,
-        total_fat=source.total_fat,
-        total_carbs=source.total_carbs,
+        total_calories=0,
+        total_protein=0,
+        total_fat=0,
+        total_carbs=0,
     )
 
     db.session.add(new_meal)
@@ -170,5 +176,9 @@ def copy_meal_service(user_id, meal_id):
                 carbs=item.carbs,
             )
         )
+
+    db.session.flush()
+
+    recalc_meal_totals(new_meal)
 
     db.session.commit()
