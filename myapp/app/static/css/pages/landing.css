@@ -1,33 +1,3 @@
-:root {
-    --bg: #020308;
-    --bg-soft: #050712;
-    --card: #070918;
-    --card-soft: #090b1c;
-
-    --yellow: #FFD43B;
-    --yellow-soft: #ffe680;
-    --blue: #00C2FF;
-    --blue-soft: #4dd9ff;
-    --violet: #9B5DE5;
-    --violet-soft: #c79bff;
-
-    --text-main: #f7f7ff;
-    --text-muted: #9ca0c2;
-    --border-subtle: rgba(255, 255, 255, 0.06);
-
-    --radius-lg: 22px;
-    --radius-md: 16px;
-    --radius-pill: 999px;
-
-    --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.85);
-    --shadow-neon-yellow: 0 0 32px rgba(255, 212, 59, 0.55);
-    --shadow-neon-blue: 0 0 32px rgba(0, 194, 255, 0.55);
-    --shadow-neon-violet: 0 0 32px rgba(155, 93, 229, 0.55);
-
-    --blur-strong: 40px;
-}
-
-
 .hero {
     position: relative;
     padding: 140px 0 180px;

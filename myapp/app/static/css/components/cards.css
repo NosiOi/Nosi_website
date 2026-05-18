@@ -1,0 +1,20 @@
+.cmp-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cmp-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.cmp-card-sub {
+    font-size: 13px;
+    color: #b8b8c7;
+}

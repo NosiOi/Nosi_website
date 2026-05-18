@@ -1,50 +1,23 @@
-{% extends "public/base_public.html" %} {% block styles %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/public/contact.css') }}"
-/>
-{% endblock %} {% block content %}
+{% extends "public/base_public.html" %} {% block content %}
 
-<section class="public-hero">
-  <div class="container">
-    <h1>Контакти</h1>
-    <p>Ми завжди поруч, щоб допомогти.</p>
-  </div>
-</section>
+<section class="pub-section">
+  <h1 class="pub-section-title">Контакти</h1>
 
-<section class="public-section">
-  <div class="container">
-    <h2>Зв’яжіться з нами</h2>
-
-    <div class="contact-grid">
-      <div class="contact-item">
-        <h3>Email</h3>
-        <p>support@nosifit.com</p>
-      </div>
-
-      <div class="contact-item">
-        <h3>Instagram</h3>
-        <p>@nosi.fit</p>
-      </div>
-
-      <div class="contact-item">
-        <h3>Telegram</h3>
-        <p>@nosifit_support</p>
-      </div>
+  <div class="pub-contact-grid">
+    <div class="pub-contact-card">
+      <h3 class="pub-contact-title">Email</h3>
+      <p class="pub-contact-text">support@nosi.fit</p>
     </div>
-  </div>
-</section>
 
-<section class="public-section alt">
-  <div class="container">
-    <h2>Залишити повідомлення</h2>
+    <div class="pub-contact-card">
+      <h3 class="pub-contact-title">Instagram</h3>
+      <p class="pub-contact-text">@nosi.fit</p>
+    </div>
 
-    <form class="contact-form">
-      <input type="text" placeholder="Ваше ім’я" required />
-      <input type="email" placeholder="Email" required />
-      <textarea placeholder="Ваше повідомлення" required></textarea>
-      <button type="submit" class="btn-primary">Надіслати</button>
-    </form>
+    <div class="pub-contact-card">
+      <h3 class="pub-contact-title">Telegram</h3>
+      <p class="pub-contact-text">@nosi_support</p>
+    </div>
   </div>
 </section>
 

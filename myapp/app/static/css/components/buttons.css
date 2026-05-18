@@ -1,0 +1,31 @@
+.cmp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    border: none;
+}
+
+.cmp-btn-primary {
+    background: #9b5de5;
+    color: #fff;
+}
+
+.cmp-btn-primary:hover {
+    background: #b07aff;
+}
+
+.cmp-btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.cmp-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+}

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>NosiFit</title>
+    <title>{% block title %}NosiFit{% endblock %}</title>
 
     <link
       rel="icon"
@@ -14,13 +14,46 @@
 
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/main.css') }}"
+      href="{{ url_for('static', filename='css/core/reset.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/core/variables.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/core/layout.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/navbar.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/buttons.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/forms.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/cards.css') }}"
     />
 
     {% block styles %}{% endblock %}
   </head>
 
-  <body>
-    {% include "components/public_nav.html" %} {% block content %}{% endblock %}
+  <body class="public-page">
+    <div class="core-orb core-orb-1"></div>
+    <div class="core-orb core-orb-2"></div>
+    <div class="core-orb core-orb-3"></div>
+
+    {% include "components/public_nav.html" %}
+
+    <main class="public-wrapper">{% block content %}{% endblock %}</main>
+
+    {% block scripts %}{% endblock %}
   </body>
 </html>

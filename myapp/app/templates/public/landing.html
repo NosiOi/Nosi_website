@@ -1,79 +1,88 @@
 {% extends "public/base_public.html" %} {% block styles %}
 <link
   rel="stylesheet"
-  href="{{ url_for('static', filename='css/public/landing.css') }}"
+  href="{{ url_for('static', filename='css/pages/landing.css') }}"
 />
 {% endblock %} {% block content %}
 
-<section class="hero">
-  <div class="hero-bg">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-    <div class="grid-lines"></div>
+<section class="pub-landing">
+  <div class="pub-landing-bg">
+    <div class="pub-blob pub-blob-1"></div>
+    <div class="pub-blob pub-blob-2"></div>
+    <div class="pub-blob pub-blob-3"></div>
+    <div class="pub-grid-lines"></div>
   </div>
 
-  <div class="hero-container">
-    <div class="hero-left">
-      <div class="logo">
-        <span class="logo-nos">Nosi</span><span class="logo-fit">Fit</span>
+  <div class="pub-landing-container">
+    <div class="pub-landing-left">
+      <div class="pub-logo">
+        <span class="pub-logo-nos">Nosi</span
+        ><span class="pub-logo-fit">Fit</span>
       </div>
 
-      <h1 class="hero-title">Твій персональний<br />фітнес‑помічник</h1>
+      <h1 class="pub-landing-title">Твій персональний<br />фітнес‑помічник</h1>
 
-      <p class="hero-sub">
+      <p class="pub-landing-sub">
         Мінімалістичний, динамічний та розумний сервіс для тренувань,
         харчування, відновлення та аналітики. Все в одному місці.
       </p>
 
-      <div class="hero-buttons">
-        <a href="{{ url_for('auth.register') }}" class="btn-primary">
+      <div class="pub-landing-actions">
+        <a
+          href="{{ url_for('auth.register') }}"
+          class="btn-root btn-register"
+          data-glow="yellow"
+        >
           Почати зараз
         </a>
 
-        <a href="{{ url_for('dashboard.demo') }}" class="btn-outline">
+        <a
+          href="{{ url_for('dashboard.demo') }}"
+          class="btn-root btn-login"
+          data-glow="blue"
+        >
           Спробувати демо
         </a>
       </div>
     </div>
 
-    <div class="hero-right">
-      <div class="progress-card">
-        <div class="progress-header">
-          <div class="progress-label">Прогрес сьогодні</div>
-          <div class="progress-tag">+32%</div>
+    <div class="pub-landing-right">
+      <div class="pub-progress-card">
+        <div class="pub-progress-header">
+          <div class="pub-progress-label">Прогрес сьогодні</div>
+          <div class="pub-progress-tag">+32%</div>
         </div>
 
-        <div class="progress-main">
-          <div class="progress-value">32%</div>
+        <div class="pub-progress-main">
+          <div class="pub-progress-value">32%</div>
         </div>
 
-        <div class="progress-bar"><span></span></div>
+        <div class="pub-progress-bar"><span></span></div>
       </div>
 
-      <div class="features-grid">
-        <div class="feature-item training-card">
-          <div class="icon">💪</div>
-          <div class="feature-title">Тренування</div>
-          <div class="feature-sub">Структура і прогрес</div>
+      <div class="pub-features-grid">
+        <div class="pub-feature-item pub-feature-training" data-glow="yellow">
+          <div class="pub-feature-icon">💪</div>
+          <div class="pub-feature-title">Тренування</div>
+          <div class="pub-feature-sub">Структура і прогрес</div>
         </div>
 
-        <div class="feature-item nutrition-card">
-          <div class="icon">🍽️</div>
-          <div class="feature-title">Харчування</div>
-          <div class="feature-sub">Калорії та макроси</div>
+        <div class="pub-feature-item pub-feature-nutrition" data-glow="violet">
+          <div class="pub-feature-icon">🍽️</div>
+          <div class="pub-feature-title">Харчування</div>
+          <div class="pub-feature-sub">Калорії та макроси</div>
         </div>
 
-        <div class="feature-item recovery-card">
-          <div class="icon">💤</div>
-          <div class="feature-title">Відновлення</div>
-          <div class="feature-sub">Сон і баланс</div>
+        <div class="pub-feature-item pub-feature-recovery" data-glow="blue">
+          <div class="pub-feature-icon">💤</div>
+          <div class="pub-feature-title">Відновлення</div>
+          <div class="pub-feature-sub">Сон і баланс</div>
         </div>
 
-        <div class="feature-item analytics-card">
-          <div class="icon">📊</div>
-          <div class="feature-title">Аналітика</div>
-          <div class="feature-sub">Графіки та інсайти</div>
+        <div class="pub-feature-item pub-feature-analytics" data-glow="mix">
+          <div class="pub-feature-icon">📊</div>
+          <div class="pub-feature-title">Аналітика</div>
+          <div class="pub-feature-sub">Графіки та інсайти</div>
         </div>
       </div>
     </div>
@@ -81,28 +90,20 @@
 </section>
 
 <script>
-  document.querySelectorAll(".feature-item").forEach((card) => {
+  document.querySelectorAll(".pub-feature-item").forEach((card) => {
     card.addEventListener("mouseenter", () => {
-      const bg = document.querySelector(".hero-bg");
-      bg.className = "hero-bg";
+      const bg = document.querySelector(".pub-landing-bg");
+      bg.className = "pub-landing-bg";
 
-      if (card.classList.contains("training-card")) {
-        bg.classList.add("yellow-glow");
-      }
-      if (card.classList.contains("recovery-card")) {
-        bg.classList.add("blue-glow");
-      }
-      if (card.classList.contains("nutrition-card")) {
-        bg.classList.add("violet-glow");
-      }
-      if (card.classList.contains("analytics-card")) {
-        bg.classList.add("mix-glow");
-      }
+      if (card.dataset.glow === "yellow") bg.classList.add("pub-glow-yellow");
+      if (card.dataset.glow === "blue") bg.classList.add("pub-glow-blue");
+      if (card.dataset.glow === "violet") bg.classList.add("pub-glow-violet");
+      if (card.dataset.glow === "mix") bg.classList.add("pub-glow-mix");
     });
 
     card.addEventListener("mouseleave", () => {
-      const bg = document.querySelector(".hero-bg");
-      bg.className = "hero-bg";
+      const bg = document.querySelector(".pub-landing-bg");
+      bg.className = "pub-landing-bg";
     });
   });
 </script>

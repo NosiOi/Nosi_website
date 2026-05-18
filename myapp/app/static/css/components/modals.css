@@ -1,0 +1,18 @@
+.cmp-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.cmp-modal {
+    background: rgba(20, 20, 30, 0.96);
+    border-radius: 16px;
+    padding: 24px;
+    width: 420px;
+    max-width: 90%;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}

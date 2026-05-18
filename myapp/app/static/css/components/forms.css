@@ -1,0 +1,25 @@
+.cmp-input,
+.cmp-select,
+.cmp-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 14px;
+}
+
+.cmp-input:focus,
+.cmp-select:focus,
+.cmp-textarea:focus {
+    outline: none;
+    border-color: #9b5de5;
+}
+
+.cmp-label {
+    font-size: 13px;
+    color: #ccc;
+    margin-bottom: 4px;
+    display: block;
+}

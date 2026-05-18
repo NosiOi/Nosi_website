@@ -1,0 +1,131 @@
+.cmp-sidebar {
+    width: 260px;
+    min-width: 260px;
+    height: 100vh;
+    background: rgba(10, 12, 20, 0.92);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 22px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(14px);
+}
+
+.cmp-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cmp-sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.cmp-sidebar-logo-img {
+    width: 44px;
+    height: 44px;
+}
+
+.cmp-sidebar-logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.cmp-sidebar-logo-main {
+    font-size: 19px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.cmp-sidebar-logo-accent {
+    font-size: 14px;
+    font-weight: 600;
+    color: #9b5de5;
+}
+
+.cmp-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cmp-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #dcdcec;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.cmp-sidebar-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.cmp-sidebar-item.active {
+    background: rgba(155, 93, 229, 0.25);
+    color: #ffffff;
+}
+
+.cmp-sidebar-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cmp-sidebar-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}
+
+.cmp-sidebar-separator {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 12px 0;
+}
+
+.cmp-sidebar-footer {
+    margin-top: auto;
+}
+
+.cmp-sidebar-logout {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #ff6b6b;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.18s ease;
+}
+
+.cmp-sidebar-logout:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.cmp-sidebar-logout-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}

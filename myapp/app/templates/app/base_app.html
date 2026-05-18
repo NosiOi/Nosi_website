@@ -4,42 +4,54 @@
     <meta charset="UTF-8" />
     <title>{% block title %}Nosi App{% endblock %}</title>
 
-    <link rel="stylesheet" href="/static/css/main.css" />
-    <link rel="stylesheet" href="/static/css/app/dashboard.css" />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/app/nutrition.css') }}"
+      href="{{ url_for('static', filename='css/core/reset.css') }}"
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/app/sidebar.css') }}"
+      href="{{ url_for('static', filename='css/core/variables.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/core/layout.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/sidebar.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/buttons.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/forms.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/cards.css') }}"
     />
 
     {% block styles %}{% endblock %}
   </head>
 
   <body class="app-page">
-    <div class="nf-overlay" onclick="toggleSidebar()"></div>
+    <div class="core-orb core-orb-1"></div>
+    <div class="core-orb core-orb-2"></div>
+    <div class="core-orb core-orb-3"></div>
 
-    <div class="nf-orb nf-orb-1"></div>
-    <div class="nf-orb nf-orb-2"></div>
-    <div class="nf-orb nf-orb-3"></div>
+    <div class="core-overlay"></div>
 
-    {% include "components/sidebar.html" %}
-
-    <div class="main-content">
-      <div class="page-content">{% block body %}{% endblock %}</div>
-      {% include "components/footer.html" %}
+    <div class="core-sidebar-shell">
+      {% include "components/sidebar.html" %}
     </div>
 
-    {% block scripts %}{% endblock %}
+    <main class="main-content">
+      <div class="page-content">{% block body %}{% endblock %}</div>
+    </main>
 
-    <script>
-      document.querySelectorAll("[data-glow]").forEach((btn) => {
-        btn.addEventListener("mouseenter", () => {
-          document.body.setAttribute("data-glow", btn.dataset.glow);
-        });
-      });
-    </script>
+    {% block scripts %}{% endblock %}
   </body>
 </html>

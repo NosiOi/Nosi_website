@@ -22,6 +22,46 @@ def recalc_meal_totals(meal: Meal):
     meal.total_carbs = sum(i.carbs for i in meal.items)
 
 
+def calculate_quality(ration_items):
+    if not ration_items:
+        return {
+            "whole_foods_percent": 0,
+            "processed_foods_percent": 0,
+            "fiber": 0,
+            "score": 0
+        }
+
+    whole = 0
+    processed = 0
+    fiber = 0
+
+    for item in ration_items:
+        name = (item.name or "").lower()
+
+        if any(x in name for x in ["овоч", "фрукт", "круп", "цільн", "яйц", "риба", "м'яс"]):
+            whole += 1
+
+        if any(x in name for x in ["печиво", "снек", "ковбас", "солод", "фаст"]):
+            processed += 1
+
+        if any(x in name for x in ["овоч", "фрукт", "круп", "бобов"]):
+            fiber += 2
+
+    total = whole + processed
+    whole_percent = round((whole / total) * 100, 1) if total else 0
+    processed_percent = round((processed / total) * 100, 1) if total else 0
+
+    score = whole_percent - processed_percent
+    score = max(0, min(100, score))
+
+    return {
+        "whole_foods_percent": whole_percent,
+        "processed_foods_percent": processed_percent,
+        "fiber": fiber,
+        "score": score
+    }
+
+
 def get_daily_nutrition_data(user_id):
     today = date.today()
 
@@ -74,11 +114,41 @@ def get_daily_nutrition_data(user_id):
     else:
         macros_ratio = {"protein": 0, "fat": 0, "carbs": 0}
 
+    ration_items = []
+    for meal in meals:
+        for item in meal.items:
+            ration_items.append(item)
+
+    ration_summary = {
+        "calories": total_calories,
+        "protein": total_protein,
+        "fat": total_fat,
+        "carbs": total_carbs,
+        "calories_diff": total_calories - goal_cal,
+        "protein_diff": total_protein - goal_prot,
+        "fat_diff": total_fat - goal_fat,
+        "carbs_diff": total_carbs - goal_carb,
+    }
+
+    weekly = {
+        "calorie_balance": total_calories - goal_cal,
+        "avg_protein": total_protein,
+        "avg_carbs": total_carbs,
+        "avg_fat": total_fat,
+        "trend_label": "Стабільно"
+    }
+
+    quality = calculate_quality(ration_items)
+
     return {
         "meals": meals,
         "progress": progress,
         "result": result,
         "macros_ratio": macros_ratio,
+        "ration_items": ration_items,
+        "ration_summary": ration_summary,
+        "weekly": weekly,
+        "quality": quality
     }
 
 

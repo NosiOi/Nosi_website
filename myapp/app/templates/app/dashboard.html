@@ -1,136 +1,151 @@
 {% extends "app/base_app.html" %} {% block title %}NOSIFIT — Дашборд{% endblock
 %} {% block body %}
+
 <link
   rel="stylesheet"
-  href="{{ url_for('static', filename='css/app/dashboard.css') }}"
+  href="{{ url_for('static', filename='css/pages/dashboard.css') }}"
 />
 
-<div class="nf-layout">
-  <main class="nf-main">
-    <div class="nf-bg-orb nf-bg-orb-primary"></div>
-    <div class="nf-bg-orb nf-bg-orb-secondary"></div>
-    <div class="nf-bg-orb nf-bg-orb-tertiary"></div>
+<div class="dash-layout">
+  <main class="dash-main">
+    <div class="dash-bg-orb dash-bg-orb-primary"></div>
+    <div class="dash-bg-orb dash-bg-orb-secondary"></div>
+    <div class="dash-bg-orb dash-bg-orb-tertiary"></div>
 
-    <section class="nf-row nf-row-main">
-      <div class="nf-col nf-col-2">
-        <div class="nf-card nf-card-metrics">
-          <div class="nf-metrics-grid">
-            <div class="nf-metric">
-              <div class="nf-metric-label">Тренування</div>
-              <div class="nf-metric-value">
-                3<span class="nf-metric-sub">/4</span>
+    <section class="dash-row dash-row-main">
+      <div class="dash-col dash-col-2">
+        <div class="dash-card dash-card-metrics">
+          <div class="dash-metrics-grid">
+            <div class="dash-metric">
+              <div class="dash-metric-label">Тренування</div>
+              <div class="dash-metric-value">
+                3<span class="dash-metric-sub">/4</span>
               </div>
-              <div class="nf-metric-foot">цього тижня</div>
+              <div class="dash-metric-foot">цього тижня</div>
             </div>
-            <div class="nf-metric">
-              <div class="nf-metric-label">Калорії</div>
-              <div class="nf-metric-value">2150</div>
-              <div class="nf-metric-foot">сьогодні</div>
+
+            <div class="dash-metric">
+              <div class="dash-metric-label">Калорії</div>
+              <div class="dash-metric-value">2150</div>
+              <div class="dash-metric-foot">сьогодні</div>
             </div>
-            <div class="nf-metric">
-              <div class="nf-metric-label">Сон</div>
-              <div class="nf-metric-value">
-                7.5<span class="nf-metric-sub">год</span>
+
+            <div class="dash-metric">
+              <div class="dash-metric-label">Сон</div>
+              <div class="dash-metric-value">
+                7.5<span class="dash-metric-sub">год</span>
               </div>
-              <div class="nf-metric-foot">остання ніч</div>
+              <div class="dash-metric-foot">остання ніч</div>
             </div>
-            <div class="nf-metric">
-              <div class="nf-metric-label">Індекс дня</div>
-              <div class="nf-metric-value nf-metric-good">82</div>
-              <div class="nf-metric-foot">зі 100</div>
+
+            <div class="dash-metric">
+              <div class="dash-metric-label">Індекс дня</div>
+              <div class="dash-metric-value dash-metric-good">82</div>
+              <div class="dash-metric-foot">зі 100</div>
             </div>
           </div>
         </div>
 
-        <div class="nf-card nf-card-split">
-          <div class="nf-card-section">
-            <div class="nf-card-section-head">
-              <span class="nf-card-title">Силове навантаження</span>
-              <span class="nf-card-pill nf-pill-purple">Тренування</span>
+        <div class="dash-card dash-card-split">
+          <div class="dash-card-section">
+            <div class="dash-card-section-head">
+              <span class="dash-card-title">Силове навантаження</span>
+              <span class="dash-card-pill dash-pill-purple">Тренування</span>
             </div>
-            <div class="nf-lifts-grid">
-              <div class="nf-lift-item">
-                <div class="nf-lift-label">Силові</div>
-                <div class="nf-lift-value">2</div>
-                <div class="nf-lift-foot">сесії</div>
+
+            <div class="dash-lifts-grid">
+              <div class="dash-lift-item">
+                <div class="dash-lift-label">Силові</div>
+                <div class="dash-lift-value">2</div>
+                <div class="dash-lift-foot">сесії</div>
               </div>
-              <div class="nf-lift-item">
-                <div class="nf-lift-label">Кардіо</div>
-                <div class="nf-lift-value">1</div>
-                <div class="nf-lift-foot">сесія</div>
+
+              <div class="dash-lift-item">
+                <div class="dash-lift-label">Кардіо</div>
+                <div class="dash-lift-value">1</div>
+                <div class="dash-lift-foot">сесія</div>
               </div>
-              <div class="nf-lift-item">
-                <div class="nf-lift-label">Мобільність</div>
-                <div class="nf-lift-value">1</div>
-                <div class="nf-lift-foot">сесія</div>
+
+              <div class="dash-lift-item">
+                <div class="dash-lift-label">Мобільність</div>
+                <div class="dash-lift-value">1</div>
+                <div class="dash-lift-foot">сесія</div>
               </div>
             </div>
-            <a href="/sport" class="nf-link-inline">Перейти до тренувань</a>
+
+            <a href="/sport" class="dash-link-inline">Перейти до тренувань</a>
           </div>
 
-          <div class="nf-card-section nf-card-section-right">
-            <div class="nf-card-section-head">
-              <span class="nf-card-title">Харчування</span>
-              <span class="nf-card-pill nf-pill-yellow">Калорії</span>
+          <div class="dash-card-section dash-card-section-right">
+            <div class="dash-card-section-head">
+              <span class="dash-card-title">Харчування</span>
+              <span class="dash-card-pill dash-pill-yellow">Калорії</span>
             </div>
-            <div class="nf-macros-grid">
-              <div class="nf-macro-item">
-                <div class="nf-macro-label">Білки</div>
-                <div class="nf-macro-value">120</div>
-                <div class="nf-macro-foot">г</div>
+
+            <div class="dash-macros-grid">
+              <div class="dash-macro-item">
+                <div class="dash-macro-label">Білки</div>
+                <div class="dash-macro-value">120</div>
+                <div class="dash-macro-foot">г</div>
               </div>
-              <div class="nf-macro-item">
-                <div class="nf-macro-label">Жири</div>
-                <div class="nf-macro-value">65</div>
-                <div class="nf-macro-foot">г</div>
+
+              <div class="dash-macro-item">
+                <div class="dash-macro-label">Жири</div>
+                <div class="dash-macro-value">65</div>
+                <div class="dash-macro-foot">г</div>
               </div>
-              <div class="nf-macro-item">
-                <div class="nf-macro-label">Вуглеводи</div>
-                <div class="nf-macro-value">230</div>
-                <div class="nf-macro-foot">г</div>
+
+              <div class="dash-macro-item">
+                <div class="dash-macro-label">Вуглеводи</div>
+                <div class="dash-macro-value">230</div>
+                <div class="dash-macro-foot">г</div>
               </div>
             </div>
-            <a href="/nutrition" class="nf-link-inline"
+
+            <a href="/nutrition" class="dash-link-inline"
               >Перейти до харчування</a
             >
           </div>
         </div>
       </div>
 
-      <div class="nf-col nf-col-1">
-        <div class="nf-card nf-card-chart">
-          <div class="nf-card-chart-head">
-            <div class="nf-card-title">Прогрес за тиждень</div>
-            <div class="nf-chart-legend">
-              <span class="nf-dot nf-dot-yellow"></span
-              ><span class="nf-chart-label">Загальний прогрес</span>
+      <div class="dash-col dash-col-1">
+        <div class="dash-card dash-card-chart">
+          <div class="dash-card-chart-head">
+            <div class="dash-card-title">Прогрес за тиждень</div>
+            <div class="dash-chart-legend">
+              <span class="dash-dot dash-dot-yellow"></span>
+              <span class="dash-chart-label">Загальний прогрес</span>
             </div>
           </div>
-          <div class="nf-chart-wrap">
-            <canvas class="nf-chart-canvas" id="nfProgressChart"></canvas>
+
+          <div class="dash-chart-wrap">
+            <canvas class="dash-chart-canvas" id="dashProgressChart"></canvas>
           </div>
         </div>
 
-        <div class="nf-card nf-card-summary">
-          <div class="nf-summary-row">
-            <div class="nf-summary-block">
-              <div class="nf-summary-label">Тижневий прогрес</div>
-              <div class="nf-summary-value">86</div>
-              <div class="nf-summary-foot">зі 100</div>
+        <div class="dash-card dash-card-summary">
+          <div class="dash-summary-row">
+            <div class="dash-summary-block">
+              <div class="dash-summary-label">Тижневий прогрес</div>
+              <div class="dash-summary-value">86</div>
+              <div class="dash-summary-foot">зі 100</div>
             </div>
-            <div class="nf-summary-block">
-              <div class="nf-summary-label">Середній сон</div>
-              <div class="nf-summary-value">
-                7.3<span class="nf-summary-sub">год</span>
+
+            <div class="dash-summary-block">
+              <div class="dash-summary-label">Середній сон</div>
+              <div class="dash-summary-value">
+                7.3<span class="dash-summary-sub">год</span>
               </div>
-              <div class="nf-summary-foot">за тиждень</div>
+              <div class="dash-summary-foot">за тиждень</div>
             </div>
           </div>
-          <div class="nf-summary-row nf-summary-row-bottom">
-            <a href="/assessment" class="nf-summary-link"
+
+          <div class="dash-summary-row dash-summary-row-bottom">
+            <a href="/assessment" class="dash-summary-link"
               >Детальна статистика</a
             >
-            <a href="/recovery" class="nf-summary-link nf-summary-link-teal"
+            <a href="/recovery" class="dash-summary-link dash-summary-link-teal"
               >Фокус на відновленні</a
             >
           </div>
@@ -138,50 +153,55 @@
       </div>
     </section>
 
-    <section class="nf-row nf-row-bottom">
-      <div class="nf-col nf-col-3">
-        <div class="nf-card nf-card-quick">
-          <div class="nf-card-title">Швидкі дії</div>
-          <div class="nf-quick-grid">
-            <a href="/sport" class="nf-quick-btn" data-glow="purple"
+    <section class="dash-row dash-row-bottom">
+      <div class="dash-col dash-col-3">
+        <div class="dash-card dash-card-quick">
+          <div class="dash-card-title">Швидкі дії</div>
+
+          <div class="dash-quick-grid">
+            <a href="/sport" class="dash-quick-btn" data-glow="purple"
               >Нове тренування</a
             >
-            <a href="/plan" class="nf-quick-btn" data-glow="purple"
+            <a href="/plan" class="dash-quick-btn" data-glow="purple"
               >Оновити план</a
             >
-            <a href="/nutrition" class="nf-quick-btn" data-glow="yellow"
+            <a href="/nutrition" class="dash-quick-btn" data-glow="yellow"
               >Записати прийом їжі</a
             >
-            <a href="/recovery" class="nf-quick-btn" data-glow="teal"
+            <a href="/recovery" class="dash-quick-btn" data-glow="teal"
               >Відмітити сон</a
             >
           </div>
         </div>
       </div>
-      <div class="nf-col nf-col-1">
-        <div class="nf-card nf-card-status">
-          <div class="nf-card-title">Баланс дня</div>
-          <div class="nf-status-grid">
-            <div class="nf-status-item">
-              <div class="nf-status-label">Тренування</div>
-              <div class="nf-status-bar nf-status-bar-good">
-                <div class="nf-status-fill" style="width: 78%"></div>
+
+      <div class="dash-col dash-col-1">
+        <div class="dash-card dash-card-status">
+          <div class="dash-card-title">Баланс дня</div>
+
+          <div class="dash-status-grid">
+            <div class="dash-status-item">
+              <div class="dash-status-label">Тренування</div>
+              <div class="dash-status-bar dash-status-bar-good">
+                <div class="dash-status-fill" style="width: 78%"></div>
               </div>
-              <div class="nf-status-foot">78 зі 100</div>
+              <div class="dash-status-foot">78 зі 100</div>
             </div>
-            <div class="nf-status-item">
-              <div class="nf-status-label">Харчування</div>
-              <div class="nf-status-bar nf-status-bar-mid">
-                <div class="nf-status-fill" style="width: 70%"></div>
+
+            <div class="dash-status-item">
+              <div class="dash-status-label">Харчування</div>
+              <div class="dash-status-bar dash-status-bar-mid">
+                <div class="dash-status-fill" style="width: 70%"></div>
               </div>
-              <div class="nf-status-foot">70 зі 100</div>
+              <div class="dash-status-foot">70 зі 100</div>
             </div>
-            <div class="nf-status-item">
-              <div class="nf-status-label">Відновлення</div>
-              <div class="nf-status-bar nf-status-bar-teal">
-                <div class="nf-status-fill" style="width: 84%"></div>
+
+            <div class="dash-status-item">
+              <div class="dash-status-label">Відновлення</div>
+              <div class="dash-status-bar dash-status-bar-teal">
+                <div class="dash-status-fill" style="width: 84%"></div>
               </div>
-              <div class="nf-status-foot">84 зі 100</div>
+              <div class="dash-status-foot">84 зі 100</div>
             </div>
           </div>
         </div>
@@ -192,8 +212,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  const nfCtx = document.getElementById("nfProgressChart").getContext("2d");
-  new Chart(nfCtx, {
+  const ctx = document.getElementById("dashProgressChart").getContext("2d");
+
+  new Chart(ctx, {
     type: "line",
     data: {
       labels: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"],
@@ -241,25 +262,25 @@
     },
   });
 
-  const orbs = document.querySelectorAll(".nf-bg-orb");
-  const navItems = document.querySelectorAll(".nf-nav-item, .nf-quick-btn");
+  const orbs = document.querySelectorAll(".dash-bg-orb");
+  const items = document.querySelectorAll(".dash-nav-item, .dash-quick-btn");
 
   function setGlow(type) {
     orbs.forEach((o) =>
       o.classList.remove(
-        "nf-orb-primary",
-        "nf-orb-purple",
-        "nf-orb-yellow",
-        "nf-orb-teal",
+        "dash-orb-primary",
+        "dash-orb-purple",
+        "dash-orb-yellow",
+        "dash-orb-teal",
       ),
     );
-    if (type === "primary") orbs[0].classList.add("nf-orb-primary");
-    if (type === "purple") orbs[0].classList.add("nf-orb-purple");
-    if (type === "yellow") orbs[0].classList.add("nf-orb-yellow");
-    if (type === "teal") orbs[0].classList.add("nf-orb-teal");
+    if (type === "primary") orbs[0].classList.add("dash-orb-primary");
+    if (type === "purple") orbs[0].classList.add("dash-orb-purple");
+    if (type === "yellow") orbs[0].classList.add("dash-orb-yellow");
+    if (type === "teal") orbs[0].classList.add("dash-orb-teal");
   }
 
-  navItems.forEach((item) => {
+  items.forEach((item) => {
     item.addEventListener("mouseenter", () => {
       const glow = item.getAttribute("data-glow");
       if (glow) setGlow(glow);
@@ -268,4 +289,5 @@
 
   setGlow("primary");
 </script>
+
 {% endblock %}

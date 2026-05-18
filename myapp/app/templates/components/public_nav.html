@@ -1,20 +1,21 @@
-<nav>
-  <div class="nav-wrapper">
-    <div class="nav-left">
-      <a href="/" class="nav-logo">
-        <img
-          src="{{ url_for('static', filename='img/Nosi_Logo.png') }}"
-          alt="NosiFit"
-          class="nav-logo-img"
-        />
-      </a>
+<nav class="nav-root">
+  <div class="nav-left">
+    <a href="/" class="nav-logo-link">
+      <img src="/static/img/Nosi_Logo.png" class="nav-logo-img" />
+    </a>
 
+    <div class="nav-links">
+      <a href="/" class="nav-link">Головна</a>
       <a href="/about" class="nav-link">Про нас</a>
+      <a href="/contact" class="nav-link">Контакти</a>
+      <a href="/demo" class="nav-link">Демо</a>
     </div>
+  </div>
 
-    <div class="nav-right">
-      <a href="/auth/login" class="nav-btn login">Увійти</a>
-      <a href="/auth/register" class="nav-btn register">Реєстрація</a>
-    </div>
+  <div class="nav-right">
+    <a href="/login" class="btn-root btn-login" data-glow="yellow">Увійти</a>
+    <a href="/register" class="btn-root btn-register" data-glow="yellow"
+      >Реєстрація</a
+    >
   </div>
 </nav>

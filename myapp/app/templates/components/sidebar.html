@@ -1,183 +1,149 @@
-<aside class="nf-sidebar">
-  <div class="nf-sidebar-header">
-    <a href="/dashboard" class="nf-logo-link">
-      <div class="nf-logo-text">
-        <span class="nf-logo-main">NOSI</span>
-        <span class="nf-logo-accent">FIT</span>
+<div class="cmp-sidebar">
+  <div class="cmp-sidebar-header">
+    <a href="/dashboard" class="cmp-sidebar-logo">
+      <img src="/static/img/Nosi_Logo.png" class="cmp-sidebar-logo-img" />
+      <div class="cmp-sidebar-logo-text">
+        <span class="cmp-sidebar-logo-main">NOSI</span>
+        <span class="cmp-sidebar-logo-accent">FIT</span>
       </div>
     </a>
   </div>
 
-  <nav class="nf-nav">
+  <nav class="cmp-sidebar-nav">
     <a
-      href="/"
-      class="nf-nav-item {% if request.path == '/' %}active{% endif %}"
+      href="/profile"
+      class="cmp-sidebar-item {% if active == 'profile' %}active{% endif %}"
     >
-      <span class="nf-nav-icon">
+      <div class="cmp-sidebar-icon">
         <svg viewBox="0 0 24 24">
           <path
-            d="M3 10L12 3l9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10z"
+            d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4 0-8 2-8 5v3h16v-3c0-3-4-5-8-5z"
           />
         </svg>
-      </span>
-      <span class="nf-nav-label">Головна</span>
+      </div>
+      <span>Профіль</span>
     </a>
 
     <a
       href="/dashboard"
-      class="nf-nav-item {% if request.path.startswith('/dashboard') %}active{% endif %}"
+      class="cmp-sidebar-item {% if active == 'dashboard' %}active{% endif %}"
     >
-      <span class="nf-nav-icon">
+      <div class="cmp-sidebar-icon">
         <svg viewBox="0 0 24 24">
-          <path
-            d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
-          />
+          <path d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z" />
         </svg>
-      </span>
-      <span class="nf-nav-label">Дашборд</span>
+      </div>
+      <span>Дашборд</span>
     </a>
 
     <a
       href="/plan"
-      class="nf-nav-item {% if request.path.startswith('/plan') %}active{% endif %}"
+      class="cmp-sidebar-item {% if active == 'plan' %}active{% endif %}"
     >
-      <span class="nf-nav-icon">
+      <div class="cmp-sidebar-icon">
         <svg viewBox="0 0 24 24">
-          <path d="M4 4h16v2H4zm0 7h16v2H4zm0 7h16v2H4z" />
+          <path d="M4 6h16M4 12h16M4 18h16" />
         </svg>
-      </span>
-      <span class="nf-nav-label">План</span>
+      </div>
+      <span>План</span>
     </a>
 
     <a
       href="/sport"
-      class="nf-nav-item {% if request.path.startswith('/sport') %}active{% endif %}"
+      class="cmp-sidebar-item {% if active == 'sport' %}active{% endif %}"
     >
-      <span class="nf-nav-icon">
+      <div class="cmp-sidebar-icon">
         <svg viewBox="0 0 24 24">
-          <path d="M20 6h-3l-1-2h-8l-1 2H4v2h16zM6 10v10h2V10zm10 0v10h2V10z" />
+          <path d="M6 6l12 12M6 18L18 6" />
         </svg>
-      </span>
-      <span class="nf-nav-label">Тренування</span>
+      </div>
+      <span>Тренування</span>
     </a>
 
     <a
       href="/nutrition"
-      class="nf-nav-item {% if request.path.startswith('/nutrition') %}active{% endif %}"
+      class="cmp-sidebar-item {% if active == 'nutrition' %}active{% endif %}"
     >
-      <span class="nf-nav-icon">
+      <div class="cmp-sidebar-icon">
         <svg viewBox="0 0 24 24">
-          <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z" />
+          <path d="M12 2v20M5 9h14" />
         </svg>
-      </span>
-      <span class="nf-nav-label">Харчування</span>
+      </div>
+      <span>Харчування</span>
     </a>
 
     <a
       href="/recovery"
-      class="nf-nav-item {% if request.path.startswith('/recovery') %}active{% endif %}"
+      class="cmp-sidebar-item {% if active == 'recovery' %}active{% endif %}"
     >
-      <span class="nf-nav-icon">
+      <div class="cmp-sidebar-icon">
         <svg viewBox="0 0 24 24">
-          <path d="M12 6a6 6 0 1 0 6 6h-2a4 4 0 1 1-4-4V6z" />
+          <circle cx="12" cy="12" r="9" />
         </svg>
-      </span>
-      <span class="nf-nav-label">Відновлення</span>
+      </div>
+      <span>Відновлення</span>
+    </a>
+
+    <a
+      href="/analytics"
+      class="cmp-sidebar-item {% if active == 'analytics' %}active{% endif %}"
+    >
+      <div class="cmp-sidebar-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 20V10M10 20V4M16 20v-6M22 20V8" />
+        </svg>
+      </div>
+      <span>Аналітика</span>
     </a>
 
     <a
       href="/assessment"
-      class="nf-nav-item {% if request.path.startswith('/assessment') %}active{% endif %}"
+      class="cmp-sidebar-item {% if active == 'assessment' %}active{% endif %}"
     >
-      <span class="nf-nav-icon">
+      <div class="cmp-sidebar-icon">
         <svg viewBox="0 0 24 24">
-          <path d="M5 9h2v10H5zm6-4h2v14h-2zm6 7h2v7h-2z" />
+          <path d="M12 2l7 7-7 7-7-7z" />
         </svg>
-      </span>
-      <span class="nf-nav-label">Статистика</span>
+      </div>
+      <span>Оцінка форми</span>
+    </a>
+
+    <div class="cmp-sidebar-separator"></div>
+
+    <a
+      href="/about"
+      class="cmp-sidebar-item {% if active == 'about' %}active{% endif %}"
+    >
+      <div class="cmp-sidebar-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 8v8M12 16h.01M12 6h.01" />
+        </svg>
+      </div>
+      <span>Про застосунок</span>
     </a>
 
     <a
-      href="/equipment"
-      class="nf-nav-item {% if request.path.startswith('/equipment') %}active{% endif %}"
+      href="/info"
+      class="cmp-sidebar-item {% if active == 'info' %}active{% endif %}"
     >
-      <span class="nf-nav-icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M7 3h10v2H7zm-2 4h14v2H5zm2 4h10v2H7zm-2 4h14v2H5z" />
-        </svg>
-      </span>
-      <span class="nf-nav-label">Обладнання</span>
-    </a>
-
-    <a
-      href="/training_plan"
-      class="nf-nav-item {% if request.path.startswith('/training_plan') %}active{% endif %}"
-    >
-      <span class="nf-nav-icon">
+      <div class="cmp-sidebar-icon">
         <svg viewBox="0 0 24 24">
           <path d="M4 4h16v16H4z" />
         </svg>
-      </span>
-      <span class="nf-nav-label">Тренувальний план</span>
-    </a>
-
-    <a
-      href="/training_explanation"
-      class="nf-nav-item {% if request.path.startswith('/training_explanation') %}active{% endif %}"
-    >
-      <span class="nf-nav-icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2l9 4v6c0 5-4 10-9 10S3 17 3 12V6l9-4z" />
-        </svg>
-      </span>
-      <span class="nf-nav-label">Пояснення вправ</span>
-    </a>
-
-    <a
-      href="/profile"
-      class="nf-nav-item {% if request.path.startswith('/profile') %}active{% endif %}"
-    >
-      <span class="nf-nav-icon">
-        <svg viewBox="0 0 24 24">
-          <path
-            d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4 0-8 2-8 5v3h16v-3c0-3-4-5-8-5z"
-          />
-        </svg>
-      </span>
-      <span class="nf-nav-label">Профіль</span>
-    </a>
-
-    <a
-      href="/support"
-      class="nf-nav-item {% if request.path.startswith('/support') %}active{% endif %}"
-    >
-      <span class="nf-nav-icon">
-        <svg viewBox="0 0 24 24">
-          <path
-            d="M12 2a10 10 0 0 0-10 10h2a8 8 0 1 1 8 8v2a10 10 0 0 0 0-20z"
-          />
-        </svg>
-      </span>
-      <span class="nf-nav-label">Підтримка</span>
+      </div>
+      <span>Про сайт</span>
     </a>
   </nav>
 
-  <div class="nf-sidebar-footer">
-    <div class="nf-user">
-      <div class="nf-user-avatar">{{ user.username[0]|upper }}</div>
-      <div class="nf-user-meta">
-        <span class="nf-user-name">{{ user.username }}</span>
-        <span class="nf-user-status">Онлайн</span>
-      </div>
-    </div>
-
-    <a href="/auth/logout" class="nf-logout">
-      <span class="nf-logout-icon">
+  <div class="cmp-sidebar-footer">
+    <a href="/logout" class="cmp-sidebar-logout">
+      <div class="cmp-sidebar-logout-icon">
         <svg viewBox="0 0 24 24">
-          <path d="M16 17l5-5-5-5v3H9v4h7z" />
+          <path d="M16 17l5-5-5-5M21 12H9" />
         </svg>
-      </span>
-      <span class="nf-logout-label">Вийти</span>
+      </div>
+      Вийти
     </a>
   </div>
-</aside>
+</div>
