@@ -7,7 +7,8 @@
     display: flex;
     flex-direction: column;
     gap: 60px;
-    overflow: visible;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .nutr-page::before,

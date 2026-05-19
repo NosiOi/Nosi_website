@@ -1,22 +1,19 @@
-{% extends "app/base_app.html" %}
-
-{% block title %}Харчування — NOSI FIT{% endblock %}
-
-{% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/nutrition.css') }}">
-{% endblock %}
-
-{% block body %}
+{% extends "app/base_app.html" %} {% block title %}Харчування — NOSI FIT{%
+endblock %} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/nutrition.css') }}"
+/>
+{% endblock %} {% block body %}
 
 <div class="nutr-page">
-
   <header class="nutr-header">
-
     <div class="nutr-header-main">
-
       <div class="nutr-header-text">
         <h1 class="nutr-title">Харчування</h1>
-        <p class="nutr-subtitle">Контроль раціону, макронутрієнтів та прогресу</p>
+        <p class="nutr-subtitle">
+          Контроль раціону, макронутрієнтів та прогресу
+        </p>
       </div>
 
       <div class="nutr-header-actions">
@@ -28,11 +25,9 @@
           Поради з харчування
         </button>
       </div>
-
     </div>
 
     <div class="nutr-header-meta">
-
       <div class="nutr-header-meta-item">
         <span class="nutr-header-meta-label">Сьогодні</span>
         <span class="nutr-header-meta-value">{{ current_date }}</span>
@@ -47,13 +42,10 @@
         <span class="nutr-header-meta-label">Статус</span>
         <span class="nutr-header-meta-pill">У процесі</span>
       </div>
-
     </div>
-
   </header>
 
   <section class="nutr-grid-top">
-
     <article class="nutr-card nutr-card-kpi">
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
@@ -70,7 +62,10 @@
 
       <div class="nutr-kpi-progress">
         <div class="nutr-kpi-progress-bar">
-          <div class="nutr-kpi-progress-fill nutr-kpi-progress-fill-yellow" style="width: {{ kcal_percent }}%;"></div>
+          <div
+            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-yellow"
+            style="width: {{ kcal_percent }}%;"
+          ></div>
         </div>
         <div class="nutr-kpi-progress-meta">
           <span>{{ kcal }} / {{ kcal_goal }} ккал</span>
@@ -100,7 +95,10 @@
 
       <div class="nutr-kpi-progress">
         <div class="nutr-kpi-progress-bar">
-          <div class="nutr-kpi-progress-fill nutr-kpi-progress-fill-blue" style="width: {{ protein_percent }}%;"></div>
+          <div
+            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-blue"
+            style="width: {{ protein_percent }}%;"
+          ></div>
         </div>
         <div class="nutr-kpi-progress-meta">
           <span>{{ protein }} / {{ protein_goal }} г</span>
@@ -130,7 +128,10 @@
 
       <div class="nutr-kpi-progress">
         <div class="nutr-kpi-progress-bar">
-          <div class="nutr-kpi-progress-fill nutr-kpi-progress-fill-violet" style="width: {{ fat_percent }}%;"></div>
+          <div
+            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-violet"
+            style="width: {{ fat_percent }}%;"
+          ></div>
         </div>
         <div class="nutr-kpi-progress-meta">
           <span>{{ fat }} / {{ fat_goal }} г</span>
@@ -160,7 +161,10 @@
 
       <div class="nutr-kpi-progress">
         <div class="nutr-kpi-progress-bar">
-          <div class="nutr-kpi-progress-fill nutr-kpi-progress-fill-turquoise" style="width: {{ carb_percent }}%;"></div>
+          <div
+            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-turquoise"
+            style="width: {{ carb_percent }}%;"
+          ></div>
         </div>
         <div class="nutr-kpi-progress-meta">
           <span>{{ carb }} / {{ carb_goal }} г</span>
@@ -173,11 +177,9 @@
         <span class="nutr-kpi-footer-value">{{ carb_goal }} г</span>
       </div>
     </article>
-
   </section>
 
   <section class="nutr-grid-middle">
-
     <article class="nutr-card nutr-card-balance">
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
@@ -224,7 +226,9 @@
             <span class="nutr-compare-today">{{ kcal }} сьогодні</span>
             <span class="nutr-compare-prev">{{ kcal_yesterday }} вчора</span>
           </div>
-          <span class="nutr-compare-diff nutr-compare-diff-kcal">{{ kcal_diff_label }}</span>
+          <span class="nutr-compare-diff nutr-compare-diff-kcal"
+            >{{ kcal_diff_label }}</span
+          >
         </div>
 
         <div class="nutr-compare-item">
@@ -273,7 +277,10 @@
 
         <div class="nutr-water-progress">
           <div class="nutr-water-progress-bar">
-            <div class="nutr-water-progress-fill" style="width: {{ water_percent }}%;"></div>
+            <div
+              class="nutr-water-progress-fill"
+              style="width: {{ water_percent }}%;"
+            ></div>
           </div>
           <div class="nutr-water-progress-meta">
             <span>{{ water }} / {{ water_goal }} л</span>
@@ -285,14 +292,14 @@
       <div class="nutr-water-actions">
         <button class="nutr-water-btn" data-water-add="0.25">+0.25 л</button>
         <button class="nutr-water-btn" data-water-add="0.5">+0.5 л</button>
-        <button class="nutr-water-btn nutr-water-btn-ghost" data-water-reset>Скинути</button>
+        <button class="nutr-water-btn nutr-water-btn-ghost" data-water-reset>
+          Скинути
+        </button>
       </div>
     </article>
-
   </section>
 
   <section class="nutr-grid-lower">
-
     <article class="nutr-card nutr-card-chart">
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
@@ -344,23 +351,22 @@
         </div>
       </div>
     </article>
-
   </section>
 
   <section class="nutr-grid-bottom">
-
     <article class="nutr-card nutr-card-month">
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
           <span class="nutr-card-title">Статистика за місяць</span>
           <button class="nutr-help" data-help-key="month">?</button>
         </div>
-        <span class="nutr-card-tag nutr-tag-outline">{{ current_month_label }}</span>
+        <span class="nutr-card-tag nutr-tag-outline"
+          >{{ current_month_label }}</span
+        >
       </div>
 
       <div class="nutr-month-body">
         <div class="nutr-month-grid">
-
           <div class="nutr-month-item">
             <span class="nutr-month-label">Середні ккал</span>
             <span class="nutr-month-value">{{ month_avg_kcal }} ккал</span>
@@ -397,10 +403,9 @@
           </div>
 
           <div class="nutr-month-item">
-            <span class="nutr-month-label">Стабільність</
-                          <span class="nutr-month-value">{{ month_stability_label }}</span>
+            <span class="nutr-month-label">Стабільність</span>
+            <span class="nutr-month-value">{{ month_stability_label }}</span>
           </div>
-
         </div>
       </div>
     </article>
@@ -427,177 +432,223 @@
         </div>
       </div>
     </article>
-
   </section>
 
-<div class="nutr-meals-overlay" data-meals-overlay>
-  <div class="nutr-meals-panel" data-meals-panel>
-
-    <div class="nutr-meals-header">
-      <span class="nutr-meals-title">Прийоми їжі</span>
-      <button class="nutr-meals-close" data-meals-close>×</button>
-    </div>
-
-    <div class="nutr-meals-tabs">
-      <button class="nutr-meals-tab nutr-meals-tab-active" data-meals-tab="today">Сьогодні</button>
-      <button class="nutr-meals-tab" data-meals-tab="history">Історія</button>
-      <button class="nutr-meals-tab" data-meals-tab="templates">Шаблони</button>
-    </div>
-
-    <div class="nutr-meals-body">
-
-      <div class="nutr-meals-section nutr-meals-section-active" data-meals-section="today">
-        <div class="nutr-meals-columns">
-
-          <div class="nutr-meals-column">
-            <h3 class="nutr-meals-column-title">Прийоми за день</h3>
-
-            <div class="nutr-meals-list">
-              {% for meal in meals_today %}
-              <div class="nutr-meal-item">
-                <div class="nutr-meal-main">
-                  <span class="nutr-meal-name">{{ meal.name }}</span>
-                  <span class="nutr-meal-kcal">{{ meal.kcal }} ккал</span>
-                </div>
-
-                <div class="nutr-meal-meta">
-                  <span class="nutr-meal-time">{{ meal.time }}</span>
-                  <span class="nutr-meal-macros">
-                    {{ meal.protein }}г Б • {{ meal.fat }}г Ж • {{ meal.carb }}г В
-                  </span>
-                </div>
-
-                <div class="nutr-meal-actions">
-                  <button class="nutr-meal-action" data-edit-meal="{{ meal.id }}">Редагувати</button>
-                  <button class="nutr-meal-action nutr-meal-action-danger" data-delete-meal="{{ meal.id }}">Видалити</button>
-                </div>
-              </div>
-              {% else %}
-              <div class="nutr-meal-empty">Прийоми їжі ще не додані.</div>
-              {% endfor %}
-            </div>
-          </div>
-
-          <div class="nutr-meals-column">
-            <h3 class="nutr-meals-column-title">Додати прийом</h3>
-
-            <form class="nutr-meal-form" method="post" action="{{ url_for('nutrition.add_meal') }}">
-
-              <div class="nutr-form-row">
-                <label class="nutr-form-label">Назва</label>
-                <input class="nutr-input" name="name" required>
-              </div>
-
-              <div class="nutr-form-row">
-                <label class="nutr-form-label">Час</label>
-                <input class="nutr-input" name="time" placeholder="08:30" required>
-              </div>
-
-              <div class="nutr-form-row nutr-form-row-grid">
-                <div>
-                  <label class="nutr-form-label">Ккал</label>
-                  <input class="nutr-input" name="kcal" type="number" min="0" required>
-                </div>
-                <div>
-                  <label class="nutr-form-label">Білки</label>
-                  <input class="nutr-input" name="protein" type="number" min="0" required>
-                </div>
-                <div>
-                  <label class="nutr-form-label">Жири</label>
-                  <input class="nutr-input" name="fat" type="number" min="0" required>
-                </div>
-                <div>
-                  <label class="nutr-form-label">Вуглеводи</label>
-                  <input class="nutr-input" name="carb" type="number" min="0" required>
-                </div>
-              </div>
-
-              <div class="nutr-form-row">
-                <label class="nutr-form-label">Категорія</label>
-                <select class="nutr-input" name="category">
-                  <option value="breakfast">Сніданок</option>
-                  <option value="lunch">Обід</option>
-                  <option value="dinner">Вечеря</option>
-                  <option value="snack">Перекус</option>
-                </select>
-              </div>
-
-              <div class="nutr-form-actions">
-                <button class="nutr-form-btn" type="submit">Додати прийом</button>
-              </div>
-
-            </form>
-          </div>
-
-        </div>
+  <div class="nutr-meals-overlay" data-meals-overlay>
+    <div class="nutr-meals-panel" data-meals-panel>
+      <div class="nutr-meals-header">
+        <span class="nutr-meals-title">Прийоми їжі</span>
+        <button class="nutr-meals-close" data-meals-close>×</button>
       </div>
 
-      <div class="nutr-meals-section" data-meals-section="history">
-        <div class="nutr-history-list">
-          {% for day in meals_history %}
-          <div class="nutr-history-day">
+      <div class="nutr-meals-tabs">
+        <button
+          class="nutr-meals-tab nutr-meals-tab-active"
+          data-meals-tab="today"
+        >
+          Сьогодні
+        </button>
+        <button class="nutr-meals-tab" data-meals-tab="history">Історія</button>
+        <button class="nutr-meals-tab" data-meals-tab="templates">
+          Шаблони
+        </button>
+      </div>
 
-            <div class="nutr-history-day-header">
-              <span class="nutr-history-date">{{ day.date }}</span>
-              <span class="nutr-history-kcal">{{ day.total_kcal }} ккал</span>
-            </div>
+      <div class="nutr-meals-body">
+        <div
+          class="nutr-meals-section nutr-meals-section-active"
+          data-meals-section="today"
+        >
+          <div class="nutr-meals-columns">
+            <div class="nutr-meals-column">
+              <h3 class="nutr-meals-column-title">Прийоми за день</h3>
 
-            <div class="nutr-history-meals">
-              {% for meal in day.meals %}
-              <div class="nutr-history-meal">
-                <span class="nutr-history-meal-name">{{ meal.name }}</span>
-                <span class="nutr-history-meal-kcal">{{ meal.kcal }} ккал</span>
+              <div class="nutr-meals-list">
+                {% for meal in meals_today %}
+                <div class="nutr-meal-item">
+                  <div class="nutr-meal-main">
+                    <span class="nutr-meal-name">{{ meal.name }}</span>
+                    <span class="nutr-meal-kcal">{{ meal.kcal }} ккал</span>
+                  </div>
+
+                  <div class="nutr-meal-meta">
+                    <span class="nutr-meal-time">{{ meal.time }}</span>
+                    <span class="nutr-meal-macros">
+                      {{ meal.protein }}г Б • {{ meal.fat }}г Ж • {{ meal.carb
+                      }}г В
+                    </span>
+                  </div>
+
+                  <div class="nutr-meal-actions">
+                    <button
+                      class="nutr-meal-action"
+                      data-edit-meal="{{ meal.id }}"
+                    >
+                      Редагувати
+                    </button>
+                    <button
+                      class="nutr-meal-action nutr-meal-action-danger"
+                      data-delete-meal="{{ meal.id }}"
+                    >
+                      Видалити
+                    </button>
+                  </div>
+                </div>
+                {% else %}
+                <div class="nutr-meal-empty">Прийоми їжі ще не додані.</div>
+                {% endfor %}
               </div>
-              {% endfor %}
             </div>
 
+            <div class="nutr-meals-column">
+              <h3 class="nutr-meals-column-title">Додати прийом</h3>
+
+              <form
+                class="nutr-meal-form"
+                method="post"
+                action="{{ url_for('nutrition.add_meal') }}"
+              >
+                <div class="nutr-form-row">
+                  <label class="nutr-form-label">Назва</label>
+                  <input class="nutr-input" name="name" required />
+                </div>
+
+                <div class="nutr-form-row">
+                  <label class="nutr-form-label">Час</label>
+                  <input
+                    class="nutr-input"
+                    name="time"
+                    placeholder="08:30"
+                    required
+                  />
+                </div>
+
+                <div class="nutr-form-row nutr-form-row-grid">
+                  <div>
+                    <label class="nutr-form-label">Ккал</label>
+                    <input
+                      class="nutr-input"
+                      name="kcal"
+                      type="number"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label class="nutr-form-label">Білки</label>
+                    <input
+                      class="nutr-input"
+                      name="protein"
+                      type="number"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label class="nutr-form-label">Жири</label>
+                    <input
+                      class="nutr-input"
+                      name="fat"
+                      type="number"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label class="nutr-form-label">Вуглеводи</label>
+                    <input
+                      class="nutr-input"
+                      name="carb"
+                      type="number"
+                      min="0"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="nutr-form-row">
+                  <label class="nutr-form-label">Категорія</label>
+                  <select class="nutr-input" name="category">
+                    <option value="breakfast">Сніданок</option>
+                    <option value="lunch">Обід</option>
+                    <option value="dinner">Вечеря</option>
+                    <option value="snack">Перекус</option>
+                  </select>
+                </div>
+
+                <div class="nutr-form-actions">
+                  <button class="nutr-form-btn" type="submit">
+                    Додати прийом
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          {% else %}
-          <div class="nutr-history-empty">Історія поки порожня.</div>
-          {% endfor %}
+        </div>
+
+        <div class="nutr-meals-section" data-meals-section="history">
+          <div class="nutr-history-list">
+            {% for day in meals_history %}
+            <div class="nutr-history-day">
+              <div class="nutr-history-day-header">
+                <span class="nutr-history-date">{{ day.date }}</span>
+                <span class="nutr-history-kcal">{{ day.total_kcal }} ккал</span>
+              </div>
+
+              <div class="nutr-history-meals">
+                {% for meal in day.meals %}
+                <div class="nutr-history-meal">
+                  <span class="nutr-history-meal-name">{{ meal.name }}</span>
+                  <span class="nutr-history-meal-kcal"
+                    >{{ meal.kcal }} ккал</span
+                  >
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% else %}
+            <div class="nutr-history-empty">Історія поки порожня.</div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="nutr-meals-section" data-meals-section="templates">
+          <div class="nutr-templates-grid">
+            {% for template in meal_templates %}
+            <div class="nutr-template-card">
+              <div class="nutr-template-header">
+                <span class="nutr-template-name">{{ template.name }}</span>
+                <span class="nutr-template-kcal">{{ template.kcal }} ккал</span>
+              </div>
+
+              <div class="nutr-template-body">
+                <span class="nutr-template-macros">
+                  {{ template.protein }}г Б • {{ template.fat }}г Ж • {{
+                  template.carb }}г В
+                </span>
+              </div>
+
+              <div class="nutr-template-actions">
+                <button
+                  class="nutr-template-btn"
+                  data-use-template="{{ template.id }}"
+                >
+                  Додати сьогодні
+                </button>
+              </div>
+            </div>
+            {% else %}
+            <div class="nutr-templates-empty">Шаблони ще не створені.</div>
+            {% endfor %}
+          </div>
         </div>
       </div>
-
-      <div class="nutr-meals-section" data-meals-section="templates">
-        <div class="nutr-templates-grid">
-
-          {% for template in meal_templates %}
-          <div class="nutr-template-card">
-
-            <div class="nutr-template-header">
-              <span class="nutr-template-name">{{ template.name }}</span>
-              <span class="nutr-template-kcal">{{ template.kcal }} ккал</span>
-            </div>
-
-            <div class="nutr-template-body">
-              <span class="nutr-template-macros">
-                {{ template.protein }}г Б • {{ template.fat }}г Ж • {{ template.carb }}г В
-              </span>
-            </div>
-
-            <div class="nutr-template-actions">
-              <button class="nutr-template-btn" data-use-template="{{ template.id }}">
-                Додати сьогодні
-              </button>
-            </div>
-
-          </div>
-          {% else %}
-          <div class="nutr-templates-empty">Шаблони ще не створені.</div>
-          {% endfor %}
-
-        </div>
-      </div>
-
     </div>
-
   </div>
+
+  <div class="nutr-tooltip" id="nutr-tooltip"></div>
+
+  {% endblock %} {% block scripts %}
+  <script src="{{ url_for('static', filename='js/nutrition.js') }}"></script>
+  {% endblock %}
 </div>
-
-<div class="nutr-tooltip" id="nutr-tooltip"></div>
-
-{% endblock %}
-
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/nutrition.js') }}"></script>
-{% endblock %}
