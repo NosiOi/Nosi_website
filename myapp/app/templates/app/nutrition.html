@@ -44,6 +44,22 @@ endblock %} {% block styles %}
       </div>
     </div>
   </header>
+  <div class="nutr-tips-popover" data-tips-popover>
+  <div class="nutr-tips-popover-header">Поради з харчування</div>
+
+  <div class="nutr-tips-popover-body">
+    {% for tip in tips %}
+    <div class="nutr-tip-item">
+      <div class="nutr-tip-dot"></div>
+      <div class="nutr-tip-text">{{ tip }}</div>
+    </div>
+    {% else %}
+    <div class="nutr-tip-empty">Немає порад на сьогодні.</div>
+    {% endfor %}
+  </div>
+</div>
+
+
 
   <section class="nutr-grid-top">
     <article class="nutr-card nutr-card-kpi">
@@ -409,31 +425,6 @@ endblock %} {% block styles %}
         </div>
       </div>
     </article>
-
-    <article class="nutr-card nutr-card-tips" data-tips-panel>
-      <div class="nutr-card-header">
-        <div class="nutr-card-title-wrap">
-          <span class="nutr-card-title">Поради з харчування</span>
-          <button class="nutr-help" data-help-key="tips">?</button>
-        </div>
-        <span class="nutr-card-tag nutr-tag-yellow">Рекомендації</span>
-      </div>
-
-      <div class="nutr-tips-body">
-        <div class="nutr-tips-list">
-          {% for tip in tips %}
-          <div class="nutr-tip-item">
-            <div class="nutr-tip-dot"></div>
-            <div class="nutr-tip-text">{{ tip }}</div>
-          </div>
-          {% else %}
-          <div class="nutr-tip-empty">Немає порад на сьогодні.</div>
-          {% endfor %}
-        </div>
-      </div>
-    </article>
-  </section>
-
   <div class="nutr-meals-overlay" data-meals-overlay>
     <div class="nutr-meals-panel" data-meals-panel>
       <div class="nutr-meals-header">

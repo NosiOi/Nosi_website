@@ -656,42 +656,85 @@
     gap: 20px;
 }
 
-.nutr-page .nutr-tips-body {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+[data-open-tips] {
+    position: relative;
 }
 
-.nutr-page .nutr-tips-list {
-    display: flex;
+.nutr-tips-popover {
+    position: absolute;
+    top: 124px;
+    right: 48px;
+    width: 210px;
+    background: var(--core-card);
+    border-radius: var(--core-radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    padding: 14px;
+    display: none;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
+    z-index: 300;
+    animation: nutr-popover-fade 0.18s ease-out;
 }
 
-.nutr-page .nutr-tip-item {
+/* Анімація */
+@keyframes nutr-popover-fade {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nutr-tips-popover.open {
+    display: flex;
+}
+
+.nutr-tips-popover-header {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--core-text-strong);
+}
+
+.nutr-tips-popover-body {
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.nutr-tip-item {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 10px;
+    line-height: 1.35;
 }
 
-.nutr-page .nutr-tip-dot {
-    width: 10px;
-    height: 10px;
+.nutr-tip-dot {
+    width: 8px;
+    height: 8px;
     background: var(--core-yellow);
     border-radius: 50%;
-    margin-top: 6px;
+    margin-top: 5px;
 }
 
-.nutr-page .nutr-tip-text {
-    font-size: 15px;
-    color: var(--core-white-soft);
-    line-height: 1.45;
-}
-
-.nutr-page .nutr-tip-empty {
+.nutr-tip-text {
     font-size: 14px;
-    color: var(--core-text-muted);
+    color: var(--core-text);
+    word-wrap: break-word;
+    white-space: normal;
 }
+
+.nutr-tip-empty {
+    font-size: 14px;
+    color: var(--core-text-soft);
+    padding: 6px 0;
+}
+
 
 .nutr-page .nutr-meals-overlay {
     position: fixed;
