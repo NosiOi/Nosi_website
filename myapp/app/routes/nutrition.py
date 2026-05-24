@@ -68,8 +68,9 @@ def nutrition_page():
 @nutrition_bp.route("/nutrition/add_meal", methods=["POST"])
 @login_required
 def add_meal():
-    add_meal_service(session["user"])
+    add_meal_service(session["user"], request.form)
     return redirect("/nutrition")
+
 
 
 @nutrition_bp.route("/nutrition/add_item", methods=["POST"])

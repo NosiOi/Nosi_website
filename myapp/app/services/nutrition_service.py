@@ -152,18 +152,22 @@ def get_daily_nutrition_data(user_id):
     }
 
 
-def add_meal_service(user_id):
+def add_meal_service(user_id, form):
     meal = Meal(
         user_id=user_id,
         date=date.today(),
-        time=datetime.now().time(),
-        total_calories=0,
-        total_protein=0,
-        total_fat=0,
-        total_carbs=0,
+        time=form["time"],
+        name=form["name"],
+        category=form["category"],
+        total_calories=int(form["kcal"]),
+        total_protein=int(form["protein"]),
+        total_fat=int(form["fat"]),
+        total_carbs=int(form["carb"]),
     )
+
     db.session.add(meal)
     db.session.commit()
+
 
 
 def add_item_service(user_id, form):
