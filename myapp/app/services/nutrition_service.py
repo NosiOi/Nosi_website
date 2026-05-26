@@ -198,6 +198,94 @@ def get_daily_nutrition_data(user_id):
     month_stability_label = "Немає даних"
     current_month_label = today.strftime("%B %Y")
 
+    day_chart = {
+    "labels": [m.time.strftime("%H:%M") for m in meals],
+    "kcal": [m.total_calories for m in meals],
+    "protein": [m.total_protein for m in meals],
+    "fat": [m.total_fat for m in meals],
+    "carb": [m.total_carbs for m in meals],
+    }
+
+    from datetime import timedelta
+
+    week_labels = []
+    week_kcal = []
+    week_protein = []
+    week_fat = []
+    week_carb = []
+
+    for i in range(7):
+        day = today - timedelta(days=i)
+        meals_day = Meal.query.filter_by(user_id=user_id, date=day).all()
+
+        week_labels.append(day.strftime("%d.%m"))
+        week_kcal.append(sum(m.total_calories for m in meals_day))
+        week_protein.append(sum(m.total_protein for m in meals_day))
+        week_fat.append(sum(m.total_fat for m in meals_day))
+        week_carb.append(sum(m.total_carbs for m in meals_day))
+
+    week_labels.reverse()
+    week_kcal.reverse()
+    week_protein.reverse()
+    week_fat.reverse()
+    week_carb.reverse()
+
+    week_chart = {
+        "labels": week_labels,
+        "kcal": week_kcal,
+        "protein": week_protein,
+        "fat": week_fat,
+        "carb": week_carb,
+    }
+    first_day = today.replace(day=1)
+
+    month_meals = Meal.query.filter(
+        Meal.user_id == user_id,
+        Meal.date >= first_day,
+        Meal.date <= today
+    ).all()
+
+    days = {}
+    for m in month_meals:
+        days.setdefault(m.date, {"kcal": 0, "protein": 0, "fat": 0, "carb": 0})
+        days[m.date]["kcal"] += m.total_calories
+        days[m.date]["protein"] += m.total_protein
+        days[m.date]["fat"] += m.total_fat
+        days[m.date]["carb"] += m.total_carbs
+
+    if not days:
+        month_avg_kcal = 0
+        month_in_target = 0
+        month_max_kcal = 0
+        month_min_kcal = 0
+        month_avg_protein = 0
+        month_avg_fat = 0
+        month_avg_carb = 0
+        month_stability_label = "Немає даних"
+    else:
+        kcal_values = [v["kcal"] for v in days.values()]
+        protein_values = [v["protein"] for v in days.values()]
+        fat_values = [v["fat"] for v in days.values()]
+        carb_values = [v["carb"] for v in days.values()]
+
+        month_avg_kcal = round(sum(kcal_values) / len(kcal_values))
+        month_in_target = sum(1 for x in kcal_values if abs(x - goal_cal) <= 150)
+        month_max_kcal = max(kcal_values)
+        month_min_kcal = min(kcal_values)
+        month_avg_protein = round(sum(protein_values) / len(protein_values))
+        month_avg_fat = round(sum(fat_values) / len(fat_values))
+        month_avg_carb = round(sum(carb_values) / len(carb_values))
+
+        diff = month_max_kcal - month_min_kcal
+        if diff < 200:
+            month_stability_label = "Дуже стабільно"
+        elif diff < 400:
+            month_stability_label = "Стабільно"
+        else:
+            month_stability_label = "Коливається"
+
+    current_month_label = today.strftime("%B %Y")
+
     return {
         "meals": meals,
         "progress": progress,
@@ -243,6 +331,19 @@ def get_daily_nutrition_data(user_id):
         "week_avg_kcal": kcal,
         "week_in_target": 0,
         "week_best_day": "—",
+
+        "month_avg_kcal": month_avg_kcal,
+        "month_in_target": month_in_target,
+        "month_max_kcal": month_max_kcal,
+        "month_min_kcal": month_min_kcal,
+        "month_avg_protein": month_avg_protein,
+        "month_avg_fat": month_avg_fat,
+        "month_avg_carb": month_avg_carb,
+        "month_stability_label": month_stability_label,
+        "current_month_label": current_month_label,
+
+        "day_chart": day_chart,
+        "week_chart": week_chart,
 
         "month_avg_kcal": month_avg_kcal,
         "month_in_target": month_in_target,

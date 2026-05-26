@@ -635,9 +635,44 @@ endblock %} {% block styles %}
     </div>
   </div>
 
-  <div class="nutr-tooltip" id="nutr-tooltip"></div>
+<div class="nutr-tooltip" id="nutr-tooltip"></div>
 
-  {% endblock %} {% block scripts %}
-  <script src="{{ url_for('static', filename='js/nutrition.js') }}"></script>
-  {% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const dayChartData = {{ day_chart | tojson }};
+  const weekChartData = {{ week_chart | tojson }};
+
+  new Chart(document.getElementById("nutr-day-chart"), {
+    type: "line",
+    data: {
+      labels: dayChartData.labels,
+      datasets: [
+        { label: "Ккал", data: dayChartData.kcal, borderColor: "#f4c542" },
+        { label: "Білки", data: dayChartData.protein, borderColor: "#4a90e2" },
+        { label: "Жири", data: dayChartData.fat, borderColor: "#9b59b6" },
+        { label: "Вуглеводи", data: dayChartData.carb, borderColor: "#1abc9c" },
+      ],
+    },
+    options: { responsive: true }
+  });
+
+  new Chart(document.getElementById("nutr-week-chart"), {
+    type: "bar",
+    data: {
+      labels: weekChartData.labels,
+      datasets: [
+        { label: "Ккал", data: weekChartData.kcal, backgroundColor: "#f4c542" },
+      ],
+    },
+    options: { responsive: true }
+  });
+</script>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/nutrition.js') }}"></script>
+{% endblock %}
 </div>
+
