@@ -63,6 +63,10 @@ def calculate_quality(ration_items):
 
 
 def get_daily_nutrition_data(user_id):
+    from myapp.app.models import User
+    from myapp.app.services.water_calculator import calculate_water
+
+    user = User.query.get(user_id)
     today = date.today()
 
     meals = (
@@ -119,26 +123,168 @@ def get_daily_nutrition_data(user_id):
         for item in meal.items:
             ration_items.append(item)
 
-    ration_summary = {
-        "calories": total_calories,
-        "protein": total_protein,
-        "fat": total_fat,
-        "carbs": total_carbs,
-        "calories_diff": total_calories - goal_cal,
-        "protein_diff": total_protein - goal_prot,
-        "fat_diff": total_fat - goal_fat,
-        "carbs_diff": total_carbs - goal_carb,
-    }
-
-    weekly = {
-        "calorie_balance": total_calories - goal_cal,
-        "avg_protein": total_protein,
-        "avg_carbs": total_carbs,
-        "avg_fat": total_fat,
-        "trend_label": "Стабільно"
-    }
+    # === RATION ITEMS ===
+    ration_items = [item for meal in meals for item in meal.items]
 
     quality = calculate_quality(ration_items)
+
+    # === KPI VALUES ===
+    kcal = total_calories
+    kcal_goal = goal_cal
+    kcal_percent = progress["calories_percent"]
+    kcal_balance = kcal - kcal_goal
+
+    protein = total_protein
+    protein_goal = goal_prot
+    protein_percent = progress["protein_percent"]
+
+    fat = total_fat
+    fat_goal = goal_fat
+    fat_percent = progress["fat_percent"]
+
+    carb = total_carbs
+    carb_goal = goal_carb
+    carb_percent = progress["carbs_percent"]
+
+    # === BALANCE STATUS ===
+    if kcal_balance > 150:
+        balance_status = "Перебір"
+    elif kcal_balance < -150:
+        balance_status = "Недобір"
+    else:
+        balance_status = "Норма"
+
+    # === YESTERDAY ===
+    yesterday = today.fromordinal(today.toordinal() - 1)
+    meals_yesterday = Meal.query.filter_by(user_id=user_id, date=yesterday).all()
+
+    kcal_yesterday = sum(m.total_calories for m in meals_yesterday)
+    protein_yesterday = sum(m.total_protein for m in meals_yesterday)
+    fat_yesterday = sum(m.total_fat for m in meals_yesterday)
+    carb_yesterday = sum(m.total_carbs for m in meals_yesterday)
+
+    def diff_label(today, yest):
+        diff = today - yest
+        if diff > 0:
+            return f"+{diff}"
+        if diff < 0:
+            return f"{diff}"
+        return "0"
+
+    kcal_diff_label = diff_label(kcal, kcal_yesterday)
+    protein_diff_label = diff_label(protein, protein_yesterday)
+    fat_diff_label = diff_label(fat, fat_yesterday)
+    carb_diff_label = diff_label(carb, carb_yesterday)
+
+    water = calculate_water(user.weight, user.activity)
+    water_goal = round(user.weight * 0.03, 2)
+    water_percent = round((water / water_goal) * 100, 1) if water_goal > 0 else 0
+
+    weekly = {
+        "calorie_balance": kcal_balance,
+        "avg_protein": protein,
+        "avg_carbs": carb,
+        "avg_fat": fat,
+        "trend_label": "Стабільно",
+    }
+
+    month_avg_kcal = kcal
+    month_in_target = 0
+    month_max_kcal = kcal
+    month_min_kcal = kcal
+    month_avg_protein = protein
+    month_avg_fat = fat
+    month_avg_carb = carb
+    month_stability_label = "Немає даних"
+    current_month_label = today.strftime("%B %Y")
+
+    day_chart = {
+    "labels": [m.time.strftime("%H:%M") for m in meals],
+    "kcal": [m.total_calories for m in meals],
+    "protein": [m.total_protein for m in meals],
+    "fat": [m.total_fat for m in meals],
+    "carb": [m.total_carbs for m in meals],
+    }
+
+    from datetime import timedelta
+
+    week_labels = []
+    week_kcal = []
+    week_protein = []
+    week_fat = []
+    week_carb = []
+
+    for i in range(7):
+        day = today - timedelta(days=i)
+        meals_day = Meal.query.filter_by(user_id=user_id, date=day).all()
+
+        week_labels.append(day.strftime("%d.%m"))
+        week_kcal.append(sum(m.total_calories for m in meals_day))
+        week_protein.append(sum(m.total_protein for m in meals_day))
+        week_fat.append(sum(m.total_fat for m in meals_day))
+        week_carb.append(sum(m.total_carbs for m in meals_day))
+
+    week_labels.reverse()
+    week_kcal.reverse()
+    week_protein.reverse()
+    week_fat.reverse()
+    week_carb.reverse()
+
+    week_chart = {
+        "labels": week_labels,
+        "kcal": week_kcal,
+        "protein": week_protein,
+        "fat": week_fat,
+        "carb": week_carb,
+    }
+    first_day = today.replace(day=1)
+
+    month_meals = Meal.query.filter(
+        Meal.user_id == user_id,
+        Meal.date >= first_day,
+        Meal.date <= today
+    ).all()
+
+    days = {}
+    for m in month_meals:
+        days.setdefault(m.date, {"kcal": 0, "protein": 0, "fat": 0, "carb": 0})
+        days[m.date]["kcal"] += m.total_calories
+        days[m.date]["protein"] += m.total_protein
+        days[m.date]["fat"] += m.total_fat
+        days[m.date]["carb"] += m.total_carbs
+
+    if not days:
+        month_avg_kcal = 0
+        month_in_target = 0
+        month_max_kcal = 0
+        month_min_kcal = 0
+        month_avg_protein = 0
+        month_avg_fat = 0
+        month_avg_carb = 0
+        month_stability_label = "Немає даних"
+    else:
+        kcal_values = [v["kcal"] for v in days.values()]
+        protein_values = [v["protein"] for v in days.values()]
+        fat_values = [v["fat"] for v in days.values()]
+        carb_values = [v["carb"] for v in days.values()]
+
+        month_avg_kcal = round(sum(kcal_values) / len(kcal_values))
+        month_in_target = sum(1 for x in kcal_values if abs(x - goal_cal) <= 150)
+        month_max_kcal = max(kcal_values)
+        month_min_kcal = min(kcal_values)
+        month_avg_protein = round(sum(protein_values) / len(protein_values))
+        month_avg_fat = round(sum(fat_values) / len(fat_values))
+        month_avg_carb = round(sum(carb_values) / len(carb_values))
+
+        diff = month_max_kcal - month_min_kcal
+        if diff < 200:
+            month_stability_label = "Дуже стабільно"
+        elif diff < 400:
+            month_stability_label = "Стабільно"
+        else:
+            month_stability_label = "Коливається"
+
+    current_month_label = today.strftime("%B %Y")
 
     return {
         "meals": meals,
@@ -146,10 +292,70 @@ def get_daily_nutrition_data(user_id):
         "result": result,
         "macros_ratio": macros_ratio,
         "ration_items": ration_items,
-        "ration_summary": ration_summary,
+        "quality": quality,
+
+        "kcal": kcal,
+        "kcal_goal": kcal_goal,
+        "kcal_percent": kcal_percent,
+        "kcal_balance": kcal_balance,
+
+        "protein": protein,
+        "protein_goal": protein_goal,
+        "protein_percent": protein_percent,
+
+        "fat": fat,
+        "fat_goal": fat_goal,
+        "fat_percent": fat_percent,
+
+        "carb": carb,
+        "carb_goal": carb_goal,
+        "carb_percent": carb_percent,
+
+        "balance_status": balance_status,
+
+        "kcal_yesterday": kcal_yesterday,
+        "protein_yesterday": protein_yesterday,
+        "fat_yesterday": fat_yesterday,
+        "carb_yesterday": carb_yesterday,
+
+        "kcal_diff_label": kcal_diff_label,
+        "protein_diff_label": protein_diff_label,
+        "fat_diff_label": fat_diff_label,
+        "carb_diff_label": carb_diff_label,
+
+        "water": water,
+        "water_goal": water_goal,
+        "water_percent": water_percent,
+
         "weekly": weekly,
-        "quality": quality
+        "week_avg_kcal": kcal,
+        "week_in_target": 0,
+        "week_best_day": "—",
+
+        "month_avg_kcal": month_avg_kcal,
+        "month_in_target": month_in_target,
+        "month_max_kcal": month_max_kcal,
+        "month_min_kcal": month_min_kcal,
+        "month_avg_protein": month_avg_protein,
+        "month_avg_fat": month_avg_fat,
+        "month_avg_carb": month_avg_carb,
+        "month_stability_label": month_stability_label,
+        "current_month_label": current_month_label,
+
+        "day_chart": day_chart,
+        "week_chart": week_chart,
+
+        "month_avg_kcal": month_avg_kcal,
+        "month_in_target": month_in_target,
+        "month_max_kcal": month_max_kcal,
+        "month_min_kcal": month_min_kcal,
+        "month_avg_protein": month_avg_protein,
+        "month_avg_fat": month_avg_fat,
+        "month_avg_carb": month_avg_carb,
+        "month_stability_label": month_stability_label,
+        "current_month_label": current_month_label,
     }
+
 
 
 def add_meal_service(user_id, form):
