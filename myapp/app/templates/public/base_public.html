@@ -29,6 +29,8 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/components/navbar.css') }}"
     />
+
+    {% block component_styles %}
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/components/buttons.css') }}"
@@ -41,15 +43,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/components/cards.css') }}"
     />
-
-    {% block styles %}{% endblock %}
+    {% endblock %} {% block styles %}{% endblock %}
   </head>
 
   <body class="public-page">
-    <div class="core-orb core-orb-1"></div>
-    <div class="core-orb core-orb-2"></div>
-    <div class="core-orb core-orb-3"></div>
-
     {% include "components/public_nav.html" %}
 
     <main class="public-wrapper">{% block content %}{% endblock %}</main>

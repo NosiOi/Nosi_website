@@ -643,6 +643,10 @@ endblock %} {% block styles %}
   const dayChartData = {{ day_chart | tojson }};
   const weekChartData = {{ week_chart | tojson }};
 
+<<<<<<< HEAD
+=======
+  // === DAY CHART ===
+>>>>>>> fbc13b1
   new Chart(document.getElementById("nutr-day-chart"), {
     type: "line",
     data: {
@@ -657,6 +661,10 @@ endblock %} {% block styles %}
     options: { responsive: true }
   });
 
+<<<<<<< HEAD
+=======
+  // === WEEK CHART ===
+>>>>>>> fbc13b1
   new Chart(document.getElementById("nutr-week-chart"), {
     type: "bar",
     data: {

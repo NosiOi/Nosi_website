@@ -33,7 +33,6 @@ def assessment():
         db.session.add(assessment)
         db.session.commit()
 
-        # Генеруємо тренувальний план
         generate_training_plan_for_user(
             user=current_user,
             assessment=assessment,

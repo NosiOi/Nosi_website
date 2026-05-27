@@ -4,7 +4,6 @@
   href="{{ url_for('static', filename='css/pages/landing.css') }}"
 />
 {% endblock %} {% block content %}
-
 <section class="pub-landing">
   <div class="pub-landing-bg">
     <div class="pub-blob pub-blob-1"></div>
@@ -30,7 +29,7 @@
       <div class="pub-landing-actions">
         <a
           href="{{ url_for('auth.register') }}"
-          class="btn-root btn-register"
+          class="pub-btn pub-btn-register"
           data-glow="yellow"
         >
           Почати зараз
@@ -38,7 +37,7 @@
 
         <a
           href="{{ url_for('dashboard.demo') }}"
-          class="btn-root btn-login"
+          class="pub-btn pub-btn-login"
           data-glow="blue"
         >
           Спробувати демо
@@ -107,5 +106,4 @@
     });
   });
 </script>
-
 {% endblock %}
