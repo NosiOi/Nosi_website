@@ -5,192 +5,210 @@ endblock %} {% block styles %}
   href="{{ url_for('static', filename='css/pages/nutrition.css') }}"
 />
 {% endblock %} {% block body %}
-
 <div class="nutr-page">
   <header class="nutr-header">
     <div class="nutr-header-main">
-      <div class="nutr-header-text">
+      <div class="nutr-header-left">
         <h1 class="nutr-title">Харчування</h1>
         <p class="nutr-subtitle">
-          Контроль раціону, макронутрієнтів та прогресу
+          Щоденний контроль калорій, макросів та водного балансу
         </p>
       </div>
-
-      <div class="nutr-header-actions">
-        <button class="nutr-header-btn" data-open-meals-panel>
+      <div class="nutr-header-right">
+        <button
+          class="nutr-header-btn nutr-header-btn-primary"
+          data-open-meals-panel
+        >
           Керувати прийомами їжі
         </button>
-
         <button class="nutr-header-btn nutr-header-btn-ghost" data-open-tips>
           Поради з харчування
         </button>
       </div>
     </div>
-
     <div class="nutr-header-meta">
       <div class="nutr-header-meta-item">
         <span class="nutr-header-meta-label">Сьогодні</span>
         <span class="nutr-header-meta-value">{{ current_date }}</span>
       </div>
-
       <div class="nutr-header-meta-item">
         <span class="nutr-header-meta-label">Ціль на день</span>
         <span class="nutr-header-meta-value">{{ kcal_goal }} ккал</span>
       </div>
-
       <div class="nutr-header-meta-item">
-        <span class="nutr-header-meta-label">Статус</span>
-        <span class="nutr-header-meta-pill">У процесі</span>
+        <span class="nutr-header-meta-label">Статус балансу</span>
+        <span class="nutr-header-meta-pill">{{ balance_status }}</span>
       </div>
     </div>
   </header>
+
   <div class="nutr-tips-popover" data-tips-popover>
-  <div class="nutr-tips-popover-header">Поради з харчування</div>
-
-  <div class="nutr-tips-popover-body">
-    {% for tip in tips %}
-    <div class="nutr-tip-item">
-      <div class="nutr-tip-dot"></div>
-      <div class="nutr-tip-text">{{ tip }}</div>
+    <div class="nutr-tips-popover-header">Поради з харчування</div>
+    <div class="nutr-tips-popover-body">
+      {% if tips %} {% for tip in tips %}
+      <div class="nutr-tip-item">
+        <div class="nutr-tip-dot"></div>
+        <div class="nutr-tip-text">{{ tip }}</div>
+      </div>
+      {% endfor %} {% else %}
+      <div class="nutr-tip-empty">Немає порад на сьогодні.</div>
+      {% endif %}
     </div>
-    {% else %}
-    <div class="nutr-tip-empty">Немає порад на сьогодні.</div>
-    {% endfor %}
   </div>
-</div>
-
-
 
   <section class="nutr-grid-top">
-    <article class="nutr-card nutr-card-kpi">
+    <article class="nutr-card nutr-card-kpi" data-kpi="kcal">
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
-          <span class="nutr-card-title">Ккал за день</span>
+          <span class="nutr-card-title">Калорії за день</span>
           <button class="nutr-help" data-help-key="kcal">?</button>
         </div>
-        <span class="nutr-card-tag nutr-tag-yellow">Енергія</span>
+        <span class="nutr-card-tag nutr-tag-kcal">Енергія</span>
       </div>
-
       <div class="nutr-kpi-main">
         <span class="nutr-kpi-value">{{ kcal }}</span>
-        <span class="nutr-kpi-footer-value">{{ kcal_balance }} ккал</span>
+        <span class="nutr-kpi-suffix">ккал</span>
       </div>
-
       <div class="nutr-kpi-progress">
         <div class="nutr-kpi-progress-bar">
           <div
-            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-yellow"
+            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-kcal"
             style="width: {{ kcal_percent }}%;"
           ></div>
         </div>
         <div class="nutr-kpi-progress-meta">
-          <span>{{ kcal }} / {{ kcal_goal }} ккал</span>
+          <span>Ціль: {{ kcal_goal }} ккал</span>
           <span>{{ kcal_percent }}%</span>
         </div>
       </div>
-
-    <div class="nutr-kpi-footer">
-      <span class="nutr-kpi-footer-label">Баланс дня</span>
-      <span class="nutr-kpi-footer-value">{{ kcal_balance }} ккал</span>
-    </div>
+      <div class="nutr-kpi-footer">
+        <div class="nutr-kpi-footer-block">
+          <span class="nutr-kpi-footer-label">Баланс</span>
+          <span class="nutr-kpi-footer-value"
+            >{% if kcal_balance > 0 %}+{{ kcal_balance }}{% else %}{{
+            kcal_balance }}{% endif %} ккал</span
+          >
+        </div>
+        <div class="nutr-kpi-footer-block">
+          <span class="nutr-kpi-footer-label">Вчора</span>
+          <span class="nutr-kpi-footer-value"
+            >{{ kcal_yesterday }} ккал ({{ kcal_diff_label }})</span
+          >
+        </div>
+      </div>
     </article>
 
-
-    <article class="nutr-card nutr-card-kpi">
+    <article class="nutr-card nutr-card-kpi" data-kpi="protein">
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
           <span class="nutr-card-title">Білки</span>
           <button class="nutr-help" data-help-key="protein">?</button>
         </div>
-        <span class="nutr-card-tag nutr-tag-blue">М'язи</span>
+        <span class="nutr-card-tag nutr-tag-protein">Відновлення</span>
       </div>
-
       <div class="nutr-kpi-main">
         <span class="nutr-kpi-value">{{ protein }}</span>
+        <span class="nutr-kpi-suffix">г</span>
       </div>
-
       <div class="nutr-kpi-progress">
         <div class="nutr-kpi-progress-bar">
           <div
-            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-blue"
+            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-protein"
             style="width: {{ protein_percent }}%;"
           ></div>
         </div>
         <div class="nutr-kpi-progress-meta">
-          <span>{{ protein }} / {{ protein_goal }} г</span>
+          <span>Ціль: {{ protein_goal }} г</span>
           <span>{{ protein_percent }}%</span>
         </div>
       </div>
-
       <div class="nutr-kpi-footer">
-        <span class="nutr-kpi-footer-label">Ціль білків</span>
-        <span class="nutr-kpi-footer-value">{{ protein_goal }} г</span>
+        <div class="nutr-kpi-footer-block">
+          <span class="nutr-kpi-footer-label">Вчора</span>
+          <span class="nutr-kpi-footer-value"
+            >{{ protein_yesterday }} г ({{ protein_diff_label }})</span
+          >
+        </div>
+        <div class="nutr-kpi-footer-block">
+          <span class="nutr-kpi-footer-label">Частка в макросах</span>
+          <span class="nutr-kpi-footer-value">{{ macros_ratio.protein }}%</span>
+        </div>
       </div>
     </article>
 
-
-    <article class="nutr-card nutr-card-kpi">
+    <article class="nutr-card nutr-card-kpi" data-kpi="fat">
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
           <span class="nutr-card-title">Жири</span>
           <button class="nutr-help" data-help-key="fat">?</button>
         </div>
-        <span class="nutr-card-tag nutr-tag-violet">Баланс</span>
+        <span class="nutr-card-tag nutr-tag-fat">Гормони</span>
       </div>
-
       <div class="nutr-kpi-main">
         <span class="nutr-kpi-value">{{ fat }}</span>
+        <span class="nutr-kpi-suffix">г</span>
       </div>
-
       <div class="nutr-kpi-progress">
         <div class="nutr-kpi-progress-bar">
           <div
-            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-violet"
+            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-fat"
             style="width: {{ fat_percent }}%;"
           ></div>
         </div>
         <div class="nutr-kpi-progress-meta">
-          <span>{{ fat }} / {{ fat_goal }} г</span>
+          <span>Ціль: {{ fat_goal }} г</span>
           <span>{{ fat_percent }}%</span>
         </div>
       </div>
-
       <div class="nutr-kpi-footer">
-        <span class="nutr-kpi-footer-label">Ціль жирів</span>
-        <span class="nutr-kpi-footer-value">{{ fat_goal }} г</span>
+        <div class="nutr-kpi-footer-block">
+          <span class="nutr-kpi-footer-label">Вчора</span>
+          <span class="nutr-kpi-footer-value"
+            >{{ fat_yesterday }} г ({{ fat_diff_label }})</span
+          >
+        </div>
+        <div class="nutr-kpi-footer-block">
+          <span class="nutr-kpi-footer-label">Частка в макросах</span>
+          <span class="nutr-kpi-footer-value">{{ macros_ratio.fat }}%</span>
+        </div>
       </div>
     </article>
 
-
-    <article class="nutr-card nutr-card-kpi">
+    <article class="nutr-card nutr-card-kpi" data-kpi="carb">
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
           <span class="nutr-card-title">Вуглеводи</span>
           <button class="nutr-help" data-help-key="carb">?</button>
         </div>
-        <span class="nutr-card-tag nutr-tag-turquoise">Енергія</span>
+        <span class="nutr-card-tag nutr-tag-carb">Енергія на тренування</span>
       </div>
-
       <div class="nutr-kpi-main">
         <span class="nutr-kpi-value">{{ carb }}</span>
+        <span class="nutr-kpi-suffix">г</span>
       </div>
-
       <div class="nutr-kpi-progress">
         <div class="nutr-kpi-progress-bar">
           <div
-            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-turquoise"
+            class="nutr-kpi-progress-fill nutr-kpi-progress-fill-carb"
             style="width: {{ carb_percent }}%;"
           ></div>
         </div>
         <div class="nutr-kpi-progress-meta">
-          <span>{{ carb }} / {{ carb_goal }} г</span>
+          <span>Ціль: {{ carb_goal }} г</span>
           <span>{{ carb_percent }}%</span>
         </div>
       </div>
-
       <div class="nutr-kpi-footer">
-        <span class="nutr-kpi-footer-label">Ціль вуглеводів</span>
-        <span class="nutr-kpi-footer-value">{{ carb_goal }} г</span>
+        <div class="nutr-kpi-footer-block">
+          <span class="nutr-kpi-footer-label">Вчора</span>
+          <span class="nutr-kpi-footer-value"
+            >{{ carb_yesterday }} г ({{ carb_diff_label }})</span
+          >
+        </div>
+        <div class="nutr-kpi-footer-block">
+          <span class="nutr-kpi-footer-label">Частка в макросах</span>
+          <span class="nutr-kpi-footer-value">{{ macros_ratio.carb }}%</span>
+        </div>
       </div>
     </article>
   </section>
@@ -202,74 +220,88 @@ endblock %} {% block styles %}
           <span class="nutr-card-title">Баланс дня</span>
           <button class="nutr-help" data-help-key="balance">?</button>
         </div>
-        <span class="nutr-card-tag nutr-tag-outline">Поточний день</span>
+        <span class="nutr-card-tag nutr-tag-outline">{{ balance_status }}</span>
       </div>
-
       <div class="nutr-balance-main">
-        <div class="nutr-balance-row">
-          <span class="nutr-balance-label">Спожито</span>
-          <span class="nutr-balance-value">{{ kcal }} ккал</span>
-        </div>
-        <div class="nutr-balance-row">
-          <span class="nutr-balance-label">Ціль</span>
-          <span class="nutr-balance-value">{{ kcal_goal }} ккал</span>
-        </div>
         <div class="nutr-balance-row nutr-balance-row-accent">
-          <span class="nutr-balance-label">Різниця</span>
-          <span class="nutr-balance-value">{{ kcal_balance }} ккал</span>
+          <span class="nutr-balance-label">Калорії</span>
+          <span class="nutr-balance-value"
+            >{{ kcal }} / {{ kcal_goal }} ккал</span
+          >
+        </div>
+        <div class="nutr-balance-row">
+          <span class="nutr-balance-label">Білки</span>
+          <span class="nutr-balance-value"
+            >{{ protein }} / {{ protein_goal }} г</span
+          >
+        </div>
+        <div class="nutr-balance-row">
+          <span class="nutr-balance-label">Жири</span>
+          <span class="nutr-balance-value">{{ fat }} / {{ fat_goal }} г</span>
+        </div>
+        <div class="nutr-balance-row">
+          <span class="nutr-balance-label">Вуглеводи</span>
+          <span class="nutr-balance-value">{{ carb }} / {{ carb_goal }} г</span>
         </div>
       </div>
-
       <div class="nutr-balance-footer">
-        <span class="nutr-balance-status-label">Статус</span>
-        <span class="nutr-balance-status-pill">{{ balance_status }}</span>
+        <div class="nutr-balance-footer-left">
+          <span class="nutr-balance-status-label">Оцінка якості раціону</span>
+          <span class="nutr-balance-status-pill"
+            >{{ quality.score }} / 100</span
+          >
+        </div>
+        <div class="nutr-balance-footer-right">
+          <span class="nutr-balance-status-label">Ціль на місяць</span>
+          <span class="nutr-balance-status-pill"
+            >{{ month_stability_label }}</span
+          >
+        </div>
       </div>
     </article>
 
     <article class="nutr-card nutr-card-compare">
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
-          <span class="nutr-card-title">Порівняння з вчорашнім днем</span>
+          <span class="nutr-card-title">Порівняння з вчора</span>
           <button class="nutr-help" data-help-key="compare">?</button>
         </div>
-        <span class="nutr-card-tag nutr-tag-outline">День до дня</span>
+        <span class="nutr-card-tag nutr-tag-outline">Динаміка</span>
       </div>
-
       <div class="nutr-compare-grid">
         <div class="nutr-compare-item">
-          <span class="nutr-compare-label">Ккал</span>
+          <span class="nutr-compare-label">Калорії</span>
           <div class="nutr-compare-values">
-            <span class="nutr-compare-today">{{ kcal }} сьогодні</span>
-            <span class="nutr-compare-prev">{{ kcal_yesterday }} вчора</span>
+            <span class="nutr-compare-today">{{ kcal }} ккал</span>
+            <span class="nutr-compare-prev">{{ kcal_yesterday }} ккал</span>
+            <span class="nutr-compare-diff nutr-compare-diff-kcal"
+              >{{ kcal_diff_label }}</span
+            >
           </div>
-          <span class="nutr-compare-diff nutr-compare-diff-kcal">{{ kcal_diff_label }}</span>
         </div>
-
         <div class="nutr-compare-item">
           <span class="nutr-compare-label">Білки</span>
           <div class="nutr-compare-values">
             <span class="nutr-compare-today">{{ protein }} г</span>
             <span class="nutr-compare-prev">{{ protein_yesterday }} г</span>
+            <span class="nutr-compare-diff">{{ protein_diff_label }}</span>
           </div>
-          <span class="nutr-compare-diff">{{ protein_diff_label }}</span>
         </div>
-
         <div class="nutr-compare-item">
           <span class="nutr-compare-label">Жири</span>
           <div class="nutr-compare-values">
             <span class="nutr-compare-today">{{ fat }} г</span>
             <span class="nutr-compare-prev">{{ fat_yesterday }} г</span>
+            <span class="nutr-compare-diff">{{ fat_diff_label }}</span>
           </div>
-          <span class="nutr-compare-diff">{{ fat_diff_label }}</span>
         </div>
-
         <div class="nutr-compare-item">
           <span class="nutr-compare-label">Вуглеводи</span>
           <div class="nutr-compare-values">
             <span class="nutr-compare-today">{{ carb }} г</span>
             <span class="nutr-compare-prev">{{ carb_yesterday }} г</span>
+            <span class="nutr-compare-diff">{{ carb_diff_label }}</span>
           </div>
-          <span class="nutr-compare-diff">{{ carb_diff_label }}</span>
         </div>
       </div>
     </article>
@@ -280,15 +312,13 @@ endblock %} {% block styles %}
           <span class="nutr-card-title">Водний баланс</span>
           <button class="nutr-help" data-help-key="water">?</button>
         </div>
-        <span class="nutr-card-tag nutr-tag-blue">Гідратація</span>
+        <span class="nutr-card-tag nutr-tag-water">Гідратація</span>
       </div>
-
       <div class="nutr-water-main">
         <div class="nutr-water-value-wrap">
           <span class="nutr-water-value">{{ water }}</span>
           <span class="nutr-water-suffix">л</span>
         </div>
-
         <div class="nutr-water-progress">
           <div class="nutr-water-progress-bar">
             <div
@@ -297,12 +327,11 @@ endblock %} {% block styles %}
             ></div>
           </div>
           <div class="nutr-water-progress-meta">
-            <span>{{ water }} / {{ water_goal }} л</span>
+            <span>Ціль: {{ water_goal }} л</span>
             <span>{{ water_percent }}%</span>
           </div>
         </div>
       </div>
-
       <div class="nutr-water-actions">
         <button class="nutr-water-btn" data-water-add="0.25">+0.25 л</button>
         <button class="nutr-water-btn" data-water-add="0.5">+0.5 л</button>
@@ -318,7 +347,7 @@ endblock %} {% block styles %}
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
           <span class="nutr-card-title">Динаміка КБЖВ за день</span>
-          <button class="nutr-help" data-help-key="chart">?</button>
+          <button class="nutr-help" data-help-key="day_chart">?</button>
         </div>
         <div class="nutr-chart-legend">
           <span class="nutr-legend-item nutr-legend-kcal">Ккал</span>
@@ -327,7 +356,6 @@ endblock %} {% block styles %}
           <span class="nutr-legend-item nutr-legend-carb">Вуглеводи</span>
         </div>
       </div>
-
       <div class="nutr-chart-body">
         <canvas id="nutr-day-chart"></canvas>
       </div>
@@ -337,30 +365,29 @@ endblock %} {% block styles %}
       <div class="nutr-card-header">
         <div class="nutr-card-title-wrap">
           <span class="nutr-card-title">Тижневий прогрес</span>
-          <button class="nutr-help" data-help-key="week">?</button>
+          <button class="nutr-help" data-help-key="week_chart">?</button>
         </div>
-        <span class="nutr-card-tag nutr-tag-outline">7 днів</span>
+        <span class="nutr-card-tag nutr-tag-outline">Останні 7 днів</span>
       </div>
-
       <div class="nutr-week-body">
         <div class="nutr-week-chart">
           <canvas id="nutr-week-chart"></canvas>
         </div>
-
         <div class="nutr-week-summary">
           <div class="nutr-week-row">
-            <span class="nutr-week-label">Середні ккал</span>
+            <span class="nutr-week-label">Середні калорії за день</span>
             <span class="nutr-week-value">{{ week_avg_kcal }} ккал</span>
           </div>
-
           <div class="nutr-week-row">
-            <span class="nutr-week-label">Днів у цілі</span>
-            <span class="nutr-week-value">{{ week_in_target }} / 7</span>
+            <span class="nutr-week-label">Баланс за тиждень</span>
+            <span class="nutr-week-value"
+              >{% if weekly.calorie_balance > 0 %}+{{ weekly.calorie_balance
+              }}{% else %}{{ weekly.calorie_balance }}{% endif %} ккал</span
+            >
           </div>
-
           <div class="nutr-week-row">
-            <span class="nutr-week-label">Найкращий день</span>
-            <span class="nutr-week-value">{{ week_best_day }}</span>
+            <span class="nutr-week-label">Тренд</span>
+            <span class="nutr-week-value">{{ weekly.trend_label }}</span>
           </div>
         </div>
       </div>
@@ -378,44 +405,36 @@ endblock %} {% block styles %}
           >{{ current_month_label }}</span
         >
       </div>
-
       <div class="nutr-month-body">
         <div class="nutr-month-grid">
           <div class="nutr-month-item">
-            <span class="nutr-month-label">Середні ккал</span>
+            <span class="nutr-month-label">Середні калорії</span>
             <span class="nutr-month-value">{{ month_avg_kcal }} ккал</span>
           </div>
-
           <div class="nutr-month-item">
             <span class="nutr-month-label">Днів у цілі</span>
-            <span class="nutr-month-value">{{ month_in_target }} днів</span>
+            <span class="nutr-month-value">{{ month_in_target }}</span>
           </div>
-
           <div class="nutr-month-item">
-            <span class="nutr-month-label">Максимум ккал</span>
+            <span class="nutr-month-label">Максимум за день</span>
             <span class="nutr-month-value">{{ month_max_kcal }} ккал</span>
           </div>
-
           <div class="nutr-month-item">
-            <span class="nutr-month-label">Мінімум ккал</span>
+            <span class="nutr-month-label">Мінімум за день</span>
             <span class="nutr-month-value">{{ month_min_kcal }} ккал</span>
           </div>
-
           <div class="nutr-month-item">
             <span class="nutr-month-label">Середні білки</span>
             <span class="nutr-month-value">{{ month_avg_protein }} г</span>
           </div>
-
           <div class="nutr-month-item">
             <span class="nutr-month-label">Середні жири</span>
             <span class="nutr-month-value">{{ month_avg_fat }} г</span>
           </div>
-
           <div class="nutr-month-item">
             <span class="nutr-month-label">Середні вуглеводи</span>
             <span class="nutr-month-value">{{ month_avg_carb }} г</span>
           </div>
-
           <div class="nutr-month-item">
             <span class="nutr-month-label">Стабільність</span>
             <span class="nutr-month-value">{{ month_stability_label }}</span>
@@ -423,11 +442,50 @@ endblock %} {% block styles %}
         </div>
       </div>
     </article>
+
+    <article class="nutr-card nutr-card-tips">
+      <div class="nutr-card-header">
+        <div class="nutr-card-title-wrap">
+          <span class="nutr-card-title">Якість раціону</span>
+          <button class="nutr-help" data-help-key="quality">?</button>
+        </div>
+        <span class="nutr-card-tag nutr-tag-outline">Огляд</span>
+      </div>
+      <div class="nutr-quality-body">
+        <div class="nutr-quality-row">
+          <span class="nutr-quality-label">Цільні продукти</span>
+          <span class="nutr-quality-value"
+            >{{ quality.whole_foods_percent }}%</span
+          >
+        </div>
+        <div class="nutr-quality-row">
+          <span class="nutr-quality-label">Оброблені продукти</span>
+          <span class="nutr-quality-value"
+            >{{ quality.processed_foods_percent }}%</span
+          >
+        </div>
+        <div class="nutr-quality-row">
+          <span class="nutr-quality-label">Оцінка клітковини</span>
+          <span class="nutr-quality-value">{{ quality.fiber }}</span>
+        </div>
+        <div class="nutr-quality-row">
+          <span class="nutr-quality-label">Загальний індекс</span>
+          <span class="nutr-quality-value">{{ quality.score }} / 100</span>
+        </div>
+      </div>
+    </article>
+  </section>
+
   <div class="nutr-meals-overlay" data-meals-overlay>
     <div class="nutr-meals-panel" data-meals-panel>
       <div class="nutr-meals-header">
-        <span class="nutr-meals-title">Прийоми їжі</span>
-        <button class="nutr-meals-close" data-meals-close>×</button>
+        <div class="nutr-meals-header-left">
+          <h2 class="nutr-meals-title">Прийоми їжі</h2>
+          <p class="nutr-meals-subtitle">
+            Керуйте своїм денним раціоном, історією та шаблонами
+          </p>
+        </div>
+        <button class="nutr-meals-close" data-meals-close>&times;</button>
       </div>
 
       <div class="nutr-meals-tabs">
@@ -444,146 +502,170 @@ endblock %} {% block styles %}
       </div>
 
       <div class="nutr-meals-body">
+        <!-- TODAY -->
         <div
           class="nutr-meals-section nutr-meals-section-active"
           data-meals-section="today"
         >
           <div class="nutr-meals-columns">
             <div class="nutr-meals-column">
-              <h3 class="nutr-meals-column-title">Прийоми за день</h3>
-
-              <div class="nutr-meals-list">
-                {% for meal in meals %}
-                <div class="nutr-meal-item">
-                  <div class="nutr-meal-main">
-                    <span class="nutr-meal-name">{{ meal.name }}</span>
-                    <span class="nutr-meal-kcal">{{ meal.kcal }} ккал</span>
-                  </div>
-
-                  <div class="nutr-meal-meta">
-                    <span class="nutr-meal-time">{{ meal.time }}</span>
-                    <span class="nutr-meal-macros">
-                      {{ meal.protein }}г Б • {{ meal.fat }}г Ж • {{ meal.carb
-                      }}г В
-                    </span>
-                  </div>
-
-                  <div class="nutr-meal-actions">
-                    <button
-                      class="nutr-meal-action"
-                      data-edit-meal="{{ meal.id }}"
-                    >
-                      Редагувати
-                    </button>
-                    <button
-                      class="nutr-meal-action nutr-meal-action-danger"
-                      data-delete-meal="{{ meal.id }}"
-                    >
-                      Видалити
-                    </button>
-                  </div>
-                </div>
-                {% else %}
-                <div class="nutr-meal-empty">Прийоми їжі ще не додані.</div>
-                {% endfor %}
-              </div>
-            </div>
-
-            <div class="nutr-meals-column">
               <h3 class="nutr-meals-column-title">Додати прийом</h3>
 
               <form
-                class="nutr-meal-form"
-                method="post"
-                action="{{ url_for('nutrition.add_meal') }}"
+                action="/nutrition/add_meal"
+                method="POST"
+                class="nutr-meal-2row"
               >
-                <div class="nutr-form-row">
-                  <label class="nutr-form-label">Назва</label>
-                  <input class="nutr-input" name="name" required />
+                <div class="nutr-meal-row-top">
+                  <input
+                    type="text"
+                    name="name"
+                    class="nutr-meal-input"
+                    placeholder="Назва страви"
+                    required
+                  />
+
+                  <select
+                    name="category"
+                    class="nutr-meal-input nutr-meal-select"
+                    required
+                  >
+                    <option value="Сніданок">Сніданок</option>
+                    <option value="Обід">Обід</option>
+                    <option value="Вечеря">Вечеря</option>
+                    <option value="Перекус">Перекус</option>
+                    <option value="Після тренування">Після тренування</option>
+                  </select>
+
+                  <input type="time" name="time" class="nutr-meal-input" />
                 </div>
 
-                <div class="nutr-form-row">
-                  <label class="nutr-form-label">Час</label>
+                <div class="nutr-meal-row-bottom">
                   <input
-                    class="nutr-input"
-                    name="time"
-                    placeholder="08:30"
+                    type="number"
+                    name="kcal"
+                    class="nutr-meal-input"
+                    placeholder="Ккал"
+                    min="0"
+                    required
+                  />
+
+                  <input
+                    type="number"
+                    name="protein"
+                    class="nutr-meal-input"
+                    placeholder="Б"
+                    min="0"
+                    required
+                  />
+
+                  <input
+                    type="number"
+                    name="fat"
+                    class="nutr-meal-input"
+                    placeholder="Ж"
+                    min="0"
+                    required
+                  />
+
+                  <input
+                    type="number"
+                    name="carb"
+                    class="nutr-meal-input"
+                    placeholder="В"
+                    min="0"
+                    required
+                  />
+
+                  <button type="submit" class="nutr-meal-add-btn">+</button>
+                </div>
+              </form>
+
+              <!-- ДОДАТИ ПРОДУКТ -->
+              <h3 class="nutr-meals-column-title">Додати продукт</h3>
+
+              <form
+                action="/nutrition/add_item"
+                method="POST"
+                class="nutr-product-2row"
+              >
+                <div class="nutr-product-row-top">
+                  <select
+                    name="meal_id"
+                    class="nutr-product-input nutr-product-select"
+                    required
+                  >
+                    {% for meal in meals %}
+                    <option value="{{ meal.id }}">
+                      {% if meal.time %}{{ meal.time.strftime("%H:%M") }} • {%
+                      endif %} {{ meal.name or "Без назви" }}
+                    </option>
+                    {% endfor %}
+                  </select>
+
+                  <input
+                    type="text"
+                    name="name"
+                    class="nutr-product-input"
+                    placeholder="Назва продукту"
                     required
                   />
                 </div>
 
-                <div class="nutr-form-row nutr-form-row-grid">
-                  <div>
-                    <label class="nutr-form-label">Ккал</label>
-                    <input
-                      class="nutr-input"
-                      name="kcal"
-                      type="number"
-                      min="0"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label class="nutr-form-label">Білки</label>
-                    <input
-                      class="nutr-input"
-                      name="protein"
-                      type="number"
-                      min="0"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label class="nutr-form-label">Жири</label>
-                    <input
-                      class="nutr-input"
-                      name="fat"
-                      type="number"
-                      min="0"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label class="nutr-form-label">Вуглеводи</label>
-                    <input
-                      class="nutr-input"
-                      name="carb"
-                      type="number"
-                      min="0"
-                      required
-                    />
-                  </div>
-                </div>
+                <div class="nutr-product-row-bottom">
+                  <input
+                    type="number"
+                    name="calories"
+                    class="nutr-product-input"
+                    placeholder="Ккал"
+                    min="0"
+                    required
+                  />
 
-                <div class="nutr-form-row">
-                  <label class="nutr-form-label">Категорія</label>
-                  <select class="nutr-input" name="category">
-                    <option value="breakfast">Сніданок</option>
-                    <option value="lunch">Обід</option>
-                    <option value="dinner">Вечеря</option>
-                    <option value="snack">Перекус</option>
-                  </select>
-                </div>
+                  <input
+                    type="number"
+                    name="protein"
+                    class="nutr-product-input"
+                    placeholder="Б"
+                    min="0"
+                    required
+                  />
 
-                <div class="nutr-form-actions">
-                  <button class="nutr-form-btn" type="submit">
-                    Додати прийом
-                  </button>
+                  <input
+                    type="number"
+                    name="fat"
+                    class="nutr-product-input"
+                    placeholder="Ж"
+                    min="0"
+                    required
+                  />
+
+                  <input
+                    type="number"
+                    name="carbs"
+                    class="nutr-product-input"
+                    placeholder="В"
+                    min="0"
+                    required
+                  />
+
+                  <button type="submit" class="nutr-product-add-btn">+</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
 
+        <!-- HISTORY -->
         <div class="nutr-meals-section" data-meals-section="history">
+          <h3 class="nutr-meals-column-title">Історія прийомів</h3>
           <div class="nutr-history-list">
-            {% for day in meals_history %}
+            {% if meals_history %} {% for day in meals_history %}
             <div class="nutr-history-day">
               <div class="nutr-history-day-header">
                 <span class="nutr-history-date">{{ day.date }}</span>
                 <span class="nutr-history-kcal">{{ day.total_kcal }} ккал</span>
               </div>
-
               <div class="nutr-history-meals">
                 {% for meal in day.meals %}
                 <div class="nutr-history-meal">
@@ -595,28 +677,28 @@ endblock %} {% block styles %}
                 {% endfor %}
               </div>
             </div>
-            {% else %}
+            {% endfor %} {% else %}
             <div class="nutr-history-empty">Історія поки порожня.</div>
-            {% endfor %}
+            {% endif %}
           </div>
         </div>
 
+        <!-- TEMPLATES -->
         <div class="nutr-meals-section" data-meals-section="templates">
+          <h3 class="nutr-meals-column-title">Шаблони прийомів</h3>
           <div class="nutr-templates-grid">
-            {% for template in meal_templates %}
+            {% if meal_templates %} {% for template in meal_templates %}
             <div class="nutr-template-card">
               <div class="nutr-template-header">
                 <span class="nutr-template-name">{{ template.name }}</span>
                 <span class="nutr-template-kcal">{{ template.kcal }} ккал</span>
               </div>
-
               <div class="nutr-template-body">
                 <span class="nutr-template-macros">
                   {{ template.protein }}г Б • {{ template.fat }}г Ж • {{
                   template.carb }}г В
                 </span>
               </div>
-
               <div class="nutr-template-actions">
                 <button
                   class="nutr-template-btn"
@@ -626,61 +708,24 @@ endblock %} {% block styles %}
                 </button>
               </div>
             </div>
-            {% else %}
+            {% endfor %} {% else %}
             <div class="nutr-templates-empty">Шаблони ще не створені.</div>
-            {% endfor %}
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
   </div>
 
-<div class="nutr-tooltip" id="nutr-tooltip"></div>
+  <div class="nutr-tooltip" id="nutr-tooltip"></div>
 
+  <div class="nutr-tooltip" id="nutr-tooltip"></div>
+</div>
+{% endblock %} {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
   const dayChartData = {{ day_chart | tojson }};
   const weekChartData = {{ week_chart | tojson }};
-
-<<<<<<< HEAD
-=======
-  // === DAY CHART ===
->>>>>>> fbc13b1
-  new Chart(document.getElementById("nutr-day-chart"), {
-    type: "line",
-    data: {
-      labels: dayChartData.labels,
-      datasets: [
-        { label: "Ккал", data: dayChartData.kcal, borderColor: "#f4c542" },
-        { label: "Білки", data: dayChartData.protein, borderColor: "#4a90e2" },
-        { label: "Жири", data: dayChartData.fat, borderColor: "#9b59b6" },
-        { label: "Вуглеводи", data: dayChartData.carb, borderColor: "#1abc9c" },
-      ],
-    },
-    options: { responsive: true }
-  });
-
-<<<<<<< HEAD
-=======
-  // === WEEK CHART ===
->>>>>>> fbc13b1
-  new Chart(document.getElementById("nutr-week-chart"), {
-    type: "bar",
-    data: {
-      labels: weekChartData.labels,
-      datasets: [
-        { label: "Ккал", data: weekChartData.kcal, backgroundColor: "#f4c542" },
-      ],
-    },
-    options: { responsive: true }
-  });
 </script>
-
-{% endblock %}
-
-{% block scripts %}
 <script src="{{ url_for('static', filename='js/nutrition.js') }}"></script>
 {% endblock %}
-</div>
-

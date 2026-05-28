@@ -123,7 +123,6 @@ def get_daily_nutrition_data(user_id):
         for item in meal.items:
             ration_items.append(item)
 
-    # === RATION ITEMS ===
     ration_items = [item for meal in meals for item in meal.items]
 
     quality = calculate_quality(ration_items)
@@ -146,7 +145,6 @@ def get_daily_nutrition_data(user_id):
     carb_goal = goal_carb
     carb_percent = progress["carbs_percent"]
 
-    # === BALANCE STATUS ===
     if kcal_balance > 150:
         balance_status = "Перебір"
     elif kcal_balance < -150:
@@ -286,6 +284,30 @@ def get_daily_nutrition_data(user_id):
 
     current_month_label = today.strftime("%B %Y")
 
+    history_days = []
+    for i in range(1, 15):
+        d = today - timedelta(days=i)
+        meals_day = Meal.query.filter_by(user_id=user_id, date=d).all()
+        if meals_day:
+            history_days.append({
+                "date": d.strftime("%d.%m.%Y"),
+                "total_kcal": sum(m.total_calories for m in meals_day),
+                "meals": [
+                    {"name": m.name, "kcal": m.total_calories}
+                    for m in meals_day
+                ]
+            })
+
+    templates = NutritionPlan.query.filter_by(user_id=user_id).all()
+    meal_templates = [{
+        "id": t.id,
+        "name": f"План #{t.id}",
+        "kcal": t.calories,
+        "protein": t.protein,
+        "fat": t.fats,
+        "carb": t.carbs
+    } for t in templates]
+
     return {
         "meals": meals,
         "progress": progress,
@@ -354,6 +376,9 @@ def get_daily_nutrition_data(user_id):
         "month_avg_carb": month_avg_carb,
         "month_stability_label": month_stability_label,
         "current_month_label": current_month_label,
+
+        "meals_history": history_days,
+        "meal_templates": meal_templates,
     }
 
 

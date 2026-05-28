@@ -1,693 +1,178 @@
 .nutr-page {
     width: 100%;
     min-height: 100vh;
-    padding: 40px 50px 120px;
-    background: var(--core-bg);
+    padding: 32px 40px 96px;
+    background: #05060a;
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 60px;
+    gap: 32px;
+    color: #f7f7fb;
     overflow-x: hidden;
-    overflow-y: hidden;
 }
 
 .nutr-page::before,
 .nutr-page::after {
     content: "";
     position: absolute;
-    width: 420px;
-    height: 420px;
-    border-radius: 50%;
-    filter: blur(80px);
+    border-radius: 999px;
+    filter: blur(40px);
     opacity: 0.55;
     pointer-events: none;
     z-index: 0;
-    transition: 0.4s ease;
 }
 
 .nutr-page::before {
-    top: -120px;
-    left: 20%;
-    background: rgba(255, 212, 59, 0.18);
+    width: 260px;
+    height: 260px;
+    left: 18%;
+    top: -60px;
+    background: rgba(0, 224, 198, 0.16);
 }
 
 .nutr-page::after {
-    bottom: -120px;
-    right: 10%;
-    background: rgba(0, 194, 255, 0.18);
+    width: 220px;
+    height: 220px;
+    right: 8%;
+    bottom: 0;
+    background: rgba(140, 82, 255, 0.16);
 }
 
-.nutr-page:hover::before {
-    background: rgba(155, 93, 229, 0.25);
-    transform: scale(1.15);
-}
-
-.nutr-page:hover::after {
-    background: rgba(0, 199, 190, 0.25);
-    transform: scale(1.15);
-}
-
-.nutr-page .nutr-header {
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
+.nutr-header {
     position: relative;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
-.nutr-page .nutr-header-main {
+.nutr-header-main {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 24px;
 }
 
-.nutr-page .nutr-title {
-    font-size: 48px;
-    font-weight: 900;
-    letter-spacing: -1px;
-    color: var(--core-white-soft);
-    text-shadow:
-        0 0 18px rgba(255, 212, 59, 0.45),
-        0 0 28px rgba(155, 93, 229, 0.35),
-        0 0 38px rgba(0, 194, 255, 0.35);
-    transition: 0.3s ease;
+.nutr-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.nutr-page .nutr-title:hover {
-    text-shadow:
-        0 0 28px rgba(255, 212, 59, 0.65),
-        0 0 38px rgba(155, 93, 229, 0.55),
-        0 0 48px rgba(0, 194, 255, 0.55);
-    transform: translateY(-2px);
+.nutr-title {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #f9fafc;
 }
 
-.nutr-page .nutr-subtitle {
-    font-size: 17px;
-    color: var(--core-text-muted);
-    margin-top: 6px;
+.nutr-subtitle {
+    font-size: 14px;
+    color: #8f95a5;
 }
 
-.nutr-page .nutr-header-actions {
+.nutr-header-right {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
-.nutr-page .nutr-header-btn {
-    padding: 14px 26px;
-    font-size: 15px;
+.nutr-header-btn {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 13px;
     font-weight: 600;
-    border-radius: var(--core-radius-md);
-    background: var(--core-card-soft);
-    color: var(--core-white-soft);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: var(--core-transition);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.18s ease;
+    white-space: nowrap;
 }
 
-.nutr-page .nutr-header-btn:hover {
-    background: var(--core-blue);
-    color: #000;
-    box-shadow: var(--core-shadow-blue);
+.nutr-header-btn-primary {
+    background: #00e0c6;
+    color: #020308;
+    box-shadow: 0 0 0 1px rgba(0, 224, 198, 0.25), 0 0 24px rgba(0, 224, 198, 0.45);
 }
 
-.nutr-page .nutr-header-btn-ghost {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+.nutr-header-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 1px rgba(0, 224, 198, 0.4), 0 0 32px rgba(0, 224, 198, 0.7);
 }
 
-.nutr-page .nutr-header-btn-ghost:hover {
-    background: var(--core-violet);
-    color: #000;
-    box-shadow: var(--core-shadow-violet);
+.nutr-header-btn-ghost {
+    background: rgba(18, 22, 35, 0.9);
+    color: #e2e4f0;
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.nutr-page .nutr-header-meta {
+.nutr-header-btn-ghost:hover {
+    background: #111521;
+    border-color: rgba(0, 224, 198, 0.4);
+    box-shadow: 0 0 18px rgba(0, 224, 198, 0.35);
+}
+
+.nutr-header-meta {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 32px;
+    flex-wrap: wrap;
 }
 
-.nutr-page .nutr-header-meta-item {
+.nutr-header-meta-item {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.nutr-page .nutr-header-meta-label {
-    font-size: 13px;
-    color: var(--core-text-muted);
+.nutr-header-meta-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6f7484;
 }
 
-.nutr-page .nutr-header-meta-value {
-    font-size: 17px;
+.nutr-header-meta-value {
+    font-size: 14px;
     font-weight: 600;
-    color: var(--core-white-soft);
+    color: #f3f4fb;
 }
 
-.nutr-page .nutr-header-meta-pill {
-    padding: 6px 14px;
-    border-radius: var(--core-radius-pill);
-    background: rgba(255, 255, 255, 0.08);
-    font-size: 13px;
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-grid-top {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 26px;
-    position: relative;
-    z-index: 2;
-}
-
-.nutr-page .nutr-card {
-    background: var(--core-card);
-    border-radius: var(--core-radius-lg);
-    padding: 26px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
-    border: 1px solid var(--core-border-subtle);
-    box-shadow: var(--core-shadow-soft);
-    position: relative;
-    z-index: 2;
-}
-
-.nutr-page .nutr-card::before {
-    content: "";
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    top: -60px;
-    right: -60px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 70%);
-    filter: blur(40px);
-    transition: var(--core-transition);
-}
-
-.nutr-page .nutr-card:hover::before {
-    background: radial-gradient(circle, rgba(0, 194, 255, 0.25), transparent 70%);
-    transform: scale(1.2);
-}
-
-.nutr-page .nutr-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nutr-page .nutr-card-title-wrap {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.nutr-page .nutr-card-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-help {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--core-white-soft);
-    font-size: 13px;
-    display: flex;
+.nutr-header-meta-pill {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: var(--core-transition-fast);
-}
-
-.nutr-page .nutr-help:hover {
-    background: var(--core-blue);
-    color: #000;
-    box-shadow: var(--core-shadow-blue);
-}
-
-.nutr-page .nutr-card-tag {
-    padding: 6px 14px;
-    border-radius: var(--core-radius-pill);
-    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
     font-weight: 600;
-}
-
-.nutr-page .nutr-tag-yellow {
-    background: rgba(255, 212, 59, 0.15);
-    color: var(--core-yellow);
-}
-
-.nutr-page .nutr-tag-blue {
-    background: rgba(0, 194, 255, 0.15);
-    color: var(--core-blue);
-}
-
-.nutr-page .nutr-tag-violet {
-    background: rgba(155, 93, 229, 0.15);
-    color: var(--core-violet);
-}
-
-.nutr-page .nutr-tag-turquoise {
-    background: rgba(0, 199, 190, 0.15);
-    color: #00c7be;
-}
-
-.nutr-page .nutr-tag-outline {
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-kpi-main {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-}
-
-.nutr-page .nutr-kpi-value {
-    font-size: 42px;
-    font-weight: 800;
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-kpi-suffix {
-    font-size: 16px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-kpi-progress {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.nutr-page .nutr-kpi-progress-bar {
-    width: 100%;
-    height: 10px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: var(--core-radius-pill);
-}
-
-.nutr-page .nutr-kpi-progress-fill {
-    height: 100%;
-    border-radius: var(--core-radius-pill);
-    transition: width 0.4s ease;
-}
-
-.nutr-page .nutr-kpi-progress-fill-yellow {
-    background: var(--core-yellow);
-    box-shadow: var(--core-shadow-yellow);
-}
-
-.nutr-page .nutr-kpi-progress-fill-blue {
-    background: var(--core-blue);
-    box-shadow: var(--core-shadow-blue);
-}
-
-.nutr-page .nutr-kpi-progress-fill-violet {
-    background: var(--core-violet);
-    box-shadow: var(--core-shadow-violet);
-}
-
-.nutr-page .nutr-kpi-progress-fill-turquoise {
-    background: #00c7be;
-    box-shadow: 0 0 32px rgba(0, 199, 190, 0.55);
-}
-
-.nutr-page .nutr-kpi-progress-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 13px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-kpi-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nutr-page .nutr-kpi-footer-label {
-    font-size: 14px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-kpi-footer-value {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-grid-middle {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
-    gap: 26px;
-}
-
-.nutr-page .nutr-balance-main {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.nutr-page .nutr-balance-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nutr-page .nutr-balance-label {
-    font-size: 14px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-balance-value {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-balance-row-accent .nutr-balance-value {
-    color: var(--core-yellow);
-}
-
-.nutr-page .nutr-balance-footer {
-    margin-top: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nutr-page .nutr-balance-status-label {
-    font-size: 14px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-balance-status-pill {
-    padding: 6px 14px;
-    border-radius: var(--core-radius-pill);
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--core-white-soft);
-    font-size: 13px;
-}
-
-.nutr-page .nutr-compare-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
-}
-
-.nutr-page .nutr-compare-item {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.nutr-page .nutr-compare-label {
-    font-size: 14px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-compare-values {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nutr-page .nutr-compare-today {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-compare-prev {
-    font-size: 14px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-compare-diff {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--core-blue);
-}
-
-.nutr-page .nutr-compare-diff-kcal {
-    color: var(--core-yellow);
-}
-
-.nutr-page .nutr-card-water {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.nutr-page .nutr-water-main {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.nutr-page .nutr-water-value-wrap {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-}
-
-.nutr-page .nutr-water-value {
-    font-size: 38px;
-    font-weight: 800;
-    color: var(--core-blue);
-}
-
-.nutr-page .nutr-water-suffix {
-    font-size: 16px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-water-progress {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.nutr-page .nutr-water-progress-bar {
-    width: 100%;
-    height: 10px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: var(--core-radius-pill);
-}
-
-.nutr-page .nutr-water-progress-fill {
-    height: 100%;
-    background: var(--core-blue);
-    box-shadow: var(--core-shadow-blue);
-    border-radius: var(--core-radius-pill);
-    transition: width 0.4s ease;
-}
-
-.nutr-page .nutr-water-progress-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 13px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-water-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.nutr-page .nutr-water-btn {
-    padding: 12px 20px;
-    border-radius: var(--core-radius-md);
-    font-size: 14px;
-    font-weight: 600;
-    background: var(--core-card-soft);
-    color: var(--core-white-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: rgba(18, 22, 35, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: var(--core-transition);
-}
-
-.nutr-page .nutr-water-btn:hover {
-    background: var(--core-blue);
-    color: #000;
-    box-shadow: var(--core-shadow-blue);
-}
-
-.nutr-page .nutr-water-btn-ghost {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.nutr-page .nutr-water-btn-ghost:hover {
-    background: var(--core-violet);
-    color: #000;
-    box-shadow: var(--core-shadow-violet);
-}
-
-.nutr-page .nutr-grid-lower {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 26px;
-}
-
-.nutr-page .nutr-chart-legend {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.nutr-page .nutr-legend-item {
-    font-size: 13px;
-    padding: 4px 10px;
-    border-radius: var(--core-radius-pill);
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-legend-kcal {
-    color: var(--core-yellow);
-}
-
-.nutr-page .nutr-legend-protein {
-    color: var(--core-blue);
-}
-
-.nutr-page .nutr-legend-fat {
-    color: var(--core-violet);
-}
-
-.nutr-page .nutr-legend-carb {
-    color: #00c7be;
-}
-
-.nutr-page .nutr-chart-body {
-    width: 100%;
-    height: 260px;
-    padding: 10px 0;
-}
-
-.nutr-page .nutr-card-week {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.nutr-page .nutr-week-body {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.nutr-page .nutr-week-chart {
-    width: 100%;
-    height: 200px;
-}
-
-.nutr-page .nutr-week-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.nutr-page .nutr-week-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nutr-page .nutr-week-label {
-    font-size: 14px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-week-value {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-grid-bottom {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 26px;
-}
-
-.nutr-page .nutr-month-body {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.nutr-page .nutr-month-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-}
-
-.nutr-page .nutr-month-item {
-    background: var(--core-card-soft);
-    padding: 16px;
-    border-radius: var(--core-radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.nutr-page .nutr-month-label {
-    font-size: 13px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-month-value {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-card-tips {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-[data-open-tips] {
-    position: relative;
+    color: #f3f4fb;
 }
 
 .nutr-tips-popover {
     position: absolute;
-    top: 124px;
-    right: 48px;
-    width: 210px;
-    background: var(--core-card);
-    border-radius: var(--core-radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    top: 72px;
+    right: 40px;
+    width: 260px;
+    background: #0b0e17;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
     padding: 14px;
     display: none;
     flex-direction: column;
-    gap: 12px;
-    z-index: 300;
-    animation: nutr-popover-fade 0.18s ease-out;
-}
-
-/* Анімація */
-@keyframes nutr-popover-fade {
-    from {
-        opacity: 0;
-        transform: translateY(-6px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    gap: 10px;
+    z-index: 30;
 }
 
 .nutr-tips-popover.open {
@@ -695,10 +180,9 @@
 }
 
 .nutr-tips-popover-header {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
-    margin-bottom: 6px;
-    color: var(--core-text-strong);
+    color: #f5f6fd;
 }
 
 .nutr-tips-popover-body {
@@ -710,489 +194,2583 @@
 .nutr-tip-item {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    line-height: 1.35;
+    gap: 8px;
 }
 
 .nutr-tip-dot {
     width: 8px;
     height: 8px;
-    background: var(--core-yellow);
-    border-radius: 50%;
-    margin-top: 5px;
+    border-radius: 999px;
+    background: #00e0c6;
+    margin-top: 4px;
 }
 
 .nutr-tip-text {
-    font-size: 14px;
-    color: var(--core-text);
-    word-wrap: break-word;
-    white-space: normal;
+    font-size: 13px;
+    color: #d3d6e5;
+    line-height: 1.4;
 }
 
 .nutr-tip-empty {
-    font-size: 14px;
-    color: var(--core-text-soft);
-    padding: 6px 0;
+    font-size: 13px;
+    color: #7b8091;
+    padding: 4px 0;
 }
 
-
-.nutr-page .nutr-meals-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(10px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    overflow: visible !important;
-}
-
-.nutr-page .nutr-meals-overlay.open {
-    display: flex;
-}
-
-.nutr-page .nutr-meals-panel {
-    width: 900px;
-    max-width: 95%;
-    background: var(--core-card-deep);
-    border-radius: var(--core-radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 26px;
-    box-shadow: var(--core-shadow-soft);
-}
-
-.nutr-page .nutr-meals-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nutr-page .nutr-meals-title {
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-meals-close {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--core-white-soft);
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--core-transition-fast);
-}
-
-.nutr-page .nutr-meals-close:hover {
-    background: var(--core-violet);
-    color: #000;
-    box-shadow: var(--core-shadow-violet);
-}
-
-.nutr-page .nutr-meals-tabs {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.nutr-page .nutr-meals-tab {
-    padding: 10px 20px;
-    border-radius: var(--core-radius-pill);
-    font-size: 14px;
-    font-weight: 600;
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--core-white-soft);
-    transition: var(--core-transition-fast);
-}
-
-.nutr-page .nutr-meals-tab:hover {
-    background: var(--core-blue);
-    color: #000;
-}
-
-.nutr-page .nutr-meals-tab-active {
-    background: var(--core-violet);
-    color: #000;
-    box-shadow: var(--core-shadow-violet);
-}
-
-.nutr-page .nutr-meals-body {
-    display: flex;
-    flex-direction: column;
-    gap: 26px;
-}
-
-.nutr-page .nutr-meals-section {
-    display: none;
-}
-
-.nutr-page .nutr-meals-section-active {
-    display: block;
-}
-
-.nutr-page .nutr-meals-columns {
+.nutr-grid-top {
+    position: relative;
+    z-index: 2;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 26px;
-}
-
-.nutr-page .nutr-meals-column-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--core-white-soft);
-    margin-bottom: 14px;
-}
-
-.nutr-page .nutr-meals-list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.nutr-page .nutr-meal-item {
-    background: var(--core-card-soft);
-    padding: 16px;
-    border-radius: var(--core-radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.nutr-page .nutr-meal-main {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nutr-page .nutr-meal-name {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--core-white-soft);
-}
-
-.nutr-page .nutr-meal-kcal {
-    font-size: 14px;
-    color: var(--core-yellow);
-}
-
-.nutr-page .nutr-meal-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nutr-page .nutr-meal-time {
-    font-size: 13px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-meal-macros {
-    font-size: 13px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-meal-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.nutr-page .nutr-meal-action {
-    font-size: 13px;
-    padding: 6px 12px;
-    border-radius: var(--core-radius-pill);
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--core-white-soft);
-    transition: var(--core-transition-fast);
-}
-
-.nutr-page .nutr-meal-action:hover {
-    background: var(--core-blue);
-    color: #000;
-}
-
-.nutr-page .nutr-meal-action-danger {
-    background: rgba(255, 0, 0, 0.15);
-    color: #ff6b6b;
-}
-
-.nutr-page .nutr-meal-action-danger:hover {
-    background: #ff6b6b;
-    color: #000;
-}
-
-.nutr-page .nutr-meal-empty {
-    font-size: 14px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-meal-form {
-    display: flex;
-    flex-direction: column;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 18px;
 }
 
-.nutr-page .nutr-form-row {
+.nutr-card {
+    background: #0b0e17;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 18px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.nutr-card-kpi[data-kpi="kcal"]::before {
+    background: radial-gradient(circle at 80% 0%, rgba(255, 214, 70, 0.16), transparent 60%);
+}
+
+.nutr-card-kpi[data-kpi="protein"]::before {
+    background: radial-gradient(circle at 80% 0%, rgba(0, 224, 198, 0.18), transparent 60%);
+}
+
+.nutr-card-kpi[data-kpi="fat"]::before {
+    background: radial-gradient(circle at 80% 0%, rgba(140, 82, 255, 0.2), transparent 60%);
+}
+
+.nutr-card-kpi[data-kpi="carb"]::before {
+    background: radial-gradient(circle at 80% 0%, rgba(0, 224, 198, 0.18), transparent 60%);
+}
+
+.nutr-card:hover::before {
+    opacity: 1;
+}
+
+.nutr-card:hover {
+    border-color: rgba(0, 224, 198, 0.35);
+    box-shadow: 0 0 0 1px rgba(0, 224, 198, 0.25), 0 18px 40px rgba(0, 0, 0, 0.8);
+}
+
+.nutr-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.nutr-card-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nutr-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #f5f6fd;
+}
+
+.nutr-help {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    background: rgba(20, 24, 37, 0.9);
+    color: #cfd3e6;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.16s ease;
+}
+
+.nutr-help:hover {
+    background: #00e0c6;
+    color: #020308;
+    box-shadow: 0 0 18px rgba(0, 224, 198, 0.5);
+}
+
+.nutr-card-tag {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.nutr-tag-kcal {
+    background: rgba(255, 214, 70, 0.12);
+    color: #ffd646;
+}
+
+.nutr-tag-protein {
+    background: rgba(0, 224, 198, 0.12);
+    color: #00e0c6;
+}
+
+.nutr-tag-fat {
+    background: rgba(140, 82, 255, 0.16);
+    color: #b89bff;
+}
+
+.nutr-tag-carb {
+    background: rgba(0, 224, 198, 0.12);
+    color: #00e0c6;
+}
+
+.nutr-tag-outline {
+    background: rgba(18, 22, 35, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e1e4f3;
+}
+
+.nutr-tag-water {
+    background: rgba(0, 224, 198, 0.12);
+    color: #00e0c6;
+}
+
+.nutr-kpi-main {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.nutr-kpi-value {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: #f9fafc;
+}
+
+.nutr-kpi-suffix {
+    font-size: 13px;
+    color: #8f95a5;
+}
+
+.nutr-kpi-progress {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.nutr-page .nutr-form-row-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-}
-
-.nutr-page .nutr-form-label {
-    font-size: 14px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-input {
+.nutr-kpi-progress-bar {
     width: 100%;
-    padding: 12px 14px;
-    border-radius: var(--core-radius-md);
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: var(--core-white-soft);
-    font-size: 14px;
-    transition: var(--core-transition-fast);
+    height: 8px;
+    border-radius: 999px;
+    background: #151927;
+    overflow: hidden;
 }
 
-.nutr-page .nutr-input:focus {
-    border-color: var(--core-blue);
-    box-shadow: var(--core-shadow-blue);
+.nutr-kpi-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
 }
 
-.nutr-page .nutr-form-actions {
-    display: flex;
-    justify-content: flex-end;
+.nutr-kpi-progress-fill-kcal {
+    background: #ffd646;
+    box-shadow: 0 0 18px rgba(255, 214, 70, 0.6);
 }
 
-.nutr-page .nutr-form-btn {
-    padding: 12px 20px;
-    border-radius: var(--core-radius-md);
-    background: var(--core-violet);
-    color: #000;
-    font-size: 14px;
-    font-weight: 600;
-    transition: var(--core-transition-fast);
+.nutr-kpi-progress-fill-protein {
+    background: #00e0c6;
+    box-shadow: 0 0 18px rgba(0, 224, 198, 0.7);
 }
 
-.nutr-page .nutr-form-btn:hover {
-    background: var(--core-violet-soft);
-    box-shadow: var(--core-shadow-violet);
+.nutr-kpi-progress-fill-fat {
+    background: #b89bff;
+    box-shadow: 0 0 18px rgba(184, 155, 255, 0.7);
 }
 
-.nutr-page .nutr-history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.nutr-kpi-progress-fill-carb {
+    background: #00e0c6;
+    box-shadow: 0 0 18px rgba(0, 224, 198, 0.7);
 }
 
-.nutr-page .nutr-history-day {
-    background: var(--core-card-soft);
-    padding: 18px;
-    border-radius: var(--core-radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.nutr-page .nutr-history-day-header {
+.nutr-kpi-progress-meta {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    font-size: 12px;
+    color: #7b8091;
 }
 
-.nutr-page .nutr-history-date {
-    font-size: 16px;
+.nutr-kpi-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.nutr-kpi-footer-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nutr-kpi-footer-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6f7484;
+}
+
+.nutr-kpi-footer-value {
+    font-size: 13px;
     font-weight: 600;
-    color: var(--core-white-soft);
+    color: #e5e7f5;
 }
 
-.nutr-page .nutr-history-kcal {
-    font-size: 14px;
-    color: var(--core-yellow);
+.nutr-grid-middle {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr) minmax(0, 1.1fr);
+    gap: 18px;
 }
 
-.nutr-page .nutr-history-meals {
+.nutr-card-balance {
+    gap: 12px;
+}
+
+.nutr-balance-main {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.nutr-page .nutr-history-meal {
+.nutr-balance-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    font-size: 13px;
 }
 
-.nutr-page .nutr-history-meal-name {
-    font-size: 14px;
-    color: var(--core-white-soft);
+.nutr-balance-label {
+    color: #8f95a5;
 }
 
-.nutr-page .nutr-history-meal-kcal {
-    font-size: 14px;
-    color: var(--core-text-muted);
+.nutr-balance-value {
+    color: #f3f4fb;
+    font-weight: 600;
 }
 
-.nutr-page .nutr-history-empty {
-    font-size: 14px;
-    color: var(--core-text-muted);
+.nutr-balance-row-accent .nutr-balance-value {
+    color: #ffd646;
 }
 
-.nutr-page .nutr-templates-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+.nutr-balance-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 6px;
 }
 
-.nutr-page .nutr-template-card {
-    background: var(--core-card-soft);
-    padding: 18px;
-    border-radius: var(--core-radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+.nutr-balance-footer-left,
+.nutr-balance-footer-right {
     display: flex;
     flex-direction: column;
+    gap: 4px;
+}
+
+.nutr-balance-status-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6f7484;
+}
+
+.nutr-balance-status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(18, 22, 35, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #f3f4fb;
+}
+
+.nutr-card-compare {
     gap: 12px;
 }
 
-.nutr-page .nutr-template-header {
+.nutr-compare-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nutr-compare-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nutr-compare-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6f7484;
+}
+
+.nutr-compare-values {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.nutr-compare-today {
+    color: #f3f4fb;
+    font-weight: 600;
+}
+
+.nutr-compare-prev {
+    color: #7b8091;
+}
+
+.nutr-compare-diff {
+    font-weight: 600;
+    color: #00e0c6;
+}
+
+.nutr-compare-diff-kcal {
+    color: #ffd646;
+}
+
+.nutr-card-water {
+    gap: 12px;
+}
+
+.nutr-water-main {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nutr-water-value-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.nutr-water-value {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: #00e0c6;
+}
+
+.nutr-water-suffix {
+    font-size: 13px;
+    color: #8f95a5;
+}
+
+.nutr-water-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nutr-water-progress-bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: #151927;
+    overflow: hidden;
+}
+
+.nutr-water-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: #00e0c6;
+    box-shadow: 0 0 18px rgba(0, 224, 198, 0.7);
+    transition: width 0.3s ease;
+}
+
+.nutr-water-progress-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #7b8091;
+}
+
+.nutr-water-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.nutr-water-btn {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: rgba(18, 22, 35, 0.9);
+    color: #f3f4fb;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: 0.16s ease;
+}
+
+.nutr-water-btn:hover {
+    border-color: rgba(0, 224, 198, 0.5);
+    box-shadow: 0 0 18px rgba(0, 224, 198, 0.5);
+}
+
+.nutr-water-btn-ghost {
+    background: transparent;
+    color: #9da2b4;
+}
+
+.nutr-water-btn-ghost:hover {
+    background: rgba(18, 22, 35, 0.9);
+    color: #f3f4fb;
+}
+
+.nutr-grid-lower {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr);
+    gap: 18px;
+}
+
+.nutr-card-chart {
+    gap: 12px;
+}
+
+.nutr-chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.nutr-legend-item {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: rgba(18, 22, 35, 0.9);
+    color: #e1e4f3;
+}
+
+.nutr-legend-kcal {
+    color: #ffd646;
+}
+
+.nutr-legend-protein {
+    color: #00e0c6;
+}
+
+.nutr-legend-fat {
+    color: #b89bff;
+}
+
+.nutr-legend-carb {
+    color: #00e0c6;
+}
+
+.nutr-chart-body {
+    width: 100%;
+    height: 260px;
+    padding-top: 4px;
+}
+
+.nutr-card-week {
+    gap: 12px;
+}
+
+.nutr-week-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nutr-week-chart {
+    width: 100%;
+    height: 200px;
+}
+
+.nutr-week-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nutr-week-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.nutr-week-label {
+    color: #8f95a5;
+}
+
+.nutr-week-value {
+    color: #f3f4fb;
+    font-weight: 600;
+}
+
+.nutr-grid-bottom {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+    gap: 18px;
+}
+
+.nutr-card-month {
+    gap: 12px;
+}
+
+.nutr-month-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nutr-month-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.nutr-month-item {
+    background: #111521;
+    border-radius: 14px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nutr-month-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6f7484;
+}
+
+.nutr-month-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f3f4fb;
+}
+
+.nutr-card-tips {
+    gap: 12px;
+}
+
+.nutr-quality-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nutr-quality-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.nutr-quality-label {
+    color: #8f95a5;
+}
+
+.nutr-quality-value {
+    color: #f3f4fb;
+    font-weight: 600;
+}
+
+.nutr-meals-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(1, 2, 6, 0.82);
+    backdrop-filter: blur(14px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 40;
+}
+
+.nutr-meals-overlay.open {
+    display: flex;
+}
+
+.nutr-meals-panel {
+    width: 960px;
+    max-width: 96%;
+    max-height: 90vh;
+    background: #05060a;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 20px 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+}
+
+.nutr-meals-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.nutr-meals-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nutr-meals-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f5f6fd;
+}
+
+.nutr-meals-subtitle {
+    font-size: 13px;
+    color: #8f95a5;
+}
+
+.nutr-meals-close {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    background: rgba(18, 22, 35, 0.9);
+    color: #d3d6e5;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.16s ease;
+}
+
+.nutr-meals-close:hover {
+    background: #00e0c6;
+    color: #020308;
+    box-shadow: 0 0 18px rgba(0, 224, 198, 0.6);
+}
+
+.nutr-meals-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nutr-meals-tab {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: rgba(18, 22, 35, 0.9);
+    color: #cfd3e6;
+    transition: 0.16s ease;
+}
+
+.nutr-meals-tab:hover {
+    background: #111521;
+}
+
+.nutr-meals-tab-active {
+    background: #00e0c6;
+    color: #020308;
+    box-shadow: 0 0 18px rgba(0, 224, 198, 0.6);
+}
+
+.nutr-meals-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.nutr-meals-section {
+    display: none;
+    height: 100%;
+}
+
+.nutr-meals-section-active {
+    display: block;
+}
+
+.nutr-meals-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 16px;
+    height: 100%;
+}
+
+.nutr-meals-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+}
+
+.nutr-meals-column-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #f3f4fb;
+}
+
+.nutr-meals-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 4px;
+}
+
+.nutr-meal-item {
+    background: #0b0e17;
+    border-radius: 14px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nutr-meal-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.nutr-meal-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f3f4fb;
+}
+
+.nutr-meal-kcal {
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffd646;
+}
+
+.nutr-meal-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12px;
+    color: #8f95a5;
+}
+
+.nutr-meal-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+
+.nutr-meal-action {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: rgba(18, 22, 35, 0.9);
+    color: #e1e4f3;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: 0.16s ease;
+}
+
+.nutr-meal-action:hover {
+    border-color: rgba(0, 224, 198, 0.5);
+    box-shadow: 0 0 16px rgba(0, 224, 198, 0.5);
+}
+
+.nutr-meal-action-danger {
+    background: rgba(255, 77, 109, 0.12);
+    color: #ff4d6d;
+    border-color: rgba(255, 77, 109, 0.4);
+}
+
+.nutr-meal-action-danger:hover {
+    background: #ff4d6d;
+    color: #020308;
+    box-shadow: 0 0 18px rgba(255, 77, 109, 0.7);
+}
+
+.nutr-meal-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.nutr-meal-item-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr) auto;
+    gap: 6px;
+    align-items: center;
+    font-size: 12px;
+}
+
+.nutr-meal-item-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nutr-meal-item-name {
+    color: #d3d6e5;
+}
+
+.nutr-meal-item-kcal {
+    color: #ffd646;
+}
+
+.nutr-meal-item-macros {
+    color: #8f95a5;
+}
+
+.nutr-meal-item-delete-form {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.nutr-meal-empty {
+    font-size: 13px;
+    color: #7b8091;
+}
+
+.nutr-meal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nutr-form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nutr-form-row-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.nutr-form-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6f7484;
+}
+
+.nutr-input {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0b0e17;
+    color: #f3f4fb;
+    font-size: 13px;
+    padding: 8px 10px;
+    outline: 0;
+    transition: 0.16s ease;
+}
+
+.nutr-input::placeholder {
+    color: #5f6474;
+}
+
+.nutr-input:focus {
+    border-color: rgba(0, 224, 198, 0.7);
+    box-shadow: 0 0 0 1px rgba(0, 224, 198, 0.4);
+}
+
+.nutr-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 4px;
+}
+
+.nutr-form-btn {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: #00e0c6;
+    color: #020308;
+    box-shadow: 0 0 18px rgba(0, 224, 198, 0.6);
+    transition: 0.16s ease;
+}
+
+.nutr-form-btn:hover {
+    box-shadow: 0 0 24px rgba(0, 224, 198, 0.8);
+    transform: translateY(-1px);
+}
+
+.nutr-history-list {
+    max-height: 52vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 4px;
+}
+
+.nutr-history-day {
+    background: #0b0e17;
+    border-radius: 14px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nutr-history-day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.nutr-history-date {
+    color: #f3f4fb;
+    font-weight: 600;
+}
+
+.nutr-history-kcal {
+    color: #ffd646;
+    font-weight: 600;
+}
+
+.nutr-history-meals {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+}
+
+.nutr-history-meal {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.nutr-page .nutr-template-name {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--core-white-soft);
+.nutr-history-meal-name {
+    color: #d3d6e5;
 }
 
-.nutr-page .nutr-template-kcal {
-    font-size: 14px;
-    color: var(--core-yellow);
+.nutr-history-meal-kcal {
+    color: #8f95a5;
 }
 
-.nutr-page .nutr-template-body {
-    font-size: 14px;
-    color: var(--core-text-muted);
+.nutr-history-empty {
+    font-size: 13px;
+    color: #7b8091;
 }
 
-.nutr-page .nutr-template-actions {
+.nutr-templates-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.nutr-template-card {
+    background: #0b0e17;
+    border-radius: 14px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
     display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nutr-template-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.nutr-template-name {
+    color: #f3f4fb;
+    font-weight: 600;
+}
+
+.nutr-template-kcal {
+    color: #ffd646;
+    font-weight: 600;
+}
+
+.nutr-template-body {
+    font-size: 12px;
+    color: #8f95a5;
+}
+
+.nutr-template-actions {
+    display: flex;
+    align-items: center;
     justify-content: flex-end;
 }
 
-.nutr-page .nutr-template-btn {
-    padding: 10px 16px;
-    border-radius: var(--core-radius-pill);
-    background: var(--core-blue);
-    color: #000;
-    font-size: 14px;
+.nutr-template-btn {
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 11px;
     font-weight: 600;
-    transition: var(--core-transition-fast);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: #00e0c6;
+    color: #020308;
+    box-shadow: 0 0 18px rgba(0, 224, 198, 0.6);
+    transition: 0.16s ease;
 }
 
-.nutr-page .nutr-template-btn:hover {
-    background: var(--core-blue-soft);
-    box-shadow: var(--core-shadow-blue);
+.nutr-template-btn:hover {
+    box-shadow: 0 0 24px rgba(0, 224, 198, 0.8);
 }
 
-.nutr-page .nutr-templates-empty {
-    font-size: 14px;
-    color: var(--core-text-muted);
-}
-
-.nutr-page .nutr-tooltip {
-    position: fixed;
-    padding: 10px 14px;
-    background: rgba(0, 0, 0, 0.85);
-    color: var(--core-white-soft);
+.nutr-templates-empty {
     font-size: 13px;
-    border-radius: var(--core-radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    z-index: 300;
+    color: #7b8091;
 }
 
-.nutr-page .nutr-tooltip.visible {
+.nutr-tooltip {
+    position: fixed;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: #020308;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #f3f4fb;
+    font-size: 12px;
+    max-width: 260px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.16s ease, transform 0.16s ease;
+    z-index: 60;
+}
+
+.nutr-tooltip.visible {
     opacity: 1;
+    transform: translateY(0);
 }
 
 @media (max-width: 1200px) {
-    .nutr-page .nutr-grid-top {
-        grid-template-columns: repeat(2, 1fr);
+    .nutr-page {
+        padding: 28px 24px 80px;
     }
 
-    .nutr-page .nutr-grid-middle {
-        grid-template-columns: 1fr;
+    .nutr-grid-top {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .nutr-page .nutr-grid-lower {
-        grid-template-columns: 1fr;
+    .nutr-grid-middle {
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+        grid-auto-rows: auto;
     }
 
-    .nutr-page .nutr-grid-bottom {
-        grid-template-columns: 1fr;
+    .nutr-grid-lower {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .nutr-page .nutr-month-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .nutr-grid-bottom {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .nutr-page .nutr-templates-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .nutr-month-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .nutr-templates-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .nutr-meals-panel {
+        max-height: 92vh;
     }
 }
 
-@media (max-width: 700px) {
-    .nutr-page {
-        padding: 30px 20px 100px;
-    }
-
-    .nutr-page .nutr-header-main {
+@media (max-width: 900px) {
+    .nutr-header-main {
         flex-direction: column;
         align-items: flex-start;
-        gap: 20px;
     }
 
-    .nutr-page .nutr-header-actions {
-        width: 100%;
+    .nutr-header-right {
         flex-wrap: wrap;
     }
 
-    .nutr-page .nutr-grid-top {
-        grid-template-columns: 1fr;
+    .nutr-grid-top {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .nutr-page .nutr-month-grid {
-        grid-template-columns: 1fr;
+    .nutr-grid-middle {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .nutr-page .nutr-templates-grid {
-        grid-template-columns: 1fr;
+    .nutr-grid-lower {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .nutr-page .nutr-meals-panel {
-        padding: 20px;
+    .nutr-grid-bottom {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .nutr-page .nutr-meals-columns {
-        grid-template-columns: 1fr;
+    .nutr-month-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .nutr-templates-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .nutr-meals-panel {
+        padding: 16px;
+    }
+
+    .nutr-meals-columns {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .nutr-page {
+        padding: 24px 16px 72px;
+    }
+
+    .nutr-header-meta {
+        gap: 18px;
+    }
+
+    .nutr-month-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .nutr-templates-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .nutr-form-row-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .nutr-meal-item-row {
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+    }
+}
+
+.nutr-chart-body canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#nutr-day-chart,
+#nutr-week-chart {
+    background: #0b0e17;
+    border-radius: 14px;
+}
+
+.chartjs-size-monitor,
+.chartjs-size-monitor-expand,
+.chartjs-size-monitor-shrink {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.nutr-chart-tooltip {
+    position: absolute;
+    background: #020308;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #f3f4fb;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.16s ease, transform 0.16s ease;
+    z-index: 50;
+}
+
+.nutr-chart-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nutr-chart-tooltip-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.nutr-chart-tooltip-value {
+    color: #00e0c6;
+    font-weight: 600;
+}
+
+.nutr-chart-tooltip-kcal {
+    color: #ffd646;
+}
+
+.nutr-chart-tooltip-protein {
+    color: #00e0c6;
+}
+
+.nutr-chart-tooltip-fat {
+    color: #b89bff;
+}
+
+.nutr-chart-tooltip-carb {
+    color: #00e0c6;
+}
+
+.nutr-chart-line {
+    stroke-linecap: round;
+}
+
+.nutr-chart-point {
+    transition: r 0.16s ease;
+}
+
+.nutr-chart-point:hover {
+    r: 6;
+}
+
+.nutr-chart-grid line {
+    stroke: rgba(255, 255, 255, 0.06);
+}
+
+.nutr-chart-axis text {
+    fill: #7b8091;
+    font-size: 11px;
+}
+
+.nutr-chart-axis path {
+    stroke: rgba(255, 255, 255, 0.06);
+}
+
+.nutr-chart-highlight {
+    stroke: #00e0c6;
+    stroke-width: 2;
+}
+
+.nutr-chart-highlight-kcal {
+    stroke: #ffd646;
+}
+
+.nutr-chart-highlight-protein {
+    stroke: #00e0c6;
+}
+
+.nutr-chart-highlight-fat {
+    stroke: #b89bff;
+}
+
+.nutr-chart-highlight-carb {
+    stroke: #00e0c6;
+}
+
+.nutr-chart-area {
+    fill-opacity: 0.08;
+}
+
+.nutr-chart-area-kcal {
+    fill: #ffd646;
+}
+
+.nutr-chart-area-protein {
+    fill: #00e0c6;
+}
+
+.nutr-chart-area-fat {
+    fill: #b89bff;
+}
+
+.nutr-chart-area-carb {
+    fill: #00e0c6;
+}
+
+.nutr-chart-bar {
+    rx: 4;
+    transition: 0.16s ease;
+}
+
+.nutr-chart-bar:hover {
+    opacity: 0.85;
+}
+
+.nutr-chart-bar-kcal {
+    fill: #ffd646;
+}
+
+.nutr-chart-bar-protein {
+    fill: #00e0c6;
+}
+
+.nutr-chart-bar-fat {
+    fill: #b89bff;
+}
+
+.nutr-chart-bar-carb {
+    fill: #00e0c6;
+}
+
+.nutr-chart-week-bar {
+    fill: #00e0c6;
+    rx: 4;
+    transition: 0.16s ease;
+}
+
+.nutr-chart-week-bar:hover {
+    opacity: 0.85;
+}
+
+.nutr-chart-week-axis text {
+    fill: #7b8091;
+    font-size: 11px;
+}
+
+.nutr-chart-week-grid line {
+    stroke: rgba(255, 255, 255, 0.06);
+}
+
+.nutr-chart-week-highlight {
+    stroke: #00e0c6;
+    stroke-width: 2;
+}
+
+.nutr-chart-week-tooltip {
+    position: absolute;
+    background: #020308;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #f3f4fb;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.16s ease, transform 0.16s ease;
+    z-index: 50;
+}
+
+.nutr-chart-week-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nutr-chart-week-tooltip-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.nutr-chart-week-tooltip-value {
+    color: #00e0c6;
+    font-weight: 600;
+}
+
+.nutr-chart-week-tooltip-kcal {
+    color: #ffd646;
+}
+
+.nutr-chart-week-tooltip-protein {
+    color: #00e0c6;
+}
+
+.nutr-chart-week-tooltip-fat {
+    color: #b89bff;
+}
+
+.nutr-chart-week-tooltip-carb {
+    color: #00e0c6;
+}
+
+.nutr-chart-month-grid {
+    display: grid;
+    grid-template-columns: repeat(31, minmax(0, 1fr));
+    gap: 2px;
+    width: 100%;
+}
+
+.nutr-chart-month-cell {
+    width: 100%;
+    height: 22px;
+    border-radius: 4px;
+    background: #111521;
+    transition: 0.16s ease;
+}
+
+.nutr-chart-month-cell[data-level="1"] {
+    background: rgba(0, 224, 198, 0.18);
+}
+
+.nutr-chart-month-cell[data-level="2"] {
+    background: rgba(0, 224, 198, 0.32);
+}
+
+.nutr-chart-month-cell[data-level="3"] {
+    background: rgba(0, 224, 198, 0.48);
+}
+
+.nutr-chart-month-cell[data-level="4"] {
+    background: rgba(0, 224, 198, 0.65);
+}
+
+.nutr-chart-month-cell:hover {
+    opacity: 0.85;
+}
+
+.nutr-chart-month-tooltip {
+    position: absolute;
+    background: #020308;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #f3f4fb;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.16s ease, transform 0.16s ease;
+    z-index: 50;
+}
+
+.nutr-chart-month-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nutr-chart-month-tooltip-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.nutr-chart-month-tooltip-value {
+    color: #00e0c6;
+    font-weight: 600;
+}
+
+.nutr-chart-month-tooltip-kcal {
+    color: #ffd646;
+}
+
+.nutr-chart-month-tooltip-protein {
+    color: #00e0c6;
+}
+
+.nutr-chart-month-tooltip-fat {
+    color: #b89bff;
+}
+
+.nutr-chart-month-tooltip-carb {
+    color: #00e0c6;
+}
+
+.nutr-animate-fade {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: nutrFadeIn 0.35s ease forwards;
+}
+
+@keyframes nutrFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nutr-animate-scale {
+    transform: scale(0.92);
+    opacity: 0;
+    animation: nutrScaleIn 0.3s ease forwards;
+}
+
+@keyframes nutrScaleIn {
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.nutr-animate-slide {
+    opacity: 0;
+    transform: translateX(-12px);
+    animation: nutrSlideIn 0.35s ease forwards;
+}
+
+@keyframes nutrSlideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.nutr-animate-pop {
+    transform: scale(0.8);
+    opacity: 0;
+    animation: nutrPopIn 0.28s ease forwards;
+}
+
+@keyframes nutrPopIn {
+    60% {
+        transform: scale(1.06);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.nutr-animate-blink {
+    animation: nutrBlink 1.2s ease infinite;
+}
+
+@keyframes nutrBlink {
+    0% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
+}
+
+.nutr-animate-pulse {
+    animation: nutrPulse 1.4s ease infinite;
+}
+
+@keyframes nutrPulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.85;
+    }
+
+    50% {
+        transform: scale(1.04);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.85;
+    }
+}
+
+.nutr-animate-glow {
+    animation: nutrGlow 2.4s ease infinite;
+}
+
+@keyframes nutrGlow {
+    0% {
+        box-shadow: 0 0 0 rgba(0, 224, 198, 0.0);
+    }
+
+    50% {
+        box-shadow: 0 0 22px rgba(0, 224, 198, 0.45);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(0, 224, 198, 0.0);
+    }
+}
+
+.nutr-animate-glow-kcal {
+    animation: nutrGlowKcal 2.4s ease infinite;
+}
+
+@keyframes nutrGlowKcal {
+    0% {
+        box-shadow: 0 0 0 rgba(255, 214, 70, 0.0);
+    }
+
+    50% {
+        box-shadow: 0 0 22px rgba(255, 214, 70, 0.45);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(255, 214, 70, 0.0);
+    }
+}
+
+.nutr-animate-glow-fat {
+    animation: nutrGlowFat 2.4s ease infinite;
+}
+
+@keyframes nutrGlowFat {
+    0% {
+        box-shadow: 0 0 0 rgba(184, 155, 255, 0.0);
+    }
+
+    50% {
+        box-shadow: 0 0 22px rgba(184, 155, 255, 0.45);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(184, 155, 255, 0.0);
+    }
+}
+
+.nutr-animate-glow-protein {
+    animation: nutrGlowProtein 2.4s ease infinite;
+}
+
+@keyframes nutrGlowProtein {
+    0% {
+        box-shadow: 0 0 0 rgba(0, 224, 198, 0.0);
+    }
+
+    50% {
+        box-shadow: 0 0 22px rgba(0, 224, 198, 0.45);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(0, 224, 198, 0.0);
+    }
+}
+
+.nutr-animate-glow-carb {
+    animation: nutrGlowCarb 2.4s ease infinite;
+}
+
+@keyframes nutrGlowCarb {
+    0% {
+        box-shadow: 0 0 0 rgba(0, 224, 198, 0.0);
+    }
+
+    50% {
+        box-shadow: 0 0 22px rgba(0, 224, 198, 0.45);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(0, 224, 198, 0.0);
+    }
+}
+
+.nutr-animate-water-fill {
+    animation: nutrWaterFill 1.2s ease forwards;
+}
+
+@keyframes nutrWaterFill {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: var(--target-width);
+    }
+}
+
+.nutr-animate-water-pulse {
+    animation: nutrWaterPulse 1.6s ease infinite;
+}
+
+@keyframes nutrWaterPulse {
+    0% {
+        box-shadow: 0 0 0 rgba(0, 224, 198, 0.0);
+    }
+
+    50% {
+        box-shadow: 0 0 22px rgba(0, 224, 198, 0.45);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(0, 224, 198, 0.0);
+    }
+}
+
+.nutr-animate-card-hover {
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.nutr-animate-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+}
+
+.nutr-animate-card-press:active {
+    transform: scale(0.98);
+}
+
+.nutr-animate-button {
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.nutr-animate-button:hover {
+    transform: translateY(-1px);
+}
+
+.nutr-animate-button:active {
+    transform: scale(0.96);
+}
+
+.nutr-animate-input-focus:focus {
+    box-shadow: 0 0 0 1px rgba(0, 224, 198, 0.4);
+}
+
+.nutr-animate-tab {
+    transition: background 0.16s ease, color 0.16s ease;
+}
+
+.nutr-animate-tab:hover {
+    background: #111521;
+}
+
+.nutr-animate-tab-active {
+    background: #00e0c6;
+    color: #020308;
+}
+
+.nutr-animate-modal {
+    animation: nutrModalIn 0.28s ease forwards;
+}
+
+@keyframes nutrModalIn {
+    0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.nutr-animate-overlay {
+    animation: nutrOverlayIn 0.25s ease forwards;
+}
+
+@keyframes nutrOverlayIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.nutr-animate-tooltip {
+    transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.nutr-animate-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nutr-animate-tooltip.hidden {
+    opacity: 0;
+    transform: translateY(-4px);
+}
+
+.nutr-animate-list-item {
+    animation: nutrListItemIn 0.25s ease forwards;
+}
+
+@keyframes nutrListItemIn {
+    0% {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nutr-animate-scale-small {
+    animation: nutrScaleSmall 0.22s ease forwards;
+}
+
+@keyframes nutrScaleSmall {
+    0% {
+        transform: scale(0.92);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.nutr-animate-scale-large {
+    animation: nutrScaleLarge 0.32s ease forwards;
+}
+
+@keyframes nutrScaleLarge {
+    0% {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.nutr-animate-fade-slow {
+    animation: nutrFadeSlow 0.6s ease forwards;
+}
+
+@keyframes nutrFadeSlow {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.nutr-animate-fade-fast {
+    animation: nutrFadeFast 0.18s ease forwards;
+}
+
+@keyframes nutrFadeFast {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.nutr-animate-slide-right {
+    animation: nutrSlideRight 0.28s ease forwards;
+}
+
+@keyframes nutrSlideRight {
+    0% {
+        opacity: 0;
+        transform: translateX(-12px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.nutr-animate-slide-left {
+    animation: nutrSlideLeft 0.28s ease forwards;
+}
+
+@keyframes nutrSlideLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(12px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.nutr-animate-slide-up {
+    animation: nutrSlideUp 0.28s ease forwards;
+}
+
+@keyframes nutrSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nutr-animate-slide-down {
+    animation: nutrSlideDown 0.28s ease forwards;
+}
+
+@keyframes nutrSlideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nutr-animate-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-animate-ripple::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(0, 224, 198, 0.25);
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.nutr-animate-ripple:active::after {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.nutr-ripple-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-btn::before {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: rgba(0, 224, 198, 0.35);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-btn:active::before {
+    transform: scale(12);
+    opacity: 1;
+}
+
+.nutr-ripple-dark {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-dark::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-dark:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-light {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-light::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-light:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-fat {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-fat::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(184, 155, 255, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-fat:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-kcal {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-kcal::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(255, 214, 70, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-kcal:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-carb {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-carb::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-carb:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-protein {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-protein::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-protein:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-water {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-water::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.35);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-water:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-delete {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-delete::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(255, 77, 109, 0.35);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-delete:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-template {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-template::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.35);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-template:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-history {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-history::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-history:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-meal {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-meal::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-meal:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-item::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-item:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-tab {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-tab::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-tab:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-close {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-close::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(255, 77, 109, 0.35);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-close:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-chart {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-chart::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-chart:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-month {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-month::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-month:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-ripple-quality {
+    position: relative;
+    overflow: hidden;
+}
+
+.nutr-ripple-quality::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 224, 198, 0.25);
+    border-radius: 999px;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nutr-ripple-quality:active::before {
+    transform: scale(14);
+    opacity: 1;
+}
+
+.nutr-select {
+    appearance: none;
+    background: #0b0e17 url("data:image/svg+xml;utf8,<svg fill='%23cfd3e6' height='14' width='14' viewBox='0 0 20 20'><path d='M5.5 7l4.5 4.5L14.5 7'/></svg>") no-repeat right 12px center;
+    background-size: 14px;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+}
+
+input[type="time"] {
+    position: relative;
+    padding-right: 40px;
+}
+
+input[type="time"]::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    width: 18px;
+    height: 18px;
+    transform: translateY(-50%);
+    background: url("data:image/svg+xml;utf8,<svg fill='%23cfd3e6' height='18' width='18' viewBox='0 0 20 20'><path d='M6 8l4 4 4-4'/></svg>") no-repeat center;
+    background-size: 18px;
+    pointer-events: none;
+}
+
+.nutr-meals-column {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Стара форма */
+.nutr-meal-form {
+    width: 100%;
+}
+
+.nutr-form-row {
+    width: 100%;
+}
+
+.nutr-form-row-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+
+.nutr-product-2row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.nutr-product-row-top {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 10px;
+}
+
+.nutr-product-row-bottom {
+    display: grid;
+    grid-template-columns: 0.6fr 0.5fr 0.5fr 0.5fr 0.3fr;
+    gap: 10px;
+}
+
+.nutr-product-input {
+    background: #0f131d;
+    border: 1px solid #1c2233;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #e8ecf7;
+}
+
+.nutr-product-select {
+    appearance: none;
+    background: #0f131d url("data:image/svg+xml;utf8,<svg fill='%23cfd3e6' height='10' width='10' viewBox='0 0 20 20'><path d='M5.5 7l4.5 4.5L14.5 7'/></svg>") no-repeat right 12px center;
+    background-size: 10px;
+    padding-right: 30px;
+}
+
+.nutr-product-add-btn {
+    background: #00d26a;
+    border: none;
+    color: #000;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.nutr-product-add-btn:hover {
+    background: #00ff80;
+}
+
+
+.nutr-meal-2row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.nutr-meal-row-top {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 0.7fr;
+    gap: 10px;
+}
+
+.nutr-meal-row-bottom {
+    display: grid;
+    grid-template-columns: 0.6fr 0.5fr 0.5fr 0.5fr 0.6fr;
+    gap: 10px;
+}
+
+.nutr-meal-input {
+    background: #0f131d;
+    border: 1px solid #1c2233;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #e8ecf7;
+}
+
+.nutr-meal-select {
+    appearance: none;
+    background: #0f131d url("data:image/svg+xml;utf8,<svg fill='%23cfd3e6' height='10' width='10' viewBox='0 0 20 20'><path d='M5.5 7l4.5 4.5L14.5 7'/></svg>") no-repeat right 12px center;
+    background-size: 10px;
+    padding-right: 30px;
+}
+
+.nutr-meal-add-btn {
+    background: #00d26a;
+    border: none;
+    color: #000;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.nutr-meal-add-btn:hover {
+    background: #00ff80;
 }
