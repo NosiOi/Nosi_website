@@ -21,6 +21,8 @@ class User(db.Model):
     experience = db.Column(db.String(50), nullable=False)
     workouts_per_week = db.Column(db.Integer, nullable=False)
 
+    is_premium = db.Column(db.Boolean, default=False)
+
     training_plans = db.relationship("TrainingPlan", backref="user", lazy=True)
 
     equipment = db.relationship(
