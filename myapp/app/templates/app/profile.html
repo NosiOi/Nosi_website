@@ -1,21 +1,74 @@
 {% extends "app/base_app.html" %} {% block title %}Профіль — NOSIFIT{% endblock
-%} {% block body %}
+%} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/profile.css') }}"
+/>
+{% endblock %} {% block body %}
 
-<h2 class="page-title">Профіль</h2>
+<div class="profile-page">
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <img src="/static/img/avatar_default.png" alt="avatar" />
+    </div>
 
-<div class="profile-card">
-  <p><strong>Ім'я:</strong> {{ user.username }}</p>
-  <p><strong>Email:</strong> {{ user.email }}</p>
-  <p><strong>Вік:</strong> {{ user.age }}</p>
-  <p><strong>Зріст:</strong> {{ user.height }}</p>
-  <p><strong>Вага:</strong> {{ user.weight }}</p>
-  <p><strong>Стать:</strong> {{ user.gender }}</p>
-  <p><strong>Активність:</strong> {{ user.activity }}</p>
-  <p><strong>Ціль:</strong> {{ user.goal }}</p>
-  <p><strong>Досвід:</strong> {{ user.experience }}</p>
-  <p><strong>Тренувань на тиждень:</strong> {{ user.workouts_per_week }}</p>
+    <div class="profile-info">
+      <h1 class="profile-name">{{ user.username }}</h1>
+      <p class="profile-email">{{ user.email }}</p>
 
-  <a href="/profile/edit" class="btn-primary">Редагувати</a>
+      {% if user.is_premium %}
+      <span class="profile-badge premium">Premium</span>
+      {% else %}
+      <span class="profile-badge free">Free</span>
+      {% endif %}
+
+      <a href="{{ url_for('profile.edit_profile') }}" class="profile-edit-btn">
+        Редагувати профіль
+      </a>
+    </div>
+  </div>
+
+  <div class="profile-grid">
+    <div class="profile-card">
+      <span class="label">Вік</span>
+      <span class="value">{{ user.age }}</span>
+    </div>
+
+    <div class="profile-card">
+      <span class="label">Зріст</span>
+      <span class="value">{{ user.height }} см</span>
+    </div>
+
+    <div class="profile-card">
+      <span class="label">Вага</span>
+      <span class="value">{{ user.weight }} кг</span>
+    </div>
+
+    <div class="profile-card">
+      <span class="label">Стать</span>
+      <span class="value">{{ user.gender }}</span>
+    </div>
+
+    <div class="profile-card">
+      <span class="label">Активність</span>
+      <span class="value">{{ user.activity }}</span>
+    </div>
+
+    <div class="profile-card">
+      <span class="label">Ціль</span>
+      <span class="value">{{ user.goal }}</span>
+    </div>
+
+    <div class="profile-card">
+      <span class="label">Досвід</span>
+      <span class="value">{{ user.experience }}</span>
+    </div>
+
+    <div class="profile-card">
+      <span class="label">Тренувань на тиждень</span>
+      <span class="value">{{ user.workouts_per_week }}</span>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

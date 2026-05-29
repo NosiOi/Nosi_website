@@ -3,6 +3,8 @@ from myapp.app.models import User, WorkoutPlan, NutritionPlan, RecoveryPlan
 from myapp.app import db
 from myapp.app.services.plan_generator import PlanGenerator
 from myapp.app.utils.decorators import login_required
+from flask_login import current_user
+
 
 profile_bp = Blueprint("profile", __name__)
 
@@ -93,4 +95,4 @@ def edit_profile():
         # 4. Повертаємо користувача в профіль
         return redirect("/profile")
 
-    return render_template("profile_edit.html", user=user)
+    return render_template("app/profile_edit.html", user=user)
