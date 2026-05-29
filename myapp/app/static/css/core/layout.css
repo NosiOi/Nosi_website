@@ -49,29 +49,21 @@
     z-index: 1;
 }
 
-.core-orb-1 {
-    width: 320px;
-    height: 320px;
-    left: 35%;
-    top: -80px;
-    background: radial-gradient(circle, rgba(254, 228, 64, 0.18), transparent 60%);
+.bg-glow-static,
+.bg-glow-dynamic {
+    position: fixed;
+    z-index: 3 !important;
 }
 
-.core-orb-2 {
-    width: 260px;
-    height: 260px;
-    left: -40px;
-    bottom: 0;
-    background: radial-gradient(circle, rgba(140, 82, 255, 0.18), transparent 60%);
+.main-content {
+    position: relative;
+    z-index: 5 !important;
 }
 
-.core-orb-3 {
-    width: 260px;
-    height: 260px;
-    right: -20px;
-    top: 35%;
-    background: radial-gradient(circle, rgba(0, 199, 190, 0.18), transparent 60%);
+.core-sidebar-shell {
+    z-index: 20 !important;
 }
+
 
 @media (max-width: 900px) {
     .core-orb-1 {
@@ -92,4 +84,9 @@
         height: 200px;
         right: -10px;
     }
+}
+
+.bg-glow-static,
+.bg-glow-dynamic {
+    z-index: 2 !important;
 }

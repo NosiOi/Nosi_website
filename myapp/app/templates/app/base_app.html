@@ -38,11 +38,10 @@
   </head>
 
   <body class="app-page">
-    <div class="core-orb core-orb-1"></div>
-    <div class="core-orb core-orb-2"></div>
-    <div class="core-orb core-orb-3"></div>
-
-    <div class="core-overlay"></div>
+    <div class="bg-glow-static glow-purple"></div>
+    <div class="bg-glow-static glow-teal"></div>
+    <div class="bg-glow-static glow-yellow"></div>
+    <div class="bg-glow-dynamic"></div>
 
     <div class="core-sidebar-shell">
       {% include "components/sidebar.html" %}
@@ -51,7 +50,5 @@
     <main class="main-content">
       <div class="page-content">{% block body %}{% endblock %}</div>
     </main>
-
-    {% block scripts %}{% endblock %}
   </body>
 </html>
