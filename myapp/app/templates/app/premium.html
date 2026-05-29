@@ -1,0 +1,13 @@
+{% extends "app/base.html" %} {% block content %}
+<div style="padding: 40px">
+  <h1>Premium</h1>
+
+  {% if user.is_premium %}
+  <p>Ваш акаунт: <strong>Premium</strong></p>
+  <p>Дякуємо за підтримку!</p>
+  {% else %}
+  <p>Ваш акаунт: <strong>Free</strong></p>
+  <a href="/premium/activate" class="btn btn-primary">Активувати Premium</a>
+  {% endif %}
+</div>
+{% endblock %}

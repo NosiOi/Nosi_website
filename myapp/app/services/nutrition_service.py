@@ -150,7 +150,6 @@ def get_daily_nutrition_data(user_id):
 
     quality = calculate_quality(ration_items)
 
-    # === KPI VALUES ===
     kcal = total_calories
     kcal_goal = goal_cal
     kcal_percent = progress["calories_percent"]
@@ -175,7 +174,6 @@ def get_daily_nutrition_data(user_id):
     else:
         balance_status = "Норма"
 
-    # === YESTERDAY ===
     yesterday = today.fromordinal(today.toordinal() - 1)
     meals_yesterday = Meal.query.filter_by(user_id=user_id, date=yesterday).all()
 
@@ -425,19 +423,41 @@ def add_meal_service(user_id, form):
 
 
 def add_item_service(user_id, form):
+    from myapp.app.models import User
+    from myapp.app.services.food_api_service import fetch_food_data
+
+    user = User.query.get(user_id)
+
     meal_id = int(form["meal_id"])
     meal = Meal.query.filter_by(id=meal_id, user_id=user_id).first()
     if not meal:
         return
 
-    item = MealItem(
-        meal_id=meal.id,
-        name=form["name"],
-        calories=int(form.get("calories", 0)),
-        protein=int(form.get("protein", 0)),
-        fat=int(form.get("fat", 0)),
-        carbs=int(form.get("carbs", 0)),
-    )
+    if user.is_premium:
+        api_data = fetch_food_data(form["name"])
+
+        item = MealItem(
+            meal_id=meal.id,
+            name=form["name"],
+            calories=api_data["calories"],
+            protein=api_data["protein"],
+            fat=api_data["fat"],
+            carbs=api_data["carbs"],
+            fiber=api_data["fiber"],
+            category_label=api_data["category"]
+        )
+
+    else:
+        item = MealItem(
+            meal_id=meal.id,
+            name=form["name"],
+            calories=int(form.get("calories", 0)),
+            protein=int(form.get("protein", 0)),
+            fat=int(form.get("fat", 0)),
+            carbs=int(form.get("carbs", 0)),
+            fiber=0,
+            category_label=None
+        )
 
     db.session.add(item)
     db.session.flush()
@@ -446,6 +466,7 @@ def add_item_service(user_id, form):
 
     db.session.add(meal)
     db.session.commit()
+
 
 
 def delete_meal_service(user_id, meal_id):
