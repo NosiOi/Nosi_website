@@ -1,5 +1,105 @@
 {% extends "app/base_app.html" %} {% block title %}Редагувати профіль —
-NOSIFIT{% endblock %} {% block body %}
-<h2>Редагувати профіль</h2>
-<p>Тут буде форма редагування.</p>
+NOSIFIT{% endblock %} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/profile_edit.css') }}"
+/>
+{% endblock %} {% block body %}
+
+<div class="profile-edit-page">
+  <div class="profile-edit-header">
+    <h2 class="pe-title">Редагувати профіль</h2>
+    <p class="pe-subtitle">
+      Онови свої дані, щоб отримувати точніші тренування, харчування та
+      аналітику
+    </p>
+  </div>
+
+  <form method="POST" class="profile-edit-form">
+    <div class="pe-section">
+      <h3 class="pe-section-title">Основна інформація</h3>
+      <div class="pe-grid">
+        <div class="pe-field">
+          <label>Ім’я</label>
+          <input type="text" name="username" value="{{ user.username }}" />
+        </div>
+
+        <div class="pe-field">
+          <label>Email</label>
+          <input type="email" name="email" value="{{ user.email }}" />
+        </div>
+      </div>
+    </div>
+
+    <div class="pe-section">
+      <h3 class="pe-section-title">Параметри тіла</h3>
+      <div class="pe-grid">
+        <div class="pe-field">
+          <label>Вік</label>
+          <input type="number" name="age" value="{{ user.age }}" />
+        </div>
+
+        <div class="pe-field">
+          <label>Зріст (см)</label>
+          <input type="number" name="height" value="{{ user.height }}" />
+        </div>
+
+        <div class="pe-field">
+          <label>Вага (кг)</label>
+          <input type="number" name="weight" value="{{ user.weight }}" />
+        </div>
+
+        <div class="pe-field">
+          <label>Стать</label>
+          <select name="gender">
+              <option value="male" {{ "selected" if user.gender == "male" else "" }}>Чоловіча</option>
+              <option value="female" {{ "selected" if user.gender == "female" else "" }}>Жіноча</option>
+            </select>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="pe-section">
+      <h3 class="pe-section-title">Цілі та активність</h3>
+      <div class="pe-grid">
+        <div class="pe-field">
+          <label>Ціль</label>
+          <select name="goal">
+            <option value="muscle_gain" {{ "selected" if user.goal == "muscle_gain" else "" }}>Набір м’язів</option>
+            <option value="fat_loss" {{ "selected" if user.goal == "fat_loss" else "" }}>Спалення жиру</option>
+            <option value="recomposition" {{ "selected" if user.goal == "recomposition" else "" }}>Рекомпозиція</option>
+            </select>
+        </div>
+        <div class="pe-field">
+          <label>Активність</label>
+          <select name="activity">
+            <option value="1.2" {{ "selected" if user.activity == 1.2 else "" }}>Низька</option>
+            <option value="1.375" {{ "selected" if user.activity == 1.375 else "" }}>Легка</option>
+            <option value="1.55" {{ "selected" if user.activity == 1.55 else "" }}>Середня</option>
+            <option value="1.725" {{ "selected" if user.activity == 1.725 else "" }}>Висока</option>
+            </select>
+        </div>
+        <div class="pe-field">
+          <label>Досвід</label>
+          <select name="experience">
+            <option value="beginner" {{ "selected" if user.experience == "beginner" else "" }}>Початківець</option>
+            <option value="intermediate" {{ "selected" if user.experience == "intermediate" else "" }}>Середній</option>
+            <option value="advanced" {{ "selected" if user.experience == "advanced" else "" }}>Просунутий</option>
+            </select>
+        </div>
+        <div class="pe-field">
+          <label>Тренувань на тиждень</label>
+          <input type="number" name="trainings" value="{{ user.trainings }}" />
+        </div>
+      </div>
+    </div>
+
+    <div class="pe-actions">
+      <button type="submit" class="pe-btn-save">Зберегти зміни</button>
+      <a href="/profile" class="pe-btn-cancel">Скасувати</a>
+    </div>
+  </form>
+</div>
+
 {% endblock %}

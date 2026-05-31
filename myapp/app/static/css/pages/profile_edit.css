@@ -1,0 +1,139 @@
+.profile-edit-page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 20px 0 60px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.profile-edit-header {
+    margin-bottom: 26px;
+}
+
+.pe-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #f7f7ff;
+}
+
+.pe-subtitle {
+    font-size: 14px;
+    color: #9a9ab5;
+    margin-top: 6px;
+}
+
+.pe-section {
+    background: linear-gradient(135deg, #17182c, #111222);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    padding: 22px 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+.pe-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f7f7ff;
+    margin-bottom: 16px;
+}
+
+.pe-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+@media (max-width: 720px) {
+    .pe-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pe-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pe-field label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #9a9ab5;
+}
+
+.pe-field input,
+.pe-field select {
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #151628;
+    color: #f7f7ff;
+    font-size: 14px;
+    outline: none;
+    transition: 0.25s ease;
+}
+
+.pe-field input:focus,
+.pe-field select:focus {
+    border-color: #00c2ff;
+    box-shadow: 0 0 0 1px rgba(0, 194, 255, 0.7), 0 14px 32px rgba(0, 0, 0, 0.9);
+    background: #181a30;
+}
+
+.pe-actions {
+    margin-top: 26px;
+    display: flex;
+    gap: 14px;
+    justify-content: flex-end;
+}
+
+.pe-btn-save {
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: #151b2c;
+    border: 1px solid #00c2ff;
+    color: #f7f7ff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 1);
+}
+
+.pe-btn-save:hover {
+    background: #192238;
+    color: #ffd43b;
+    border-color: #ffd43b;
+    transform: translateY(-2px);
+}
+
+.pe-btn-cancel {
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: #18192b;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #9a9ab5;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.25s ease;
+}
+
+.pe-btn-cancel:hover {
+    background: #1d2234;
+    color: #f7f7ff;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
