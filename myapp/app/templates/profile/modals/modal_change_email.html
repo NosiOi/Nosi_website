@@ -1,0 +1,19 @@
+<div class="modal-backdrop" id="change-email-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Змінити email</h3>
+      <button class="modal-close" data-close-modal>&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="form-change-email">
+        <div class="modal-field">
+          <label>Новий email</label>
+          <input type="email" name="new_email" value="{{ user.email }}" />
+        </div>
+        <button type="submit" class="modal-submit">
+          Надіслати код підтвердження
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

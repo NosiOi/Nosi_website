@@ -1,0 +1,44 @@
+<div class="modal-backdrop" id="edit-goal-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Цілі та активність</h3>
+      <button class="modal-close" data-close-modal>&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="form-edit-goal">
+        <div class="modal-grid">
+          <div class="modal-field">
+            <label>Ціль</label>
+            <select name="goal">
+              <option value="muscle_gain" {{ "selected" if user.goal == "muscle_gain" else "" }}>Набір м’язів</option>
+              <option value="fat_loss" {{ "selected" if user.goal == "fat_loss" else "" }}>Спалення жиру</option>
+              <option value="recomposition" {{ "selected" if user.goal == "recomposition" else "" }}>Рекомпозиція</option>
+            </select>
+          </div>
+          <div class="modal-field">
+            <label>Активність</label>
+            <select name="activity">
+              <option value="1.2" {{ "selected" if user.activity == 1.2 else "" }}>Низька</option>
+              <option value="1.375" {{ "selected" if user.activity == 1.375 else "" }}>Легка</option>
+              <option value="1.55" {{ "selected" if user.activity == 1.55 else "" }}>Середня</option>
+              <option value="1.725" {{ "selected" if user.activity == 1.725 else "" }}>Висока</option>
+            </select>
+          </div>
+          <div class="modal-field">
+            <label>Досвід</label>
+            <select name="experience">
+              <option value="beginner" {{ "selected" if user.experience == "beginner" else "" }}>Початківець</option>
+              <option value="intermediate" {{ "selected" if user.experience == "intermediate" else "" }}>Середній</option>
+              <option value="advanced" {{ "selected" if user.experience == "advanced" else "" }}>Просунутий</option>
+            </select>
+          </div>
+          <div class="modal-field">
+            <label>Тренувань на тиждень</label>
+            <input type="number" name="workouts_per_week" value="{{ user.workouts_per_week }}">
+          </div>
+        </div>
+        <button type="submit" class="modal-submit">Зберегти</button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="profile-section">
+  <div class="profile-section-header">
+    <h2 class="profile-section-title">Параметри тіла</h2>
+    <button class="profile-section-edit" data-modal="edit-body-modal">
+      Редагувати
+    </button>
+  </div>
+
+  <div class="profile-stats-grid">
+    <div class="profile-stat">
+      <span class="profile-stat-label">Вік</span>
+      <span class="profile-stat-value">{{ user.age }} років</span>
+    </div>
+    <div class="profile-stat">
+      <span class="profile-stat-label">Зріст</span>
+      <span class="profile-stat-value">{{ user.height }} см</span>
+    </div>
+    <div class="profile-stat">
+      <span class="profile-stat-label">Вага</span>
+      <span class="profile-stat-value">{{ user.weight }} кг</span>
+    </div>
+    <div class="profile-stat">
+      <span class="profile-stat-label">Стать</span>
+      <span class="profile-stat-value">
+        {% if user.gender == "male" %}Чоловіча{% elif user.gender == "female"
+        %}Жіноча{% else %}-{% endif %}
+      </span>
+    </div>
+  </div>
+</div>

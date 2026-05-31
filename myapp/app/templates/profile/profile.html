@@ -1,0 +1,38 @@
+{% extends "app/base_app.html" %} {% block title %}Профіль — NOSIFIT{% endblock
+%} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/profile/profile.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/profile/modals.css') }}"
+/>
+{% endblock %} {% block body %}
+<div class="profile-page">
+  <div class="profile-layout">
+    <div class="profile-main">
+      {% include "profile/components/profile_header.html" %} {% include
+      "profile/components/profile_stats.html" %} {% include
+      "profile/components/profile_goals.html" %}
+    </div>
+
+    <div class="profile-side">
+      {% include "profile/components/profile_actions.html" %}
+    </div>
+  </div>
+</div>
+
+{% include "profile/modals/modal_edit_name.html" %} {% include
+"profile/modals/modal_edit_body.html" %} {% include
+"profile/modals/modal_edit_goal.html" %} {% include
+"profile/modals/modal_change_password.html" %} {% include
+"profile/modals/modal_change_email.html" %}
+
+<script src="{{ url_for('static', filename='js/profile/modals.js') }}"></script>
+<script src="{{ url_for('static', filename='js/profile/update_name.js') }}"></script>
+<script src="{{ url_for('static', filename='js/profile/update_body.js') }}"></script>
+<script src="{{ url_for('static', filename='js/profile/update_goal.js') }}"></script>
+<script src="{{ url_for('static', filename='js/profile/change_password.js') }}"></script>
+<script src="{{ url_for('static', filename='js/profile/change_email.js') }}"></script>
+{% endblock %}
