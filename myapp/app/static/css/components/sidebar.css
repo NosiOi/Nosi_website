@@ -13,11 +13,13 @@
 
 .cmp-sidebar-header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 10px;
+    padding-bottom: 10px;
 }
 
-.cmp-sidebar-logo {
+.cmp-sidebar-brand {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -25,32 +27,104 @@
     transition: transform 0.25s ease;
 }
 
+.cmp-sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    padding: 6px 0;
+}
+
 .cmp-sidebar-logo:hover {
     transform: translateY(-2px);
 }
 
 .cmp-sidebar-logo-img {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     object-fit: contain;
+    filter: drop-shadow(0 0 12px rgba(255, 212, 59, 0.35));
 }
 
 .cmp-sidebar-logo-text {
     display: flex;
     flex-direction: column;
-    line-height: 1;
+    line-height: 1.05;
 }
 
 .cmp-sidebar-logo-main {
-    font-size: 19px;
-    font-weight: 700;
-    color: #ffffff;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #ffd43b;
 }
 
 .cmp-sidebar-logo-accent {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 700;
     color: #9b5de5;
+    margin-top: -2px;
+}
+
+.cmp-sidebar-home {
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #9a9ab5;
+    opacity: 0.8;
+    transition: 0.2s ease;
+}
+
+.cmp-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: transform 0.25s ease;
+}
+
+.cmp-sidebar-brand:hover {
+    transform: translateY(-2px);
+}
+
+.cmp-sidebar-brand-img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 14px rgba(255, 212, 59, 0.35));
+}
+
+.cmp-sidebar-brand-text {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    font-size: 26px;
+}
+
+.brand-nos {
+    color: #ffd43b;
+}
+
+.brand-fit {
+    color: #9b5de5;
+}
+
+.cmp-sidebar-home-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: #9a9ab5;
+    text-decoration: none;
+    transition: 0.2s ease;
+    opacity: 0.85;
+}
+
+.cmp-sidebar-home-link:hover {
+    color: #ffffff;
+    opacity: 1;
+    transform: translateX(2px);
 }
 
 .cmp-sidebar-nav {
@@ -150,7 +224,6 @@
     transform: scale(1.08);
 }
 
-/* Scrollbar */
 .cmp-sidebar::-webkit-scrollbar {
     width: 6px;
 }
