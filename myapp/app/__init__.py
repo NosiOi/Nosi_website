@@ -3,11 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_mail import Mail
+from authlib.integrations.flask_client import OAuth
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
 mail = Mail()
+oauth = OAuth()
 
 from myapp.app.models.user import User
 
@@ -23,10 +25,14 @@ def create_app():
     login_manager.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
+    oauth.init_app(app)
 
     login_manager.login_view = "auth.login"
 
-    from myapp.app import models
+    app.config["GOOGLE_CLIENT_ID"] = "твій_id"
+    app.config["GOOGLE_CLIENT_SECRET"] = "твій_secret"
+    app.config["GITHUB_CLIENT_ID"] = "твій_id"
+    app.config["GITHUB_CLIENT_SECRET"] = "твій_secret"
 
     from myapp.app.routes.auth import auth_bp
     from myapp.app.routes.dashboard import dashboard_bp
@@ -42,6 +48,12 @@ def create_app():
     from myapp.app.routes.profile.profile_update import profile_update_bp
     from myapp.app.routes.profile.password_change import password_change_bp
     from myapp.app.routes.profile.email_change import email_change_bp
+
+    from myapp.app.routes.auth.oauth_google import google_bp
+    from myapp.app.routes.auth.oauth_github import github_bp
+
+    app.register_blueprint(google_bp)
+    app.register_blueprint(github_bp)
 
     app.register_blueprint(profile_view_bp)
     app.register_blueprint(profile_update_bp)
