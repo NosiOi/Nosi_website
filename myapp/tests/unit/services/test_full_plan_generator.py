@@ -1,6 +1,5 @@
 from myapp.app.services.plan_generator import PlanGenerator
 
-
 def test_full_plan():
     gen = PlanGenerator(
         age=25,

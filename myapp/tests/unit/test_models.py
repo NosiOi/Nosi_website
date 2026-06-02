@@ -1,9 +1,12 @@
+from myapp.app.models.user import User
 from myapp.app import db
-from myapp.app.models import User
 
-
-def test_create_user(test_db):
-    user = User(username="yarik", email="test@example.com", password="123456")
+def test_create_user(app):
+    user = User(
+        username="yarik",
+        email="test@example.com",
+        password="hashedpass"
+    )
     db.session.add(user)
     db.session.commit()
 
@@ -11,3 +14,4 @@ def test_create_user(test_db):
 
     assert saved is not None
     assert saved.username == "yarik"
+    assert saved.password == "hashedpass"
