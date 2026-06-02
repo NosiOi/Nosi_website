@@ -1,10 +1,10 @@
 import pytest
-from myapp.app.app import create_app
-from myapp.app import db
-
+from myapp.app import create_app, db
+from myapp.app.models.user import User
+from werkzeug.security import generate_password_hash
 
 @pytest.fixture
-def test_app():
+def app():
     app = create_app()
     app.config["TESTING"] = True
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
@@ -15,7 +15,17 @@ def test_app():
         db.session.remove()
         db.drop_all()
 
+@pytest.fixture
+def client(app):
+    return app.test_client()
 
 @pytest.fixture
-def test_db(test_app):
-    return db
+def user(app):
+    u = User(
+        username="testuser",
+        email="test@example.com",
+        password=generate_password_hash("password123")
+    )
+    db.session.add(u)
+    db.session.commit()
+    return u
