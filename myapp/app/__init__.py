@@ -1,9 +1,13 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_mail import Mail
 from authlib.integrations.flask_client import OAuth
+import os
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -15,7 +19,10 @@ from myapp.app.models.user import User
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    print("LOAD USER:", user_id)
+    user = User.query.get(int(user_id))
+    print("FOUND USER:", user)
+    return user
 
 def create_app():
     app = Flask(__name__)
@@ -29,11 +36,21 @@ def create_app():
 
     login_manager.login_view = "auth.login"
 
-    app.config["GOOGLE_CLIENT_ID"] = "твій_id"
-    app.config["GOOGLE_CLIENT_SECRET"] = "твій_secret"
-    app.config["GITHUB_CLIENT_ID"] = "твій_id"
-    app.config["GITHUB_CLIENT_SECRET"] = "твій_secret"
+    app.config["GOOGLE_CLIENT_ID"] = os.getenv("GOOGLE_CLIENT_ID")
+    app.config["GOOGLE_CLIENT_SECRET"] = os.getenv("GOOGLE_CLIENT_SECRET")
 
+    oauth.register(
+        name="google",
+        client_id=app.config["GOOGLE_CLIENT_ID"],
+        client_secret=app.config["GOOGLE_CLIENT_SECRET"],
+        server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+        client_kwargs={"scope": "openid email profile"},
+    )
+
+    from myapp.app.routes.auth.oauth_google import google_bp
+    from myapp.app.routes.auth.oauth_github import github_bp
+
+    from myapp.app.routes.auth.complete_profile import complete_profile_bp
     from myapp.app.routes.auth_main import auth_bp
     from myapp.app.routes.dashboard import dashboard_bp
     from myapp.app.routes.plan import plan_bp
@@ -49,17 +66,9 @@ def create_app():
     from myapp.app.routes.profile.password_change import password_change_bp
     from myapp.app.routes.profile.email_change import email_change_bp
 
-    from myapp.app.routes.auth.oauth_google import google_bp
-    from myapp.app.routes.auth.oauth_github import github_bp
-
     app.register_blueprint(google_bp)
     app.register_blueprint(github_bp)
-
-    app.register_blueprint(profile_view_bp)
-    app.register_blueprint(profile_update_bp)
-    app.register_blueprint(password_change_bp)
-    app.register_blueprint(email_change_bp)
-
+    app.register_blueprint(complete_profile_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(plan_bp)
@@ -69,5 +78,9 @@ def create_app():
     app.register_blueprint(questionnaire_bp)
     app.register_blueprint(nutrition_bp)
     app.register_blueprint(premium_bp)
+    app.register_blueprint(profile_view_bp)
+    app.register_blueprint(profile_update_bp)
+    app.register_blueprint(password_change_bp)
+    app.register_blueprint(email_change_bp)
 
     return app

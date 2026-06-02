@@ -1,0 +1,46 @@
+<h2>Заповніть профіль</h2>
+
+<form method="POST">
+  <label>Вік</label>
+  <input type="number" name="age" required />
+
+  <label>Зріст (см)</label>
+  <input type="number" name="height" required />
+
+  <label>Вага (кг)</label>
+  <input type="number" name="weight" required />
+
+  <label>Стать</label>
+  <select name="gender" required>
+    <option value="male">Чоловік</option>
+    <option value="female">Жінка</option>
+  </select>
+
+  <label>Активність</label>
+  <select name="activity" required>
+    <option value="1.2">Мінімальна</option>
+    <option value="1.375">Легка</option>
+    <option value="1.55">Середня</option>
+    <option value="1.725">Висока</option>
+    <option value="1.9">Екстремальна</option>
+  </select>
+
+  <label>Ціль</label>
+  <select name="goal" required>
+    <option value="lose">Схуднення</option>
+    <option value="maintain">Підтримка</option>
+    <option value="gain">Набір</option>
+  </select>
+
+  <label>Досвід</label>
+  <select name="experience" required>
+    <option value="beginner">Початківець</option>
+    <option value="intermediate">Середній</option>
+    <option value="advanced">Просунутий</option>
+  </select>
+
+  <label>Тренувань на тиждень</label>
+  <input type="number" name="workouts" required />
+
+  <button type="submit">Зберегти</button>
+</form>

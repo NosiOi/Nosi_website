@@ -1,7 +1,8 @@
+from flask_login import UserMixin
 from myapp.app import db
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -28,3 +29,8 @@ class User(db.Model):
     equipment = db.relationship(
         "UserEquipment", back_populates="user", cascade="all, delete-orphan"
     )
+
+    @property
+    def is_active(self):
+        return True
+
