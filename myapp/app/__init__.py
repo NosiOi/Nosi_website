@@ -34,7 +34,7 @@ def create_app():
     app.config["GITHUB_CLIENT_ID"] = "твій_id"
     app.config["GITHUB_CLIENT_SECRET"] = "твій_secret"
 
-    from myapp.app.routes.auth import auth_bp
+    from myapp.app.routes.auth_main import auth_bp
     from myapp.app.routes.dashboard import dashboard_bp
     from myapp.app.routes.plan import plan_bp
     from myapp.app.routes.assessment import assessment_bp
