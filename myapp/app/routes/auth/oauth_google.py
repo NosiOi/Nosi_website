@@ -1,9 +1,11 @@
-from flask import Blueprint, redirect, url_for, session
+from flask import Blueprint, redirect, url_for, session, jsonify
 from flask_login import login_user
 from myapp.app.models.user import User
+from myapp.app.models.oauth_account import OAuthAccount
 from myapp.app import db, oauth
 
 google_bp = Blueprint("google_oauth", __name__)
+
 
 @google_bp.route("/auth/google")
 def google_login():
@@ -11,29 +13,55 @@ def google_login():
     redirect_uri = url_for("google_oauth.google_callback", _external=True)
     return google.authorize_redirect(redirect_uri)
 
+
 @google_bp.route("/auth/google/callback")
 def google_callback():
     google = oauth.create_client("google")
-    token = google.authorize_access_token()
+
+    try:
+        token = google.authorize_access_token()
+    except Exception:
+        return jsonify({"error": "Google token error"}), 400
 
     userinfo_endpoint = google.server_metadata["userinfo_endpoint"]
     user_info = google.get(userinfo_endpoint).json()
 
-    email = user_info["email"]
-    name = user_info["name"]
+    if "sub" not in user_info:
+        return jsonify({"error": "Google user error"}), 400
 
-    user = User.query.filter_by(email=email).first()
+    google_id = user_info["sub"]
+    email = user_info.get("email")
+    name = user_info.get("name")
 
-    if user:
-        from flask_login import logout_user
-        logout_user()
+    oauth_acc = OAuthAccount.query.filter_by(
+        provider="google",
+        provider_user_id=google_id
+    ).first()
+
+    if oauth_acc:
+        user = oauth_acc.user
         login_user(user)
         return redirect("/profile")
 
+    if email:
+        user = User.query.filter_by(email=email).first()
+        if user:
+            login_user(user)
+
+            db.session.add(OAuthAccount(
+                provider="google",
+                provider_user_id=google_id,
+                user_id=user.id
+            ))
+            db.session.commit()
+
+            return redirect("/profile")
+
     session["oauth_user"] = {
+        "provider": "google",
+        "provider_user_id": google_id,
         "email": email,
         "name": name
     }
 
-    return redirect("/complete-profile")
-
+    return redirect("/auth/complete_profile")

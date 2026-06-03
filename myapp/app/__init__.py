@@ -72,6 +72,7 @@ def create_app():
     from myapp.app.routes.profile.password_change import password_change_bp
     from myapp.app.routes.profile.email_change import email_change_bp
     from myapp.app.routes.profile.delete_account import delete_account_bp
+    from myapp.app.routes.profile.oauth_disconnect import oauth_disconnect_bp
 
     # Register blueprints
     app.register_blueprint(google_bp)
@@ -91,5 +92,6 @@ def create_app():
     app.register_blueprint(password_change_bp)
     app.register_blueprint(email_change_bp)
     app.register_blueprint(delete_account_bp)
+    app.register_blueprint(oauth_disconnect_bp)
 
     return app

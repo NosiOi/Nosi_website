@@ -41,6 +41,13 @@ class User(db.Model, UserMixin):
     cascade="all, delete-orphan",
     lazy=True
     )
+    
+    oauth_accounts = db.relationship(
+    "OAuthAccount",
+    back_populates="user",
+    cascade="all, delete-orphan"
+    )
+
 
 
     @property

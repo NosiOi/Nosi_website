@@ -73,11 +73,46 @@
       </form>
     </div>
 
+    <div class="oauth-section">
+      {% for acc in current_user.oauth_accounts %}
+      <div class="oauth-item">
+        <span>{{ acc.provider|capitalize }}</span>
+        <form method="POST" action="/profile/oauth_disconnect">
+          <input type="hidden" name="provider" value="{{ acc.provider }}" />
+          <button class="disconnect-btn">Від’єднати</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+
     <div class="profile-card">
       <span class="label">Тренувань на тиждень</span>
       <span class="value">{{ user.workouts_per_week }}</span>
     </div>
   </div>
+</div>
+<div class="oauth-section">
+  {% for acc in current_user.oauth_accounts %}
+  <div class="oauth-item">
+    <span>{{ acc.provider|capitalize }}</span>
+    <form method="POST" action="/profile/oauth_disconnect">
+      <input type="hidden" name="provider" value="{{ acc.provider }}" />
+      <button class="disconnect-btn">Від’єднати</button>
+    </form>
+  </div>
+  {% endfor %} {% if not current_user.oauth_accounts|selectattr("provider",
+  "equalto", "google")|list %}
+  <div class="oauth-item">
+    <span>Google</span>
+    <a href="/auth/google" class="connect-btn">Підключити</a>
+  </div>
+  {% endif %} {% if not current_user.oauth_accounts|selectattr("provider",
+  "equalto", "github")|list %}
+  <div class="oauth-item">
+    <span>GitHub</span>
+    <a href="/auth/github" class="connect-btn">Підключити</a>
+  </div>
+  {% endif %}
 </div>
 
 {% endblock %}

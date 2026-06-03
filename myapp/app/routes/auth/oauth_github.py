@@ -1,7 +1,8 @@
-from flask import Blueprint, redirect, request, session, current_app
+from flask import Blueprint, redirect, request, session, current_app, jsonify
 import requests
 from flask_login import login_user
 from myapp.app.models.user import User
+from myapp.app.models.oauth_account import OAuthAccount
 from myapp.app import db
 
 github_bp = Blueprint("github", __name__)
@@ -36,36 +37,66 @@ def github_callback():
         },
     ).json()
 
-    access_token = token_res.get("access_token")
+    if "access_token" not in token_res:
+        return jsonify({"error": "GitHub token error"}), 400
+
+    access_token = token_res["access_token"]
 
     user_res = requests.get(
         "https://api.github.com/user",
         headers={"Authorization": f"Bearer {access_token}"}
     ).json()
 
+    if "id" not in user_res:
+        return jsonify({"error": "GitHub user error"}), 400
+
+    github_id = str(user_res["id"])
+    username = user_res.get("login")
+
     email_res = requests.get(
         "https://api.github.com/user/emails",
         headers={"Authorization": f"Bearer {access_token}"}
     ).json()
+
+    if not isinstance(email_res, list):
+        return jsonify({"error": "GitHub email error"}), 400
 
     primary_email = None
     for e in email_res:
         if e.get("primary"):
             primary_email = e.get("email")
 
-    username = user_res.get("login")
     email = primary_email
 
-    user = User.query.filter_by(email=email).first()
+    oauth_acc = OAuthAccount.query.filter_by(
+        provider="github",
+        provider_user_id=github_id
+    ).first()
 
-    if user:
+    if oauth_acc:
+        user = oauth_acc.user
         login_user(user)
         return redirect("/profile")
 
+    if email:
+        user = User.query.filter_by(email=email).first()
+        if user:
+            login_user(user)
+
+            db.session.add(OAuthAccount(
+                provider="github",
+                provider_user_id=github_id,
+                user_id=user.id
+            ))
+            db.session.commit()
+
+            return redirect("/profile")
+
     session["oauth_user"] = {
+        "provider": "github",
+        "provider_user_id": github_id,
         "username": username,
-        "email": email,
-        "provider": "github"
+        "email": email
     }
 
     return redirect("/auth/complete_profile")
