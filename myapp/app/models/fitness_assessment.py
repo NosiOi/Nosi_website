@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from myapp.app import db
 
 
@@ -16,9 +16,13 @@ class FitnessAssessment(db.Model):
     si_squat = db.Column(db.Float, nullable=False)
     si_core = db.Column(db.Float, nullable=False)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(
+        db.DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc)
+    )
 
-    user = db.relationship("User", backref=db.backref("fitness_assessments", lazy=True))
+
+    user = db.relationship("User", back_populates="assessments")
 
     def __repr__(self) -> str:
         return f"<FitnessAssessment user_id={self.user_id} si_push={self.si_push:.2f}>"

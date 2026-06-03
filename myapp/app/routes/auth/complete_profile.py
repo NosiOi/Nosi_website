@@ -53,4 +53,4 @@ def complete_profile():
 
         return redirect("/profile")
 
-    return render_template("complete_profile.html", oauth_user=oauth_user)
+    return render_template("auth/complete_profile.html", oauth_user=oauth_user)

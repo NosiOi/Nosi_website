@@ -65,6 +65,15 @@
     </div>
 
     <div class="profile-card">
+      <form
+        action="{{ url_for('delete_account.delete_account') }}"
+        method="POST"
+      >
+        <button class="delete-btn">Видалити акаунт</button>
+      </form>
+    </div>
+
+    <div class="profile-card">
       <span class="label">Тренувань на тиждень</span>
       <span class="value">{{ user.workouts_per_week }}</span>
     </div>

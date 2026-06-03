@@ -24,11 +24,24 @@ class User(db.Model, UserMixin):
 
     is_premium = db.Column(db.Boolean, default=False)
 
-    training_plans = db.relationship("TrainingPlan", backref="user", lazy=True)
-
-    equipment = db.relationship(
-        "UserEquipment", back_populates="user", cascade="all, delete-orphan"
+    workout_plan = db.relationship("WorkoutPlan", backref="user", cascade="all, delete-orphan", lazy=True)
+    nutrition_plan = db.relationship("NutritionPlan", backref="user", cascade="all, delete-orphan", lazy=True)
+    recovery_plan = db.relationship("RecoveryPlan", backref="user", cascade="all, delete-orphan", lazy=True)
+    
+    assessments = db.relationship(
+    "FitnessAssessment",
+    back_populates="user",
+    cascade="all, delete-orphan"
     )
+    equipment = db.relationship("UserEquipment", back_populates="user", cascade="all, delete-orphan", lazy=True)
+
+    meals = db.relationship(
+    "Meal",
+    back_populates="user",
+    cascade="all, delete-orphan",
+    lazy=True
+    )
+
 
     @property
     def is_active(self):

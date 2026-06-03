@@ -4,6 +4,7 @@ class Meal(db.Model):
     __tablename__ = "meals"
 
     id = db.Column(db.Integer, primary_key=True)
+    user = db.relationship("User", back_populates="meals")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     date = db.Column(db.Date, nullable=False)
