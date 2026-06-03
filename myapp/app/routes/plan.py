@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, session, redirect
+from flask import Blueprint, render_template, redirect
+from flask_login import login_required, current_user
 from myapp.app.models import User, WorkoutPlan, NutritionPlan, RecoveryPlan
 from myapp.app import db
 from myapp.app.services.plan_generator import PlanGenerator
@@ -7,11 +8,9 @@ plan_bp = Blueprint("plan", __name__, url_prefix="/plan")
 
 
 @plan_bp.route("/view")
+@login_required
 def view_plan():
-    if "user" not in session:
-        return redirect("/auth/login")
-
-    user = User.query.get(session["user"])
+    user = current_user
 
     workout = WorkoutPlan.query.filter_by(user_id=user.id).first()
     nutrition = NutritionPlan.query.filter_by(user_id=user.id).first()
@@ -33,11 +32,9 @@ def view_plan():
 
 
 @plan_bp.route("/generate")
+@login_required
 def generate_plan():
-    if "user" not in session:
-        return redirect("/auth/login")
-
-    user = User.query.get(session["user"])
+    user = current_user
 
     generator = PlanGenerator(
         age=user.age,
@@ -48,24 +45,18 @@ def generate_plan():
         goal=user.goal,
         experience=user.experience,
         workouts_per_week=user.workouts_per_week,
-        environment=session.get("environment", "gym"),
-        aesthetic_focus=session.get("aesthetic_focus"),
-        performance_focus=session.get("performance_focus"),
-        weak_points=session.get("weak_points", []),
-        strong_points=session.get("strong_points", []),
+        environment=user.environment if hasattr(user, "environment") else "gym",
+        aesthetic_focus=user.aesthetic_focus if hasattr(user, "aesthetic_focus") else None,
+        performance_focus=user.performance_focus if hasattr(user, "performance_focus") else None,
+        weak_points=user.weak_points if hasattr(user, "weak_points") else [],
+        strong_points=user.strong_points if hasattr(user, "strong_points") else [],
     )
 
     plan = generator.generate()
 
-    workout = WorkoutPlan.query.filter_by(user_id=user.id).first() or WorkoutPlan(
-        user_id=user.id
-    )
-    nutrition = NutritionPlan.query.filter_by(user_id=user.id).first() or NutritionPlan(
-        user_id=user.id
-    )
-    recovery = RecoveryPlan.query.filter_by(user_id=user.id).first() or RecoveryPlan(
-        user_id=user.id
-    )
+    workout = WorkoutPlan.query.filter_by(user_id=user.id).first() or WorkoutPlan(user_id=user.id)
+    nutrition = NutritionPlan.query.filter_by(user_id=user.id).first() or NutritionPlan(user_id=user.id)
+    recovery = RecoveryPlan.query.filter_by(user_id=user.id).first() or RecoveryPlan(user_id=user.id)
 
     workout.plan = plan["training_plan"]
     nutrition.calories = plan["calories"]
