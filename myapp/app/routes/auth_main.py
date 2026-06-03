@@ -69,9 +69,10 @@ def register():
     return render_template("auth/register.html")
 
 
+from flask_login import logout_user
 @auth_bp.route("/logout")
 def logout():
-    from flask_login import logout_user
     logout_user()
 
     return redirect("/")
+
