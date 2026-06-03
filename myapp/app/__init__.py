@@ -1,14 +1,13 @@
 from dotenv import load_dotenv
 load_dotenv()
 
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_mail import Mail
 from authlib.integrations.flask_client import OAuth
-import os
-
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -18,17 +17,17 @@ oauth = OAuth()
 
 from myapp.app.models.user import User
 
+
 @login_manager.user_loader
 def load_user(user_id):
-    print("LOAD USER:", user_id)
-    user = User.query.get(int(user_id))
-    print("FOUND USER:", user)
-    return user
+    return User.query.get(int(user_id))
+
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object("myapp.app.config.Config")
 
+    # Init extensions
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
@@ -37,9 +36,14 @@ def create_app():
 
     login_manager.login_view = "auth.login"
 
+    # OAuth config
     app.config["GOOGLE_CLIENT_ID"] = os.getenv("GOOGLE_CLIENT_ID")
     app.config["GOOGLE_CLIENT_SECRET"] = os.getenv("GOOGLE_CLIENT_SECRET")
 
+    app.config["GITHUB_CLIENT_ID"] = os.getenv("GITHUB_CLIENT_ID")
+    app.config["GITHUB_CLIENT_SECRET"] = os.getenv("GITHUB_CLIENT_SECRET")
+
+    # Register Google OAuth
     oauth.register(
         name="google",
         client_id=app.config["GOOGLE_CLIENT_ID"],
@@ -48,6 +52,7 @@ def create_app():
         client_kwargs={"scope": "openid email profile"},
     )
 
+    # Blueprints
     from myapp.app.routes.auth.oauth_google import google_bp
     from myapp.app.routes.auth.oauth_github import github_bp
 
@@ -68,6 +73,7 @@ def create_app():
     from myapp.app.routes.profile.email_change import email_change_bp
     from myapp.app.routes.profile.delete_account import delete_account_bp
 
+    # Register blueprints
     app.register_blueprint(google_bp)
     app.register_blueprint(github_bp)
     app.register_blueprint(complete_profile_bp)

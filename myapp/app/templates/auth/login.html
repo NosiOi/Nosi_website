@@ -70,9 +70,13 @@
           </button>
 
           <button class="oauth-btn github" type="button">
-            <a href="/auth/github" class="oauth-btn github"
-              >Увійти через GitHub</a
+            <a
+              href="{{ url_for('github.github_login') }}"
+              class="oauth-btn github"
             >
+              <img src="/static/icons/github.svg" />
+              Увійти через GitHub
+            </a>
           </button>
         </div>
 
