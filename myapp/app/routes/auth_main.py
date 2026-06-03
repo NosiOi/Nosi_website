@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user, logout_user
 from myapp.app import db
-from myapp.app.models import User
+from myapp.app.models.user import User
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -15,15 +16,15 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if not user:
-            return "Користувача не знайдено"
+            flash("Користувача не знайдено", "error")
+            return redirect("/auth/login")
 
         if not check_password_hash(user.password, password):
-            return "Невірний пароль"
+            flash("Невірний пароль", "error")
+            return redirect("/auth/login")
 
-        from flask_login import login_user
         login_user(user)
         return redirect("/dashboard")
-
 
     return render_template("auth/login.html")
 
@@ -31,48 +32,66 @@ def login():
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.form["username"]
-        email = request.form["email"]
-        password = request.form["password"]
-        age = int(request.form["age"])
-        height = int(request.form["height"])
-        weight = int(request.form["weight"])
-        gender = request.form["gender"]
-        activity = float(request.form.get("activity"))
+        email = request.form.get("email")
 
-        if User.query.filter_by(email=email).first():
-            return "Користувач з такою поштою вже існує"
+        session["reg_data"] = {
+            "username": request.form.get("username"),
+            "email": email,
+            "password": request.form.get("password"),
+            "age": request.form.get("age"),
+            "height": request.form.get("height"),
+            "weight": request.form.get("weight"),
+            "gender": request.form.get("gender"),
+            "activity": request.form.get("activity"),
+            "goal": request.form.get("goal"),
+            "experience": request.form.get("experience"),
+            "workouts_per_week": request.form.get("workouts_per_week"),
+        }
 
-        hashed_password = generate_password_hash(password)
+        return redirect("/auth/send_code")
+
+    return render_template("auth/register.html")
+
+
+@auth_bp.route("/register_complete", methods=["GET", "POST"])
+def register_complete():
+    reg_data = session.get("reg_data")
+    verified_email = session.get("verified_email")
+
+    if not reg_data or not verified_email:
+        flash("Спочатку підтвердіть email", "error")
+        return redirect("/auth/register")
+
+    if request.method == "POST":
+        hashed_password = generate_password_hash(reg_data["password"])
 
         user = User(
-            username=username,
-            email=email,
+            username=reg_data["username"],
+            email=verified_email,
             password=hashed_password,
-            age=age,
-            height=height,
-            weight=weight,
-            gender=gender,
-            activity=activity,
-            goal=request.form.get("goal"),
-            experience=request.form.get("experience"),
-            workouts_per_week=int(request.form.get("workouts_per_week")),
+            age=int(reg_data["age"]),
+            height=int(reg_data["height"]),
+            weight=int(reg_data["weight"]),
+            gender=reg_data["gender"],
+            activity=float(reg_data["activity"]),
+            goal=reg_data["goal"],
+            experience=reg_data["experience"],
+            workouts_per_week=int(reg_data["workouts_per_week"]),
         )
 
         db.session.add(user)
         db.session.commit()
 
-        from flask_login import logout_user
-        logout_user()
+        session.pop("reg_data", None)
+        session.pop("verified_email", None)
+
+        login_user(user)
+        return redirect("/dashboard")
+
+    return render_template("auth/register_complete.html")
 
 
-    return render_template("auth/register.html")
-
-
-from flask_login import logout_user
 @auth_bp.route("/logout")
 def logout():
     logout_user()
-
     return redirect("/")
-

@@ -23,7 +23,8 @@
 
       <h2 class="title">Створити акаунт</h2>
 
-      <form method="POST" class="form">
+      <h1 style="color: red">REGISTER TEMPLATE LOADED</h1>
+      <form method="POST" action="/verify/send_code">
         <div class="field">
           <label>Email</label>
           <input
@@ -182,12 +183,12 @@
         </label>
 
         <div class="oauth-box">
-          <button class="oauth-btn google">
+          <button type="button" class="oauth-btn google">
             <img src="/static/img/google.svg" alt="" />
             Увійти через Google
           </button>
 
-          <button class="oauth-btn github">
+          <button type="button" class="oauth-btn github">
             <img src="/static/img/github.svg" alt="" />
             Увійти через GitHub
           </button>
