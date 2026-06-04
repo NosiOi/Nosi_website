@@ -29,7 +29,7 @@ def login():
     return render_template("auth/login.html")
 
 
-@auth_bp.route("/register", methods=["GET", "POST"])
+@auth_bp.route("/register", methods=["GET"])
 def register():
     if request.method == "POST":
         email = request.form.get("email")
@@ -48,7 +48,7 @@ def register():
             "workouts_per_week": request.form.get("workouts_per_week"),
         }
 
-        return redirect("/auth/send_code")
+        return redirect("/verify/send_code")
 
     return render_template("auth/register.html")
 

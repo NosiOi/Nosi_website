@@ -25,3 +25,4 @@ def test_oauth_user_cannot_login_with_password(client, app):
         "password": "anything"
     })
     assert response.status_code == 403
+

@@ -1,18 +1,6 @@
-<!doctype html>
-<html lang="uk">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Підтвердження пошти — NOSIFIT</title>
-  </head>
-  <body>
-    <h1>Підтвердження електронної пошти</h1>
+<h1>Введіть код підтвердження</h1>
 
-    <form method="POST">
-      <label>Введіть код з листа:</label>
-      <input type="text" name="code" maxlength="6" required />
-      <button type="submit">Підтвердити</button>
-    </form>
-
-    <a href="/auth/register">Повернутися</a>
-  </body>
-</html>
+<form method="POST">
+  <input type="text" name="code" placeholder="Код" required />
+  <button type="submit">Підтвердити</button>
+</form>
