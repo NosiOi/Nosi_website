@@ -48,7 +48,7 @@ def complete_profile():
 
         from flask_login import logout_user
         logout_user()
-        login_user(user)
+        login_user(user, remember=True)
         session.pop("oauth_user")
 
         return redirect("/profile")

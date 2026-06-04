@@ -10,17 +10,31 @@ email_verification_bp = Blueprint("email_verification", __name__, url_prefix="/v
 
 def send_verification_email(email, code):
     msg = Message(
-        subject="Ваш код підтвердження — NOSIFIT",
+        subject="Код підтвердження для NosiFit",
         recipients=[email],
-        body=f"Ваш код підтвердження: {code}\nДійсний 10 хвилин."
+        body=(
+            f"Привіт!\n\n"
+            f"Ваш код підтвердження для створення акаунту в NosiFit:\n\n"
+            f"👉 {code}\n\n"
+            f"Код дійсний протягом 10 хвилин.\n"
+            f"Якщо ви не надсилали запит — просто ігноруйте цей лист.\n\n"
+            f"З повагою,\nКоманда NosiFit"
+        )
     )
-    mail.send(msg)
+
+    msg.html = f"""
+    <h2>Ваш код підтвердження</h2>
+    <p>Код для входу в <b>NosiFit</b>:</p>
+    <h1 style="font-size: 32px; letter-spacing: 4px;">{code}</h1>
+    <p>Дійсний 10 хвилин.</p>
+    """
 
     try:
         mail.send(msg)
         print("SMTP OK")
     except Exception as e:
         print("SMTP ERROR:", e)
+
 
 
 

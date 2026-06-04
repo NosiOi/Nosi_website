@@ -48,9 +48,3 @@ class User(db.Model, UserMixin):
     cascade="all, delete-orphan"
     )
 
-
-
-    @property
-    def is_active(self):
-        return True
-
