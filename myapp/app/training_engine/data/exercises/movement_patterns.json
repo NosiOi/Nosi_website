@@ -1,0 +1,35 @@
+{
+    "push": [
+        "pushups",
+        "bench_press",
+        "shoulder_press"
+    ],
+    "pull": [
+        "pullups",
+        "rows",
+        "lat_pulldown"
+    ],
+    "hinge": [
+        "deadlift",
+        "romanian_deadlift",
+        "good_morning"
+    ],
+    "squat": [
+        "squats",
+        "lunges",
+        "leg_press"
+    ],
+    "carry": [
+        "farmer_walk"
+    ],
+    "rotation": [
+        "russian_twist"
+    ],
+    "core_flexion": [
+        "situps",
+        "crunches"
+    ],
+    "core_stability": [
+        "plank"
+    ]
+}

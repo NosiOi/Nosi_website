@@ -1,0 +1,95 @@
+{
+    "pushups": {
+        "id": "pushups",
+        "name": "Віджимання",
+        "muscles_primary": [
+            "chest"
+        ],
+        "muscles_secondary": [
+            "triceps",
+            "shoulders",
+            "core"
+        ],
+        "difficulty": 3,
+        "equipment": [
+            "bodyweight"
+        ],
+        "environment": [
+            "home",
+            "outdoor",
+            "gym"
+        ],
+        "movement_pattern": "push",
+        "risk_level": 1,
+        "progression_chain": [
+            "incline_pushups",
+            "pushups",
+            "decline_pushups",
+            "diamond_pushups",
+            "ring_pushups"
+        ],
+        "regression_chain": [
+            "wall_pushups",
+            "incline_pushups"
+        ]
+    },
+    "squats": {
+        "id": "squats",
+        "name": "Присідання",
+        "muscles_primary": [
+            "quads"
+        ],
+        "muscles_secondary": [
+            "glutes",
+            "hamstrings",
+            "core"
+        ],
+        "difficulty": 2,
+        "equipment": [
+            "bodyweight"
+        ],
+        "environment": [
+            "home",
+            "outdoor",
+            "gym"
+        ],
+        "movement_pattern": "squat",
+        "risk_level": 1,
+        "progression_chain": [
+            "squats",
+            "jump_squats",
+            "pistol_squats"
+        ],
+        "regression_chain": [
+            "box_squats"
+        ]
+    },
+    "situps": {
+        "id": "situps",
+        "name": "Скручування",
+        "muscles_primary": [
+            "core"
+        ],
+        "muscles_secondary": [
+            "hip_flexors"
+        ],
+        "difficulty": 2,
+        "equipment": [
+            "bodyweight"
+        ],
+        "environment": [
+            "home",
+            "outdoor",
+            "gym"
+        ],
+        "movement_pattern": "core_flexion",
+        "risk_level": 1,
+        "progression_chain": [
+            "situps",
+            "weighted_situps"
+        ],
+        "regression_chain": [
+            "crunches"
+        ]
+    }
+}
