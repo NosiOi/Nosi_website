@@ -9,6 +9,7 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from authlib.integrations.flask_client import OAuth
 
+# Extensions
 db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
@@ -61,6 +62,7 @@ def create_app():
     from myapp.app.routes.auth.email_verification import email_verification_bp
     from myapp.app.routes.auth.complete_profile import complete_profile_bp
     from myapp.app.routes.auth_main import auth_bp
+
     from myapp.app.routes.root import root_bp
     from myapp.app.routes.public import public_bp
     from myapp.app.routes.dashboard import dashboard_bp
@@ -71,6 +73,7 @@ def create_app():
     from myapp.app.routes.questionnaire import questionnaire_bp
     from myapp.app.routes.nutrition import nutrition_bp
     from myapp.app.routes.premium import premium_bp
+
     from myapp.app.routes.profile.profile_view import profile_view_bp
     from myapp.app.routes.profile.profile_update import profile_update_bp
     from myapp.app.routes.profile.password_change import password_change_bp
@@ -78,12 +81,16 @@ def create_app():
     from myapp.app.routes.profile.delete_account import delete_account_bp
     from myapp.app.routes.profile.oauth_disconnect import oauth_disconnect_bp
 
+    # Training Engine API
+    from myapp.app.routes.training_api import training_api
+
     # Register blueprints
     app.register_blueprint(google_bp)
     app.register_blueprint(github_bp)
     app.register_blueprint(email_verification_bp)
     app.register_blueprint(complete_profile_bp)
     app.register_blueprint(auth_bp)
+
     app.register_blueprint(root_bp)
     app.register_blueprint(public_bp)
     app.register_blueprint(dashboard_bp)
@@ -94,11 +101,15 @@ def create_app():
     app.register_blueprint(questionnaire_bp)
     app.register_blueprint(nutrition_bp)
     app.register_blueprint(premium_bp)
+
     app.register_blueprint(profile_view_bp)
     app.register_blueprint(profile_update_bp)
     app.register_blueprint(password_change_bp)
     app.register_blueprint(email_change_bp)
     app.register_blueprint(delete_account_bp)
     app.register_blueprint(oauth_disconnect_bp)
+
+    # Training Engine API
+    app.register_blueprint(training_api)
 
     return app
