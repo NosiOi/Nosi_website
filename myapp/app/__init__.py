@@ -68,7 +68,6 @@ def create_app():
     from myapp.app.routes.dashboard import dashboard_bp
     from myapp.app.routes.plan import plan_bp
     from myapp.app.routes.assessment import assessment_bp
-    from myapp.app.routes.training import training_bp
     from myapp.app.routes.equipment import equipment_bp
     from myapp.app.routes.questionnaire import questionnaire_bp
     from myapp.app.routes.nutrition import nutrition_bp
@@ -83,6 +82,7 @@ def create_app():
 
     # Training Engine API
     from myapp.app.routes.training_api import training_api
+    from myapp.app.routes.training_session_api import training_session_api
 
     # Register blueprints
     app.register_blueprint(google_bp)
@@ -96,7 +96,6 @@ def create_app():
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(plan_bp)
     app.register_blueprint(assessment_bp)
-    app.register_blueprint(training_bp)
     app.register_blueprint(equipment_bp)
     app.register_blueprint(questionnaire_bp)
     app.register_blueprint(nutrition_bp)
@@ -111,5 +110,7 @@ def create_app():
 
     # Training Engine API
     app.register_blueprint(training_api)
+    app.register_blueprint(training_session_api)
+
 
     return app

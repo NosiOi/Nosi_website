@@ -1,10 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, request
-from myapp.app.models import User, WorkoutPlan, NutritionPlan, RecoveryPlan
+from flask_login import login_required, current_user
+from myapp.app.models import User
 from myapp.app import db
-from myapp.app.services.plan_generator import PlanGenerator
-from flask_login import login_required
-from flask_login import current_user
-
 
 profile_bp = Blueprint("profile", __name__)
 
@@ -40,7 +37,6 @@ def edit_profile():
     user = User.query.get(session["user"])
 
     if request.method == "POST":
-        # 1. Оновлюємо дані користувача
         user.username = request.form["username"]
         user.email = request.form["email"]
         user.age = int(request.form["age"])
@@ -52,47 +48,23 @@ def edit_profile():
         user.experience = request.form["experience"]
         user.workouts_per_week = int(request.form["workouts_per_week"])
 
+        if "environment" in request.form:
+            user.environment = request.form["environment"]
+
+        if "aesthetic_focus" in request.form:
+            user.aesthetic_focus = request.form["aesthetic_focus"]
+
+        if "performance_focus" in request.form:
+            user.performance_focus = request.form["performance_focus"]
+
+        if "weak_points" in request.form:
+            user.weak_points = request.form.getlist("weak_points")
+
+        if "strong_points" in request.form:
+            user.strong_points = request.form.getlist("strong_points")
+
         db.session.commit()
 
-        # 2. Генеруємо новий план
-        generator = PlanGenerator(
-            age=user.age,
-            sex=user.gender,
-            weight=user.weight,
-            height=user.height,
-            activity=user.activity,
-            goal=user.goal,
-            experience=user.experience,
-            workouts_per_week=user.workouts_per_week,
-        )
-
-        plan = generator.generate()
-
-        # 3. Оновлюємо або створюємо плани
-        workout = WorkoutPlan.query.filter_by(user_id=user.id).first()
-        nutrition = NutritionPlan.query.filter_by(user_id=user.id).first()
-        recovery = RecoveryPlan.query.filter_by(user_id=user.id).first()
-
-        if not workout:
-            workout = WorkoutPlan(user_id=user.id)
-        if not nutrition:
-            nutrition = NutritionPlan(user_id=user.id)
-        if not recovery:
-            recovery = RecoveryPlan(user_id=user.id)
-
-        workout.plan = plan["training_plan"]
-        nutrition.calories = plan["calories"]
-        nutrition.protein = plan["protein"]
-        nutrition.fats = plan["fats"]
-        nutrition.carbs = plan["carbs"]
-        recovery.plan = f"Сон: {plan['sleep']} годин, Вода: {plan['water']} л"
-
-        db.session.add(workout)
-        db.session.add(nutrition)
-        db.session.add(recovery)
-        db.session.commit()
-
-        # 4. Повертаємо користувача в профіль
         return redirect("/profile")
 
     return render_template("app/profile_edit.html", user=user)
