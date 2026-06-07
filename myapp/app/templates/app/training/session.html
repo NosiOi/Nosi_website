@@ -1,0 +1,34 @@
+{% extends "app/base_app.html" %} {% block title %}Live Session · NosiFit{%
+endblock %} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/training/base.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/training/components.css') }}"
+/>
+{% endblock %} {% block body %}
+<div class="tr-shell tr-live-shell">
+  <main class="tr-live">
+    <header class="tr-live-header">
+      <h2 id="tr-live-title">Live Session</h2>
+      <div class="tr-live-meta">
+        <span id="tr-live-step">1 / 6</span>
+        <span id="tr-live-timer">00:00</span>
+      </div>
+    </header>
+
+    <section id="tr-live-step-area" class="tr-live-step-area">
+      <!-- JS will render current exercise, sets, controls -->
+    </section>
+
+    <footer class="tr-live-footer">
+      <button id="tr-live-prev" class="tr-btn">Prev</button>
+      <button id="tr-live-next" class="tr-btn tr-btn--primary">Next</button>
+    </footer>
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/training/session.js') }}"></script>
+{% endblock %}

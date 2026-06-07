@@ -1,0 +1,99 @@
+{% extends "app/base_app.html" %} {% block title %}Тренування · NosiFit{%
+endblock %} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/training/base.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/training/layout.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/training/components.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/training/animations.css') }}"
+/>
+{% endblock %} {% block body %}
+<div class="tr-shell">
+  <header class="tr-header">
+    <div class="tr-h-left">
+      <h1 class="tr-title">Тренування</h1>
+      <p class="tr-sub">
+        Привіт, <strong>{{ user.username }}</strong> · сьогодні:
+        <span id="tr-day-type">—</span>
+      </p>
+    </div>
+    <div class="tr-h-right">
+      <button id="tr-start" class="tr-btn tr-btn--primary">
+        Start Session
+      </button>
+      <button id="tr-edit-plan" class="tr-btn tr-btn--ghost">Edit Plan</button>
+    </div>
+  </header>
+
+  <section class="tr-grid">
+    <aside class="tr-panel tr-panel--muscles">
+      <div class="cmp-card tr-card">
+        <div class="tr-card-head">
+          <h3 class="cmp-card-title">М’язи та прогрес</h3>
+          <p class="cmp-card-sub">Павутинка навантажень</p>
+        </div>
+        <div id="tr-radar" class="tr-radar" aria-hidden="false"></div>
+        <div id="tr-legend" class="tr-legend"></div>
+        <div class="tr-card-foot">
+          <small class="cmp-card-sub">Premium: вибрати до 4 цілей</small>
+        </div>
+      </div>
+    </aside>
+
+    <main class="tr-panel tr-panel--workout">
+      <div class="cmp-card tr-card">
+        <div class="tr-card-head">
+          <h3 class="cmp-card-title">Сьогоднішня сесія</h3>
+          <p class="cmp-card-sub" id="tr-session-title">Завантаження...</p>
+        </div>
+
+        <ul id="tr-exercises" class="tr-exercise-list" aria-live="polite"></ul>
+
+        <div class="tr-actions">
+          <button id="tr-live-start" class="tr-btn tr-btn--primary">
+            Start Now
+          </button>
+          <button id="tr-open-plan" class="tr-btn tr-btn--ghost">
+            Open Plan
+          </button>
+        </div>
+      </div>
+
+      <div class="cmp-card tr-card">
+        <h3 class="cmp-card-title">Рекомендації</h3>
+        <div id="tr-recs" class="tr-recs">Завантаження...</div>
+      </div>
+    </main>
+
+    <aside class="tr-panel tr-panel--plan">
+      <div class="cmp-card tr-card">
+        <h3 class="cmp-card-title">План тренувань</h3>
+        <div id="tr-plan-list" class="tr-plan-list">Завантаження...</div>
+        <div style="margin-top: 12px">
+          <button id="tr-new-plan" class="tr-btn tr-btn--ghost">
+            New Plan
+          </button>
+        </div>
+      </div>
+    </aside>
+  </section>
+</div>
+
+<div id="tr-modal-overlay" class="cmp-modal-overlay" aria-hidden="true">
+  <div class="cmp-modal" id="tr-modal"></div>
+</div>
+
+<script src="{{ url_for('static', filename='js/training/radar.js') }}"></script>
+<script src="{{ url_for('static', filename='js/training/plan.js') }}"></script>
+<script src="{{ url_for('static', filename='js/training/session.js') }}"></script>
+<script src="{{ url_for('static', filename='js/training/main.js') }}"></script>
+{% endblock %}
