@@ -38,9 +38,7 @@ def register():
 @auth_bp.route("/register_complete", methods=["GET", "POST"])
 def register_complete():
     reg_data = session.get("reg_data")
-    print("REG DATA:", reg_data)
     verified_email = session.get("verified_email")
-    print("VERIFIED EMAIL:", verified_email)
 
     if not reg_data or not verified_email:
         flash("Спочатку підтвердіть email", "error")
