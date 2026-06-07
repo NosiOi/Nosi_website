@@ -1,0 +1,92 @@
+.tr-btn {
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    font-weight: 700;
+    transition: transform var(--trans-fast) ease, background var(--trans-fast) ease;
+}
+
+.tr-btn--primary {
+    background: var(--nf-yellow);
+    color: #070707;
+}
+
+.tr-btn--ghost {
+    background: transparent;
+    color: var(--nf-text);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tr-btn:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.03);
+}
+
+.tr-exercise-list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tr-exercise-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    transition: background var(--trans-fast) ease, transform var(--trans-fast) ease;
+}
+
+.tr-exercise-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    transform: translateY(-2px);
+}
+
+.tr-ex-name {
+    font-weight: 700;
+}
+
+.tr-ex-meta {
+    color: var(--nf-muted);
+    font-size: 13px;
+}
+
+.tr-radar {
+    width: 100%;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tr-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.tr-plan-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tr-plan-item {
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cmp-modal-overlay[aria-hidden="false"] {
+    display: flex;
+}

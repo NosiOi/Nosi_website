@@ -10,10 +10,16 @@ def dashboard():
     return render_template("app/dashboard.html", user=current_user)
 
 
-@dashboard_bp.route("/sport")
+@dashboard_bp.route("/training")
 @login_required
-def sport_page():
-    return render_template("app/sport.html", user=current_user)
+def training_page():
+    return render_template("app/training/training.html", user=current_user)
+
+
+@dashboard_bp.route("/nutrition")
+@login_required
+def nutrition_page():
+    return render_template("app/nutrition.html", user=current_user)
 
 
 @dashboard_bp.route("/recovery")

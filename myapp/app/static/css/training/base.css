@@ -1,0 +1,36 @@
+:root {
+    --nf-black: #070707;
+    --nf-yellow: #FFD43B;
+    --nf-purple: #9B5DE5;
+    --nf-teal: #2EC4B6;
+    --nf-card: rgba(255, 255, 255, 0.03);
+    --nf-text: #e9e9ef;
+    --nf-muted: #b8b8c7;
+    --radius: 12px;
+    --trans-fast: 180ms;
+    --trans-med: 280ms;
+}
+
+body {
+    background: var(--nf-black);
+    color: var(--nf-text);
+    font-family: Inter, system-ui, sans-serif;
+}
+
+.tr-shell {
+    padding: 28px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.tr-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--nf-yellow);
+    margin: 0;
+}
+
+.tr-sub {
+    color: var(--nf-muted);
+    margin: 4px 0 0 0;
+}
