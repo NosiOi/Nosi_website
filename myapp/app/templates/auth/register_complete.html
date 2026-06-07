@@ -2,11 +2,14 @@
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
-    <title>Реєстрація завершена</title>
+    <title>Завершення реєстрації</title>
   </head>
   <body>
-    <h1>Акаунт успішно створено!</h1>
-    <p>Тепер ви можете перейти до свого профілю.</p>
-    <a href="/dashboard">Перейти до програми</a>
+    <h1>Підтвердження даних</h1>
+    <p>Натисніть кнопку нижче, щоб завершити створення акаунта.</p>
+
+    <form method="POST" action="/auth/register_complete">
+      <button type="submit">Завершити реєстрацію</button>
+    </form>
   </body>
 </html>

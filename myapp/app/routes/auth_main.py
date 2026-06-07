@@ -1,17 +1,18 @@
-from flask import Blueprint, render_template, request, redirect, session, flash
+from flask import Blueprint, render_template, request, redirect, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user
 from myapp.app import db
 from myapp.app.models.user import User
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
+print("LOADED AUTH_MAIN:", __file__)
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
+        email = request.form.get("email")
+        password = request.form.get("password")
 
         user = User.query.filter_by(email=email).first()
 
@@ -23,7 +24,7 @@ def login():
             flash("Невірний пароль", "error")
             return redirect("/auth/login")
 
-        login_user(user)
+        login_user(user, remember=True)
         return redirect("/dashboard")
 
     return render_template("auth/login.html")
@@ -31,32 +32,15 @@ def login():
 
 @auth_bp.route("/register", methods=["GET"])
 def register():
-    if request.method == "POST":
-        email = request.form.get("email")
-
-        session["reg_data"] = {
-            "username": request.form.get("username"),
-            "email": email,
-            "password": request.form.get("password"),
-            "age": request.form.get("age"),
-            "height": request.form.get("height"),
-            "weight": request.form.get("weight"),
-            "gender": request.form.get("gender"),
-            "activity": request.form.get("activity"),
-            "goal": request.form.get("goal"),
-            "experience": request.form.get("experience"),
-            "workouts_per_week": request.form.get("workouts_per_week"),
-        }
-
-        return redirect("/verify/send_code")
-
     return render_template("auth/register.html")
 
 
 @auth_bp.route("/register_complete", methods=["GET", "POST"])
 def register_complete():
     reg_data = session.get("reg_data")
+    print("REG DATA:", reg_data)
     verified_email = session.get("verified_email")
+    print("VERIFIED EMAIL:", verified_email)
 
     if not reg_data or not verified_email:
         flash("Спочатку підтвердіть email", "error")
@@ -70,8 +54,8 @@ def register_complete():
             email=verified_email,
             password=hashed_password,
             age=int(reg_data["age"]),
-            height=int(reg_data["height"]),
-            weight=int(reg_data["weight"]),
+            height=float(reg_data["height"]),
+            weight=float(reg_data["weight"]),
             gender=reg_data["gender"],
             activity=float(reg_data["activity"]),
             goal=reg_data["goal"],
@@ -85,7 +69,7 @@ def register_complete():
         session.pop("reg_data", None)
         session.pop("verified_email", None)
 
-        login_user(user)
+        login_user(user, remember=True)
         return redirect("/dashboard")
 
     return render_template("auth/register_complete.html")

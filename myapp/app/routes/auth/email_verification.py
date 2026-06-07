@@ -29,13 +29,7 @@ def send_verification_email(email, code):
     <p>Дійсний 10 хвилин.</p>
     """
 
-    try:
-        mail.send(msg)
-        print("SMTP OK")
-    except Exception as e:
-        print("SMTP ERROR:", e)
-
-
+    mail.send(msg)
 
 
 @email_verification_bp.route("/send_code", methods=["POST"])
@@ -43,8 +37,8 @@ def send_code():
     email = request.form.get("email")
 
     if User.query.filter_by(email=email).first():
-        flash("Ця пошта вже використовується", "error")
-        return redirect("/auth/register")
+        flash("Ця пошта вже зареєстрована. Увійдіть у свій акаунт.", "error")
+        return redirect("/auth/login")
 
     session["reg_data"] = request.form.to_dict()
 
@@ -59,7 +53,8 @@ def send_code():
 
     session["pending_email"] = email
 
-    return redirect("/verify/verify_email")  
+    return redirect("/verify/verify_email")
+
 
 
 @email_verification_bp.route("/verify_email", methods=["GET", "POST"])
@@ -90,4 +85,3 @@ def verify_email():
     db.session.commit()
 
     return redirect("/auth/register_complete")
-

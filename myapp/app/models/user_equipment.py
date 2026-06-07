@@ -6,3 +6,7 @@ class UserEquipment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     equipment_id = db.Column(db.Integer, db.ForeignKey("equipment.id"), nullable=False)
+
+    # Relationships
+    user = db.relationship("User", back_populates="equipment")
+    equipment = db.relationship("Equipment")

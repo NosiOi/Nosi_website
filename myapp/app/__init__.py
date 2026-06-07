@@ -28,6 +28,7 @@ def create_app():
     mail.init_app(app)
     oauth.init_app(app)
 
+    # Login manager
     login_manager.login_view = "auth.login"
 
     # Import models AFTER db.init_app
@@ -35,25 +36,27 @@ def create_app():
     from myapp.app.models.verification_code import VerificationCode
     from myapp.app.models.oauth_account import OAuthAccount
 
-    # user_loader must be defined AFTER importing User
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
     # OAuth config
-    app.config["GOOGLE_CLIENT_ID"] = os.getenv("GOOGLE_CLIENT_ID")
-    app.config["GOOGLE_CLIENT_SECRET"] = os.getenv("GOOGLE_CLIENT_SECRET")
-
-    app.config["GITHUB_CLIENT_ID"] = os.getenv("GITHUB_CLIENT_ID")
-    app.config["GITHUB_CLIENT_SECRET"] = os.getenv("GITHUB_CLIENT_SECRET")
-
-    # Register Google OAuth
     oauth.register(
         name="google",
-        client_id=app.config["GOOGLE_CLIENT_ID"],
-        client_secret=app.config["GOOGLE_CLIENT_SECRET"],
+        client_id=os.getenv("GOOGLE_CLIENT_ID"),
+        client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
         server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
         client_kwargs={"scope": "openid email profile"},
+    )
+
+    oauth.register(
+        name="github",
+        client_id=os.getenv("GITHUB_CLIENT_ID"),
+        client_secret=os.getenv("GITHUB_CLIENT_SECRET"),
+        access_token_url="https://github.com/login/oauth/access_token",
+        authorize_url="https://github.com/login/oauth/authorize",
+        api_base_url="https://api.github.com/",
+        client_kwargs={"scope": "user:email"},
     )
 
     # Blueprints
@@ -80,9 +83,11 @@ def create_app():
     from myapp.app.routes.profile.delete_account import delete_account_bp
     from myapp.app.routes.profile.oauth_disconnect import oauth_disconnect_bp
 
-    # Training Engine API
     from myapp.app.routes.training_api import training_api
     from myapp.app.routes.training_session_api import training_session_api
+    from myapp.app.routes.onboarding_api import onboarding_api
+    from myapp.app.routes.equipment_api import equipment_api
+    from myapp.app.routes.injury_api import injury_api
 
     # Register blueprints
     app.register_blueprint(google_bp)
@@ -108,9 +113,10 @@ def create_app():
     app.register_blueprint(delete_account_bp)
     app.register_blueprint(oauth_disconnect_bp)
 
-    # Training Engine API
     app.register_blueprint(training_api)
     app.register_blueprint(training_session_api)
-
+    app.register_blueprint(onboarding_api)
+    app.register_blueprint(equipment_api)
+    app.register_blueprint(injury_api)
 
     return app
