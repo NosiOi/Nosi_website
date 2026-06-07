@@ -14,3 +14,9 @@ from myapp.app.models.nutrition.saved_meal import SavedMeal
 from myapp.app.models.training_session import TrainingSession, SessionExercise
 from myapp.app.models.equipment import Equipment
 from myapp.app.models.user_equipment import UserEquipment
+
+# Onboarding subsystem
+from myapp.app.models.user_profile import UserProfile
+from myapp.app.models.user_goals import UserTrainingGoals
+from myapp.app.models.injury import Injury
+from myapp.app.models.user_injury import UserInjury
