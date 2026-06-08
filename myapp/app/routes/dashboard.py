@@ -62,3 +62,9 @@ def profile_page():
 @login_required
 def questionnaire_page():
     return render_template("app/questionnaire.html", user=current_user)
+
+
+@dashboard_bp.route("/tracker")
+@login_required
+def tracker_page():
+    return render_template("app/tracker.html", user=current_user)

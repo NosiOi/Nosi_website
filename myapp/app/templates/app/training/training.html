@@ -1,5 +1,5 @@
 {% extends "app/base_app.html" %} {% block title %}Тренування · NosiFit{%
-endblock %} {% block styles %}
+endblock %} {% block styles %} {{ super() }}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/training/base.css') }}"
@@ -25,71 +25,337 @@ endblock %} {% block styles %}
         Привіт, <strong>{{ user.username }}</strong> · сьогодні:
         <span id="tr-day-type">—</span>
       </p>
+      <p class="tr-sub-small">
+        NosiFit підлаштовує план під твої цілі та інвентар.
+      </p>
     </div>
+
     <div class="tr-h-right">
-      <button id="tr-start" class="tr-btn tr-btn--primary">
-        Start Session
+      <button
+        id="tr-start"
+        class="tr-btn tr-btn--primary"
+        aria-label="Почати сесію"
+      >
+        Почати сесію
       </button>
-      <button id="tr-edit-plan" class="tr-btn tr-btn--ghost">Edit Plan</button>
+      <button
+        id="tr-edit-plan"
+        class="tr-btn tr-btn--ghost"
+        aria-label="Редагувати план"
+      >
+        Редагувати план
+      </button>
     </div>
   </header>
 
-  <section class="tr-grid">
-    <aside class="tr-panel tr-panel--muscles">
+  <section class="tr-strip" role="region" aria-label="Швидка статистика">
+    <div class="cmp-card tr-strip-card">
+      <div class="tr-strip-top">
+        <span class="tr-strip-label">Тижневе навантаження</span>
+        <button
+          class="tr-help"
+          data-tooltip="Сумарний об'єм тренувань за тиждень"
+          aria-label="Пояснення: Тижневе навантаження"
+        >
+          ?
+        </button>
+      </div>
+      <div class="tr-strip-value" id="tr-week-load">—</div>
+      <div class="tr-strip-sub">Об’єм по всіх м’язах</div>
+    </div>
+
+    <div class="cmp-card tr-strip-card">
+      <div class="tr-strip-top">
+        <span class="tr-strip-label">Фокус сьогодні</span>
+        <button
+          class="tr-help"
+          data-tooltip="Основні м’язові групи на сьогодні"
+          aria-label="Пояснення: Фокус сьогодні"
+        >
+          ?
+        </button>
+      </div>
+      <div class="tr-strip-value" id="tr-focus-muscles">—</div>
+      <div class="tr-strip-sub">Головні групи</div>
+    </div>
+
+    <div class="cmp-card tr-strip-card">
+      <div class="tr-strip-top">
+        <span class="tr-strip-label">Сесій цього тижня</span>
+        <button
+          class="tr-help"
+          data-tooltip="Плановані та виконані сесії за тиждень"
+          aria-label="Пояснення: Сесій цього тижня"
+        >
+          ?
+        </button>
+      </div>
+      <div class="tr-strip-value" id="tr-week-sessions">—</div>
+      <div class="tr-strip-sub">План · Факт</div>
+    </div>
+
+    <div class="cmp-card tr-strip-card">
+      <div class="tr-strip-top">
+        <span class="tr-strip-label">Рівень втоми</span>
+        <button
+          class="tr-help"
+          data-tooltip="Орієнтовна оцінка втоми на основі останніх сесій"
+          aria-label="Пояснення: Рівень втоми"
+        >
+          ?
+        </button>
+      </div>
+      <div class="tr-strip-value" id="tr-fatigue">—</div>
+      <div class="tr-strip-sub">Суб’єктивна оцінка</div>
+    </div>
+  </section>
+
+  <section class="tr-grid" role="main" aria-label="Тренувальний блок">
+    <aside class="tr-panel tr-panel--muscles" aria-labelledby="muscles-title">
       <div class="cmp-card tr-card">
         <div class="tr-card-head">
-          <h3 class="cmp-card-title">М’язи та прогрес</h3>
-          <p class="cmp-card-sub">Павутинка навантажень</p>
+          <div>
+            <h3 id="muscles-title" class="cmp-card-title">М’язи та прогрес</h3>
+            <p class="cmp-card-sub">Павутинка навантажень по групах</p>
+          </div>
+          <div class="tr-card-actions">
+            <button
+              class="tr-help"
+              data-tooltip="Преміум дозволяє вибрати до 4 цільових м’язів"
+              aria-label="Пояснення: Преміум"
+            >
+              ?
+            </button>
+          </div>
         </div>
-        <div id="tr-radar" class="tr-radar" aria-hidden="false"></div>
-        <div id="tr-legend" class="tr-legend"></div>
-        <div class="tr-card-foot">
-          <small class="cmp-card-sub">Premium: вибрати до 4 цілей</small>
+
+        <div
+          id="tr-radar"
+          class="tr-radar"
+          role="img"
+          aria-label="Радарна діаграма навантаження"
+        ></div>
+
+        <div class="tr-legend-wrapper">
+          <div class="tr-legend-header">
+            <span class="cmp-card-sub">Цільові групи</span>
+            <button
+              class="tr-help"
+              data-tooltip="Виберіть до 4 м’язів для відстеження (преміум)"
+              aria-label="Пояснення: Цільові групи"
+            >
+              ?
+            </button>
+          </div>
+          <div id="tr-legend" class="tr-legend" role="list"></div>
         </div>
+
+        <div class="tr-premium-controls" aria-hidden="false">
+          <label class="cmp-label">Обрати цільові м’язи</label>
+          <div
+            id="tr-premium-muscles"
+            class="tr-premium-muscles"
+            role="group"
+            aria-label="Вибір цільових м'язів"
+          ></div>
+          <div class="tr-premium-actions">
+            <button id="tr-save-premium-muscles" class="tr-btn tr-btn--ghost">
+              Зберегти
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmp-card tr-card tr-card-mini">
+        <h3 class="cmp-card-title">Баланс навантаження</h3>
+        <p class="cmp-card-sub">Підказки щодо перерозподілу об’єму</p>
+        <ul
+          id="tr-balance-list"
+          class="tr-balance-list"
+          aria-live="polite"
+        ></ul>
       </div>
     </aside>
 
-    <main class="tr-panel tr-panel--workout">
+    <main class="tr-panel tr-panel--workout" aria-labelledby="session-title">
       <div class="cmp-card tr-card">
         <div class="tr-card-head">
-          <h3 class="cmp-card-title">Сьогоднішня сесія</h3>
-          <p class="cmp-card-sub" id="tr-session-title">Завантаження...</p>
+          <div>
+            <h3 id="session-title" class="cmp-card-title">Сьогоднішня сесія</h3>
+            <p class="cmp-card-sub" id="tr-session-title">Завантаження...</p>
+          </div>
+          <div class="tr-session-meta">
+            <span class="tr-chip" id="tr-session-type">—</span>
+            <span class="tr-chip tr-chip-soft" id="tr-session-duration"
+              >— хв</span
+            >
+            <button
+              class="tr-help"
+              data-tooltip="Тип сесії: сила, гіпертрофія, витривалість"
+              aria-label="Пояснення: Тип сесії"
+            >
+              ?
+            </button>
+          </div>
         </div>
 
         <ul id="tr-exercises" class="tr-exercise-list" aria-live="polite"></ul>
 
         <div class="tr-actions">
           <button id="tr-live-start" class="tr-btn tr-btn--primary">
-            Start Now
+            Розпочати зараз
           </button>
           <button id="tr-open-plan" class="tr-btn tr-btn--ghost">
-            Open Plan
+            Відкрити план
           </button>
+        </div>
+      </div>
+
+      <div class="cmp-card tr-card">
+        <div class="tr-card-head">
+          <h3 class="cmp-card-title">Наступна сесія</h3>
+          <p class="cmp-card-sub" id="tr-next-session-title">—</p>
+        </div>
+        <div class="tr-next-session">
+          <div class="tr-next-meta">
+            <div class="tr-next-row">
+              <span class="tr-next-label">Тип:</span>
+              <span id="tr-next-type">—</span>
+            </div>
+            <div class="tr-next-row">
+              <span class="tr-next-label">М’язи:</span>
+              <span id="tr-next-muscles">—</span>
+            </div>
+            <div class="tr-next-row">
+              <span class="tr-next-label">Час:</span>
+              <span id="tr-next-duration">— хв</span>
+            </div>
+          </div>
+          <button id="tr-next-open" class="tr-btn tr-btn--ghost">Деталі</button>
         </div>
       </div>
 
       <div class="cmp-card tr-card">
         <h3 class="cmp-card-title">Рекомендації</h3>
-        <div id="tr-recs" class="tr-recs">Завантаження...</div>
+        <p class="cmp-card-sub">Поради на основі прогресу</p>
+        <div id="tr-recs" class="tr-recs" aria-live="polite"></div>
       </div>
     </main>
 
-    <aside class="tr-panel tr-panel--plan">
+    <aside class="tr-panel tr-panel--plan" aria-labelledby="plan-title">
       <div class="cmp-card tr-card">
-        <h3 class="cmp-card-title">План тренувань</h3>
-        <div id="tr-plan-list" class="tr-plan-list">Завантаження...</div>
-        <div style="margin-top: 12px">
-          <button id="tr-new-plan" class="tr-btn tr-btn--ghost">
-            New Plan
+        <div class="tr-card-head">
+          <div>
+            <h3 id="plan-title" class="cmp-card-title">План тренувань</h3>
+            <p class="cmp-card-sub">Тижневий розклад · зал / дім / змішано</p>
+          </div>
+          <button
+            class="tr-help"
+            data-tooltip="Тут відображається твій активний план"
+            aria-label="Пояснення: План тренувань"
+          >
+            ?
           </button>
         </div>
+
+        <div id="tr-plan-week" class="tr-plan-week" role="list"></div>
+
+        <div class="tr-plan-footer">
+          <button id="tr-new-plan" class="tr-btn tr-btn--ghost">
+            Новий план
+          </button>
+          <button id="tr-duplicate-plan" class="tr-btn tr-btn--ghost">
+            Дублювати
+          </button>
+        </div>
+      </div>
+
+      <div class="cmp-card tr-card tr-card-mini">
+        <div class="tr-card-head">
+          <h3 class="cmp-card-title">Швидкий конструктор</h3>
+          <p class="cmp-card-sub">Додати вправу в сесію</p>
+        </div>
+
+        <form id="tr-quick-builder" class="tr-builder" autocomplete="off">
+          <label class="cmp-label"
+            >М’язова група
+            <button
+              class="tr-help"
+              data-tooltip="Фільтр вправ по м’язах"
+              aria-label="Пояснення: М’язова група"
+            >
+              ?
+            </button></label
+          >
+          <select id="tr-builder-muscle" class="cmp-select" required>
+            <option value="">Оберіть...</option>
+            <option value="chest">Груди</option>
+            <option value="back">Спина</option>
+            <option value="legs">Ноги</option>
+            <option value="shoulders">Плечі</option>
+            <option value="arms">Руки</option>
+            <option value="core">Кор</option>
+          </select>
+
+          <label class="cmp-label">Локація</label>
+          <select id="tr-builder-location" class="cmp-select">
+            <option value="any">Будь-де</option>
+            <option value="gym">Зал</option>
+            <option value="home">Дім</option>
+          </select>
+
+          <label class="cmp-label">Вправа</label>
+          <select id="tr-builder-exercise" class="cmp-select" required>
+            <option value="">Спочатку оберіть м’яз</option>
+          </select>
+
+          <div class="tr-builder-row-inline">
+            <div>
+              <label class="cmp-label">Підходи</label>
+              <input
+                id="tr-builder-sets"
+                type="number"
+                min="1"
+                max="10"
+                value="3"
+                class="cmp-input"
+              />
+            </div>
+            <div>
+              <label class="cmp-label">Повторення</label>
+              <input
+                id="tr-builder-reps"
+                type="number"
+                min="1"
+                max="50"
+                value="10"
+                class="cmp-input"
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="tr-btn tr-btn--primary">
+            Додати в сесію
+          </button>
+        </form>
+      </div>
+
+      <div class="cmp-card tr-card tr-card-mini">
+        <h3 class="cmp-card-title">Сьогоднішній підсумок</h3>
+        <ul class="tr-summary-list">
+          <li>Кількість вправ: <strong id="tr-summary-ex-count">—</strong></li>
+          <li>Орієнтовний об’єм: <strong id="tr-summary-volume">—</strong></li>
+          <li>
+            Основні м’язи: <strong id="tr-summary-main-muscles">—</strong>
+          </li>
+        </ul>
       </div>
     </aside>
   </section>
 </div>
 
 <div id="tr-modal-overlay" class="cmp-modal-overlay" aria-hidden="true">
-  <div class="cmp-modal" id="tr-modal"></div>
+  <div class="cmp-modal" id="tr-modal" role="dialog" aria-modal="true"></div>
 </div>
 
 <script src="{{ url_for('static', filename='js/training/radar.js') }}"></script>
