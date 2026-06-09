@@ -6,7 +6,7 @@ from myapp.app.training_engine.models.muscle import Muscle
 from myapp.app.training_engine.models.equipment import TEEquipment
 
 APP = create_app()
-DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "exercises_seed.json")
+DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "app", "training_engine", "data", "exercises", "base_exercises.json")
 
 
 def get_or_create_muscle(slug, name=None):

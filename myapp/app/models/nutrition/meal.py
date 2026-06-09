@@ -1,10 +1,10 @@
+from datetime import datetime
 from myapp.app import db
 
 class Meal(db.Model):
     __tablename__ = "meals"
 
     id = db.Column(db.Integer, primary_key=True)
-    user = db.relationship("User", back_populates="meals")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     date = db.Column(db.Date, nullable=False)
@@ -17,6 +17,10 @@ class Meal(db.Model):
     total_protein = db.Column(db.Integer, nullable=False, default=0)
     total_fat = db.Column(db.Integer, nullable=False, default=0)
     total_carbs = db.Column(db.Integer, nullable=False, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    user = db.relationship("User", back_populates="meals")
 
     items = db.relationship(
         "MealItem",
