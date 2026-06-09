@@ -1,30 +1,6 @@
-from myapp.app import db
+from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSONB
-
-
-class User(db.Model):
-    __tablename__ = "users"
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    username = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-
-    age = db.Column(db.Integer, nullable=False)
-    height = db.Column(db.Float, nullable=False)  # см
-    weight = db.Column(db.Float, nullable=False)  # кг
-    gender = db.Column(db.String(10), nullable=False)
-
-    activity = db.Column(db.Float, nullable=False)
-
-    goal = db.Column(db.String(50), nullable=False)
-    experience = db.Column(db.String(50), nullable=False)
-    workouts_per_week = db.Column(db.Integer, nullable=False)
-
-    workout_plan = db.relationship("WorkoutPlan", backref="user", lazy=True)
-    nutrition_plan = db.relationship("NutritionPlan", backref="user", lazy=True)
-    recovery_plan = db.relationship("RecoveryPlan", backref="user", lazy=True)
+from myapp.app import db
 
 
 class WorkoutPlan(db.Model):
@@ -33,6 +9,8 @@ class WorkoutPlan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     plan = db.Column(JSONB, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    user = db.relationship("User", back_populates="workout_plan")
 
 
 class NutritionPlan(db.Model):
@@ -45,6 +23,8 @@ class NutritionPlan(db.Model):
     carbs = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
+    user = db.relationship("User", back_populates="nutrition_plan")
+
 
 class RecoveryPlan(db.Model):
     __tablename__ = "recovery_plans"
@@ -52,3 +32,5 @@ class RecoveryPlan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     plan = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    user = db.relationship("User", back_populates="recovery_plan")

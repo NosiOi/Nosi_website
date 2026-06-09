@@ -1,5 +1,6 @@
-from myapp.app import db
 from datetime import datetime, timezone
+from myapp.app import db
+
 
 class OAuthAccount(db.Model):
     __tablename__ = "oauth_accounts"
@@ -15,3 +16,6 @@ class OAuthAccount(db.Model):
     )
 
     user = db.relationship("User", back_populates="oauth_accounts")
+
+    def __repr__(self):
+        return f"<OAuthAccount id={self.id} provider={self.provider} user_id={self.user_id}>"

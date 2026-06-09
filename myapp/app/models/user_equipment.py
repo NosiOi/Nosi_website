@@ -20,7 +20,13 @@ class UserEquipment(db.Model):
     )
 
     def to_dict(self):
-        return {"id": self.id, "user_id": self.user_id, "equipment_id": self.equipment_id, "available": self.available, "notes": self.notes}
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "equipment_id": self.equipment_id,
+            "available": self.available,
+            "notes": self.notes,
+        }
 
     def __repr__(self):
         return f"<UserEquipment user_id={self.user_id} equipment_id={self.equipment_id} available={self.available}>"

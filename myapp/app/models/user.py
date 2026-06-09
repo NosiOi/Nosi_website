@@ -32,7 +32,14 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    # Nutrition plan (1:1)
+    # Workout / nutrition / recovery plans (1:1)
+    workout_plan = db.relationship(
+        "WorkoutPlan",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan"
+    )
+
     nutrition_plan = db.relationship(
         "NutritionPlan",
         back_populates="user",
@@ -40,7 +47,6 @@ class User(db.Model, UserMixin):
         cascade="all, delete-orphan"
     )
 
-    # Recovery plan (1:1)
     recovery_plan = db.relationship(
         "RecoveryPlan",
         back_populates="user",

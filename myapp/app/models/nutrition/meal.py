@@ -1,6 +1,7 @@
 from datetime import datetime
 from myapp.app import db
 
+
 class Meal(db.Model):
     __tablename__ = "meals"
 
@@ -17,6 +18,7 @@ class Meal(db.Model):
     total_protein = db.Column(db.Integer, nullable=False, default=0)
     total_fat = db.Column(db.Integer, nullable=False, default=0)
     total_carbs = db.Column(db.Integer, nullable=False, default=0)
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
@@ -28,3 +30,6 @@ class Meal(db.Model):
         lazy=True,
         cascade="all, delete-orphan"
     )
+
+    def __repr__(self):
+        return f"<Meal id={self.id} user_id={self.user_id} name={self.name}>"
