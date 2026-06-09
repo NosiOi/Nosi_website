@@ -35,7 +35,7 @@ class User(db.Model, UserMixin):
     # Nutrition plan (1:1)
     nutrition_plan = db.relationship(
         "NutritionPlan",
-        backref="user",
+        back_populates="user",
         uselist=False,
         cascade="all, delete-orphan"
     )
@@ -43,7 +43,7 @@ class User(db.Model, UserMixin):
     # Recovery plan (1:1)
     recovery_plan = db.relationship(
         "RecoveryPlan",
-        backref="user",
+        back_populates="user",
         uselist=False,
         cascade="all, delete-orphan"
     )
@@ -51,7 +51,7 @@ class User(db.Model, UserMixin):
     # Equipment (1:N) - user's available equipment
     user_equipment = db.relationship(
         "UserEquipment",
-        backref="user",
+        back_populates="user",
         cascade="all, delete-orphan",
         lazy="dynamic",
         foreign_keys="UserEquipment.user_id"
@@ -94,7 +94,7 @@ class User(db.Model, UserMixin):
 
     preferences = db.relationship(
         "UserPreference",
-        backref="user",
+        back_populates="user",
         cascade="all, delete-orphan",
         lazy="dynamic",
         foreign_keys="UserPreference.user_id"
