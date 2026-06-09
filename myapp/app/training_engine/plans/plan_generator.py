@@ -1,5 +1,6 @@
 from typing import Dict
-from ..models.training_plan import TrainingPlan, TrainingDay
+from ..models.training_plan import TrainingPlan
+from ..models.training_day import TrainingDay
 from .plan_split_logic import PlanSplitLogic
 from .plan_adapter import PlanAdapter
 from .plan_periodization import PlanPeriodization

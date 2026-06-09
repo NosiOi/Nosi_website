@@ -1,95 +1,111 @@
-{
-    "pushups": {
-        "id": "pushups",
-        "name": "Віджимання",
+[
+    {
+        "name": "Жим лежачи",
+        "slug": "bench-press",
+        "description": "Класичний жим штанги лежачи для розвитку грудей та трицепсів.",
+        "difficulty": 5,
+        "location": "gym",
+        "movement_pattern": "push",
+        "risk_level": 3,
         "muscles_primary": [
             "chest"
         ],
         "muscles_secondary": [
             "triceps",
-            "shoulders",
-            "core"
+            "shoulders"
         ],
-        "difficulty": 3,
         "equipment": [
-            "bodyweight"
-        ],
-        "environment": [
-            "home",
-            "outdoor",
-            "gym"
-        ],
-        "movement_pattern": "push",
-        "risk_level": 1,
-        "progression_chain": [
-            "incline_pushups",
-            "pushups",
-            "decline_pushups",
-            "diamond_pushups",
-            "ring_pushups"
-        ],
-        "regression_chain": [
-            "wall_pushups",
-            "incline_pushups"
+            "barbell",
+            "bench"
         ]
     },
-    "squats": {
-        "id": "squats",
-        "name": "Присідання",
+    {
+        "name": "Підтягування",
+        "slug": "pull-ups",
+        "description": "Підтягування власною вагою для розвитку спини та біцепсів.",
+        "difficulty": 6,
+        "location": "any",
+        "movement_pattern": "pull",
+        "risk_level": 2,
         "muscles_primary": [
-            "quads"
+            "back"
         ],
         "muscles_secondary": [
-            "glutes",
-            "hamstrings",
-            "core"
+            "biceps"
         ],
-        "difficulty": 2,
         "equipment": [
             "bodyweight"
-        ],
-        "environment": [
-            "home",
-            "outdoor",
-            "gym"
-        ],
+        ]
+    },
+    {
+        "name": "Присідання зі штангою",
+        "slug": "barbell-squat",
+        "description": "Базова вправа для ніг і корпусу.",
+        "difficulty": 6,
+        "location": "gym",
         "movement_pattern": "squat",
-        "risk_level": 1,
-        "progression_chain": [
-            "squats",
-            "jump_squats",
-            "pistol_squats"
+        "risk_level": 4,
+        "muscles_primary": [
+            "legs"
         ],
-        "regression_chain": [
-            "box_squats"
+        "muscles_secondary": [
+            "core"
+        ],
+        "equipment": [
+            "barbell"
         ]
     },
-    "situps": {
-        "id": "situps",
-        "name": "Скручування",
+    {
+        "name": "Жим плечима сидячи",
+        "slug": "seated-shoulder-press",
+        "description": "Жим для розвитку дельтоподібних м'язів.",
+        "difficulty": 5,
+        "location": "gym",
+        "movement_pattern": "push",
+        "risk_level": 3,
+        "muscles_primary": [
+            "shoulders"
+        ],
+        "muscles_secondary": [
+            "triceps"
+        ],
+        "equipment": [
+            "dumbbell",
+            "bench"
+        ]
+    },
+    {
+        "name": "Планка",
+        "slug": "plank",
+        "description": "Ізометрична вправа для розвитку корпусу.",
+        "difficulty": 2,
+        "location": "any",
+        "movement_pattern": "isometric",
+        "risk_level": 1,
         "muscles_primary": [
             "core"
         ],
-        "muscles_secondary": [
-            "hip_flexors"
-        ],
-        "difficulty": 2,
+        "muscles_secondary": [],
         "equipment": [
             "bodyweight"
+        ]
+    },
+    {
+        "name": "Випади",
+        "slug": "lunges",
+        "description": "Випади для розвитку ніг і балансу.",
+        "difficulty": 3,
+        "location": "any",
+        "movement_pattern": "lunge",
+        "risk_level": 2,
+        "muscles_primary": [
+            "legs"
         ],
-        "environment": [
-            "home",
-            "outdoor",
-            "gym"
+        "muscles_secondary": [
+            "core"
         ],
-        "movement_pattern": "core_flexion",
-        "risk_level": 1,
-        "progression_chain": [
-            "situps",
-            "weighted_situps"
-        ],
-        "regression_chain": [
-            "crunches"
+        "equipment": [
+            "bodyweight"
         ]
     }
-}
+]

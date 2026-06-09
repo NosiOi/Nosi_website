@@ -1,38 +1,26 @@
-from dataclasses import dataclass, field
-from typing import Dict, List
-from .training_day import TrainingDay
+from datetime import datetime
+from myapp.app import db
 
 
-@dataclass
-class TrainingPlan:
-    """
-    High-level training plan model.
-    Contains:
-    - multiple training days
-    - metadata about user and goal
-    - periodization model reference
-    """
+class TrainingPlan(db.Model):
+    __tablename__ = "te_training_plans"
 
-    days: Dict[str, TrainingDay] = field(default_factory=dict)
-    goal: str = "maintain"
-    experience: str = "beginner"
-    workouts_per_week: int = 3
-    periodization: str = "linear"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False, index=True)
+    name = db.Column(db.String(250), nullable=False)
+    meta = db.Column(db.Text, nullable=True)  # JSON: days, exercises, order
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    def add_day(self, name: str, day: TrainingDay):
-        self.days[name] = day
-
-    def get_day(self, name: str) -> TrainingDay:
-        return self.days[name]
-
-    def summary(self) -> Dict:
+    def to_dict(self):
         return {
-            "days": list(self.days.keys()),
-            "goal": self.goal,
-            "experience": self.experience,
-            "workouts_per_week": self.workouts_per_week,
-            "periodization": self.periodization,
+            "id": self.id,
+            "user_id": self.user_id,
+            "name": self.name,
+            "meta": self.meta,
+            "is_active": self.is_active
         }
 
-    # TODO: add deload week generator
-    # TODO: add adaptive progression integration
+    def __repr__(self):
+        return f"<TrainingPlan id={self.id} name={self.name}>"
