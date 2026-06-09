@@ -84,7 +84,7 @@ class User(db.Model, UserMixin):
     # Training engine relationships
     training_plans = db.relationship(
         "TrainingPlan",
-        backref="owner",
+        back_populates="owner",
         cascade="all, delete-orphan",
         lazy="dynamic",
         foreign_keys="TrainingPlan.user_id"
@@ -92,7 +92,7 @@ class User(db.Model, UserMixin):
 
     sessions = db.relationship(
         "Session",
-        backref="owner",
+        back_populates="owner",
         cascade="all, delete-orphan",
         lazy="dynamic",
         foreign_keys="Session.user_id"
