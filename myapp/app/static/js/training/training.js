@@ -1,310 +1,194 @@
 (function () {
-  const D = {
-    startBtn: document.getElementById('tr-start'),
-    editPlanBtn: document.getElementById('tr-edit-plan'),
-    weekLoad: document.getElementById('tr-week-load'),
-    focusMuscles: document.getElementById('tr-focus-muscles'),
-    weekSessions: document.getElementById('tr-week-sessions'),
-    fatigue: document.getElementById('tr-fatigue'),
-    radar: document.getElementById('tr-radar'),
-    legend: document.getElementById('tr-legend'),
-    premiumMuscles: document.getElementById('tr-premium-muscles'),
-    savePremiumBtn: document.getElementById('tr-save-premium-muscles'),
-    balanceList: document.getElementById('tr-balance-list'),
-    sessionTitle: document.getElementById('tr-session-title'),
-    sessionType: document.getElementById('tr-session-type'),
-    sessionDuration: document.getElementById('tr-session-duration'),
-    exercisesList: document.getElementById('tr-exercises'),
-    liveStartBtn: document.getElementById('tr-live-start'),
-    openPlanBtn: document.getElementById('tr-open-plan'),
-    nextTitle: document.getElementById('tr-next-session-title'),
-    nextType: document.getElementById('tr-next-type'),
-    nextMuscles: document.getElementById('tr-next-muscles'),
-    nextDuration: document.getElementById('tr-next-duration'),
-    nextOpen: document.getElementById('tr-next-open'),
-    recs: document.getElementById('tr-recs')
+  'use strict';
+  const I18N = {
+    tooltip: (label, v) => `${label}: ${Math.round((v || 0) * 100)}%`,
+    ariaLabel: 'Радарна діаграма навантаження',
+    empty: 'Немає даних'
   };
-
-  const state = {
-    plans: [],
-    activePlan: null,
-    currentSession: null,
-    exercisesBank: []
-  };
-
-  function el(tag, cls) { const e = document.createElement(tag); if (cls) e.className = cls; return e; }
-  function qAll(sel, ctx = document) { return Array.from((ctx || document).querySelectorAll(sel)); }
-  function debounce(fn, ms = 400) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
-  function formatMinutes(ms) { if (!ms) return '—'; return String(Math.round(ms / 60000)); }
-
-  async function loadInitial() {
-    const plans = await API.safe(() => API.listPlans());
-    state.plans = plans || [];
-    state.activePlan = state.plans[0] || null;
-    const exercises = await API.safe(() => API.listExercises());
-    state.exercisesBank = exercises || [];
-  }
-
-  function renderHeader() {
-    D.weekLoad.textContent = state.activePlan?.meta?.weekly_load || '—';
-    D.focusMuscles.textContent = state.activePlan?.meta?.focus || '—';
-    D.weekSessions.textContent = state.activePlan ? `${state.activePlan.meta?.planned_sessions || 0} · ${state.activePlan.meta?.done_sessions || 0}` : '—';
-    D.fatigue.textContent = state.activePlan?.meta?.fatigue || '—';
-  }
-
-  function renderPlanPanel() {
-    D.legend.innerHTML = '';
-    const muscles = state.activePlan?.meta?.muscles || [];
-    muscles.forEach(m => {
-      const item = el('div', 'tr-legend-item');
-      item.textContent = m;
-      D.legend.appendChild(item);
-    });
-
-    D.premiumMuscles.innerHTML = '';
-    const all = state.activePlan?.meta?.all_muscles || ['Груди', 'Спина', 'Ноги', 'Плечі', 'Руки', 'Кор'];
-    all.forEach(name => {
-      const btn = el('button', 'tr-muscle-btn');
-      btn.type = 'button';
-      btn.textContent = name;
-      btn.dataset.muscle = name;
-      btn.addEventListener('click', () => btn.classList.toggle('is-selected'));
-      D.premiumMuscles.appendChild(btn);
-    });
-
-    if (D.radar) {
-      const radarData = state.activePlan?.meta?.radar || {};
-      NosiRadar.render(D.radar, radarData, { duration: 700 });
+  function qs(sel, root = document) { return (root || document).querySelector(sel); }
+  function qsa(sel, root = document) { return Array.from((root || document).querySelectorAll(sel)); }
+  function createSVG(ns, tag, attrs = {}) {
+    const el = document.createElementNS(ns, tag);
+    for (const k in attrs) {
+      if (attrs[k] !== null && attrs[k] !== undefined) el.setAttribute(k, String(attrs[k]));
     }
+    return el;
   }
-
-  function buildExercisesFromPlan(plan) {
-    const day = plan?.meta?.days?.[0] || { exercises: [] };
-    return (day.exercises || []).map(ex => ({
-      exercise_id: ex.exercise_id || null,
-      name: ex.name || 'Вправа',
-      reps: ex.reps || null,
-      sets: (ex.sets || [{ target: null }]).map(s => ({ weight: s.target || null, done: false }))
-    }));
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+  function clamp(v, a = 0, b = 1) { return Math.max(a, Math.min(b, v)); }
+  function normalizeMuscles(muscles) {
+    if (!muscles || typeof muscles !== 'object') return {};
+    const out = {};
+    Object.keys(muscles).forEach(k => {
+      const v = Number(muscles[k]);
+      out[k] = Number.isFinite(v) ? clamp(v, 0, 1) : 0;
+    });
+    return out;
   }
-
-  function renderSessionPanel() {
-    if (!state.currentSession) {
-      D.sessionTitle.textContent = 'Немає активної сесії';
-      D.sessionType.textContent = '—';
-      D.sessionDuration.textContent = '— хв';
-      D.exercisesList.innerHTML = '';
-      return;
+  function clearChildren(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+  function render(selectorOrEl, muscles = {}, opts = {}) {
+    const container = (typeof selectorOrEl === 'string') ? document.querySelector(selectorOrEl) : selectorOrEl;
+    if (!container) return;
+    const data = normalizeMuscles(muscles);
+    const labels = Object.keys(data);
+    const values = labels.map(l => data[l]);
+    const svgNS = 'http://www.w3.org/2000/svg';
+    clearChildren(container);
+    const size = Math.min(Math.max(container.clientWidth || 320, 220), opts.maxSize || 520);
+    const svg = createSVG(svgNS, 'svg', { width: size, height: size, viewBox: `0 0 ${size} ${size}`, role: 'img', 'aria-label': opts.ariaLabel || I18N.ariaLabel });
+    svg.style.display = 'block';
+    const cx = size / 2, cy = size / 2, r = Math.floor(size * 0.36);
+    const defs = createSVG(svgNS, 'defs');
+    svg.appendChild(defs);
+    const gridGroup = createSVG(svgNS, 'g', { class: 'tr-radar-grid-group' });
+    for (let i = 4; i >= 1; i--) {
+      const ring = createSVG(svgNS, 'circle', { cx, cy, r: (r / 4) * i, class: 'tr-radar-grid grid-ring' });
+      ring.setAttribute('fill', 'none');
+      ring.setAttribute('stroke', 'rgba(255,255,255,0.03)');
+      ring.setAttribute('stroke-width', '1');
+      gridGroup.appendChild(ring);
     }
-
-    D.sessionTitle.textContent = state.currentSession.title || 'Поточна сесія';
-    D.sessionType.textContent = state.currentSession.type || '—';
-    const started = state.currentSession.started_at ? new Date(state.currentSession.started_at).getTime() : null;
-    const durationMs = started ? (Date.now() - started) : 0;
-    D.sessionDuration.textContent = `${formatMinutes(durationMs)} хв`;
-
-    D.exercisesList.innerHTML = '';
-    const exercises = state.currentSession.data?.exercises || [];
-    exercises.forEach((ex, idx) => {
-      const li = el('li', 'tr-exercise-row');
-      li.setAttribute('data-index', idx);
-
-      const left = el('div', 'tr-ex-left');
-      left.innerHTML = `<strong class="tr-ex-name">${ex.name}</strong>
-                        <div class="tr-ex-meta">${ex.sets.length} підходи · ${ex.reps || '—'} повт.</div>`;
-
-      const right = el('div', 'tr-ex-right');
-      ex.sets.forEach((s, si) => {
-        const setRow = el('div', 'tr-set-row');
-        setRow.innerHTML = `
-          <label class="tr-set-label">S${si + 1}</label>
-          <input class="tr-set-input tr-input" data-set="${si}" data-ex="${idx}" value="${s.weight ?? ''}" placeholder="кг">
-          <button class="tr-set-done tr-btn ${s.done ? 'tr-btn--ghost' : 'tr-btn--primary'}" data-ex="${idx}" data-set="${si}">${s.done ? '✓' : 'Готово'}</button>
-        `;
-        right.appendChild(setRow);
+    svg.appendChild(gridGroup);
+    const n = Math.max(labels.length, 6);
+    const angleStep = (Math.PI * 2) / n;
+    const axesGroup = createSVG(svgNS, 'g', { class: 'tr-radar-axes' });
+    for (let i = 0; i < n; i++) {
+      const angle = -Math.PI / 2 + i * angleStep;
+      const x = cx + Math.cos(angle) * r;
+      const y = cy + Math.sin(angle) * r;
+      const line = createSVG(svgNS, 'line', { x1: cx, y1: cy, x2: x, y2: y, class: 'axis-line' });
+      line.setAttribute('stroke', 'rgba(255,255,255,0.03)');
+      line.setAttribute('stroke-width', '1');
+      axesGroup.appendChild(line);
+      const lx = cx + Math.cos(angle) * (r + 18);
+      const ly = cy + Math.sin(angle) * (r + 18);
+      const label = createSVG(svgNS, 'text', { x: lx, y: ly, 'text-anchor': Math.abs(Math.cos(angle)) > 0.1 ? (Math.cos(angle) > 0 ? 'start' : 'end') : 'middle', 'dominant-baseline': 'middle', class: 'label-text' });
+      label.textContent = labels[i] || '';
+      axesGroup.appendChild(label);
+    }
+    svg.appendChild(axesGroup);
+    const poly = createSVG(svgNS, 'polygon', { class: 'tr-radar-polygon' });
+    poly.setAttribute('fill', opts.fill || 'rgba(255,255,255,0.04)');
+    poly.setAttribute('stroke', opts.stroke || 'rgba(255,255,255,0.12)');
+    poly.setAttribute('stroke-width', '2');
+    poly.setAttribute('opacity', '0.98');
+    svg.appendChild(poly);
+    const pointsGroup = createSVG(svgNS, 'g', { class: 'tr-radar-points' });
+    const pointEls = [];
+    for (let i = 0; i < n; i++) {
+      const p = createSVG(svgNS, 'circle', { r: Math.max(6, Math.round(size * 0.02)), class: 'tr-radar-point' });
+      p.setAttribute('fill', 'transparent');
+      p.style.cursor = 'pointer';
+      p.setAttribute('data-index', i);
+      pointsGroup.appendChild(p);
+      pointEls.push(p);
+    }
+    svg.appendChild(pointsGroup);
+    container.appendChild(svg);
+    const legend = container.parentElement ? container.parentElement.querySelector('#tr-legend') : null;
+    if (legend) {
+      legend.innerHTML = '';
+      labels.forEach((lab, i) => {
+        const el = document.createElement('div');
+        el.className = 'tr-legend-item';
+        el.dataset.index = i;
+        el.dataset.active = 'true';
+        el.innerHTML = `<span class="tr-legend-swatch ${i % 3 === 0 ? 'yellow' : i % 3 === 1 ? 'purple' : 'teal'}"></span><span class="tr-legend-label">${lab}</span>`;
+        el.addEventListener('click', () => {
+          const active = el.dataset.active === 'true';
+          el.dataset.active = active ? 'false' : 'true';
+          el.classList.toggle('is-muted', active);
+          const p = pointEls[i];
+          if (p) p.style.opacity = active ? '0.18' : '1';
+          const svgLabel = svg.querySelectorAll('.label-text')[i];
+          if (svgLabel) svgLabel.style.opacity = active ? '0.35' : '1';
+        });
+        legend.appendChild(el);
       });
-
-      li.appendChild(left);
-      li.appendChild(right);
-      D.exercisesList.appendChild(li);
-    });
-
-    qAll('.tr-set-input', D.exercisesList).forEach(inp => {
-      inp.addEventListener('input', debounce(onSetInputChange, 300));
-    });
-    qAll('.tr-set-done', D.exercisesList).forEach(btn => {
-      btn.addEventListener('click', onSetDoneClick);
-    });
-  }
-
-  function onSetInputChange(e) {
-    const exIdx = Number(e.target.dataset.ex);
-    const setIdx = Number(e.target.dataset.set);
-    const val = e.target.value.trim();
-    if (!state.currentSession) return;
-    state.currentSession.data.exercises[exIdx].sets[setIdx].weight = val ? Number(val) : null;
-    scheduleAutosave();
-  }
-
-  function onSetDoneClick(e) {
-    const exIdx = Number(e.currentTarget.dataset.ex);
-    const setIdx = Number(e.currentTarget.dataset.set);
-    const setObj = state.currentSession.data.exercises[exIdx].sets[setIdx];
-    setObj.done = true;
-    renderSessionPanel();
-    scheduleAutosave();
-  }
-
-  function saveLocalSession() {
-    if (!state.currentSession) return;
-    localStorage.setItem('nosi_current_session', JSON.stringify(state.currentSession));
-    debouncedPatch();
-  }
-
-  function loadLocalSession() {
-    const raw = localStorage.getItem('nosi_current_session');
-    if (!raw) return null;
-    try { return JSON.parse(raw); } catch { return null; }
-  }
-
-  const debouncedPatch = debounce(async function () {
-    if (!state.currentSession || !state.currentSession.id) return;
-    try {
-      await API.patchSession(state.currentSession.id, { data: state.currentSession.data });
-    } catch (err) {
-      console.warn('Помилка синхронізації', err);
-      OfflineQueue.push({ type: 'patchSession', id: state.currentSession.id, payload: { data: state.currentSession.data } });
     }
-  }, 1000);
-
-  const OfflineQueue = (function () {
-    const KEY = 'nosi_offline_queue_v1';
-    function load() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; } }
-    function save(q) { localStorage.setItem(KEY, JSON.stringify(q)); }
-    async function flush() {
-      const q = load();
-      if (!q.length) return;
-      const remaining = [];
-      for (const item of q) {
-        try {
-          if (item.type === 'patchSession') {
-            await API.patchSession(item.id, item.payload);
-          } else if (item.type === 'createSession') {
-            await API.createSession(item.payload);
-          } else {
-            await API.post(item.path, item.payload);
-          }
-        } catch (e) {
-          remaining.push(item);
+    const startVals = new Array(n).fill(0);
+    const targetVals = new Array(n).fill(0);
+    for (let i = 0; i < n; i++) targetVals[i] = values[i] || 0;
+    const duration = opts.duration || 700;
+    const t0 = performance.now();
+    function animate(now) {
+      const t = Math.min(1, (now - t0) / duration);
+      const e = easeOutCubic(t);
+      const pts = [];
+      for (let i = 0; i < n; i++) {
+        const v = startVals[i] + (targetVals[i] - startVals[i]) * e;
+        const angle = -Math.PI / 2 + i * angleStep;
+        const rr = r * v;
+        const x = cx + Math.cos(angle) * rr;
+        const y = cy + Math.sin(angle) * rr;
+        pts.push(`${x},${y}`);
+        const pEl = pointEls[i];
+        if (pEl) {
+          pEl.setAttribute('cx', x);
+          pEl.setAttribute('cy', y);
+          pEl.setAttribute('r', Math.max(6, Math.round(size * 0.02) * (1 + 0.25 * v)));
+          pEl.setAttribute('fill', (labels[i] ? (i % 3 === 0 ? 'var(--nf-yellow)' : i % 3 === 1 ? 'var(--nf-purple)' : 'var(--nf-teal)') : 'var(--nf-yellow)'));
+          pEl.style.opacity = labels[i] ? '1' : '0.6';
         }
       }
-      save(remaining);
+      poly.setAttribute('points', pts.join(' '));
+      if (t < 1) requestAnimationFrame(animate);
     }
-    function push(item) {
-      const q = load();
-      q.push(item);
-      save(q);
+    requestAnimationFrame(animate);
+    function showTooltip(ev, text) {
+      let tt = container._radarTooltip;
+      if (!tt) {
+        tt = document.createElement('div');
+        tt.className = 'tr-radar-tooltip';
+        tt.setAttribute('role', 'status');
+        document.body.appendChild(tt);
+        container._radarTooltip = tt;
+      }
+      tt.innerHTML = `<div class="tr-tooltip-body">${text}</div>`;
+      tt.classList.add('show');
+      moveTooltip(ev);
     }
-    return { flush, push, load, save, pushItem: push };
-  })();
-
-  async function startSession() {
-    if (state.currentSession) {
-      startLiveTimer();
-      return;
+    function moveTooltip(ev) {
+      const tt = container._radarTooltip;
+      if (!tt) return;
+      const left = Math.min(window.innerWidth - 220, ev.clientX + 12);
+      const top = Math.min(window.innerHeight - 80, ev.clientY + 12);
+      tt.style.left = `${left}px`;
+      tt.style.top = `${top}px`;
     }
-    try {
-      const payload = {
-        plan_id: state.activePlan?.id || null,
-        title: `Сесія ${new Date().toLocaleString()}`,
-        started_at: new Date().toISOString()
-      };
-      const created = await API.createSession(payload);
-      state.currentSession = {
-        id: created.id,
-        plan_id: created.plan_id,
-        title: created.title,
-        started_at: created.started_at,
-        data: { exercises: buildExercisesFromPlan(state.activePlan) }
-      };
-      saveLocalSession();
-      renderSessionPanel();
-      startLiveTimer();
-    } catch (err) {
-      console.warn('Старт сесії помилка', err);
-      OfflineQueue.pushItem({ type: 'createSession', payload });
-      state.currentSession = {
-        id: `local-${Date.now()}`,
-        plan_id: state.activePlan?.id || null,
-        title: payload.title,
-        started_at: payload.started_at,
-        data: { exercises: buildExercisesFromPlan(state.activePlan) }
-      };
-      saveLocalSession();
-      renderSessionPanel();
-      startLiveTimer();
+    function hideTooltip() {
+      const tt = container._radarTooltip;
+      if (!tt) return;
+      tt.classList.remove('show');
     }
+    for (let i = 0; i < pointEls.length; i++) {
+      ((lab, idx) => {
+        const el = pointEls[idx];
+        el.addEventListener('mouseenter', ev => {
+          const val = targetVals[idx] || 0;
+          const label = labels[idx] || I18N.empty;
+          showTooltip(ev, I18N.tooltip(label, val));
+        });
+        el.addEventListener('mousemove', ev => moveTooltip(ev));
+        el.addEventListener('mouseleave', hideTooltip);
+        el.addEventListener('focus', ev => {
+          const val = targetVals[idx] || 0;
+          const label = labels[idx] || I18N.empty;
+          showTooltip(ev, I18N.tooltip(label, val));
+        });
+        el.addEventListener('blur', hideTooltip);
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('aria-label', `${lab || I18N.empty} ${Math.round((targetVals[idx] || 0) * 100)}%`);
+      })(labels[i] || '', i);
+    }
+    if (!container._radarResizeHandler) {
+      container._radarResizeHandler = debounce(() => render(container, muscles, opts), 200);
+      window.addEventListener('resize', container._radarResizeHandler);
+    }
+    container._lastRadar = { labels, values, size };
   }
-
-  let liveInterval = null;
-  function startLiveTimer() {
-    if (liveInterval) return;
-    liveInterval = setInterval(() => renderSessionPanel(), 5000);
-  }
-  function stopLiveTimer() {
-    if (!liveInterval) return;
-    clearInterval(liveInterval);
-    liveInterval = null;
-  }
-
-  function attachHandlers() {
-    if (D.startBtn) D.startBtn.addEventListener('click', startSession);
-    if (D.liveStartBtn) D.liveStartBtn.addEventListener('click', startSession);
-    if (D.openPlanBtn) D.openPlanBtn.addEventListener('click', () => {
-      if (state.activePlan) window.location.href = `/training/plans/${state.activePlan.id}`;
-      else alert('У вас немає активного плану');
-    });
-    if (D.savePremiumBtn) D.savePremiumBtn.addEventListener('click', onSavePremium);
-    if (D.editPlanBtn) D.editPlanBtn.addEventListener('click', () => window.location.href = '/training/plans');
-    if (D.nextOpen) D.nextOpen.addEventListener('click', () => window.location.href = '/training/sessions/next');
-
-    window.addEventListener('online', () => {
-      OfflineQueue.flush().catch(e => console.warn('Flush error', e));
-    });
-  }
-
-  function onSavePremium() {
-    const selected = qAll('.tr-muscle-btn.is-selected', D.premiumMuscles).map(b => b.dataset.muscle);
-    API.post('/api/user/preferences', { key: 'premium_muscles', value: JSON.stringify(selected) }).catch(() => {
-      OfflineQueue.pushItem({ path: '/api/user/preferences', payload: { key: 'premium_muscles', value: JSON.stringify(selected) } });
-    });
-    alert('Цільові м’язи збережено');
-  }
-
-  async function init() {
-    attachHandlers();
-    await loadInitial();
-    const saved = loadLocalSession();
-    if (saved) state.currentSession = saved;
-    renderHeader();
-    renderPlanPanel();
-    renderSessionPanel();
-    renderNext();
-    renderRecs();
-    OfflineQueue.flush().catch(() => {});
-  }
-
-  function renderNext() {
-    D.nextTitle.textContent = 'Завтра: Силова сесія';
-    D.nextType.textContent = 'Сила';
-    D.nextMuscles.textContent = 'Груди, Трицепс';
-    D.nextDuration.textContent = '60';
-  }
-
-  function renderRecs() {
-    D.recs.innerHTML = '<div class="tr-rec">Підтримуйте прогрес: додавайте 2.5% ваги кожні 2 тижні.</div>';
-  }
-
-  document.addEventListener('DOMContentLoaded', init);
-  window.NosiTraining = { state, startSession, saveLocalSession, OfflineQueue };
+  function debounce(fn, ms = 150) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+  window.NosiRadar = { render };
 })();
