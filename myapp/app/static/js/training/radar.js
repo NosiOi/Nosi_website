@@ -1,123 +1,190 @@
 (function () {
-  function qs(sel, root = document) { return root.querySelector(sel); }
-  function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
+  const I18N = {
+    tooltip: (label, v) => `${label}: ${Math.round((v || 0) * 100)}%`,
+    ariaLabel: 'Радарна діаграма навантаження',
+    legendToggleOn: 'Включено',
+    legendToggleOff: 'Вимкнено'
+  };
 
-  function render(selectorOrEl, muscles) {
-    const container = (typeof selectorOrEl === 'string') ? document.querySelector(selectorOrEl) : selectorOrEl;
+  function debounce(fn, ms = 150) {
+    let t;
+    return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+  }
+
+  function createSVG(ns, tag, attrs = {}) {
+    const el = document.createElementNS(ns, tag);
+    for (const k in attrs) {
+      el.setAttribute(k, attrs[k]);
+    }
+    return el;
+  }
+
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function render(target, muscles = {}, opts = {}) {
+    const container = typeof target === 'string' ? document.querySelector(target) : target;
     if (!container) return;
     const labels = Object.keys(muscles || {});
     const values = labels.map(l => Math.max(0, Math.min(1, muscles[l] || 0)));
-    const size = Math.min(container.clientWidth || 320, 420);
-    const svgNS = "http://www.w3.org/2000/svg";
+    const size = Math.min(container.clientWidth || 320, opts.maxSize || 520);
+    const svgNS = 'http://www.w3.org/2000/svg';
     container.innerHTML = '';
-    const svg = document.createElementNS(svgNS, 'svg');
-    svg.setAttribute('width', size);
-    svg.setAttribute('height', size);
-    svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+    const svg = createSVG(svgNS, 'svg', { width: size, height: size, viewBox: `0 0 ${size} ${size}`, role: 'img', 'aria-label': opts.ariaLabel || I18N.ariaLabel });
     const cx = size / 2, cy = size / 2, r = size * 0.36;
+
+    const defs = createSVG(svgNS, 'defs');
+    const grad = createSVG(svgNS, 'linearGradient', { id: 'radarGrad', x1: '0%', x2: '100%' });
+    const stop1 = createSVG(svgNS, 'stop', { offset: '0%', 'stop-color': 'rgba(255,255,255,0.04)' });
+    const stop2 = createSVG(svgNS, 'stop', { offset: '100%', 'stop-color': 'rgba(255,255,255,0.02)' });
+    grad.appendChild(stop1); grad.appendChild(stop2); defs.appendChild(grad); svg.appendChild(defs);
+
     for (let i = 4; i >= 1; i--) {
-      const c = document.createElementNS(svgNS, 'circle');
-      c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', (r / 4) * i);
-      c.setAttribute('class', 'tr-radar-grid');
+      const c = createSVG(svgNS, 'circle', { cx, cy, r: (r / 4) * i });
+      c.classList.add('tr-radar-grid');
       c.setAttribute('fill', 'none');
       c.setAttribute('stroke', 'rgba(255,255,255,0.03)');
       c.setAttribute('stroke-width', '1');
       svg.appendChild(c);
     }
+
     const n = Math.max(labels.length, 6);
-    labels.forEach((lab, i) => {
-      const angle = (Math.PI * 2) * (i / n) - Math.PI / 2;
+    const angleStep = (Math.PI * 2) / n;
+
+    for (let i = 0; i < n; i++) {
+      const angle = -Math.PI / 2 + i * angleStep;
       const x = cx + Math.cos(angle) * r;
       const y = cy + Math.sin(angle) * r;
-      const line = document.createElementNS(svgNS, 'line');
-      line.setAttribute('x1', cx); line.setAttribute('y1', cy);
-      line.setAttribute('x2', x); line.setAttribute('y2', y);
-      line.setAttribute('stroke', 'rgba(255,255,255,0.03)');
+      const line = createSVG(svgNS, 'line', { x1: cx, y1: cy, x2: x, y2: y });
+      line.setAttribute('stroke', 'rgba(255,255,255,0.04)');
       line.setAttribute('stroke-width', '1');
       svg.appendChild(line);
-      const tx = cx + Math.cos(angle) * (r + 18);
-      const ty = cy + Math.sin(angle) * (r + 18);
-      const text = document.createElementNS(svgNS, 'text');
-      text.setAttribute('x', tx); text.setAttribute('y', ty);
-      text.setAttribute('fill', '#e9e9ef');
-      text.setAttribute('font-size', '11');
-      text.setAttribute('text-anchor', Math.cos(angle) > 0.1 ? 'start' : Math.cos(angle) < -0.1 ? 'end' : 'middle');
-      text.setAttribute('dominant-baseline', 'middle');
-      text.textContent = lab;
-      svg.appendChild(text);
-    });
-    const points = values.map((v, i) => {
-      const angle = (Math.PI * 2) * (i / n) - Math.PI / 2;
-      const rr = v * r;
-      return `${cx + Math.cos(angle) * rr},${cy + Math.sin(angle) * rr}`;
-    }).join(' ');
-    const poly = document.createElementNS(svgNS, 'polygon');
-    poly.setAttribute('points', points);
-    poly.setAttribute('class', 'tr-radar-polygon');
+
+      const lx = cx + Math.cos(angle) * (r + 18);
+      const ly = cy + Math.sin(angle) * (r + 18);
+      const label = createSVG(svgNS, 'text', { x: lx, y: ly, 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
+      label.classList.add('tr-radar-label');
+      label.textContent = labels[i] || '';
+      svg.appendChild(label);
+    }
+
+    const poly = createSVG(svgNS, 'polygon');
+    poly.classList.add('tr-radar-polygon');
+    poly.setAttribute('fill', opts.fill || 'url(#radarGrad)');
+    poly.setAttribute('stroke', opts.stroke || 'rgba(255,255,255,0.12)');
+    poly.setAttribute('stroke-width', '2');
+    poly.setAttribute('opacity', '0.98');
     svg.appendChild(poly);
-    values.forEach((v, i) => {
-      const angle = (Math.PI * 2) * (i / n) - Math.PI / 2;
-      const rr = v * r;
-      const x = cx + Math.cos(angle) * rr;
-      const y = cy + Math.sin(angle) * rr;
-      const p = document.createElementNS(svgNS, 'circle');
-      p.setAttribute('cx', x); p.setAttribute('cy', y); p.setAttribute('r', 8);
-      p.setAttribute('class', 'tr-radar-point');
+
+    const points = [];
+    const pointEls = [];
+    for (let i = 0; i < n; i++) {
+      const p = createSVG(svgNS, 'circle', { r: Math.max(6, size * 0.02) });
+      p.classList.add('tr-radar-point');
       p.setAttribute('fill', 'transparent');
       p.style.cursor = 'pointer';
-      p.addEventListener('mouseenter', (ev) => {
-        showTooltip(container, ev, `${labels[i]}: ${Math.round((v||0)*100)}%`);
-      });
-      p.addEventListener('mousemove', (ev) => {
-        moveTooltip(container, ev);
-      });
-      p.addEventListener('mouseleave', () => {
-        hideTooltip(container);
-      });
       svg.appendChild(p);
-    });
+      pointEls.push(p);
+    }
+
     container.appendChild(svg);
-    const legend = container.parentElement.querySelector('#tr-legend');
+
+    const legend = container.parentElement ? container.parentElement.querySelector('#tr-legend') : null;
     if (legend) {
       legend.innerHTML = '';
       labels.forEach((lab, i) => {
-        const el = document.createElement('div');
-        el.className = 'tr-legend-item';
-        el.dataset.index = i;
-        el.innerHTML = `<span class="tr-legend-swatch ${i%3===0?'yellow':i%3===1?'purple':'teal'}"></span><span class="tr-legend-label">${lab}</span>`;
-        el.addEventListener('click', () => {
-          const active = el.dataset.active === 'true';
-          el.dataset.active = active ? 'false' : 'true';
+        const item = document.createElement('div');
+        item.className = 'tr-legend-item';
+        item.dataset.index = i;
+        item.dataset.active = 'true';
+        const sw = document.createElement('span');
+        sw.className = `tr-legend-swatch ${i % 3 === 0 ? 'yellow' : i % 3 === 1 ? 'purple' : 'teal'}`;
+        const lbl = document.createElement('span');
+        lbl.className = 'tr-legend-label';
+        lbl.textContent = lab;
+        item.appendChild(sw);
+        item.appendChild(lbl);
+        item.addEventListener('click', () => {
+          const active = item.dataset.active === 'true';
+          item.dataset.active = active ? 'false' : 'true';
+          item.classList.toggle('is-muted', active);
+          const p = pointEls[i];
+          if (p) p.style.opacity = active ? '0.12' : '1';
+          const svgLabel = svg.querySelectorAll('.tr-radar-label')[i];
+          if (svgLabel) svgLabel.style.opacity = active ? '0.35' : '1';
         });
-        legend.appendChild(el);
+        legend.appendChild(item);
       });
     }
-  }
 
-  function showTooltip(container, ev, text) {
-    let tt = container._radarTooltip;
-    if (!tt) {
-      tt = document.createElement('div');
-      tt.className = 'tr-radar-tooltip';
-      document.body.appendChild(tt);
-      container._radarTooltip = tt;
+    const startVals = new Array(n).fill(0);
+    const targetVals = values.slice();
+    const duration = opts.duration || 600;
+    const t0 = performance.now();
+
+    function animate(now) {
+      const t = Math.min(1, (now - t0) / duration);
+      const e = easeOutCubic(t);
+      const pts = [];
+      for (let i = 0; i < n; i++) {
+        const v = startVals[i] + (targetVals[i] - startVals[i]) * e;
+        const angle = -Math.PI / 2 + i * angleStep;
+        const x = cx + Math.cos(angle) * r * v;
+        const y = cy + Math.sin(angle) * r * v;
+        pts.push(`${x},${y}`);
+        const pEl = pointEls[i];
+        if (pEl) { pEl.setAttribute('cx', x); pEl.setAttribute('cy', y); }
+      }
+      poly.setAttribute('points', pts.join(' '));
+      if (t < 1) requestAnimationFrame(animate);
     }
-    tt.innerHTML = `<div class="tr-tooltip-body">${text}</div>`;
-    tt.classList.add('show');
-    moveTooltip(container, ev);
-  }
-  function moveTooltip(container, ev) {
-    const tt = container._radarTooltip;
-    if (!tt) return;
-    const left = ev.clientX + 12;
-    const top = ev.clientY + 12;
-    tt.style.left = left + 'px';
-    tt.style.top = top + 'px';
-  }
-  function hideTooltip(container) {
-    const tt = container._radarTooltip;
-    if (!tt) return;
-    tt.classList.remove('show');
+    requestAnimationFrame(animate);
+
+    function showTooltip(ev, text) {
+      let tt = container._radarTooltip;
+      if (!tt) {
+        tt = document.createElement('div');
+        tt.className = 'tr-radar-tooltip';
+        tt.setAttribute('role', 'status');
+        document.body.appendChild(tt);
+        container._radarTooltip = tt;
+      }
+      tt.innerHTML = `<div class="tr-tooltip-body">${text}</div>`;
+      tt.classList.add('show');
+      moveTooltip(ev);
+    }
+    function moveTooltip(ev) {
+      const tt = container._radarTooltip;
+      if (!tt) return;
+      const left = Math.min(window.innerWidth - 220, ev.clientX + 12);
+      const top = Math.min(window.innerHeight - 80, ev.clientY + 12);
+      tt.style.left = `${left}px`;
+      tt.style.top = `${top}px`;
+    }
+    function hideTooltip() {
+      const tt = container._radarTooltip;
+      if (!tt) return;
+      tt.classList.remove('show');
+    }
+
+    for (let i = 0; i < pointEls.length; i++) {
+      ((lab, idx) => {
+        const el = pointEls[idx];
+        el.addEventListener('mouseenter', ev => showTooltip(ev, I18N.tooltip(lab || '', values[idx] || 0)));
+        el.addEventListener('mousemove', ev => moveTooltip(ev));
+        el.addEventListener('mouseleave', hideTooltip);
+        el.addEventListener('focus', ev => showTooltip(ev, I18N.tooltip(lab || '', values[idx] || 0)));
+        el.addEventListener('blur', hideTooltip);
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('aria-label', `${lab} ${Math.round((values[idx] || 0) * 100)}%`);
+      })(labels[i] || '', i);
+    }
+
+    if (!container._radarResizeHandler) {
+      container._radarResizeHandler = debounce(() => render(container, muscles, opts), 200);
+      window.addEventListener('resize', container._radarResizeHandler);
+    }
+
+    container._lastRadar = { labels, values, size };
   }
 
   window.NosiRadar = { render };

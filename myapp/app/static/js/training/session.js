@@ -1,6 +1,6 @@
 (function () {
-  function qs(sel, root = document) { return root.querySelector(sel); }
-  function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
+  function qs(s, r = document) { return (r || document).querySelector(s); }
+  function qsa(s, r = document) { return Array.from((r || document).querySelectorAll(s)); }
 
   let sessionData = null;
   let currentIndex = 0;
@@ -8,32 +8,35 @@
   let restRemaining = 0;
   let totalStart = null;
   let paused = false;
+  let autosaveTimer = null;
 
   async function initSessionFromQuery() {
     const params = new URLSearchParams(location.search);
     const id = params.get('session');
     const focus = params.get('focus');
     if (!id) return;
-    const res = await fetch(`/api/session/${encodeURIComponent(id)}`);
-    let data = null;
-    if (res.ok) data = await res.json();
-    if (!data) {
-      data = {
+    try {
+      const res = await fetch(`/api/training/sessions/${encodeURIComponent(id)}`);
+      if (res.ok) sessionData = await res.json();
+    } catch (e) {
+      console.warn('Fetch session error', e);
+    }
+    if (!sessionData) {
+      sessionData = {
         id,
-        title: 'Fixture Live Session',
+        title: 'Тестова сесія',
         exercises: [
           { id: 'ex1', name: 'Жим лежачи', sets: 4, reps: 8, location: 'зал' },
-          { id: 'ex2', name: 'Підтягування', sets: 3, reps: 6, location: 'зал' },
-          { id: 'ex3', name: 'Жим плечима', sets: 3, reps: 10, location: 'зал' }
+          { id: 'ex2', name: 'Підтягування', sets: 3, reps: 6, location: 'зал' }
         ]
       };
     }
-    sessionData = data;
     currentIndex = focus ? Number(focus) : 0;
     renderSession();
     wireControls();
-    totalStart = Date.now();
+    totalStart = sessionData.started_at ? new Date(sessionData.started_at).getTime() : Date.now();
     updateTotalTimer();
+    restoreAutosave();
   }
 
   function renderSession() {
@@ -50,17 +53,18 @@
 
   function renderSets(ex) {
     const list = qs('#tr-sets-list');
+    if (!list) return;
     list.innerHTML = '';
     for (let i = 0; i < (ex.sets || 1); i++) {
       const row = document.createElement('div');
       row.className = 'tr-set-row';
       row.innerHTML = `
-        <div class="tr-set-index">${i+1}</div>
+        <div class="tr-set-index">${i + 1}</div>
         <div style="min-width:120px">
-          <input class="cmp-input tr-set-weight" type="number" placeholder="кг" step="0.5">
+          <input class="cmp-input tr-set-weight" type="number" placeholder="кг" step="0.5" aria-label="Вага підходу ${i + 1}">
         </div>
         <div style="min-width:120px">
-          <input class="cmp-input tr-set-reps" type="number" placeholder="повт." value="${ex.reps}">
+          <input class="cmp-input tr-set-reps" type="number" placeholder="повт." value="${ex.reps}" aria-label="Повторення підходу ${i + 1}">
         </div>
         <div class="tr-set-controls">
           <button class="tr-btn tr-btn--primary tr-set-done" data-set="${i}">Готово</button>
@@ -73,27 +77,30 @@
 
   function onSetDone(e) {
     const setIndex = Number(e.currentTarget.dataset.set);
-    const weight = e.currentTarget.closest('.tr-set-row').querySelector('.tr-set-weight').value || 0;
-    const reps = e.currentTarget.closest('.tr-set-row').querySelector('.tr-set-reps').value || 0;
+    const row = e.currentTarget.closest('.tr-set-row');
+    const weight = row.querySelector('.tr-set-weight').value || 0;
+    const reps = row.querySelector('.tr-set-reps').value || 0;
     e.currentTarget.textContent = 'Збережено';
     e.currentTarget.disabled = true;
     e.currentTarget.classList.remove('tr-btn--primary');
     e.currentTarget.classList.add('tr-btn--ghost');
     startRest(60);
     updateOverviewProgress();
+    scheduleAutosave();
   }
 
   function startRest(seconds) {
     restRemaining = seconds;
-    qs('#tr-rest-timer').textContent = formatTime(restRemaining);
+    const el = qs('#tr-rest-timer');
+    if (el) el.textContent = formatTime(restRemaining);
     if (restTimer) clearInterval(restTimer);
     restTimer = setInterval(() => {
       restRemaining--;
-      qs('#tr-rest-timer').textContent = formatTime(restRemaining);
+      if (el) el.textContent = formatTime(restRemaining);
       if (restRemaining <= 0) {
         clearInterval(restTimer);
         restTimer = null;
-        qs('#tr-rest-timer').textContent = '00:00';
+        if (el) el.textContent = '00:00';
         openToast('Час відпочинку завершено', 'success');
       }
     }, 1000);
@@ -103,7 +110,8 @@
     if (restTimer) {
       clearInterval(restTimer);
       restTimer = null;
-      qs('#tr-rest-timer').textContent = '00:00';
+      const el = qs('#tr-rest-timer');
+      if (el) el.textContent = '00:00';
     }
   }
 
@@ -143,28 +151,35 @@
   function updateOverviewProgress() {
     const done = qsa('.tr-set-done[disabled]').length;
     const total = qsa('.tr-set-row').length;
-    qs('#tr-progress-fill').style.width = `${Math.round((done/Math.max(1,total))*100)}%`;
-    qs('#tr-progress-text').textContent = `${done} / ${total}`;
-    qs('#tr-overview-sets-done').textContent = done;
+    const fill = qs('#tr-progress-fill');
+    if (fill) fill.style.width = `${Math.round((done / Math.max(1, total)) * 100)}%`;
+    qs('#tr-progress-text') && (qs('#tr-progress-text').textContent = `${done} / ${total}`);
+    qs('#tr-overview-sets-done') && (qs('#tr-overview-sets-done').textContent = done);
   }
 
   function renderOverview() {
-    qs('#tr-overview-ex-count').textContent = sessionData.exercises.length;
-    qs('#tr-overview-sets-done').textContent = 0;
-    qs('#tr-overview-volume').textContent = '—';
-    qs('#tr-overview-pace').textContent = '—';
-    qs('#tr-overview-main-muscles').textContent = '—';
+    qs('#tr-overview-ex-count') && (qs('#tr-overview-ex-count').textContent = sessionData.exercises.length);
+    qs('#tr-overview-sets-done') && (qs('#tr-overview-sets-done').textContent = 0);
+    qs('#tr-overview-volume') && (qs('#tr-overview-volume').textContent = '—');
+    qs('#tr-overview-pace') && (qs('#tr-overview-pace').textContent = '—');
+    qs('#tr-overview-main-muscles') && (qs('#tr-overview-main-muscles').textContent = '—');
   }
 
   function saveNotes() {
-    const notes = qs('#tr-session-notes').value || '';
+    const notesEl = qs('#tr-session-notes');
+    const notes = notesEl ? notesEl.value || '' : '';
     if (!sessionData) return openToast('Немає сесії для збереження', 'warn');
-    fetch(`/api/session/${encodeURIComponent(sessionData.id)}/notes`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ notes }) });
-    openToast('Нотатки збережено', 'success');
+    fetch(`/api/training/sessions/${encodeURIComponent(sessionData.id)}/notes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notes })
+    }).then(() => openToast('Нотатки збережено', 'success'))
+      .catch(() => openToast('Помилка збереження нотаток', 'error'));
   }
 
   function saveProgress() {
     openToast('Прогрес збережено (локально)', 'success');
+    scheduleAutosave();
   }
 
   function endSession() {
@@ -181,16 +196,18 @@
 
   function pauseSession() {
     paused = true;
-    qs('#tr-pause').style.display = 'none';
-    qs('#tr-resume').style.display = '';
+    const p = qs('#tr-pause'); const r = qs('#tr-resume');
+    if (p) p.style.display = 'none';
+    if (r) r.style.display = '';
     openToast('Сесія на паузі', 'warn');
   }
 
   function resumeSession() {
     paused = false;
-    qs('#tr-resume').style.display = 'none';
-    qs('#tr-pause').style.display = '';
-    openToast('Сесія відновлена', 'success');
+    const p = qs('#tr-pause'); const r = qs('#tr-resume');
+    if (r) r.style.display = 'none';
+    if (p) p.style.display = '';
+    openToast('Сесію відновлено', 'success');
   }
 
   function updateTotalTimer() {
@@ -208,6 +225,29 @@
     const mm = String(Math.floor(sec / 60)).padStart(2, '0');
     const ss = String(sec % 60).padStart(2, '0');
     return `${mm}:${ss}`;
+  }
+
+  function scheduleAutosave() {
+    if (autosaveTimer) clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(() => {
+      if (sessionData) localStorage.setItem('nosi_live_session', JSON.stringify(sessionData));
+      if (sessionData && sessionData.id) {
+        fetch(`/api/training/sessions/${encodeURIComponent(sessionData.id)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: sessionData })
+        }).catch(() => {});
+      }
+    }, 800);
+  }
+
+  function restoreAutosave() {
+    const raw = localStorage.getItem('nosi_live_session');
+    if (!raw) return;
+    try {
+      const saved = JSON.parse(raw);
+      if (saved && saved.id === sessionData.id) sessionData = saved;
+    } catch { }
   }
 
   function openToast(text, type = 'success') {

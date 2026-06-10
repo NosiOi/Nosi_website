@@ -1,361 +1,538 @@
 (function () {
-  const API = {
+  'use strict';
+
+  const ROUTES = {
     today: '/api/training/today',
-    plans: '/api/plans',
+    plans: '/api/training/plans',
+    plan: (id) => `/api/training/plans/${encodeURIComponent(id)}`,
     exercises: '/api/exercises',
-    session: (id) => `/api/session/${id}`,
-    saveNotes: (sid) => `/api/session/${sid}/notes`
+    sessions: '/api/training/sessions',
+    session: (id) => `/api/training/sessions/${encodeURIComponent(id)}`,
+    preferences: '/api/user/preferences'
+  };
+
+  const SELECTORS = {
+    headerTitle: '#tr-session-title',
+    headerType: '#tr-session-type',
+    headerDuration: '#tr-session-duration',
+    radar: '#tr-radar',
+    legend: '#tr-legend',
+    exercisesList: '#tr-exercises',
+    weekLoad: '#tr-week-load',
+    focusMuscles: '#tr-focus-muscles',
+    weekSessions: '#tr-week-sessions',
+    fatigue: '#tr-fatigue',
+    premiumMuscles: '#tr-premium-muscles',
+    savePremiumBtn: '#tr-save-premium-muscles',
+    startBtn: '#tr-start',
+    liveStartBtn: '#tr-live-start',
+    openPlanBtn: '#tr-open-plan',
+    nextTitle: '#tr-next-session-title',
+    nextType: '#tr-next-type',
+    nextMuscles: '#tr-next-muscles',
+    nextDuration: '#tr-next-duration',
+    nextOpen: '#tr-next-open',
+    recs: '#tr-recs',
+    modalOverlay: '#tr-modal-overlay',
+    modal: '#tr-modal',
+    balanceList: '#tr-balance-list'
   };
 
   const state = {
     today: null,
-    plan: null,
+    plans: [],
+    activePlan: null,
     exercisesBank: [],
-    modalOpen: false
+    currentSession: null,
+    ui: {
+      planSelectorOpen: false,
+      modalOpen: false
+    },
+    offlineQueueKey: 'nosi_offline_queue_v2'
   };
 
-  function qs(sel, root = document) { return root.querySelector(sel); }
-  function qsa(sel, root = document) { return Array.from(root.querySelectorAll(sel)); }
+  function qs(sel, root = document) { return (root || document).querySelector(sel); }
+  function qsa(sel, root = document) { return Array.from((root || document).querySelectorAll(sel)); }
+  function el(tag, cls) { const e = document.createElement(tag); if (cls) e.className = cls; return e; }
+  function nowIso() { return new Date().toISOString(); }
+  function clamp(v, a = 0, b = 1) { return Math.max(a, Math.min(b, v)); }
+  function safeJSONParse(s, fallback = null) { try { return JSON.parse(s); } catch { return fallback; } }
+  function debounce(fn, ms = 300) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+  function formatMinutes(ms) { if (!ms && ms !== 0) return '—'; return String(Math.round(ms / 60000)); }
+  function formatTimeAgo(iso) { if (!iso) return '—'; const diff = Date.now() - new Date(iso).getTime(); const mins = Math.round(diff / 60000); if (mins < 1) return 'щойно'; if (mins < 60) return `${mins} хв`; const hrs = Math.round(mins / 60); if (hrs < 24) return `${hrs} год`; const days = Math.round(hrs / 24); return `${days} дн`; }
 
-  async function fetchJson(url, opts) {
-    try {
-      const res = await fetch(url, opts);
-      if (!res.ok) throw new Error('no-data');
-      return await res.json();
-    } catch (e) {
-      return null;
-    }
-  }
-
-  async function loadFixturesIfNeeded() {
-    const data = await fetchJson(API.today);
-    if (data) return data;
-    return {
-      sessionId: 'fixture-1',
-      title: 'Upper Body Strength · День 3',
-      type: 'Сила',
-      duration: 48,
-      exercises: [
-        { id: 'ex1', name: 'Жим лежачи', sets: 4, reps: 8, location: 'зал' },
-        { id: 'ex2', name: 'Підтягування', sets: 3, reps: 6, location: 'зал' },
-        { id: 'ex3', name: 'Жим плечима', sets: 3, reps: 10, location: 'зал' }
-      ],
-      muscles: { Груди: 0.8, Спина: 0.5, Ноги: 0.2, Плечі: 0.6, Руки: 0.4, Кор: 0.3 },
-      plan: [{ id: 'p1', name: 'Мій спліт' }],
-      recommendations: ['Додати більше спини наступного тижня', 'Зменшити об’єм ніг']
-    };
-  }
-
-  function renderSession(data) {
-    state.today = data;
-    const titleEl = qs('#tr-session-title');
-    const typeEl = qs('#tr-session-type');
-    const durEl = qs('#tr-session-duration');
-    titleEl.textContent = data.title || 'Сьогодні';
-    typeEl.textContent = data.type || '—';
-    durEl.textContent = (data.duration || '—') + ' хв';
-    renderExercises(data.exercises || []);
-    renderSummary(data.exercises || []);
-    renderRecs(data.recommendations || []);
-  }
-
-  function renderExercises(list) {
-    const ul = qs('#tr-exercises');
-    ul.innerHTML = '';
-    list.forEach((ex, idx) => {
-      const li = document.createElement('li');
-      li.className = 'tr-exercise-item tr-animate-pop';
-      li.dataset.idx = idx;
-      li.innerHTML = `
-        <div class="tr-ex-left">
-          <div class="tr-ex-avatar">${(ex.name||'').slice(0,2).toUpperCase()}</div>
-          <div>
-            <div class="tr-ex-name">${ex.name}</div>
-            <div class="tr-ex-meta">${ex.sets}×${ex.reps} · ${ex.location || 'будь-де'}</div>
-          </div>
-        </div>
-        <div class="tr-ex-actions">
-          <button class="tr-btn tr-btn--ghost tr-btn-edit" data-idx="${idx}">Редагувати</button>
-          <button class="tr-btn tr-btn--primary tr-btn-start-ex" data-idx="${idx}">Почати</button>
-        </div>
-      `;
-      ul.appendChild(li);
-    });
-    qsa('.tr-btn-start-ex').forEach(b => b.addEventListener('click', onStartExercise));
-    qsa('.tr-btn-edit').forEach(b => b.addEventListener('click', onEditExercise));
-  }
-
-  function renderSummary(list) {
-    qs('#tr-summary-ex-count').textContent = list.length;
-    const volume = list.reduce((s, ex) => s + (ex.sets * (ex.reps || 0)), 0);
-    qs('#tr-summary-volume').textContent = volume;
-    const muscles = Object.keys(state.today.muscles || {}).filter(k => (state.today.muscles[k]||0) > 0.3);
-    qs('#tr-summary-main-muscles').textContent = muscles.slice(0,3).join(', ') || '—';
-  }
-
-  function renderRecs(recs) {
-    const el = qs('#tr-recs');
-    el.innerHTML = '';
-    (recs || []).forEach(r => {
-      const d = document.createElement('div');
-      d.className = 'tr-rec-item';
-      d.innerHTML = `<div class="tr-rec-icon">!</div><div class="tr-rec-body"><div class="tr-rec-title">${r}</div></div>`;
-      el.appendChild(d);
-    });
-    if (!(recs||[]).length) el.innerHTML = '<div class="tr-empty">Рекомендацій поки що немає</div>';
-  }
-
-  function renderPlanList(plans) {
-    const el = qs('#tr-plan-list');
-    if (!el) return;
-    el.innerHTML = '';
-    (plans || []).forEach(p => {
-      const div = document.createElement('div');
-      div.className = 'tr-plan-item';
-      div.innerHTML = `<div>${p.name}</div><div><button class="tr-btn tr-btn--ghost tr-open-plan" data-id="${p.id}">Відкрити</button></div>`;
-      el.appendChild(div);
-    });
-    qsa('.tr-open-plan').forEach(b => b.addEventListener('click', e => openPlanModal()));
-  }
-
-  function wireHeaderButtons() {
-    const start = qs('#tr-start');
-    const edit = qs('#tr-edit-plan');
-    const openPlan = qs('#tr-open-plan');
-    if (start) start.addEventListener('click', onStartSession);
-    if (edit) edit.addEventListener('click', openPlanModal);
-    if (openPlan) openPlan.addEventListener('click', openPlanModal);
-    const newPlan = qs('#tr-new-plan');
-    if (newPlan) newPlan.addEventListener('click', openPlanModal);
-  }
-
-  function onStartSession() {
-    if (state.today && state.today.sessionId) {
-      window.location.href = `/training/session?session=${encodeURIComponent(state.today.sessionId)}`;
-    } else {
-      openToast('Немає активної сесії для запуску', 'warn');
-    }
-  }
-
-  function onStartExercise(e) {
-    const idx = Number(e.currentTarget.dataset.idx);
-    const ex = (state.today.exercises || [])[idx];
-    if (!ex) return;
-    openModalExercise(ex, idx);
-  }
-
-  function onEditExercise(e) {
-    const idx = Number(e.currentTarget.dataset.idx);
-    const ex = (state.today.exercises || [])[idx];
-    if (!ex) return;
-    openModalEditExercise(ex, idx);
-  }
-
-  function openModalExercise(ex, idx) {
-    const modal = qs('#tr-modal');
-    const overlay = qs('#tr-modal-overlay');
-    overlay.setAttribute('aria-hidden', 'false');
-    modal.innerHTML = `
-      <h3 style="margin:0 0 8px 0">${ex.name}</h3>
-      <p class="cmp-card-sub">${ex.sets}×${ex.reps} · ${ex.location || 'будь-де'}</p>
-      <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
-        <button class="tr-btn tr-btn--ghost" id="tr-modal-cancel">Закрити</button>
-        <button class="tr-btn tr-btn--primary" id="tr-modal-start-ex" data-idx="${idx}">Почати</button>
-      </div>
-    `;
-    qs('#tr-modal-cancel').addEventListener('click', closeModal);
-    qs('#tr-modal-start-ex').addEventListener('click', () => {
-      closeModal();
-      if (state.today && state.today.sessionId) {
-        window.location.href = `/training/session?session=${encodeURIComponent(state.today.sessionId)}&focus=${idx}`;
-      } else {
-        openToast('Немає сесії', 'warn');
+  const OfflineQueue = (function () {
+    const KEY = state.offlineQueueKey;
+    function load() { return safeJSONParse(localStorage.getItem(KEY), []); }
+    function save(q) { localStorage.setItem(KEY, JSON.stringify(q)); }
+    async function flush() {
+      const q = load();
+      if (!q.length) return;
+      const remaining = [];
+      for (const item of q) {
+        try {
+          if (item.type === 'patchSession') {
+            await API.patchSession(item.id, item.payload);
+          } else if (item.type === 'createSession') {
+            await API.createSession(item.payload);
+          } else if (item.type === 'post') {
+            await API.post(item.path, item.payload);
+          }
+        } catch (e) {
+          remaining.push(item);
+        }
       }
+      save(remaining);
+    }
+    function push(item) {
+      const q = load();
+      q.push(item);
+      save(q);
+    }
+    return { load, save, flush, push };
+  })();
+
+  const API = window.API || (function () {
+    function headers() {
+      const h = { 'Content-Type': 'application/json' };
+      const token = localStorage.getItem('token');
+      if (token) h['Authorization'] = `Bearer ${token}`;
+      return h;
+    }
+    async function handle(res) {
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        const err = new Error(`${res.status} ${res.statusText}`);
+        err.body = text;
+        throw err;
+      }
+      return res.status === 204 ? null : res.json().catch(() => null);
+    }
+    return {
+      listPlans() { return fetch(ROUTES.plans, { headers: headers() }).then(handle); },
+      getPlan(id) { return fetch(ROUTES.plan(id), { headers: headers() }).then(handle); },
+      listExercises() { return fetch(ROUTES.exercises, { headers: headers() }).then(handle); },
+      createSession(payload) { return fetch(ROUTES.sessions, { method: 'POST', headers: headers(), body: JSON.stringify(payload) }).then(handle); },
+      patchSession(id, payload) { return fetch(ROUTES.session(id), { method: 'PATCH', headers: headers(), body: JSON.stringify(payload) }).then(handle); },
+      getSession(id) { return fetch(ROUTES.session(id), { headers: headers() }).then(handle); },
+      post(path, payload) { return fetch(path, { method: 'POST', headers: headers(), body: JSON.stringify(payload) }).then(handle); }
+    };
+  })();
+
+  function renderHeader(today) {
+    const titleEl = qs(SELECTORS.headerTitle);
+    const typeEl = qs(SELECTORS.headerType);
+    const durEl = qs(SELECTORS.headerDuration);
+    if (!titleEl || !typeEl || !durEl) return;
+    titleEl.textContent = today?.title || 'Сьогодні';
+    typeEl.textContent = today?.type || '—';
+    durEl.textContent = (today?.duration ? `${today.duration}` : '—') + ' хв';
+  }
+
+  function renderRadar() {
+    const container = qs(SELECTORS.radar);
+    if (!container) return;
+    const radarData = state.activePlan?.meta?.radar || state.today?.muscles || {};
+    if (window.NosiRadar) {
+      NosiRadar.render(container, radarData, { duration: 700 });
+    } else {
+      container.textContent = 'Радар недоступний';
+    }
+  }
+
+  function renderLegend() {
+    const legend = qs(SELECTORS.legend);
+    if (!legend) return;
+    legend.innerHTML = '';
+    const muscles = state.activePlan?.meta?.muscles || Object.keys(state.today?.muscles || {});
+    (muscles || []).forEach((m, i) => {
+      const item = el('div', 'tr-legend-item');
+      item.dataset.index = i;
+      const sw = el('span', `tr-legend-swatch ${i % 3 === 0 ? 'yellow' : i % 3 === 1 ? 'purple' : 'teal'}`);
+      const lbl = el('span', 'tr-legend-label');
+      lbl.textContent = m;
+      item.appendChild(sw);
+      item.appendChild(lbl);
+      item.addEventListener('click', () => {
+        item.classList.toggle('is-muted');
+      });
+      legend.appendChild(item);
     });
   }
 
-  function openModalEditExercise(ex, idx) {
-    const modal = qs('#tr-modal');
-    const overlay = qs('#tr-modal-overlay');
+  function renderPlanSelector() {
+    const planName = state.activePlan?.name || 'Немає активного плану';
+    const el = qs('#tr-session-title');
+    if (el) el.setAttribute('data-plan', planName);
+  }
+
+  function renderExercisesList(exercises) {
+    const list = qs(SELECTORS.exercisesList);
+    if (!list) return;
+    list.innerHTML = '';
+    exercises.forEach((ex, idx) => {
+      const li = el('li', 'tr-exercise-row');
+      li.dataset.index = idx;
+      const left = el('div', 'tr-ex-left');
+      left.innerHTML = `<strong class="tr-ex-name">${ex.name}</strong>
+                        <div class="tr-ex-meta">${ex.sets?.length || ex.sets || 1} підходи · ${ex.reps || '—'} повт.</div>`;
+      const right = el('div', 'tr-ex-right');
+      (ex.sets || Array.from({ length: ex.sets || 1 })).forEach((s, si) => {
+        const setRow = el('div', 'tr-set-row');
+        const weightVal = (s && s.weight != null) ? s.weight : '';
+        setRow.innerHTML = `
+          <label class="tr-set-label">S${si + 1}</label>
+          <input class="tr-set-input tr-input" data-set="${si}" data-ex="${idx}" value="${weightVal}" placeholder="кг" aria-label="Вага підходу ${si + 1}">
+          <input class="tr-set-reps tr-input" data-set="${si}" data-ex="${idx}" value="${s && s.reps ? s.reps : ex.reps || ''}" placeholder="повт." aria-label="Повторення підходу ${si + 1}">
+          <button class="tr-set-done tr-btn tr-btn--ghost" data-ex="${idx}" data-set="${si}">${s && s.done ? '✓' : 'Готово'}</button>
+        `;
+        right.appendChild(setRow);
+      });
+      li.appendChild(left);
+      li.appendChild(right);
+      list.appendChild(li);
+    });
+
+    qsa('.tr-set-input', list).forEach(inp => {
+      inp.addEventListener('input', debounce(onExerciseInput, 300));
+    });
+    qsa('.tr-set-done', list).forEach(btn => {
+      btn.addEventListener('click', onExerciseSetDone);
+    });
+  }
+
+  function renderQuickStats() {
+    qs(SELECTORS.weekLoad) && (qs(SELECTORS.weekLoad).textContent = state.activePlan?.meta?.weekly_load || '—');
+    qs(SELECTORS.focusMuscles) && (qs(SELECTORS.focusMuscles).textContent = state.activePlan?.meta?.focus || '—');
+    qs(SELECTORS.weekSessions) && (qs(SELECTORS.weekSessions).textContent = state.activePlan ? `${state.activePlan.meta?.planned_sessions || 0} · ${state.activePlan.meta?.done_sessions || 0}` : '—');
+    qs(SELECTORS.fatigue) && (qs(SELECTORS.fatigue).textContent = state.activePlan?.meta?.fatigue || '—');
+  }
+
+  function renderRecommendations() {
+    const container = qs(SELECTORS.recs);
+    if (!container) return;
+    container.innerHTML = '';
+    const recs = state.activePlan?.meta?.recommendations || state.today?.recommendations || ['Підтримуйте прогрес: додавайте 2.5% ваги кожні 2 тижні.'];
+    recs.forEach(r => {
+      const d = el('div', 'tr-rec');
+      d.textContent = r;
+      container.appendChild(d);
+    });
+  }
+
+  function onExerciseInput(e) {
+    const exIdx = Number(e.target.dataset.ex);
+    const setIdx = Number(e.target.dataset.set);
+    if (!state.currentSession || !state.currentSession.data) return;
+    const val = e.target.value.trim();
+    const ex = state.currentSession.data.exercises[exIdx];
+    if (!ex) return;
+    ex.sets = ex.sets || [];
+    ex.sets[setIdx] = ex.sets[setIdx] || {};
+    ex.sets[setIdx].weight = val ? Number(val) : null;
+    scheduleSessionAutosave();
+  }
+
+  function onExerciseSetDone(e) {
+    const exIdx = Number(e.currentTarget.dataset.ex);
+    const setIdx = Number(e.currentTarget.dataset.set);
+    if (!state.currentSession || !state.currentSession.data) return;
+    const ex = state.currentSession.data.exercises[exIdx];
+    if (!ex) return;
+    ex.sets = ex.sets || [];
+    ex.sets[setIdx] = ex.sets[setIdx] || {};
+    ex.sets[setIdx].done = true;
+    e.currentTarget.textContent = '✓';
+    e.currentTarget.classList.remove('tr-btn--ghost');
+    e.currentTarget.classList.add('tr-btn--ghost');
+    scheduleSessionAutosave();
+    renderSessionProgress();
+  }
+
+  function renderSessionProgress() {
+    const done = qsa('.tr-set-done[disabled], .tr-set-done:disabled').length || qsa('.tr-set-done').filter(b => b.textContent.trim() === '✓').length;
+    const total = qsa('.tr-set-row').length || 0;
+    const fill = qs('#tr-progress-fill');
+    if (fill) fill.style.width = `${Math.round((done / Math.max(1, total)) * 100)}%`;
+    qs('#tr-progress-text') && (qs('#tr-progress-text').textContent = `${done} / ${total}`);
+    qs('#tr-overview-sets-done') && (qs('#tr-overview-sets-done').textContent = done);
+  }
+
+  function loadLocalSession() {
+    const raw = localStorage.getItem('nosi_current_session');
+    return safeJSONParse(raw, null);
+  }
+
+  function saveLocalSession() {
+    if (!state.currentSession) return;
+    localStorage.setItem('nosi_current_session', JSON.stringify(state.currentSession));
+  }
+
+  const scheduleSessionAutosave = debounce(function () {
+    saveLocalSession();
+    if (state.currentSession && state.currentSession.id && !String(state.currentSession.id).startsWith('local-')) {
+      API.patchSession(state.currentSession.id, { data: state.currentSession.data }).catch(err => {
+        OfflineQueue.push({ type: 'patchSession', id: state.currentSession.id, payload: { data: state.currentSession.data } });
+      });
+    } else {
+      OfflineQueue.push({ type: 'patchSession', id: state.currentSession.id || `local-${Date.now()}`, payload: { data: state.currentSession.data } });
+    }
+  }, 800);
+
+  async function startSessionFlow() {
+    if (state.currentSession) {
+      return;
+    }
+    const payload = {
+      plan_id: state.activePlan?.id || null,
+      title: `Сесія ${new Date().toLocaleString()}`,
+      started_at: nowIso()
+    };
+    try {
+      const created = await API.createSession(payload);
+      state.currentSession = {
+        id: created.id,
+        plan_id: created.plan_id,
+        title: created.title,
+        started_at: created.started_at,
+        data: { exercises: buildExercisesFromPlan(state.activePlan) }
+      };
+      saveLocalSession();
+      renderSessionPanel();
+      startLiveTimer();
+    } catch (err) {
+      state.currentSession = {
+        id: `local-${Date.now()}`,
+        plan_id: state.activePlan?.id || null,
+        title: payload.title,
+        started_at: payload.started_at,
+        data: { exercises: buildExercisesFromPlan(state.activePlan) }
+      };
+      OfflineQueue.push({ type: 'createSession', payload });
+      saveLocalSession();
+      renderSessionPanel();
+      startLiveTimer();
+    }
+  }
+
+  function buildExercisesFromPlan(plan) {
+    const day = plan?.meta?.days?.[0] || { exercises: [] };
+    return (day.exercises || []).map(ex => ({
+      exercise_id: ex.exercise_id || null,
+      name: ex.name || 'Вправа',
+      reps: ex.reps || null,
+      sets: (ex.sets || [{ target: null }]).map(s => ({ weight: s.target || null, reps: s.reps || ex.reps || null, done: false }))
+    }));
+  }
+
+  function renderSessionPanel() {
+    if (!state.currentSession) {
+      qs(SELECTORS.headerTitle) && (qs(SELECTORS.headerTitle).textContent = 'Немає активної сесії');
+      qs(SELECTORS.headerType) && (qs(SELECTORS.headerType).textContent = '—');
+      qs(SELECTORS.headerDuration) && (qs(SELECTORS.headerDuration).textContent = '— хв');
+      renderExercisesList([]);
+      return;
+    }
+    qs(SELECTORS.headerTitle) && (qs(SELECTORS.headerTitle).textContent = state.currentSession.title || 'Поточна сесія');
+    qs(SELECTORS.headerType) && (qs(SELECTORS.headerType).textContent = state.currentSession.type || '—');
+    const started = state.currentSession.started_at ? new Date(state.currentSession.started_at).getTime() : null;
+    const durationMs = started ? (Date.now() - started) : 0;
+    qs(SELECTORS.headerDuration) && (qs(SELECTORS.headerDuration).textContent = `${formatMinutes(durationMs)} хв`);
+    renderExercisesList(state.currentSession.data?.exercises || []);
+    renderSessionProgress();
+  }
+
+  let liveInterval = null;
+  function startLiveTimer() {
+    if (liveInterval) return;
+    liveInterval = setInterval(() => {
+      renderSessionPanel();
+    }, 5000);
+  }
+  function stopLiveTimer() {
+    if (!liveInterval) return;
+    clearInterval(liveInterval);
+    liveInterval = null;
+  }
+
+  function openModal(html) {
+    const overlay = qs(SELECTORS.modalOverlay);
+    const modal = qs(SELECTORS.modal);
+    if (!overlay || !modal) return;
     overlay.setAttribute('aria-hidden', 'false');
-    modal.innerHTML = `
-      <h3 style="margin:0 0 8px 0">Редагувати: ${ex.name}</h3>
-      <div style="display:flex; gap:8px; margin-top:8px;">
-        <div style="flex:1">
-          <label class="cmp-label">Підходи</label>
-          <input id="tr-edit-sets" class="cmp-input" type="number" min="1" value="${ex.sets}">
-        </div>
-        <div style="width:120px">
-          <label class="cmp-label">Повторення</label>
-          <input id="tr-edit-reps" class="cmp-input" type="number" min="1" value="${ex.reps}">
-        </div>
-      </div>
+    modal.innerHTML = html;
+    state.ui.modalOpen = true;
+  }
+  function closeModal() {
+    const overlay = qs(SELECTORS.modalOverlay);
+    const modal = qs(SELECTORS.modal);
+    if (!overlay || !modal) return;
+    overlay.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = '';
+    state.ui.modalOpen = false;
+  }
+
+  function openPlanQuickEditor() {
+    openModal(`
+      <h3 style="margin:0 0 8px 0">Редагувати план</h3>
+      <label class="cmp-label">Назва</label>
+      <input id="tr-modal-plan-name" class="cmp-input" value="${state.activePlan?.name || 'Мій план'}">
       <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
         <button class="tr-btn tr-btn--ghost" id="tr-modal-cancel">Скасувати</button>
         <button class="tr-btn tr-btn--primary" id="tr-modal-save">Зберегти</button>
       </div>
-    `;
-    qs('#tr-modal-cancel').addEventListener('click', closeModal);
-    qs('#tr-modal-save').addEventListener('click', () => {
-      const sets = Number(qs('#tr-edit-sets').value) || ex.sets;
-      const reps = Number(qs('#tr-edit-reps').value) || ex.reps;
-      state.today.exercises[idx].sets = sets;
-      state.today.exercises[idx].reps = reps;
-      renderExercises(state.today.exercises);
-      renderSummary(state.today.exercises);
-      closeModal();
-      openToast('Вправа оновлена', 'success');
-    });
-  }
-
-  function closeModal() {
-    const overlay = qs('#tr-modal-overlay');
-    overlay.setAttribute('aria-hidden', 'true');
-    qs('#tr-modal').innerHTML = '';
-  }
-
-  function openPlanModal() {
-    const overlay = qs('#tr-modal-overlay');
-    const modal = qs('#tr-modal');
-    overlay.setAttribute('aria-hidden', 'false');
-    modal.innerHTML = `
-      <h3 style="margin:0 0 8px 0">Редагувати план</h3>
-      <label class="cmp-label">Назва плану</label>
-      <input id="tr-modal-plan-name" class="cmp-input" value="${(state.plan && state.plan.name) || 'Мій план'}">
-      <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
-        <button class="tr-btn tr-btn--ghost" id="tr-modal-cancel">Скасувати</button>
-        <button class="tr-btn tr-btn--primary" id="tr-modal-save-plan">Зберегти</button>
-      </div>
-    `;
-    qs('#tr-modal-cancel').addEventListener('click', closeModal);
-    qs('#tr-modal-save-plan').addEventListener('click', async () => {
+    `);
+    qs('#tr-modal-cancel') && qs('#tr-modal-cancel').addEventListener('click', closeModal);
+    qs('#tr-modal-save') && qs('#tr-modal-save').addEventListener('click', async () => {
       const name = qs('#tr-modal-plan-name').value.trim() || 'Мій план';
-      await fetchJson(API.plans, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
+      try {
+        await API.post(ROUTES.plan(state.activePlan?.id || ''), { name });
+      } catch (e) {
+        console.warn('Save plan error', e);
+      }
       closeModal();
-      openToast('План збережено', 'success');
-      init();
+      await refreshPlans();
+      renderPlanPanel();
     });
   }
 
-  function openToast(text, type = 'success') {
-    const t = document.createElement('div');
-    t.className = `tr-toast ${type === 'warn' ? 'warn' : type === 'error' ? 'error' : 'success'}`;
-    t.textContent = text;
-    document.body.appendChild(t);
-    setTimeout(() => t.classList.add('show'), 20);
-    setTimeout(() => t.remove(), 3500);
-  }
-
-  function wireQuickBuilder() {
-    const muscle = qs('#tr-builder-muscle');
-    const location = qs('#tr-builder-location');
-    const exercise = qs('#tr-builder-exercise');
-    const form = qs('#tr-quick-builder');
-
-    muscle && muscle.addEventListener('change', async () => {
-      const m = muscle.value;
-      exercise.innerHTML = '<option>Завантаження...</option>';
-      const list = await fetchJson(`${API.exercises}?muscle=${encodeURIComponent(m)}`) || [];
-      state.exercisesBank = list;
-      exercise.innerHTML = '<option value="">Оберіть вправу</option>';
-      (list || []).forEach(ex => {
-        const opt = document.createElement('option');
-        opt.value = ex.id;
-        opt.textContent = ex.name;
-        exercise.appendChild(opt);
-      });
-    });
-
-    form && form.addEventListener('submit', (ev) => {
-      ev.preventDefault();
-      const exId = exercise.value;
-      const sets = Number(qs('#tr-builder-sets').value) || 3;
-      const reps = Number(qs('#tr-builder-reps').value) || 10;
-      const exObj = (state.exercisesBank || []).find(x => x.id === exId) || { id: exId, name: exercise.options[exercise.selectedIndex]?.text || 'Нова вправа', location: location.value };
-      state.today = state.today || { exercises: [] };
-      state.today.exercises = state.today.exercises || [];
-      state.today.exercises.push({ id: exObj.id || `tmp-${Date.now()}`, name: exObj.name, sets, reps, location: exObj.location || location.value });
-      renderExercises(state.today.exercises);
-      renderSummary(state.today.exercises);
-      openToast('Вправа додана в сесію', 'success');
-      form.reset();
+  function renderBalanceHints() {
+    const list = qs(SELECTORS.balanceList);
+    if (!list) return;
+    list.innerHTML = '';
+    const hints = state.activePlan?.meta?.balance_hints || ['Розподіли навантаження між великими групами', 'Зверни увагу на відновлення після важких днів'];
+    hints.forEach(h => {
+      const li = el('li', 'tr-balance-item');
+      li.textContent = h;
+      list.appendChild(li);
     });
   }
 
-  function wireTooltips() {
-    qsa('.tr-help').forEach(btn => {
-      const tip = btn.dataset.tooltip || '';
-      if (!tip) return;
-      const anchor = btn;
-      anchor.addEventListener('mouseenter', (e) => {
-        let tt = anchor._tt;
-        if (!tt) {
-          tt = document.createElement('div');
-          tt.className = 'tr-tooltip small';
-          tt.innerHTML = `<div class="tr-tooltip-body">${escapeHtml(tip)}</div>`;
-          document.body.appendChild(tt);
-          anchor._tt = tt;
-        }
-        positionTooltip(anchor, tt);
-        tt.classList.add('show');
-      });
-      anchor.addEventListener('mousemove', (ev) => {
-        const tt = anchor._tt;
-        if (tt) positionTooltip(anchor, tt, ev);
-      });
-      anchor.addEventListener('mouseleave', () => {
-        const tt = anchor._tt;
-        if (tt) tt.classList.remove('show');
-      });
+  function renderNextSessionPreview() {
+    qs(SELECTORS.nextTitle) && (qs(SELECTORS.nextTitle).textContent = state.activePlan?.meta?.next_session?.title || '—');
+    qs(SELECTORS.nextType) && (qs(SELECTORS.nextType).textContent = state.activePlan?.meta?.next_session?.type || '—');
+    qs(SELECTORS.nextMuscles) && (qs(SELECTORS.nextMuscles).textContent = (state.activePlan?.meta?.next_session?.muscles || []).join(', ') || '—');
+    qs(SELECTORS.nextDuration) && (qs(SELECTORS.nextDuration).textContent = state.activePlan?.meta?.next_session?.duration ? `${state.activePlan.meta.next_session.duration}` : '—');
+  }
+
+  async function refreshPlans() {
+    try {
+      const plans = await API.listPlans();
+      state.plans = plans || [];
+      state.activePlan = state.plans[0] || state.activePlan;
+    } catch (e) {
+      console.warn('Could not load plans', e);
+    }
+  }
+
+  async function loadInitialData() {
+    try {
+      const plans = await API.listPlans();
+      state.plans = plans || [];
+      state.activePlan = state.plans[0] || null;
+    } catch (e) {
+      state.plans = [];
+      state.activePlan = null;
+    }
+    try {
+      const exercises = await API.listExercises();
+      state.exercisesBank = exercises || [];
+    } catch (e) {
+      state.exercisesBank = [];
+    }
+    try {
+      const res = await fetch(ROUTES.today, { headers: { 'Content-Type': 'application/json' } });
+      if (res.ok) state.today = await res.json();
+    } catch (e) {
+      state.today = null;
+    }
+  }
+
+  function attachUI() {
+    const startBtn = qs(SELECTORS.startBtn);
+    const liveStart = qs(SELECTORS.liveStartBtn);
+    const openPlan = qs(SELECTORS.openPlanBtn);
+    const savePremium = qs(SELECTORS.savePremiumBtn);
+    const nextOpen = qs(SELECTORS.nextOpen);
+
+    if (startBtn) startBtn.addEventListener('click', startSessionFlow);
+    if (liveStart) liveStart.addEventListener('click', startSessionFlow);
+    if (openPlan) openPlan.addEventListener('click', () => {
+      if (state.activePlan) window.location.href = `/training/plans/${state.activePlan.id}`;
+      else alert('У вас немає активного плану');
     });
-  }
+    if (savePremium) savePremium.addEventListener('click', onSavePremium);
+    if (nextOpen) nextOpen.addEventListener('click', () => window.location.href = '/training/sessions/next');
 
-  function positionTooltip(anchor, tt, ev) {
-    const rect = anchor.getBoundingClientRect();
-    const left = rect.left + window.scrollX;
-    const top = rect.bottom + window.scrollY + 8;
-    tt.style.left = (left) + 'px';
-    tt.style.top = (top) + 'px';
-  }
+    const editPlanBtn = qs('#tr-edit-plan');
+    if (editPlanBtn) editPlanBtn.addEventListener('click', openPlanQuickEditor);
 
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
-  }
-
-  function wireModalOverlay() {
-    const overlay = qs('#tr-modal-overlay');
-    overlay && overlay.addEventListener('click', (e) => {
+    const overlay = qs(SELECTORS.modalOverlay);
+    if (overlay) overlay.addEventListener('click', (e) => {
       if (e.target === overlay) closeModal();
     });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        if (state.currentSession) scheduleSessionAutosave();
+      }
+      if (e.key === 'Escape' && state.ui.modalOpen) {
+        closeModal();
+      }
+    });
+
+    window.addEventListener('online', () => {
+      OfflineQueue.flush().catch(err => console.warn('Flush failed', err));
+    });
+  }
+
+  async function onSavePremium() {
+    const selected = qsa('.tr-muscle-btn.is-selected', qs(SELECTORS.premiumMuscles)).map(b => b.dataset.muscle);
+    try {
+      await API.post(ROUTES.preferences, { key: 'premium_muscles', value: JSON.stringify(selected) });
+      alert('Цільові м’язи збережено');
+    } catch (e) {
+      OfflineQueue.push({ type: 'post', path: ROUTES.preferences, payload: { key: 'premium_muscles', value: JSON.stringify(selected) } });
+      alert('Збереження в чергу (offline)');
+    }
   }
 
   async function init() {
-    wireHeaderButtons();
-    wireQuickBuilder();
-    wireTooltips();
-    wireModalOverlay();
-    const data = await loadFixturesIfNeeded();
-    renderSession(data);
-    renderPlanList(data.plan || []);
-    renderRadar('#tr-radar', data.muscles || {});
+    attachUI();
+    await loadInitialData();
+    const saved = loadLocalSession();
+    if (saved) state.currentSession = saved;
+    renderHeader(state.today);
+    renderRadar();
+    renderLegend();
+    renderPlanSelector();
+    renderQuickStats();
+    renderPlanPanel();
+    renderSessionPanel();
+    renderBalanceHints();
+    renderNextSessionPreview();
+    renderRecommendations();
+    OfflineQueue.flush().catch(() => {});
   }
 
-  window.NosiTraining = {
+  function renderPlanPanel() {
+    renderPlanSelector();
+    renderRadar();
+    renderLegend();
+    renderBalanceHints();
+  }
+
+  window.TrainingMain = {
+    state,
     init,
-    openPlanModal,
-    closeModal,
-    renderRadar: (sel, data) => renderRadar(sel, data)
+    refreshPlans,
+    renderRadar,
+    renderSessionPanel,
+    startSessionFlow,
+    OfflineQueue,
+    buildExercisesFromPlan
   };
-
-  function renderRadar(sel, muscles) {
-    if (window.NosiRadar && typeof window.NosiRadar.render === 'function') {
-      window.NosiRadar.render(sel, muscles);
-      return;
-    }
-    const el = (typeof sel === 'string') ? document.querySelector(sel) : sel;
-    if (!el) return;
-    el.innerHTML = '<div class="tr-visual-placeholder">Радарна діаграма (завантаження)</div>';
-  }
 
   document.addEventListener('DOMContentLoaded', init);
 })();
