@@ -20,6 +20,9 @@ endblock %} {% block styles %} {{ super() }}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/training/animations.css') }}"
 />
+<script src="{{ url_for('static', filename='js/training/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/training/training.js') }}"></script>
+
 {% endblock %} {% block body %}
 <div class="tr-shell">
   <header class="tr-header">
