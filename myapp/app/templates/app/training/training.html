@@ -20,17 +20,18 @@ endblock %} {% block styles %} {{ super() }}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/training/animations.css') }}"
 />
-<script src="{{ url_for('static', filename='js/training/api.js') }}"></script>
-<script src="{{ url_for('static', filename='js/training/training.js') }}"></script>
-
 {% endblock %} {% block body %}
-<div class="tr-shell">
-  <header class="tr-header">
+<div class="tr-shell" id="tr-shell">
+  <header
+    class="tr-header"
+    role="banner"
+    aria-label="Заголовок сторінки тренувань"
+  >
     <div class="tr-h-left">
       <h1 class="tr-title">Тренування</h1>
       <p class="tr-sub">
         Привіт, <strong>{{ user.username }}</strong> · сьогодні:
-        <span id="tr-day-type">—</span>
+        <span id="tr-day-type" aria-live="polite">—</span>
       </p>
       <p class="tr-sub-small">
         NosiFit підлаштовує план під твої цілі та інвентар.
@@ -38,25 +39,33 @@ endblock %} {% block styles %} {{ super() }}
     </div>
 
     <div class="tr-h-right">
-      <button
-        id="tr-start"
-        class="tr-btn tr-btn--primary"
-        aria-label="Почати сесію"
-      >
-        Почати сесію
-      </button>
-      <button
-        id="tr-edit-plan"
-        class="tr-btn tr-btn--ghost"
-        aria-label="Редагувати план"
-      >
-        Редагувати план
-      </button>
+      <div class="tr-h-actions">
+        <button
+          id="tr-start"
+          class="tr-btn tr-btn--primary"
+          type="button"
+          aria-label="Почати сесію"
+        >
+          Почати сесію
+        </button>
+        <button
+          id="tr-edit-plan"
+          class="tr-btn tr-btn--ghost"
+          type="button"
+          aria-label="Редагувати план"
+        >
+          Редагувати план
+        </button>
+      </div>
     </div>
   </header>
 
   <section class="tr-strip" role="region" aria-label="Швидка статистика">
-    <div class="cmp-card tr-strip-card">
+    <div
+      class="cmp-card tr-strip-card"
+      role="article"
+      aria-label="Тижневе навантаження"
+    >
       <div class="tr-strip-top">
         <span class="tr-strip-label">Тижневе навантаження</span>
         <button
@@ -71,7 +80,11 @@ endblock %} {% block styles %} {{ super() }}
       <div class="tr-strip-sub">Об’єм по всіх м’язах</div>
     </div>
 
-    <div class="cmp-card tr-strip-card">
+    <div
+      class="cmp-card tr-strip-card"
+      role="article"
+      aria-label="Фокус сьогодні"
+    >
       <div class="tr-strip-top">
         <span class="tr-strip-label">Фокус сьогодні</span>
         <button
@@ -86,7 +99,11 @@ endblock %} {% block styles %} {{ super() }}
       <div class="tr-strip-sub">Головні групи</div>
     </div>
 
-    <div class="cmp-card tr-strip-card">
+    <div
+      class="cmp-card tr-strip-card"
+      role="article"
+      aria-label="Сесій цього тижня"
+    >
       <div class="tr-strip-top">
         <span class="tr-strip-label">Сесій цього тижня</span>
         <button
@@ -101,7 +118,11 @@ endblock %} {% block styles %} {{ super() }}
       <div class="tr-strip-sub">План · Факт</div>
     </div>
 
-    <div class="cmp-card tr-strip-card">
+    <div
+      class="cmp-card tr-strip-card"
+      role="article"
+      aria-label="Рівень втоми"
+    >
       <div class="tr-strip-top">
         <span class="tr-strip-label">Рівень втоми</span>
         <button
@@ -166,7 +187,11 @@ endblock %} {% block styles %} {{ super() }}
             aria-label="Вибір цільових м'язів"
           ></div>
           <div class="tr-premium-actions">
-            <button id="tr-save-premium-muscles" class="tr-btn tr-btn--ghost">
+            <button
+              id="tr-save-premium-muscles"
+              class="tr-btn tr-btn--ghost"
+              type="button"
+            >
               Зберегти
             </button>
           </div>
@@ -206,15 +231,67 @@ endblock %} {% block styles %} {{ super() }}
           </div>
         </div>
 
-        <ul id="tr-exercises" class="tr-exercise-list" aria-live="polite"></ul>
+        <div class="tr-session-body">
+          <div class="tr-session-controls">
+            <div class="tr-session-timers">
+              <div class="tr-timer">
+                <span class="tr-timer-label">Загальний час</span>
+                <span id="tr-live-total" class="tr-timer-value">00:00</span>
+              </div>
+              <div class="tr-rest">
+                <span class="tr-timer-label">Таймер відпочинку</span>
+                <span id="tr-rest-timer" class="tr-timer-value">00:00</span>
+              </div>
+            </div>
 
-        <div class="tr-actions">
-          <button id="tr-live-start" class="tr-btn tr-btn--primary">
-            Розпочати зараз
-          </button>
-          <button id="tr-open-plan" class="tr-btn tr-btn--ghost">
-            Відкрити план
-          </button>
+            <div class="tr-session-actions">
+              <button
+                id="tr-live-start"
+                class="tr-btn tr-btn--primary"
+                type="button"
+              >
+                Розпочати зараз
+              </button>
+              <button
+                id="tr-open-plan"
+                class="tr-btn tr-btn--ghost"
+                type="button"
+              >
+                Відкрити план
+              </button>
+            </div>
+          </div>
+
+          <div class="cmp-card tr-card tr-card-inner">
+            <div class="tr-card-head">
+              <h4 class="cmp-card-title">Список вправ</h4>
+              <p class="cmp-card-sub">Натисни «Готово» після підходу</p>
+            </div>
+
+            <ul
+              id="tr-exercises"
+              class="tr-exercise-list"
+              role="list"
+              aria-live="polite"
+            ></ul>
+
+            <div class="tr-actions">
+              <button
+                id="tr-save-progress"
+                class="tr-btn tr-btn--ghost"
+                type="button"
+              >
+                Зберегти прогрес
+              </button>
+              <button
+                id="tr-live-end"
+                class="tr-btn tr-btn--primary"
+                type="button"
+              >
+                Завершити сесію
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -238,7 +315,9 @@ endblock %} {% block styles %} {{ super() }}
               <span id="tr-next-duration">— хв</span>
             </div>
           </div>
-          <button id="tr-next-open" class="tr-btn tr-btn--ghost">Деталі</button>
+          <button id="tr-next-open" class="tr-btn tr-btn--ghost" type="button">
+            Деталі
+          </button>
         </div>
       </div>
 
@@ -265,108 +344,174 @@ endblock %} {% block styles %} {{ super() }}
           </button>
         </div>
 
-        <div id="tr-plan-week" class="tr-plan-week" role="list"></div>
+        <div class="tr-plan-body">
+          <div class="tr-plan-list" id="tr-plan-list" role="list"></div>
 
-        <div class="tr-plan-footer">
-          <button id="tr-new-plan" class="tr-btn tr-btn--ghost">
-            Новий план
-          </button>
-          <button id="tr-duplicate-plan" class="tr-btn tr-btn--ghost">
-            Дублювати
-          </button>
-        </div>
-      </div>
-
-      <div class="cmp-card tr-card tr-card-mini">
-        <div class="tr-card-head">
-          <h3 class="cmp-card-title">Швидкий конструктор</h3>
-          <p class="cmp-card-sub">Додати вправу в сесію</p>
-        </div>
-
-        <form id="tr-quick-builder" class="tr-builder" autocomplete="off">
-          <label class="cmp-label"
-            >М’язова група
-            <button
-              class="tr-help"
-              data-tooltip="Фільтр вправ по м’язах"
-              aria-label="Пояснення: М’язова група"
-            >
-              ?
-            </button></label
+          <div
+            class="tr-quick-builder cmp-card tr-card-mini"
+            aria-labelledby="quick-builder-title"
           >
-          <select id="tr-builder-muscle" class="cmp-select" required>
-            <option value="">Оберіть...</option>
-            <option value="chest">Груди</option>
-            <option value="back">Спина</option>
-            <option value="legs">Ноги</option>
-            <option value="shoulders">Плечі</option>
-            <option value="arms">Руки</option>
-            <option value="core">Кор</option>
-          </select>
-
-          <label class="cmp-label">Локація</label>
-          <select id="tr-builder-location" class="cmp-select">
-            <option value="any">Будь-де</option>
-            <option value="gym">Зал</option>
-            <option value="home">Дім</option>
-          </select>
-
-          <label class="cmp-label">Вправа</label>
-          <select id="tr-builder-exercise" class="cmp-select" required>
-            <option value="">Спочатку оберіть м’яз</option>
-          </select>
-
-          <div class="tr-builder-row-inline">
-            <div>
+            <h4 id="quick-builder-title" class="cmp-card-title">
+              Швидкий конструктор
+            </h4>
+            <div class="tr-builder-row">
+              <label class="cmp-label">М’язова група</label>
+              <select
+                id="tr-builder-muscle"
+                class="cmp-select"
+                aria-label="Вибір м'язової групи"
+              >
+                <option value="">Оберіть м'яз</option>
+              </select>
+            </div>
+            <div class="tr-builder-row">
+              <label class="cmp-label">Локація</label>
+              <select
+                id="tr-builder-location"
+                class="cmp-select"
+                aria-label="Вибір локації"
+              >
+                <option value="зал">Зал</option>
+                <option value="дім">Дім</option>
+                <option value="змішано">Змішано</option>
+              </select>
+            </div>
+            <div class="tr-builder-row">
+              <label class="cmp-label">Вправа</label>
+              <select
+                id="tr-builder-exercise"
+                class="cmp-select"
+                aria-label="Вибір вправи"
+              >
+                <option value="">Оберіть вправу</option>
+              </select>
+            </div>
+            <div class="tr-builder-row tr-builder-sets">
               <label class="cmp-label">Підходи</label>
               <input
                 id="tr-builder-sets"
+                class="cmp-input"
                 type="number"
                 min="1"
-                max="10"
                 value="3"
-                class="cmp-input"
+                aria-label="Кількість підходів"
               />
-            </div>
-            <div>
               <label class="cmp-label">Повторення</label>
               <input
                 id="tr-builder-reps"
+                class="cmp-input"
                 type="number"
                 min="1"
-                max="50"
                 value="10"
-                class="cmp-input"
+                aria-label="Кількість повторень"
               />
             </div>
+            <div class="tr-builder-actions">
+              <button
+                id="tr-builder-add"
+                class="tr-btn tr-btn--primary"
+                type="button"
+              >
+                Додати в сесію
+              </button>
+            </div>
           </div>
-
-          <button type="submit" class="tr-btn tr-btn--primary">
-            Додати в сесію
-          </button>
-        </form>
+        </div>
       </div>
 
       <div class="cmp-card tr-card tr-card-mini">
         <h3 class="cmp-card-title">Сьогоднішній підсумок</h3>
-        <ul class="tr-summary-list">
-          <li>Кількість вправ: <strong id="tr-summary-ex-count">—</strong></li>
-          <li>Орієнтовний об’єм: <strong id="tr-summary-volume">—</strong></li>
-          <li>
-            Основні м’язи: <strong id="tr-summary-main-muscles">—</strong>
-          </li>
-        </ul>
+        <div class="tr-summary">
+          <div class="tr-summary-row">
+            <span>Вправи</span><strong id="tr-overview-ex-count">—</strong>
+          </div>
+          <div class="tr-summary-row">
+            <span>Об’єм</span><strong id="tr-overview-volume">—</strong>
+          </div>
+          <div class="tr-summary-row">
+            <span>Головні м’язи</span
+            ><strong id="tr-overview-main-muscles">—</strong>
+          </div>
+        </div>
       </div>
     </aside>
   </section>
+
+  <div id="tr-modal-overlay" class="tr-modal-overlay" aria-hidden="true">
+    <div
+      id="tr-modal"
+      class="tr-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tr-modal-title"
+    ></div>
+  </div>
+
+  <template id="tpl-exercise-row">
+    <li class="tr-exercise-row" role="listitem" data-exercise-id="">
+      <div class="tr-ex-left">
+        <strong class="tr-ex-name"></strong>
+        <div class="tr-ex-meta"></div>
+      </div>
+      <div class="tr-ex-right"></div>
+    </li>
+  </template>
+
+  <template id="tpl-set-row">
+    <div class="tr-set-row">
+      <div class="tr-set-index"></div>
+      <div class="tr-set-inputs">
+        <input
+          class="cmp-input tr-set-weight"
+          type="number"
+          placeholder="кг"
+          step="0.5"
+          aria-label="Вага підходу"
+        />
+        <input
+          class="cmp-input tr-set-reps"
+          type="number"
+          placeholder="повт."
+          aria-label="Повторення підходу"
+        />
+      </div>
+      <div class="tr-set-controls">
+        <button class="tr-btn tr-set-done tr-btn--ghost" type="button">
+          Готово
+        </button>
+      </div>
+    </div>
+  </template>
+
+  <div id="tr-toast-container" aria-live="polite" aria-atomic="true"></div>
 </div>
 
-<div id="tr-modal-overlay" class="cmp-modal-overlay" aria-hidden="true">
-  <div class="cmp-modal" id="tr-modal" role="dialog" aria-modal="true"></div>
-</div>
-
+<script src="{{ url_for('static', filename='js/training/api.js') }}"></script>
 <script src="{{ url_for('static', filename='js/training/radar.js') }}"></script>
-<script src="{{ url_for('static', filename='js/training/plan.js') }}"></script>
 <script src="{{ url_for('static', filename='js/training/session.js') }}"></script>
+<script src="{{ url_for('static', filename='js/training/plan.js') }}"></script>
+<script src="{{ url_for('static', filename='js/training/training.js') }}"></script>
 <script src="{{ url_for('static', filename='js/training/main.js') }}"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.TrainingMain && typeof window.TrainingMain.init === "function") {
+      window.TrainingMain.init();
+    }
+    if (window.NosiRadar) {
+      const initialMuscles = window.__INITIAL_RADAR_MUSCLES__ || {};
+      NosiRadar.render("#tr-radar", initialMuscles, { duration: 700 });
+    }
+    // Populate builder selects if helper exists
+    if (
+      window.TrainingUtils &&
+      typeof window.TrainingUtils.loadExercisesForBuilder === "function"
+    ) {
+      window.TrainingUtils.loadExercisesForBuilder(
+        "#tr-builder-exercise",
+        "#tr-builder-muscle",
+      );
+    }
+  });
+</script>
 {% endblock %}
