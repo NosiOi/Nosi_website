@@ -1,16 +1,43 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from flask_login import login_required, current_user
 from myapp.app.services.training_engine_service import TrainingEngineService
 
 training_api = Blueprint("training_api", __name__, url_prefix="/api/training")
 
-
 @training_api.get("/plan")
 @login_required
 def get_plan():
     week = int(request.args.get("week", 1))
-    plan = TrainingEngineService.generate_plan(current_user, week)
-    return jsonify(plan.to_dict())
+    try:
+        plan = TrainingEngineService.generate_plan(current_user, week)
+        return jsonify(plan.to_dict())
+    except Exception as e:
+        current_app.logger.exception("Error generating training plan")
+        return jsonify({"error": "failed to generate plan", "message": str(e)}), 500
+
+@training_api.get("/plan_mock")
+def get_plan_mock():
+    sample = {
+        "id": "mock-1",
+        "name": "Тестовий план",
+        "type": "adaptive",
+        "duration": 45,
+        "meta": {
+            "days": [
+                {
+                    "day_name": "day1",
+                    "exercises": [
+                        {"exercise_id": "ex-fixt-1", "name": "Жим лежачи", "sets": [{"target": 80}], "reps": "8-10"},
+                        {"exercise_id": "ex-fixt-2", "name": "Підтягування", "sets": [{"target": 0}], "reps": "6-8"}
+                    ]
+                }
+            ],
+            "radar": {"Chest": 0.8, "Back": 0.6, "Legs": 0.7},
+            "balance_hints": ["Фокус на великих групах", "Додати 1 день відновлення"]
+        }
+    }
+    return jsonify(sample)
+
 
 
 @training_api.get("/analytics")
