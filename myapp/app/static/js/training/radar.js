@@ -2,89 +2,123 @@
   const I18N = {
     tooltip: (label, v) => `${label}: ${Math.round((v || 0) * 100)}%`,
     ariaLabel: 'Радарна діаграма навантаження',
-    legendToggleOn: 'Включено',
-    legendToggleOff: 'Вимкнено'
+    empty: 'Немає даних'
   };
 
-  function debounce(fn, ms = 150) {
-    let t;
-    return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
-  }
+  function qs(sel, root = document) { return (root || document).querySelector(sel); }
+  function qsa(sel, root = document) { return Array.from((root || document).querySelectorAll(sel)); }
 
   function createSVG(ns, tag, attrs = {}) {
     const el = document.createElementNS(ns, tag);
     for (const k in attrs) {
-      el.setAttribute(k, attrs[k]);
+      if (attrs[k] !== null && attrs[k] !== undefined) el.setAttribute(k, String(attrs[k]));
     }
     return el;
   }
 
   function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
-  function render(target, muscles = {}, opts = {}) {
-    const container = typeof target === 'string' ? document.querySelector(target) : target;
+  function clamp(v, a = 0, b = 1) { return Math.max(a, Math.min(b, v)); }
+
+  function normalizeMuscles(muscles) {
+    if (!muscles || typeof muscles !== 'object') return {};
+    const out = {};
+    Object.keys(muscles).forEach(k => {
+      const v = Number(muscles[k]);
+      out[k] = Number.isFinite(v) ? clamp(v, 0, 1) : 0;
+    });
+    return out;
+  }
+
+  function buildPoints(values, cx, cy, r, angleStep, n, scale = 1) {
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const v = values[i] || 0;
+      const angle = -Math.PI / 2 + i * angleStep;
+      const rr = r * v * scale;
+      const x = cx + Math.cos(angle) * rr;
+      const y = cy + Math.sin(angle) * rr;
+      pts.push({ x, y, v, angle });
+    }
+    return pts;
+  }
+
+  function clearChildren(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function render(selectorOrEl, muscles = {}, opts = {}) {
+    const container = (typeof selectorOrEl === 'string') ? document.querySelector(selectorOrEl) : selectorOrEl;
     if (!container) return;
-    const labels = Object.keys(muscles || {});
-    const values = labels.map(l => Math.max(0, Math.min(1, muscles[l] || 0)));
-    const size = Math.min(container.clientWidth || 320, opts.maxSize || 520);
+    const data = normalizeMuscles(muscles);
+    const labels = Object.keys(data);
+    const values = labels.map(l => data[l]);
     const svgNS = 'http://www.w3.org/2000/svg';
-    container.innerHTML = '';
+    clearChildren(container);
+
+    const size = Math.min(Math.max(container.clientWidth || 320, 220), opts.maxSize || 520);
     const svg = createSVG(svgNS, 'svg', { width: size, height: size, viewBox: `0 0 ${size} ${size}`, role: 'img', 'aria-label': opts.ariaLabel || I18N.ariaLabel });
-    const cx = size / 2, cy = size / 2, r = size * 0.36;
+    svg.style.display = 'block';
+    const cx = size / 2, cy = size / 2, r = Math.floor(size * 0.36);
 
     const defs = createSVG(svgNS, 'defs');
-    const grad = createSVG(svgNS, 'linearGradient', { id: 'radarGrad', x1: '0%', x2: '100%' });
+    const grad = createSVG(svgNS, 'linearGradient', { id: `radarGrad-${Date.now()}`, x1: '0%', x2: '100%' });
     const stop1 = createSVG(svgNS, 'stop', { offset: '0%', 'stop-color': 'rgba(255,255,255,0.04)' });
     const stop2 = createSVG(svgNS, 'stop', { offset: '100%', 'stop-color': 'rgba(255,255,255,0.02)' });
-    grad.appendChild(stop1); grad.appendChild(stop2); defs.appendChild(grad); svg.appendChild(defs);
+    grad.appendChild(stop1);
+    grad.appendChild(stop2);
+    defs.appendChild(grad);
+    svg.appendChild(defs);
 
+    const gridGroup = createSVG(svgNS, 'g', { class: 'tr-radar-grid-group' });
     for (let i = 4; i >= 1; i--) {
-      const c = createSVG(svgNS, 'circle', { cx, cy, r: (r / 4) * i });
-      c.classList.add('tr-radar-grid');
-      c.setAttribute('fill', 'none');
-      c.setAttribute('stroke', 'rgba(255,255,255,0.03)');
-      c.setAttribute('stroke-width', '1');
-      svg.appendChild(c);
+      const ring = createSVG(svgNS, 'circle', { cx, cy, r: (r / 4) * i, class: 'tr-radar-grid grid-ring' });
+      ring.setAttribute('fill', 'none');
+      ring.setAttribute('stroke', 'rgba(255,255,255,0.03)');
+      ring.setAttribute('stroke-width', '1');
+      gridGroup.appendChild(ring);
     }
+    svg.appendChild(gridGroup);
 
     const n = Math.max(labels.length, 6);
     const angleStep = (Math.PI * 2) / n;
 
+    const axesGroup = createSVG(svgNS, 'g', { class: 'tr-radar-axes' });
     for (let i = 0; i < n; i++) {
       const angle = -Math.PI / 2 + i * angleStep;
       const x = cx + Math.cos(angle) * r;
       const y = cy + Math.sin(angle) * r;
-      const line = createSVG(svgNS, 'line', { x1: cx, y1: cy, x2: x, y2: y });
-      line.setAttribute('stroke', 'rgba(255,255,255,0.04)');
+      const line = createSVG(svgNS, 'line', { x1: cx, y1: cy, x2: x, y2: y, class: 'axis-line' });
+      line.setAttribute('stroke', 'rgba(255,255,255,0.03)');
       line.setAttribute('stroke-width', '1');
-      svg.appendChild(line);
+      axesGroup.appendChild(line);
 
       const lx = cx + Math.cos(angle) * (r + 18);
       const ly = cy + Math.sin(angle) * (r + 18);
-      const label = createSVG(svgNS, 'text', { x: lx, y: ly, 'text-anchor': 'middle', 'dominant-baseline': 'middle' });
-      label.classList.add('tr-radar-label');
+      const label = createSVG(svgNS, 'text', { x: lx, y: ly, 'text-anchor': Math.abs(Math.cos(angle)) > 0.1 ? (Math.cos(angle) > 0 ? 'start' : 'end') : 'middle', 'dominant-baseline': 'middle', class: 'label-text' });
       label.textContent = labels[i] || '';
-      svg.appendChild(label);
+      axesGroup.appendChild(label);
     }
+    svg.appendChild(axesGroup);
 
-    const poly = createSVG(svgNS, 'polygon');
-    poly.classList.add('tr-radar-polygon');
-    poly.setAttribute('fill', opts.fill || 'url(#radarGrad)');
+    const poly = createSVG(svgNS, 'polygon', { class: 'tr-radar-polygon' });
+    poly.setAttribute('fill', opts.fill || `url(#${grad.id})`);
     poly.setAttribute('stroke', opts.stroke || 'rgba(255,255,255,0.12)');
     poly.setAttribute('stroke-width', '2');
     poly.setAttribute('opacity', '0.98');
     svg.appendChild(poly);
 
-    const points = [];
+    const pointsGroup = createSVG(svgNS, 'g', { class: 'tr-radar-points' });
     const pointEls = [];
     for (let i = 0; i < n; i++) {
-      const p = createSVG(svgNS, 'circle', { r: Math.max(6, size * 0.02) });
-      p.classList.add('tr-radar-point');
+      const p = createSVG(svgNS, 'circle', { r: Math.max(6, Math.round(size * 0.02)), class: 'tr-radar-point' });
       p.setAttribute('fill', 'transparent');
       p.style.cursor = 'pointer';
-      svg.appendChild(p);
+      p.setAttribute('data-index', i);
+      pointsGroup.appendChild(p);
       pointEls.push(p);
     }
+    svg.appendChild(pointsGroup);
 
     container.appendChild(svg);
 
@@ -92,47 +126,51 @@
     if (legend) {
       legend.innerHTML = '';
       labels.forEach((lab, i) => {
-        const item = document.createElement('div');
-        item.className = 'tr-legend-item';
-        item.dataset.index = i;
-        item.dataset.active = 'true';
-        const sw = document.createElement('span');
-        sw.className = `tr-legend-swatch ${i % 3 === 0 ? 'yellow' : i % 3 === 1 ? 'purple' : 'teal'}`;
-        const lbl = document.createElement('span');
-        lbl.className = 'tr-legend-label';
-        lbl.textContent = lab;
-        item.appendChild(sw);
-        item.appendChild(lbl);
-        item.addEventListener('click', () => {
-          const active = item.dataset.active === 'true';
-          item.dataset.active = active ? 'false' : 'true';
-          item.classList.toggle('is-muted', active);
+        const el = document.createElement('div');
+        el.className = 'tr-legend-item';
+        el.dataset.index = i;
+        el.dataset.active = 'true';
+        el.innerHTML = `<span class="tr-legend-swatch ${i%3===0?'yellow':i%3===1?'purple':'teal'}"></span><span class="tr-legend-label">${lab}</span>`;
+        el.addEventListener('click', () => {
+          const active = el.dataset.active === 'true';
+          el.dataset.active = active ? 'false' : 'true';
+          el.classList.toggle('is-muted', active);
           const p = pointEls[i];
-          if (p) p.style.opacity = active ? '0.12' : '1';
-          const svgLabel = svg.querySelectorAll('.tr-radar-label')[i];
+          if (p) p.style.opacity = active ? '0.18' : '1';
+          const svgLabel = svg.querySelectorAll('.label-text')[i];
           if (svgLabel) svgLabel.style.opacity = active ? '0.35' : '1';
         });
-        legend.appendChild(item);
+        legend.appendChild(el);
       });
     }
 
     const startVals = new Array(n).fill(0);
-    const targetVals = values.slice();
-    const duration = opts.duration || 600;
+    const targetVals = new Array(n).fill(0);
+    for (let i = 0; i < n; i++) targetVals[i] = values[i] || 0;
+
+    const duration = opts.duration || 700;
     const t0 = performance.now();
 
     function animate(now) {
       const t = Math.min(1, (now - t0) / duration);
       const e = easeOutCubic(t);
       const pts = [];
+      const ptsObj = buildPoints(targetVals.map(v => startVals[0] + (v - startVals[0]) * e), cx, cy, r, angleStep, n, 1);
       for (let i = 0; i < n; i++) {
         const v = startVals[i] + (targetVals[i] - startVals[i]) * e;
         const angle = -Math.PI / 2 + i * angleStep;
-        const x = cx + Math.cos(angle) * r * v;
-        const y = cy + Math.sin(angle) * r * v;
+        const rr = r * v;
+        const x = cx + Math.cos(angle) * rr;
+        const y = cy + Math.sin(angle) * rr;
         pts.push(`${x},${y}`);
         const pEl = pointEls[i];
-        if (pEl) { pEl.setAttribute('cx', x); pEl.setAttribute('cy', y); }
+        if (pEl) {
+          pEl.setAttribute('cx', x);
+          pEl.setAttribute('cy', y);
+          pEl.setAttribute('r', Math.max(6, Math.round(size * 0.02) * (1 + 0.25 * v)));
+          pEl.setAttribute('fill', (labels[i] ? (i % 3 === 0 ? 'var(--nf-yellow)' : i % 3 === 1 ? 'var(--nf-purple)' : 'var(--nf-teal)') : 'var(--nf-yellow)'));
+          pEl.style.opacity = labels[i] ? '1' : '0.6';
+        }
       }
       poly.setAttribute('points', pts.join(' '));
       if (t < 1) requestAnimationFrame(animate);
@@ -169,13 +207,21 @@
     for (let i = 0; i < pointEls.length; i++) {
       ((lab, idx) => {
         const el = pointEls[idx];
-        el.addEventListener('mouseenter', ev => showTooltip(ev, I18N.tooltip(lab || '', values[idx] || 0)));
+        el.addEventListener('mouseenter', ev => {
+          const val = targetVals[idx] || 0;
+          const label = labels[idx] || I18N.empty;
+          showTooltip(ev, I18N.tooltip(label, val));
+        });
         el.addEventListener('mousemove', ev => moveTooltip(ev));
         el.addEventListener('mouseleave', hideTooltip);
-        el.addEventListener('focus', ev => showTooltip(ev, I18N.tooltip(lab || '', values[idx] || 0)));
+        el.addEventListener('focus', ev => {
+          const val = targetVals[idx] || 0;
+          const label = labels[idx] || I18N.empty;
+          showTooltip(ev, I18N.tooltip(label, val));
+        });
         el.addEventListener('blur', hideTooltip);
         el.setAttribute('tabindex', '0');
-        el.setAttribute('aria-label', `${lab} ${Math.round((values[idx] || 0) * 100)}%`);
+        el.setAttribute('aria-label', `${lab || I18N.empty} ${Math.round((targetVals[idx] || 0) * 100)}%`);
       })(labels[i] || '', i);
     }
 
@@ -185,6 +231,11 @@
     }
 
     container._lastRadar = { labels, values, size };
+  }
+
+  function debounce(fn, ms = 150) {
+    let t;
+    return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
   }
 
   window.NosiRadar = { render };

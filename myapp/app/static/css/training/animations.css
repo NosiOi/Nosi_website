@@ -5,11 +5,81 @@
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(6px);
+        transform: translateY(8px);
     }
 
     to {
         opacity: 1;
         transform: none;
     }
+}
+
+.btn-press {
+    transition: transform var(--trans-fast) ease;
+}
+
+.btn-press:active {
+    transform: translateY(2px) scale(0.996);
+}
+
+@keyframes radarPulse {
+    0% {
+        opacity: 0.9;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.98;
+        transform: scale(1.02);
+    }
+
+    100% {
+        opacity: 0.9;
+        transform: scale(1);
+    }
+}
+
+.tr-radar-polygon {
+    animation: radarPulse 6s ease-in-out infinite;
+}
+
+.tr-radar-tooltip {
+    transition: opacity var(--trans-fast) ease, transform var(--trans-fast) ease;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(6px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+.float-up {
+    animation: floatUp var(--trans-med) ease both;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.96);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.02);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.pop-in {
+    animation: popIn var(--trans-fast) ease both;
 }

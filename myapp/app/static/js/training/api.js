@@ -1,5 +1,6 @@
 const API = (function () {
-  const BASE = '/api/training';
+  let DETECTED_BASE = null;
+  const CANDIDATE_BASES = ['/api/training', '/api', '/api/v1', ''];
   const DEFAULT_TIMEOUT = 10000;
 
   function headers() {
@@ -50,46 +51,90 @@ const API = (function () {
     throw lastErr;
   }
 
+  async function detectBase() {
+    if (DETECTED_BASE !== null) return DETECTED_BASE;
+    for (const base of CANDIDATE_BASES) {
+      try {
+        const url = (base ? `${base}/plans` : '/plans');
+        const res = await fetch(url, { method: 'OPTIONS', headers: headers() }).catch(() => null);
+        if (res && (res.ok || res.status === 405 || res.status === 200 || res.status === 204)) {
+          DETECTED_BASE = base;
+          return DETECTED_BASE;
+        }
+      } catch (e) {}
+    }
+    DETECTED_BASE = '/api'; 
+    return DETECTED_BASE;
+  }
+
+  async function buildUrl(path) {
+    const base = await detectBase();
+    if (!path) return base || '';
+    if (path.startsWith('/')) return (base ? base + path : path);
+    return (base ? base + '/' + path : '/' + path);
+  }
+
   return {
     listPlans() {
-      return retry(() => timeoutFetch(`${BASE}/plans`, { headers: headers() }).then(handleResponse));
+      return retry(async () => {
+        const url = await buildUrl('/plans');
+        return timeoutFetch(url, { headers: headers() }).then(handleResponse);
+      });
     },
     getPlan(id) {
-      return retry(() => timeoutFetch(`${BASE}/plans/${encodeURIComponent(id)}`, { headers: headers() }).then(handleResponse));
+      return retry(async () => {
+        const url = await buildUrl(`/plans/${encodeURIComponent(id)}`);
+        return timeoutFetch(url, { headers: headers() }).then(handleResponse);
+      });
     },
     createSession(payload) {
-      return retry(() => timeoutFetch(`${BASE}/sessions`, {
-        method: 'POST',
-        headers: headers(),
-        body: JSON.stringify(payload)
-      }).then(handleResponse));
+      return retry(async () => {
+        const url = await buildUrl('/sessions');
+        return timeoutFetch(url, {
+          method: 'POST',
+          headers: headers(),
+          body: JSON.stringify(payload)
+        }).then(handleResponse);
+      });
     },
     getSession(id) {
-      return retry(() => timeoutFetch(`${BASE}/sessions/${encodeURIComponent(id)}`, { headers: headers() }).then(handleResponse));
+      return retry(async () => {
+        const url = await buildUrl(`/sessions/${encodeURIComponent(id)}`);
+        return timeoutFetch(url, { headers: headers() }).then(handleResponse);
+      });
     },
     patchSession(id, payload) {
-      return retry(() => timeoutFetch(`${BASE}/sessions/${encodeURIComponent(id)}`, {
-        method: 'PATCH',
-        headers: headers(),
-        body: JSON.stringify(payload)
-      }).then(handleResponse));
+      return retry(async () => {
+        const url = await buildUrl(`/sessions/${encodeURIComponent(id)}`);
+        return timeoutFetch(url, {
+          method: 'PATCH',
+          headers: headers(),
+          body: JSON.stringify(payload)
+        }).then(handleResponse);
+      });
     },
     listExercises() {
-      return retry(() => timeoutFetch('/api/exercises', { headers: headers() }).then(handleResponse));
+      return retry(async () => {
+        const url = await buildUrl('/exercises');
+        return timeoutFetch(url, { headers: headers() }).then(handleResponse);
+      });
     },
     post(path, payload) {
-      return retry(() => timeoutFetch(path, {
-        method: 'POST',
-        headers: headers(),
-        body: JSON.stringify(payload)
-      }).then(handleResponse));
+      return retry(async () => {
+        const url = path.startsWith('/') ? path : await buildUrl(path);
+        return timeoutFetch(url, {
+          method: 'POST',
+          headers: headers(),
+          body: JSON.stringify(payload)
+        }).then(handleResponse);
+      });
     },
-    //safe call that returns null on error
     safe(fn) {
       return fn().catch(err => {
         console.warn('API safe error', err);
         return null;
       });
-    }
+    },
+    detectBase
   };
 })();
