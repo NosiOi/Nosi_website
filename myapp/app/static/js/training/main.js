@@ -2,9 +2,9 @@
   'use strict';
 
   const state = {
-    todayRaw: null,          // payload from /api/training/today
+    todayRaw: null,
     exercisesBank: [],
-    currentSession: null,    // normalized session object for UI
+    currentSession: null,
     ui: { modalOpen: false }
   };
 
@@ -152,6 +152,106 @@
     };
   }
 
+  function normalizeSessionFromBackend(s) {
+    if (!s) return null;
+    let dataObj = {};
+    try { dataObj = s.data ? JSON.parse(s.data) : {}; } catch (e) { dataObj = {}; }
+    return {
+      id: s.id,
+      title: s.title || 'Сесія',
+      plan_id: s.plan_id || null,
+      started_at: s.started_at || null,
+      finished_at: s.finished_at || null,
+      data: dataObj,
+      exercises: dataObj.exercises || []
+    };
+  }
+
+  async function onStartSessionFromPlan(planId) {
+    try {
+      openToast('Створюю сесію...', 'info');
+      const session = await API.startSessionFromPlan(planId);
+      state.currentSession = normalizeSessionFromBackend(session);
+      renderAll();
+      openToast('Сесія створена', 'success');
+    } catch (err) {
+      console.error(err);
+      openToast('Не вдалося створити сесію', 'error');
+    }
+  }
+
+  async function onCreateSessionNow(title = 'Нова сесія') {
+    try {
+      const payload = { title, data: JSON.stringify({ exercises: [] }) };
+      const session = await API.createSession(payload);
+      state.currentSession = normalizeSessionFromBackend(session);
+      renderAll();
+      openToast('Сесія запущена', 'success');
+    } catch (err) {
+      console.error(err);
+      openToast('Не вдалося запустити сесію', 'error');
+    }
+  }
+
+  async function onAddExerciseToSession(exerciseId, sets = 3, reps = '8') {
+    if (!state.currentSession || !state.currentSession.id) {
+      openToast('Спочатку створіть або виберіть сесію', 'warn');
+      return;
+    }
+    try {
+      const payload = { exercise_id: exerciseId, sets, reps };
+      const res = await API.addExerciseToSession(state.currentSession.id, payload);
+      state.currentSession = normalizeSessionFromBackend(res);
+      renderAll();
+      openToast('Вправа додана до сесії', 'success');
+    } catch (err) {
+      console.error(err);
+      openToast('Не вдалося додати вправу', 'error');
+    }
+  }
+
+  async function onSaveSessionProgress() {
+    if (!state.currentSession || !state.currentSession.id) {
+      openToast('Немає активної сесії для збереження', 'warn');
+      return;
+    }
+    try {
+      const payload = { data: JSON.stringify(state.currentSession.data || {}) };
+      const res = await API.updateSessionData(state.currentSession.id, payload);
+      state.currentSession = normalizeSessionFromBackend(res);
+      openToast('Прогрес збережено', 'success');
+    } catch (err) {
+      console.error(err);
+      openToast('Не вдалося зберегти прогрес', 'error');
+    }
+  }
+
+  async function onFinishSession() {
+    if (!state.currentSession || !state.currentSession.id) {
+      openToast('Немає активної сесії', 'warn');
+      return;
+    }
+    try {
+      const res = await API.finishSession(state.currentSession.id);
+      state.currentSession = normalizeSessionFromBackend(res);
+      renderAll();
+      openToast('Сесію завершено', 'success');
+    } catch (err) {
+      console.error(err);
+      openToast('Не вдалося завершити сесію', 'error');
+    }
+  }
+
+  async function onSelectPlan(planId) {
+    try {
+      const plan = await API.getPlan(planId);
+      showPlanEditor(plan);
+    } catch (err) {
+      console.error(err);
+      openToast('Не вдалося завантажити план', 'error');
+    }
+  }
+
   async function loadInitialData() {
     try {
       const today = await API.getTrainingToday();
@@ -198,10 +298,14 @@
           }
         });
       }
+
+      qs('#btn-start-now')?.addEventListener('click', () => onCreateSessionNow());
+      qs('#btn-save-progress')?.addEventListener('click', () => onSaveSessionProgress());
+      qs('#btn-finish-session')?.addEventListener('click', () => onFinishSession());
     });
   }
 
-  window.TrainingUI = { state, loadInitialData, renderAll };
+  window.TrainingUI = { state, loadInitialData, renderAll, onAddExerciseToSession, onStartSessionFromPlan, onCreateSessionNow, onSaveSessionProgress, onFinishSession, onSelectPlan };
 
   init();
 })();

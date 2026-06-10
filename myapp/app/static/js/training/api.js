@@ -37,6 +37,15 @@ const API = (function () {
     getSession(id) { return fetchJson(`/session/${id}`); },
     createPlan(payload) { return fetchJson('/plans', { method: 'POST', body: payload }); },
     getUserPreferences() { return fetchJson('/user/preferences'); },
-    saveUserPreferences(payload) { return fetchJson('/user/preferences', { method: 'POST', body: payload }); }
+    saveUserPreferences(payload) { return fetchJson('/user/preferences', { method: 'POST', body: payload }); },
+
+    createSession(payload) { return fetchJson('/session', { method: 'POST', body: payload }); },
+    startSessionFromPlan(planId) { return fetchJson('/session', { method: 'POST', body: { plan_id: planId } }); },
+    addExerciseToSession(sessionId, exercisePayload) { return fetchJson(`/session/${sessionId}/exercises`, { method: 'POST', body: exercisePayload }); },
+    updateSessionData(sessionId, dataPayload) { return fetchJson(`/session/${sessionId}`, { method: 'PATCH', body: dataPayload }); },
+    finishSession(sessionId) { return fetchJson(`/session/${sessionId}/finish`, { method: 'POST' }); },
+    listPlans() { return fetchJson('/plans'); },
+    getPlan(planId) { return fetchJson(`/plans/${planId}`); },
+    updatePlan(planId, payload) { return fetchJson(`/plans/${planId}`, { method: 'PUT', body: payload }); }
   };
 })();

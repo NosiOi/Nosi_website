@@ -8,6 +8,7 @@ from myapp.app.training_engine.models.training_plan import TrainingPlan
 from myapp.app.training_engine.models.session import Session
 from myapp.app.training_engine.models.user_pref import UserPreference
 from sqlalchemy import func
+import datetime
 import json
 
 bp = Blueprint("api_training", __name__, url_prefix="/api")
@@ -153,3 +154,58 @@ def user_preferences():
             db.session.add(pref)
     db.session.commit()
     return jsonify({"status": "ok"})
+
+@bp.route("/session", methods=["POST"])
+@login_required
+def create_session():
+    data = request.get_json() or {}
+    plan_id = data.get("plan_id")
+    title = data.get("title") or (f"Сесія плану {plan_id}" if plan_id else "Нова сесія")
+    session = Session(user_id=current_user.id, plan_id=plan_id, title=title, data=data.get("data"))
+    db.session.add(session)
+    db.session.commit()
+    return jsonify(session.to_dict()), 201
+
+@bp.route("/session/<int:session_id>/exercises", methods=["POST"])
+@login_required
+def add_exercise_to_session(session_id):
+    s = Session.query.filter_by(id=session_id, user_id=current_user.id).first_or_404()
+    payload = request.get_json() or {}
+    ex_id = payload.get("exercise_id")
+    sets = payload.get("sets", 3)
+    reps = payload.get("reps", "8")
+    try:
+        data = json.loads(s.data) if s.data else {"exercises": []}
+    except Exception:
+        data = {"exercises": []}
+    data.setdefault("exercises", []).append({"id": ex_id, "sets": sets, "reps": reps, "added_at": datetime.utcnow().isoformat()})
+    s.data = json.dumps(data)
+    db.session.add(s)
+    db.session.commit()
+    return jsonify(s.to_dict())
+
+@bp.route("/session/<int:session_id>", methods=["PATCH"])
+@login_required
+def patch_session(session_id):
+    s = Session.query.filter_by(id=session_id, user_id=current_user.id).first_or_404()
+    payload = request.get_json() or {}
+    if "data" in payload:
+        newdata = payload.get("data")
+        if isinstance(newdata, dict):
+            s.data = json.dumps(newdata)
+        else:
+            s.data = newdata
+    if "title" in payload:
+        s.title = payload.get("title")
+    db.session.add(s)
+    db.session.commit()
+    return jsonify(s.to_dict())
+
+@bp.route("/session/<int:session_id>/finish", methods=["POST"])
+@login_required
+def finish_session(session_id):
+    s = Session.query.filter_by(id=session_id, user_id=current_user.id).first_or_404()
+    s.finished_at = datetime.utcnow()
+    db.session.add(s)
+    db.session.commit()
+    return jsonify(s.to_dict())
