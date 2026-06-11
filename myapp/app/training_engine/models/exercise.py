@@ -114,7 +114,21 @@ class Exercise(db.Model):
         for k, v in kwargs.items():
             setattr(self, k, v)
 
-    # --- compatibility properties for tests / loaders ---
+    @property
+    def difficulty_level(self):
+        try:
+            return int(self.difficulty) if self.difficulty is not None else 1
+        except Exception:
+            return 1
+
+    def is_safe_for_beginner(self):
+        try:
+            risk = int(self.risk_level or 1)
+        except Exception:
+            risk = 1
+        diff = self.difficulty_level
+        return (risk <= 2) and (diff <= 3)
+
     @property
     def muscles_primary(self):
         if getattr(self, "_muscles_primary", None):
