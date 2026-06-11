@@ -139,6 +139,8 @@ endblock %} {% block styles %} {{ super() }}
   </section>
 
   <section class="tr-grid" role="main" aria-label="Тренувальний блок">
+    <div id="tr-toast-container" aria-hidden="true"></div>
+
     <aside class="tr-panel tr-panel--muscles" aria-labelledby="muscles-title">
       <div class="cmp-card tr-card">
         <div class="tr-card-head">
@@ -151,6 +153,7 @@ endblock %} {% block styles %} {{ super() }}
               class="tr-help"
               data-tooltip="Преміум дозволяє вибрати до 4 цільових м’язів"
               aria-label="Пояснення: Преміум"
+              type="button"
             >
               ?
             </button>
@@ -171,6 +174,7 @@ endblock %} {% block styles %} {{ super() }}
               class="tr-help"
               data-tooltip="Виберіть до 4 м’язів для відстеження (преміум)"
               aria-label="Пояснення: Цільові групи"
+              type="button"
             >
               ?
             </button>
@@ -225,6 +229,7 @@ endblock %} {% block styles %} {{ super() }}
               class="tr-help"
               data-tooltip="Тип сесії: сила, гіпертрофія, витривалість"
               aria-label="Пояснення: Тип сесії"
+              type="button"
             >
               ?
             </button>
@@ -246,15 +251,19 @@ endblock %} {% block styles %} {{ super() }}
 
             <div class="tr-session-actions">
               <button
-                id="tr-live-start"
+                id="btn-start-now"
+                data-old-id="tr-live-start"
+                data-action="start-now"
                 class="tr-btn tr-btn--primary"
                 type="button"
               >
                 Розпочати зараз
               </button>
+
               <button
                 id="tr-open-plan"
                 class="tr-btn tr-btn--ghost"
+                data-action="open-plan"
                 type="button"
               >
                 Відкрити план
@@ -277,14 +286,19 @@ endblock %} {% block styles %} {{ super() }}
 
             <div class="tr-actions">
               <button
-                id="tr-save-progress"
+                id="btn-save-progress"
+                data-old-id="tr-save-progress"
+                data-action="save-progress"
                 class="tr-btn tr-btn--ghost"
                 type="button"
               >
                 Зберегти прогрес
               </button>
+
               <button
-                id="tr-live-end"
+                id="btn-finish-session"
+                data-old-id="tr-live-end"
+                data-action="finish-session"
                 class="tr-btn tr-btn--primary"
                 type="button"
               >
@@ -339,13 +353,14 @@ endblock %} {% block styles %} {{ super() }}
             class="tr-help"
             data-tooltip="Тут відображається твій активний план"
             aria-label="Пояснення: План тренувань"
+            type="button"
           >
             ?
           </button>
         </div>
 
         <div class="tr-plan-body">
-          <div class="tr-plan-list" id="tr-plan-list" role="list"></div>
+          <div id="tr-plan-list" class="tr-plan-list" role="list"></div>
 
           <div
             class="tr-quick-builder cmp-card tr-card-mini"
@@ -354,6 +369,7 @@ endblock %} {% block styles %} {{ super() }}
             <h4 id="quick-builder-title" class="cmp-card-title">
               Швидкий конструктор
             </h4>
+
             <div class="tr-builder-row">
               <label class="cmp-label">М’язова група</label>
               <select
@@ -364,6 +380,7 @@ endblock %} {% block styles %} {{ super() }}
                 <option value="">Оберіть м'яз</option>
               </select>
             </div>
+
             <div class="tr-builder-row">
               <label class="cmp-label">Локація</label>
               <select
@@ -376,6 +393,7 @@ endblock %} {% block styles %} {{ super() }}
                 <option value="змішано">Змішано</option>
               </select>
             </div>
+
             <div class="tr-builder-row">
               <label class="cmp-label">Вправа</label>
               <select
@@ -386,6 +404,7 @@ endblock %} {% block styles %} {{ super() }}
                 <option value="">Оберіть вправу</option>
               </select>
             </div>
+
             <div class="tr-builder-row tr-builder-sets">
               <label class="cmp-label">Підходи</label>
               <input
@@ -406,31 +425,18 @@ endblock %} {% block styles %} {{ super() }}
                 aria-label="Кількість повторень"
               />
             </div>
+
             <div class="tr-builder-actions">
               <button
                 id="tr-builder-add"
+                data-action="add-exercise"
+                data-exercise-id=""
                 class="tr-btn tr-btn--primary"
                 type="button"
               >
                 Додати в сесію
               </button>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="cmp-card tr-card tr-card-mini">
-        <h3 class="cmp-card-title">Сьогоднішній підсумок</h3>
-        <div class="tr-summary">
-          <div class="tr-summary-row">
-            <span>Вправи</span><strong id="tr-overview-ex-count">—</strong>
-          </div>
-          <div class="tr-summary-row">
-            <span>Об’єм</span><strong id="tr-overview-volume">—</strong>
-          </div>
-          <div class="tr-summary-row">
-            <span>Головні м’язи</span
-            ><strong id="tr-overview-main-muscles">—</strong>
           </div>
         </div>
       </div>

@@ -274,6 +274,71 @@
     renderAll();
   }
 
+  async function initBuilder() {
+    const muscleSelect = qs('#tr-builder-muscle');
+    const locationSelect = qs('#tr-builder-location');
+    const exerciseSelect = qs('#tr-builder-exercise');
+    const addBtn = qs('#tr-builder-add');
+
+    let allExercises = [];
+    try {
+      allExercises = await API.listExercises();
+    } catch (e) {
+      console.error("Не вдалося завантажити вправи", e);
+      return;
+    }
+
+    const muscles = new Set();
+    allExercises.forEach(ex => {
+      ex.muscles?.forEach(m => muscles.add(m.slug));
+    });
+
+    muscles.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = m;
+      muscleSelect.appendChild(opt);
+    });
+
+    function updateExerciseList() {
+      const selectedMuscle = muscleSelect.value;
+      const selectedLocation = locationSelect.value;
+
+      exerciseSelect.innerHTML = '<option value="">Оберіть вправу</option>';
+
+      const filtered = allExercises.filter(ex => {
+        const matchMuscle = selectedMuscle ? ex.muscles.some(m => m.slug === selectedMuscle) : true;
+        const matchLocation = selectedLocation ? ex.location === selectedLocation : true;
+        return matchMuscle && matchLocation;
+      });
+
+      filtered.forEach(ex => {
+        const opt = document.createElement('option');
+        opt.value = ex.id;
+        opt.textContent = ex.name;
+        exerciseSelect.appendChild(opt);
+      });
+    }
+
+    muscleSelect.addEventListener('change', updateExerciseList);
+    locationSelect.addEventListener('change', updateExerciseList);
+
+    addBtn.addEventListener('click', () => {
+      const exId = exerciseSelect.value;
+      const sets = Number(qs('#tr-builder-sets').value);
+      const reps = Number(qs('#tr-builder-reps').value);
+
+      if (!exId) {
+        openToast("Оберіть вправу", "warn");
+        return;
+      }
+
+      TrainingUI.onAddExerciseToSession(Number(exId), sets, reps);
+    });
+
+    updateExerciseList();
+  }
+
   function renderAll() {
     renderHeader();
     renderRadar();
@@ -284,6 +349,7 @@
   function init() {
     document.addEventListener('DOMContentLoaded', () => {
       loadInitialData();
+      initBuilder();
 
       const searchForm = qs('#tr-ex-search-form');
       if (searchForm) {
@@ -302,10 +368,59 @@
       qs('#btn-start-now')?.addEventListener('click', () => onCreateSessionNow());
       qs('#btn-save-progress')?.addEventListener('click', () => onSaveSessionProgress());
       qs('#btn-finish-session')?.addEventListener('click', () => onFinishSession());
+
+      document.addEventListener('click', function (ev) {
+        const btn = ev.target.closest('[data-action]');
+        if (!btn) return;
+
+        const action = btn.dataset.action;
+        switch (action) {
+          case 'start-now':
+            TrainingUI.onCreateSessionNow && TrainingUI.onCreateSessionNow();
+            break;
+          case 'save-progress':
+            TrainingUI.onSaveSessionProgress && TrainingUI.onSaveSessionProgress();
+            break;
+          case 'finish-session':
+            TrainingUI.onFinishSession && TrainingUI.onFinishSession();
+            break;
+          case 'add-exercise':
+            {
+              const exId = btn.dataset.exerciseId;
+              if (!exId) { openToast('Не вказано id вправи', 'warn'); break; }
+              TrainingUI.onAddExerciseToSession && TrainingUI.onAddExerciseToSession(Number(exId));
+            }
+            break;
+          case 'start-plan':
+            {
+              const planId = btn.dataset.planId;
+              if (!planId) { openToast('Не вказано id плану', 'warn'); break; }
+              TrainingUI.onStartSessionFromPlan && TrainingUI.onStartSessionFromPlan(Number(planId));
+            }
+            break;
+        }
+      });
     });
   }
 
-  window.TrainingUI = { state, loadInitialData, renderAll, onAddExerciseToSession, onStartSessionFromPlan, onCreateSessionNow, onSaveSessionProgress, onFinishSession, onSelectPlan };
+  window.TrainingUI = {
+    state,
+    loadInitialData,
+    renderAll,
+    onAddExerciseToSession,
+    onStartSessionFromPlan,
+    onCreateSessionNow,
+    onSaveSessionProgress,
+    onFinishSession,
+    onSelectPlan,
+    debugCheck: function () {
+      console.log('currentSession', state.currentSession);
+      console.log('exercisesBank length', state.exercisesBank.length);
+      console.log('DOM buttons:',
+        { start: !!document.querySelector('#btn-start-now'), save: !!document.querySelector('#btn-save-progress'), finish: !!document.querySelector('#btn-finish-session') }
+      );
+    }
+  };
 
   init();
 })();
