@@ -293,10 +293,10 @@
       ex.muscles?.forEach(m => muscles.add(m.slug));
     });
 
-    muscles.forEach(m => {
+    muscles.forEach(slug => {
       const opt = document.createElement('option');
-      opt.value = m;
-      opt.textContent = m;
+      opt.value = slug;
+      opt.textContent = slug;
       muscleSelect.appendChild(opt);
     });
 
@@ -308,7 +308,13 @@
 
       const filtered = allExercises.filter(ex => {
         const matchMuscle = selectedMuscle ? ex.muscles.some(m => m.slug === selectedMuscle) : true;
-        const matchLocation = selectedLocation ? ex.location === selectedLocation : true;
+
+        const matchLocation =
+          selectedLocation === "зал" ? ex.location === "gym" :
+          selectedLocation === "дім" ? ex.location === "home" :
+          selectedLocation === "змішано" ? ex.location === "any" :
+          true;
+
         return matchMuscle && matchLocation;
       });
 
