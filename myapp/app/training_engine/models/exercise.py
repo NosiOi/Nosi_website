@@ -2,6 +2,7 @@ from datetime import datetime
 from myapp.app import db
 import json
 
+# Association tables: exercise id is string to match Exercise.id (string)
 exercise_muscle = db.Table(
     "te_exercise_muscle",
     db.Column("exercise_id", db.String(250), db.ForeignKey("te_exercises.id"), primary_key=True),
@@ -44,12 +45,6 @@ class Exercise(db.Model):
     )
 
     def __init__(self, *args, **kwargs):
-        """
-        Accept legacy/test kwargs (muscles_primary, muscles_secondary, equipment, environment,
-        progression_chain, regression_chain, movement_pattern, risk_level, difficulty, id, name, slug).
-        Unknown kwargs are set as plain attributes for in-memory tests.
-        """
-        # Known mapped fields to pass to SQLAlchemy constructor
         mapped = {}
         for k in (
             "id",
@@ -66,11 +61,8 @@ class Exercise(db.Model):
             if k in kwargs:
                 mapped[k] = kwargs.pop(k)
 
-        # call base constructor to set mapped attributes
         super().__init__(**mapped)
 
-        # handle legacy lists -> store as attributes (not necessarily DB columns)
-        # progression_chain / regression_chain -> store as JSON text in progression/regression columns
         prog = kwargs.pop("progression_chain", kwargs.pop("progression", None))
         reg = kwargs.pop("regression_chain", kwargs.pop("regression", None))
         if prog is not None:
@@ -129,11 +121,13 @@ class Exercise(db.Model):
         diff = self.difficulty_level
         return (risk <= 2) and (diff <= 3)
 
+    def is_safe_for_beginners(self):
+        return self.is_safe_for_beginner()
+
     @property
     def muscles_primary(self):
         if getattr(self, "_muscles_primary", None):
             return list(self._muscles_primary)
-        # derive from association if exercise_muscles relationship exists
         try:
             res = []
             for em in getattr(self, "exercise_muscles", []) or []:
@@ -155,7 +149,6 @@ class Exercise(db.Model):
 
     @property
     def progression_chain(self):
-        # prefer in-memory list
         if getattr(self, "_progression_chain", None):
             return list(self._progression_chain)
         try:
@@ -178,13 +171,11 @@ class Exercise(db.Model):
 
     @property
     def environment(self):
-        # environment may be stored as list or single value
         env = getattr(self, "_environment", None)
         if env is None:
             return []
         return env if isinstance(env, (list, tuple)) else [env]
 
-    # --- utility methods ---
     def is_bodyweight(self):
         try:
             if getattr(self, "_legacy_equipment", None):
@@ -196,12 +187,10 @@ class Exercise(db.Model):
             return False
 
     def to_dict(self):
-        # safe serialization for API/tests
         muscles = []
         try:
             muscles = [{"id": m.id, "name": m.name, "slug": m.slug} for m in self.muscles]
         except Exception:
-            # fallback to legacy lists
             muscles = [{"slug": s} for s in (getattr(self, "_muscles_primary", []) + getattr(self, "_muscles_secondary", []))]
         equipment = []
         try:
