@@ -10,7 +10,9 @@ github_bp = Blueprint("github", __name__)
 
 @github_bp.route("/auth/github")
 def github_login():
-    client_id = current_app.config["GITHUB_CLIENT_ID"]
+    client_id = current_app.config.get("GITHUB_CLIENT_ID")
+    if not client_id:
+        return jsonify({"error": "GitHub OAuth not configured"}), 400
 
     github_auth_url = (
         "https://github.com/login/oauth/authorize"

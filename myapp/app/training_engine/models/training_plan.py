@@ -1,26 +1,10 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Dict, List, Optional
+import json
 
 from myapp.app import db
-
-
-@dataclass
-class TrainingDay:
-    """
-    Lightweight value object representing a single training day inside a plan.
-    """
-    name: Optional[str] = None
-    exercises: List[Dict[str, Any]] = field(default_factory=list)
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "TrainingDay":
-        name = data.get("name")
-        exercises = data.get("exercises", []) or []
-        return cls(name=name, exercises=list(exercises))
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {"name": self.name, "exercises": list(self.exercises)}
+from myapp.app.training_engine.models.training_day import TrainingDay
 
 
 class TrainingPlan(db.Model):
@@ -28,22 +12,33 @@ class TrainingPlan(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
-    name = db.Column(db.String(250), nullable=False)
-    meta = db.Column(db.Text, nullable=True)  # JSON blob describing days, structure, etc.
+    name = db.Column(db.String(250), nullable=False, default="Plan")
+    meta = db.Column(db.Text, nullable=True)
     is_active = db.Column(db.Boolean, default=False, nullable=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
+    owner = db.relationship("User", back_populates="training_plans", lazy="joined")
+
+    def __init__(self, *args, **kwargs):
+        # allow legacy/test kwargs (goal, experience, workouts_per_week) as plain attributes
+        db_fields = {"id", "user_id", "name", "meta", "is_active", "created_at", "updated_at"}
+        init_kwargs = {}
+        for k in list(kwargs.keys()):
+            if k in db_fields:
+                init_kwargs[k] = kwargs.pop(k)
+        super().__init__(**init_kwargs)
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
     def get_meta(self) -> Dict[str, Any]:
-        import json
         try:
             return json.loads(self.meta) if self.meta else {}
         except Exception:
             return {}
 
     def set_meta(self, meta_obj: Dict[str, Any]) -> None:
-        import json
         self.meta = json.dumps(meta_obj)
 
     def get_days(self) -> List[TrainingDay]:
@@ -58,6 +53,19 @@ class TrainingPlan(db.Model):
             for d in days:
                 result.append(TrainingDay.from_dict(d or {}))
         return result
+
+    def add_day(self, key: str, day: TrainingDay):
+        """
+        Add or replace a day in plan.meta under 'days'.
+        Keeps 'days' as dict keyed by provided key for compatibility with tests.
+        """
+        meta = self.get_meta()
+        days = meta.get("days", {})
+        if not isinstance(days, dict):
+            days = {}
+        days[key] = day.to_dict() if hasattr(day, "to_dict") else dict(day)
+        meta["days"] = days
+        self.set_meta(meta)
 
     def to_dict(self) -> Dict[str, Any]:
         return {

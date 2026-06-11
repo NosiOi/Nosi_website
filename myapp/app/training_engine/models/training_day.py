@@ -1,36 +1,22 @@
-from datetime import datetime
-import json
-from myapp.app import db
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional
 
-class TrainingDay(db.Model):
-    __tablename__ = "te_training_days"
+@dataclass
+class TrainingDay:
+    day_name: Optional[str] = None
+    name: Optional[str] = None
+    environment: Optional[str] = None
+    exercises: List[Dict[str, Any]] = field(default_factory=list)
 
-    id = db.Column(db.Integer, primary_key=True)
-    plan_id = db.Column(db.Integer, nullable=True, index=True)
-    name = db.Column(db.String(120), nullable=False)
-    meta = db.Column(db.Text, nullable=True)  # JSON: exercises, sets, reps
-    focus = db.Column(db.String(120), nullable=True, default="general")
-    environment = db.Column(db.String(50), nullable=True, default="gym")
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    def add_exercise(self, ex):
+        self.exercises.append(ex)
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]):
+        dn = data.get("day_name") or data.get("name")
+        env = data.get("environment")
+        exercises = data.get("exercises", []) or []
+        return cls(day_name=dn, name=dn, environment=env, exercises=list(exercises))
 
     def to_dict(self):
-        try:
-            meta = json.loads(self.meta) if self.meta else {}
-        except Exception:
-            meta = {}
-        return {
-            "id": self.id,
-            "name": self.name,
-            "meta": meta,
-            "focus": self.focus,
-            "environment": self.environment
-        }
-
-    def add_exercise(self, exercise_id, sets=3, reps="8"):
-        try:
-            meta = json.loads(self.meta) if self.meta else {"exercises": []}
-        except Exception:
-            meta = {"exercises": []}
-        meta.setdefault("exercises", []).append({"id": exercise_id, "sets": sets, "reps": reps})
-        self.meta = json.dumps(meta)
+        return {"day_name": self.day_name or self.name, "environment": self.environment, "exercises": list(self.exercises)}
