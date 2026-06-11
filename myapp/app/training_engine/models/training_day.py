@@ -5,14 +5,26 @@ from typing import Any, Dict, List, Optional
 class TrainingDay:
     day_name: Optional[str] = None
     name: Optional[str] = None
-    environment: Optional[str] = None
+    environment: Optional[List[str]] = None
     exercises: List[Dict[str, Any]] = field(default_factory=list)
 
-    def add_exercise(self, ex):
-        self.exercises.append(ex)
+    def add_exercise(self, exercise=None, sets=3, reps="8-12", **kwargs):
+        """
+        Tests call day.add_exercise(exercise=ex, sets=3, reps="10-12")
+        Accept both positional and keyword args and append a normalized dict.
+        """
+        entry = {
+            "exercise": exercise,
+            "sets": sets,
+            "reps": reps
+        }
+        # include any extra metadata
+        for k, v in kwargs.items():
+            entry[k] = v
+        self.exercises.append(entry)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]):
+    def from_dict(cls, data):
         dn = data.get("day_name") or data.get("name")
         env = data.get("environment")
         exercises = data.get("exercises", []) or []

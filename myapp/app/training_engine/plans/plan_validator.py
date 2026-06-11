@@ -1,19 +1,14 @@
-from typing import Dict
-
+from typing import Dict, Any
 
 class PlanValidator:
-    
-    # Validates training plan structure.
-
     @staticmethod
-    def validate(plan: Dict) -> bool:
-        if not plan:
-            return False
-
-        for day, exercises in plan.items():
+    def validate_plan(days: Dict[str, Any]) -> bool:
+        if not isinstance(days, dict):
+            raise ValueError("Days must be a dict")
+        if not days:
+            raise ValueError("Plan must contain at least one day")
+        for k, d in days.items():
+            exercises = d.get("exercises", [])
             if not isinstance(exercises, list):
-                return False
-            if len(exercises) == 0:
-                return False
-
+                raise ValueError("Day exercises must be a list")
         return True

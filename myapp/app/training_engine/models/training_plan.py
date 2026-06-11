@@ -41,18 +41,22 @@ class TrainingPlan(db.Model):
     def set_meta(self, meta_obj: Dict[str, Any]) -> None:
         self.meta = json.dumps(meta_obj)
 
-    def get_days(self) -> List[TrainingDay]:
+    @property
+    def days(self):
+        # Return meta['days'] as dict (compat with tests that expect plan.days).
         meta = self.get_meta()
         days = meta.get("days", {})
-        result: List[TrainingDay] = []
         if isinstance(days, dict):
-            for k in sorted(days.keys()):
-                d = days.get(k) or {}
-                result.append(TrainingDay.from_dict(d))
-        elif isinstance(days, list):
-            for d in days:
-                result.append(TrainingDay.from_dict(d or {}))
-        return result
+            return days
+        # if stored as list, convert to dict with indices or day_name
+        if isinstance(days, list):
+            out = {}
+            for i, d in enumerate(days):
+                key = d.get("day_name") or d.get("name") or str(i)
+                out[key] = d
+            return out
+        return {}
+
 
     def add_day(self, key: str, day: TrainingDay):
         """
