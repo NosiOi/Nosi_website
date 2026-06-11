@@ -7,6 +7,7 @@ from myapp.app.training_engine.models.equipment import TEEquipment
 from myapp.app.training_engine.models.training_plan import TrainingPlan
 from myapp.app.training_engine.models.session import Session
 from myapp.app.training_engine.models.user_pref import UserPreference
+from myapp.app.services.analytics_service import compute_weekly_report
 from sqlalchemy import func
 import datetime as dt
 import json
@@ -130,7 +131,6 @@ def training_today():
         filtered = []
         for ex in ex_objs:
             try:
-                # if association table is a Table, ex.muscles contains Muscle objects
                 muscle_slugs = [m.slug.lower() for m in ex.muscles]
             except Exception:
                 muscle_slugs = []
@@ -209,7 +209,12 @@ def add_exercise_to_session(session_id):
             data = json.loads(s.data) if s.data else {"exercises": []}
         except Exception:
             data = {"exercises": []}
-        data.setdefault("exercises", []).append({"id": ex_id, "sets": sets, "reps": reps, "added_at": dt.datetime.utcnow().isoformat()})
+        data.setdefault("exercises", []).append({
+            "id": ex_id,
+            "sets": sets,
+            "reps": reps,
+            "added_at": dt.datetime.utcnow().isoformat()
+        })
         s.data = json.dumps(data)
         db.session.add(s)
         db.session.commit()
@@ -271,49 +276,32 @@ def report_muscle_load():
             from_dt = dt.datetime.utcnow() - dt.timedelta(days=7)
             to_dt = dt.datetime.utcnow()
 
-        sessions = Session.query.filter(Session.user_id == current_user.id, Session.created_at >= from_dt, Session.created_at <= to_dt).all()
+        sessions = Session.query.filter(
+            Session.user_id == current_user.id,
+            Session.created_at >= from_dt,
+            Session.created_at <= to_dt
+        ).all()
 
-        muscle_scores = {}
+        session_payloads = []
         for s in sessions:
             try:
                 payload = json.loads(s.data) if s.data else {}
             except Exception:
                 payload = {}
-            for ex_entry in payload.get("exercises", []):
-                ex_id = ex_entry.get("id") or ex_entry.get("exercise_id")
-                if not ex_id:
-                    continue
-                ex = Exercise.query.get(ex_id)
-                if not ex:
-                    continue
-                sets = ex_entry.get("sets", 1)
-                reps = ex_entry.get("reps", 1)
-                work = (int(sets) if isinstance(sets, (int, float, str)) and str(sets).isdigit() else 1) * (int(reps) if isinstance(reps, (int, float, str)) and str(reps).isdigit() else 1)
-                if hasattr(ex, "exercise_muscles") and ex.exercise_muscles:
-                    for em in ex.exercise_muscles:
-                        if not em or not getattr(em, "muscle", None):
-                            continue
-                        load = getattr(em, "load_percent", None)
-                        if load is None:
-                            load = 60 if getattr(em, "is_primary", False) else 20
-                        score = (load or 0) * work / 100.0
-                        muscle_scores[em.muscle.slug] = muscle_scores.get(em.muscle.slug, 0) + score
-                else:
-                    try:
-                        muscles = ex.muscles or []
-                    except Exception:
-                        muscles = []
-                    if not muscles:
-                        continue
-                    per = 1.0 * work / len(muscles)
-                    for m in muscles:
-                        mslug = getattr(m, "slug", None)
-                        if not mslug:
-                            continue
-                        muscle_scores[mslug] = muscle_scores.get(mslug, 0) + per
+            session_payloads.append(payload)
 
-        total = sum(muscle_scores.values()) or 1
-        normalized = {k: round(v / total, 4) for k, v in muscle_scores.items()}
-        return jsonify({"raw": muscle_scores, "normalized": normalized, "from": from_dt.isoformat(), "to": to_dt.isoformat()})
+        def exercise_lookup(ex_id):
+            try:
+                return Exercise.query.get(int(ex_id))
+            except Exception:
+                return None
+
+        report = compute_weekly_report(session_payloads, exercise_lookup)
+        return jsonify({
+            "raw": report["raw"],
+            "normalized": report["normalized"],
+            "from": from_dt.isoformat(),
+            "to": to_dt.isoformat()
+        })
     except Exception as e:
         return _error_response(e)
