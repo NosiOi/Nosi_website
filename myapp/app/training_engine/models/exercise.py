@@ -47,8 +47,8 @@ class Exercise(db.Model):
             "location": self.location,
             "movement_pattern": self.movement_pattern,
             "risk_level": self.risk_level,
-            "muscles": [m.slug for m in self.muscles],
-            "equipment": [e.name for e in self.equipment],
+            "muscles": [{"id": m.id, "name": m.name, "slug": m.slug} for m in self.muscles],
+            "equipment": [{"id": e.id, "name": e.name} for e in self.equipment],
             "progression": self.progression,
             "regression": self.regression
         }
