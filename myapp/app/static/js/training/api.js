@@ -46,6 +46,13 @@ const API = (function () {
     finishSession(sessionId) { return fetchJson(`/session/${sessionId}/finish`, { method: 'POST' }); },
     listPlans() { return fetchJson('/plans'); },
     getPlan(planId) { return fetchJson(`/plans/${planId}`); },
-    updatePlan(planId, payload) { return fetchJson(`/plans/${planId}`, { method: 'PUT', body: payload }); }
+    updatePlan(planId, payload) { return fetchJson(`/plans/${planId}`, { method: 'PUT', body: payload }); },
+
+    getMuscleLoadReport(params = {}) {
+      const qs = new URLSearchParams();
+      Object.keys(params).forEach(k => { if (params[k] != null && params[k] !== '') qs.set(k, params[k]); });
+      const path = '/reports/muscle-load' + (qs.toString() ? `?${qs.toString()}` : '');
+      return fetchJson(path);
+    }
   };
 })();

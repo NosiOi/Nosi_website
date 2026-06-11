@@ -37,14 +37,6 @@
     if (durEl) durEl.textContent = dur;
   }
 
-  function renderRadar() {
-    const container = qs('#tr-radar');
-    if (!container) return;
-    const radarData = state.currentSession?.muscles || {};
-    if (window.NosiRadar) NosiRadar.render(container, radarData, { duration: 700 });
-    else container.textContent = Object.keys(radarData).length ? JSON.stringify(radarData) : 'Радар недоступний';
-  }
-
   function renderExercisesList(exercises = []) {
     const list = qs('#tr-exercises');
     if (!list) return;
@@ -79,32 +71,6 @@
     attachExerciseHandlers();
   }
 
-  function renderSessionPanel() {
-    const titleEl = qs('#tr-session-title');
-    const typeEl = qs('#tr-session-type');
-    const durEl = qs('#tr-session-duration');
-    if (!state.currentSession) {
-      if (titleEl) titleEl.textContent = 'Немає активної сесії';
-      if (typeEl) typeEl.textContent = '—';
-      if (durEl) durEl.textContent = '— хв';
-      renderExercisesList([]);
-      return;
-    }
-    if (titleEl) titleEl.textContent = state.currentSession.title || 'Поточна сесія';
-    if (typeEl) typeEl.textContent = state.currentSession.type || '—';
-    const started = state.currentSession.started_at ? new Date(state.currentSession.started_at).getTime() : null;
-    const durationMs = started ? (Date.now() - started) : 0;
-    if (durEl) durEl.textContent = `${Math.round(durationMs / 60000)} хв`;
-    renderExercisesList(state.currentSession.exercises || []);
-  }
-
-  function renderQuickStats() {
-    qs('#tr-week-load') && (qs('#tr-week-load').textContent = state.currentSession?.meta?.weekly_load || '—');
-    qs('#tr-focus-muscles') && (qs('#tr-focus-muscles').textContent = state.currentSession?.meta?.focus || '—');
-    qs('#tr-week-sessions') && (qs('#tr-week-sessions').textContent = state.currentSession?.meta ? `${state.currentSession.meta.planned_sessions||0} · ${state.currentSession.meta.done_sessions||0}` : '—');
-    qs('#tr-fatigue') && (qs('#tr-fatigue').textContent = state.currentSession?.meta?.fatigue || '—');
-  }
-
   function attachExerciseHandlers() {
     qsa('.tr-set-done').forEach(btn => {
       btn.removeEventListener('click', onSetDone);
@@ -118,8 +84,7 @@
     openToast(`Позначено підхід ${setIdx + 1} вправи ${exIdx + 1}`, 'success', 1200);
   }
 
-  function onExerciseInput(e) {
-  }
+  function onExerciseInput(e) {}
 
   function normalizeTrainingToday(payload) {
     if (!payload) return null;
@@ -146,7 +111,7 @@
     return {
       id: ex.id || ex.exercise_id || null,
       name: ex.name || ex.title || 'Без назви',
-      reps: ex.reps || (ex.meta && ex.meta.reps) || ex.default_reps || '—',
+      reps: ex.reps || ex.default_reps || '—',
       sets: ex.sets || (ex.meta && ex.meta.exercises) || [],
       raw: ex
     };
@@ -167,19 +132,6 @@
     };
   }
 
-  async function onStartSessionFromPlan(planId) {
-    try {
-      openToast('Створюю сесію...', 'info');
-      const session = await API.startSessionFromPlan(planId);
-      state.currentSession = normalizeSessionFromBackend(session);
-      renderAll();
-      openToast('Сесія створена', 'success');
-    } catch (err) {
-      console.error(err);
-      openToast('Не вдалося створити сесію', 'error');
-    }
-  }
-
   async function onCreateSessionNow(title = 'Нова сесія') {
     try {
       const payload = { title, data: JSON.stringify({ exercises: [] }) };
@@ -190,6 +142,18 @@
     } catch (err) {
       console.error(err);
       openToast('Не вдалося запустити сесію', 'error');
+    }
+  }
+
+  async function onStartSessionFromPlan(planId) {
+    try {
+      const session = await API.startSessionFromPlan(planId);
+      state.currentSession = normalizeSessionFromBackend(session);
+      renderAll();
+      openToast('Сесія з плану запущена', 'success');
+    } catch (err) {
+      console.error(err);
+      openToast('Не вдалося запустити сесію з плану', 'error');
     }
   }
 
@@ -242,14 +206,11 @@
     }
   }
 
-  async function onSelectPlan(planId) {
-    try {
-      const plan = await API.getPlan(planId);
-      showPlanEditor(plan);
-    } catch (err) {
-      console.error(err);
-      openToast('Не вдалося завантажити план', 'error');
-    }
+  function onSelectPlan(plan) {
+    if (!plan) return;
+    state.currentSession = state.currentSession || { id: null, data: { exercises: [] } };
+    state.currentSession.title = plan.name || `План ${plan.id}`;
+    renderAll();
   }
 
   async function loadInitialData() {
@@ -265,10 +226,11 @@
     }
 
     try {
-      const exercises = await API.listExercises();
-      state.exercisesBank = Array.isArray(exercises) ? exercises : [];
+      const res = await API.listExercises({ per_page: 100 });
+      state.exercisesBank = Array.isArray(res.items) ? res.items : [];
     } catch (e) {
       state.exercisesBank = [];
+      console.error('Не вдалося завантажити вправи', e);
     }
 
     renderAll();
@@ -282,7 +244,8 @@
 
     let allExercises = [];
     try {
-      allExercises = await API.listExercises();
+      const res = await API.listExercises({ per_page: 500 });
+      allExercises = res.items || [];
     } catch (e) {
       console.error("Не вдалося завантажити вправи", e);
       return;
@@ -290,7 +253,7 @@
 
     const muscles = new Set();
     allExercises.forEach(ex => {
-      ex.muscles?.forEach(m => muscles.add(m.slug));
+      (ex.muscles || []).forEach(m => muscles.add(m.slug));
     });
 
     muscles.forEach(slug => {
@@ -302,20 +265,11 @@
 
     function updateExerciseList() {
       const selectedMuscle = muscleSelect.value;
-      const selectedLocation = locationSelect.value;
-
       exerciseSelect.innerHTML = '<option value="">Оберіть вправу</option>';
 
       const filtered = allExercises.filter(ex => {
-        const matchMuscle = selectedMuscle ? ex.muscles.some(m => m.slug === selectedMuscle) : true;
-
-        const matchLocation =
-          selectedLocation === "зал" ? ex.location === "gym" :
-          selectedLocation === "дім" ? ex.location === "home" :
-          selectedLocation === "змішано" ? ex.location === "any" :
-          true;
-
-        return matchMuscle && matchLocation;
+        const matchMuscle = selectedMuscle ? (ex.muscles || []).some(m => m.slug === selectedMuscle) : true;
+        return matchMuscle;
       });
 
       filtered.forEach(ex => {
@@ -345,9 +299,34 @@
     updateExerciseList();
   }
 
+  function renderSessionPanel() {
+    const titleEl = qs('#tr-session-title');
+    const typeEl = qs('#tr-session-type');
+    const durEl = qs('#tr-session-duration');
+    if (!state.currentSession) {
+      if (titleEl) titleEl.textContent = 'Немає активної сесії';
+      if (typeEl) typeEl.textContent = '—';
+      if (durEl) durEl.textContent = '— хв';
+      renderExercisesList([]);
+      return;
+    }
+    if (titleEl) titleEl.textContent = state.currentSession.title || 'Поточна сесія';
+    if (typeEl) typeEl.textContent = state.currentSession.type || '—';
+    const started = state.currentSession.started_at ? new Date(state.currentSession.started_at).getTime() : null;
+    const durationMs = started ? (Date.now() - started) : 0;
+    if (durEl) durEl.textContent = `${Math.round(durationMs / 60000)} хв`;
+    renderExercisesList(state.currentSession.exercises || []);
+  }
+
+  function renderQuickStats() {
+    qs('#tr-week-load') && (qs('#tr-week-load').textContent = state.currentSession?.meta?.weekly_load || '—');
+    qs('#tr-focus-muscles') && (qs('#tr-focus-muscles').textContent = state.currentSession?.meta?.focus || '—');
+    qs('#tr-week-sessions') && (qs('#tr-week-sessions').textContent = state.currentSession?.meta ? `${state.currentSession.meta.planned_sessions||0} · ${state.currentSession.meta.done_sessions||0}` : '—');
+    qs('#tr-fatigue') && (qs('#tr-fatigue').textContent = state.currentSession?.meta?.fatigue || '—');
+  }
+
   function renderAll() {
     renderHeader();
-    renderRadar();
     renderSessionPanel();
     renderQuickStats();
   }
@@ -364,7 +343,7 @@
           const q = qs('#tr-ex-search-input')?.value || '';
           try {
             const res = await API.listExercises({ q });
-            renderExercisesList(res || []);
+            renderExercisesList(res.items || []);
           } catch (err) {
             openToast('Помилка пошуку вправ', 'error');
           }

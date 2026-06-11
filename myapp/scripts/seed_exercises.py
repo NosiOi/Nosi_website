@@ -72,9 +72,11 @@ def run_seed(data_path=None):
             db.session.add(ex)
             db.session.flush()
 
+            # append muscles to association table (no load_percent required)
             for mslug in it.get("muscles_primary", []) + it.get("muscles_secondary", []):
                 m = get_or_create_muscle(mslug, mslug.capitalize())
-                ex.muscles.append(m)
+                if m not in ex.muscles:
+                    ex.muscles.append(m)
 
             for ename in it.get("equipment", []):
                 e = get_or_create_equipment(ename)

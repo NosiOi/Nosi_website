@@ -31,6 +31,7 @@ class Exercise(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
+    # relationship via association table (no ExerciseMuscle model expected)
     muscles = db.relationship("Muscle", secondary=exercise_muscle, backref=db.backref("exercises", lazy="dynamic"))
     equipment = db.relationship("TEEquipment", secondary=exercise_equipment, backref=db.backref("exercises", lazy="dynamic"))
 

@@ -1,5 +1,6 @@
 from datetime import datetime
 from myapp.app import db
+import json
 
 
 class Session(db.Model):
@@ -24,6 +25,10 @@ class Session(db.Model):
     )
 
     def to_dict(self):
+        try:
+            parsed = json.loads(self.data) if self.data else {}
+        except Exception:
+            parsed = {}
         return {
             "id": self.id,
             "user_id": self.user_id,
@@ -31,7 +36,7 @@ class Session(db.Model):
             "title": self.title,
             "started_at": self.started_at.isoformat() if self.started_at else None,
             "finished_at": self.finished_at.isoformat() if self.finished_at else None,
-            "data": self.data
+            "data": parsed
         }
 
     def __repr__(self):
