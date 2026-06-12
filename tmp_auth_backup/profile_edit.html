@@ -12,7 +12,7 @@ FIT{% endblock %} {% block styles %}
     <label class="form-label"
       >Ім'я
       <input
-        class="cmp-input"
+        class="form-input"
         name="username"
         value="{{ user.username or '' }}"
       />
@@ -21,7 +21,7 @@ FIT{% endblock %} {% block styles %}
     <label class="form-label"
       >Email
       <input
-        class="cmp-input"
+        class="form-input"
         name="email"
         type="email"
         value="{{ user.email or '' }}"
@@ -32,7 +32,7 @@ FIT{% endblock %} {% block styles %}
       <label class="form-label"
         >Вік
         <input
-          class="cmp-input"
+          class="form-input"
           name="age"
           type="number"
           value="{{ user.age or '' }}"
@@ -42,7 +42,7 @@ FIT{% endblock %} {% block styles %}
       <label class="form-label"
         >Зріст (см)
         <input
-          class="cmp-input"
+          class="form-input"
           name="height"
           type="number"
           value="{{ user.height or '' }}"
@@ -52,7 +52,7 @@ FIT{% endblock %} {% block styles %}
       <label class="form-label"
         >Вага (кг)
         <input
-          class="cmp-input"
+          class="form-input"
           name="weight"
           type="number"
           value="{{ user.weight or '' }}"
@@ -62,7 +62,7 @@ FIT{% endblock %} {% block styles %}
 
     <label class="form-label"
       >Стать
-      <select class="cmp-input" name="gender">
+      <select class="form-input" name="gender">
         <option value="male" {% if user.gender="" ="male" %}selected{% endif %}>
           Чоловік
         </option>
@@ -97,7 +97,7 @@ FIT{% endblock %} {% block styles %}
       <label class="form-label"
         >Активність
         <input
-          class="cmp-input"
+          class="form-input"
           name="activity"
           type="number"
           step="0.01"
@@ -108,7 +108,7 @@ FIT{% endblock %} {% block styles %}
       <label class="form-label"
         >Тренувань на тиждень
         <input
-          class="cmp-input"
+          class="form-input"
           name="workouts_per_week"
           type="number"
           value="{{ user.workouts_per_week or '' }}"
@@ -117,12 +117,9 @@ FIT{% endblock %} {% block styles %}
     </div>
 
     <div class="auth-actions">
-      <button class="cmp-btn-primary" type="submit">Зберегти</button>
-      <a class="cmp-btn-ghost" href="{{ url_for('profile.view') }}">Скасувати</a>
+      <button class="btn-primary" type="submit">Зберегти</button>
+      <a class="btn-ghost" href="{{ url_for('profile.view') }}">Скасувати</a>
     </div>
   </form>
 </div>
 {% endblock %}
-
-
-

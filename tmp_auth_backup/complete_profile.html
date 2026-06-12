@@ -13,7 +13,7 @@ FIT{% endblock %} {% block styles %}
       <label class="form-label"
         >Вік
         <input
-          class="cmp-input"
+          class="form-input"
           type="number"
           name="age"
           min="10"
@@ -25,7 +25,7 @@ FIT{% endblock %} {% block styles %}
       <label class="form-label"
         >Зріст (см)
         <input
-          class="cmp-input"
+          class="form-input"
           type="number"
           name="height"
           min="100"
@@ -39,7 +39,7 @@ FIT{% endblock %} {% block styles %}
       <label class="form-label"
         >Вага (кг)
         <input
-          class="cmp-input"
+          class="form-input"
           type="number"
           name="weight"
           min="30"
@@ -50,7 +50,7 @@ FIT{% endblock %} {% block styles %}
 
       <label class="form-label"
         >Стать
-        <select class="cmp-input" name="gender" required>
+        <select class="form-input" name="gender" required>
           <option value="male">Чоловік</option>
           <option value="female">Жінка</option>
           <option value="other">Інше</option>
@@ -60,7 +60,7 @@ FIT{% endblock %} {% block styles %}
 
     <label class="form-label"
       >Активність
-      <select class="cmp-input" name="activity" required>
+      <select class="form-input" name="activity" required>
         <option value="1.2">Мінімальна</option>
         <option value="1.375">Легка</option>
         <option value="1.55">Середня</option>
@@ -72,7 +72,7 @@ FIT{% endblock %} {% block styles %}
     <div class="grid-2">
       <label class="form-label"
         >Ціль
-        <select class="cmp-input" name="goal" required>
+        <select class="form-input" name="goal" required>
           <option value="lose">Схуднення</option>
           <option value="maintain">Підтримка</option>
           <option value="gain">Набір</option>
@@ -81,7 +81,7 @@ FIT{% endblock %} {% block styles %}
 
       <label class="form-label"
         >Досвід
-        <select class="cmp-input" name="experience" required>
+        <select class="form-input" name="experience" required>
           <option value="beginner">Початківець</option>
           <option value="intermediate">Середній</option>
           <option value="advanced">Просунутий</option>
@@ -92,7 +92,7 @@ FIT{% endblock %} {% block styles %}
     <label class="form-label"
       >Тренувань на тиждень
       <input
-        class="cmp-input"
+        class="form-input"
         type="number"
         name="workouts"
         min="0"
@@ -102,12 +102,9 @@ FIT{% endblock %} {% block styles %}
     </label>
 
     <div class="auth-actions">
-      <button class="cmp-btn-primary" type="submit">Зберегти</button>
+      <button class="btn-primary" type="submit">Зберегти</button>
       <a class="link-muted" href="{{ url_for('root.index') }}">Пропустити</a>
     </div>
   </form>
 </div>
 {% endblock %}
-
-
-

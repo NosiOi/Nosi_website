@@ -23,3 +23,58 @@
     margin-bottom: 4px;
     display: block;
 }
+
+.u-container {
+    width: 100%;
+    max-width: var(--core-max-width, 1200px);
+    margin: 0 auto;
+    padding: 0 20px
+}
+
+.u-center {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.u-hidden {
+    display: none
+}
+
+.u-small {
+    font-size: 13px;
+    color: var(--core-text-muted)
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px
+}
+
+.input,
+.select,
+textarea {
+    height: 44px;
+    padding: 10px 12px;
+    border-radius: var(--core-radius-sm);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--core-border-subtle);
+    color: var(--core-text-main);
+    font-size: 14px;
+    transition: box-shadow var(--core-transition), border-color var(--core-transition);
+}
+
+.input:focus,
+.select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--core-violet);
+    box-shadow: 0 8px 30px rgba(155, 93, 229, 0.08)
+}
+
+.auth-page .form-input,
+body.au-register .form-input {
+    all: unset;
+    display: block;
+}

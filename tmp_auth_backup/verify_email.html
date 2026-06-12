@@ -11,7 +11,7 @@ FIT{% endblock %} {% block body %}
     <label class="form-label"
       >Код підтвердження
       <input
-        class="cmp-input"
+        class="form-input"
         type="text"
         name="code"
         placeholder="Введіть код"
@@ -20,7 +20,7 @@ FIT{% endblock %} {% block body %}
     </label>
 
     <div class="auth-actions">
-      <button class="cmp-btn-primary" type="submit">Підтвердити</button>
+      <button class="btn-primary" type="submit">Підтвердити</button>
       <a class="link-muted" href="{{ url_for('auth.resend') }}"
         >Надіслати код повторно</a
       >
@@ -28,6 +28,3 @@ FIT{% endblock %} {% block body %}
   </form>
 </div>
 {% endblock %}
-
-
-

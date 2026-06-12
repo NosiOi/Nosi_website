@@ -31,7 +31,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
     <label class="au-form-label"
       >Email
       <input
-        class="au-cmp-input"
+        class="au-form-input"
         type="email"
         name="email"
         placeholder="example@gmail.com"
@@ -42,7 +42,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
     <label class="au-form-label"
       >Ім'я
       <input
-        class="au-cmp-input"
+        class="au-form-input"
         type="text"
         name="username"
         placeholder="Твоє ім'я"
@@ -55,7 +55,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
         >Пароль
         <div class="au-pass-row">
           <input
-            class="au-cmp-input"
+            class="au-form-input"
             type="password"
             id="p1"
             name="password"
@@ -64,7 +64,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
           />
           <button
             type="button"
-            class="au-cmp-btn-ghost au-toggle"
+            class="au-btn-ghost au-toggle"
             onclick="togglePass('p1', this)"
           >
             Показати
@@ -76,7 +76,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
         >Підтвердження пароля
         <div class="au-pass-row">
           <input
-            class="au-cmp-input"
+            class="au-form-input"
             type="password"
             id="p2"
             name="confirm_password"
@@ -85,7 +85,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
           />
           <button
             type="button"
-            class="au-cmp-btn-ghost au-toggle"
+            class="au-btn-ghost au-toggle"
             onclick="togglePass('p2', this)"
           >
             Показати
@@ -98,7 +98,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
       <label class="au-form-label"
         >Вік
         <input
-          class="au-cmp-input"
+          class="au-form-input"
           type="number"
           name="age"
           min="14"
@@ -111,7 +111,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
       <label class="au-form-label"
         >Зріст (см)
         <input
-          class="au-cmp-input"
+          class="au-form-input"
           type="number"
           name="height"
           min="120"
@@ -124,7 +124,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
       <label class="au-form-label"
         >Вага (кг)
         <input
-          class="au-cmp-input"
+          class="au-form-input"
           type="number"
           name="weight"
           min="35"
@@ -138,7 +138,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
     <div class="au-grid-2">
       <label class="au-form-label"
         >Стать
-        <select class="au-select au-cmp-input" name="gender" required>
+        <select class="au-select au-form-input" name="gender" required>
           <option value="" disabled selected>Оберіть</option>
           <option value="male">Чоловіча</option>
           <option value="female">Жіноча</option>
@@ -147,7 +147,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
 
       <label class="au-form-label"
         >Активність
-        <select class="au-select au-cmp-input" name="activity" required>
+        <select class="au-select au-form-input" name="activity" required>
           <option value="" disabled selected>Оберіть</option>
           <option value="1.2">Мінімальна</option>
           <option value="1.375">Легка</option>
@@ -161,7 +161,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
     <div class="au-grid-2">
       <label class="au-form-label"
         >Ціль
-        <select class="au-select au-cmp-input" name="goal" required>
+        <select class="au-select au-form-input" name="goal" required>
           <option value="" disabled selected>Оберіть</option>
           <option value="fat_loss">Схуднення</option>
           <option value="muscle_gain">Набір м’язів</option>
@@ -172,7 +172,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
 
       <label class="au-form-label"
         >Досвід
-        <select class="au-select au-cmp-input" name="experience" required>
+        <select class="au-select au-form-input" name="experience" required>
           <option value="" disabled selected>Оберіть</option>
           <option value="beginner">Початківець</option>
           <option value="intermediate">Середній</option>
@@ -183,7 +183,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
 
     <label class="au-form-label"
       >Тренувань на тиждень
-      <select class="au-select au-cmp-input" name="workouts_per_week" required>
+      <select class="au-select au-form-input" name="workouts_per_week" required>
         <option value="" disabled selected>Оберіть</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -200,14 +200,14 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
     </label>
 
     <div class="au-auth-actions">
-      <button class="au-cmp-btn-primary" type="submit">Створити акаунт</button>
+      <button class="au-btn-primary" type="submit">Створити акаунт</button>
     </div>
 
     <div class="au-divider"><span>або</span></div>
 
     <div class="au-oauth-list">
       <a
-        class="au-cmp-oauth-cmp-btn au-google"
+        class="au-oauth-btn au-google"
         href="{{ url_for('google_oauth.google_login') }}"
       >
         <img
@@ -217,7 +217,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
         Увійти через Google
       </a>
       <a
-        class="au-cmp-oauth-cmp-btn au-github"
+        class="au-oauth-btn au-github"
         href="{{ url_for('github.github_login') }}"
       >
         <img
@@ -236,6 +236,3 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
 {% endblock %} {% block scripts %}
 <script src="{{ url_for('static', filename='js/auth/auth.js') }}"></script>
 {% endblock %}
-
-
-

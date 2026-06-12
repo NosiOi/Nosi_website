@@ -29,3 +29,14 @@
 .cmp-btn-ghost:hover {
     background: rgba(255, 255, 255, 0.1);
 }
+
+.auth-page .btn,
+body.au-register .btn {
+    all: unset;
+    display: inline-block;
+}
+
+.auth-page .btn-primary,
+body.au-register .btn-primary {
+    all: unset;
+}

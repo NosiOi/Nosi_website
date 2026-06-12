@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{% block title %}Аутентифікація — NOSI FIT{% endblock %}</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/core/reset.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/core/variables.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/core/layout.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/cards.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/components/forms.css') }}"
+    />
+
+    {% block styles %}{% endblock %}
+  </head>
+
+  <body class="auth-page {% block body_class %}{% endblock %}">
+    <div class="auth-shell" role="region" aria-label="Аутентифікація">
+      <div class="auth-brand">
+        <a
+          href="{{ url_for('root.landing') }}"
+          class="brand-link"
+          aria-label="NOSI FIT — головна"
+        >
+          <img
+            src="{{ url_for('static', filename='img/Nosi_Logo.png') }}"
+            alt="NOSI FIT"
+            class="brand-icon"
+          />
+          <span class="brand-text"
+            >NOSI<span class="brand-accent">FIT</span></span
+          >
+        </a>
+      </div>
+
+      <main class="auth-main" role="main">{% block body %}{% endblock %}</main>
+
+      <footer class="auth-footer" role="contentinfo">
+        <small>© {{ current_year or "" }} NOSI FIT</small>
+      </footer>
+    </div>
+
+    <script>
+      function togglePass(id, btn) {
+        const input = document.getElementById(id);
+        if (!input) return;
+        if (input.type === "password") {
+          input.type = "text";
+          btn.textContent = "Приховати";
+        } else {
+          input.type = "password";
+          btn.textContent = "Показати";
+        }
+      }
+    </script>
+
+    {% block scripts %}{% endblock %}
+  </body>
+</html>
+

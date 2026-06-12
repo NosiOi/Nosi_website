@@ -9,7 +9,7 @@ NOSI FIT{% endblock %} {% block body %}
 
   <form method="POST" action="{{ url_for('auth.register_complete') }}">
     <div class="auth-actions">
-      <button class="cmp-btn-primary" type="submit">Завершити реєстрацію</button>
+      <button class="cmp-cmp-btn-primary" type="submit">Завершити реєстрацію</button>
       <a class="link-muted" href="{{ url_for('auth.register') }}"
         >Повернутися</a
       >
@@ -17,6 +17,4 @@ NOSI FIT{% endblock %} {% block body %}
   </form>
 </div>
 {% endblock %}
-
-
 

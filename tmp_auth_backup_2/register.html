@@ -64,7 +64,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
           />
           <button
             type="button"
-            class="au-cmp-btn-ghost au-toggle"
+            class="au-cmp-cmp-btn-ghost au-toggle"
             onclick="togglePass('p1', this)"
           >
             Показати
@@ -85,7 +85,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
           />
           <button
             type="button"
-            class="au-cmp-btn-ghost au-toggle"
+            class="au-cmp-cmp-btn-ghost au-toggle"
             onclick="togglePass('p2', this)"
           >
             Показати
@@ -200,7 +200,7 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
     </label>
 
     <div class="au-auth-actions">
-      <button class="au-cmp-btn-primary" type="submit">Створити акаунт</button>
+      <button class="au-cmp-cmp-btn-primary" type="submit">Створити акаунт</button>
     </div>
 
     <div class="au-divider"><span>або</span></div>
@@ -236,6 +236,4 @@ endblock %} {% block body_class %}au-register{% endblock %} {% block styles %}
 {% endblock %} {% block scripts %}
 <script src="{{ url_for('static', filename='js/auth/auth.js') }}"></script>
 {% endblock %}
-
-
 

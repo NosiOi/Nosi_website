@@ -2,6 +2,7 @@
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{% block title %}Nosi App{% endblock %}</title>
 
     <link
@@ -37,18 +38,21 @@
     {% block styles %}{% endblock %}
   </head>
 
-  <body class="app-page">
-    <div class="bg-glow-static glow-purple"></div>
-    <div class="bg-glow-static glow-teal"></div>
-    <div class="bg-glow-static glow-yellow"></div>
-    <div class="bg-glow-dynamic"></div>
+  <body class="app-page {% block body_class %}{% endblock %}">
+    <!-- background glows (static + dynamic) -->
+    <div class="bg-glow-static glow-purple" aria-hidden="true"></div>
+    <div class="bg-glow-static glow-teal" aria-hidden="true"></div>
+    <div class="bg-glow-static glow-yellow" aria-hidden="true"></div>
+    <div class="bg-glow-dynamic" aria-hidden="true"></div>
 
-    <div class="core-sidebar-shell">
+    <div class="core-sidebar-shell" role="navigation" aria-label="Головне меню">
       {% include "components/sidebar.html" %}
     </div>
 
-    <main class="main-content">
+    <main class="main-content" role="main">
       <div class="page-content">{% block body %}{% endblock %}</div>
     </main>
+
+    {% block scripts %}{% endblock %}
   </body>
 </html>

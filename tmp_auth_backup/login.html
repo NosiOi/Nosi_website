@@ -16,7 +16,7 @@
     <label class="form-label"
       >Електронна пошта
       <input
-        class="cmp-input"
+        class="form-input"
         type="email"
         name="email"
         placeholder="example@gmail.com"
@@ -28,7 +28,7 @@
       >Пароль
       <div class="pass-row">
         <input
-          class="cmp-input"
+          class="form-input"
           type="password"
           name="password"
           id="password"
@@ -37,7 +37,7 @@
         />
         <button
           type="button"
-          class="cmp-btn-ghost toggle"
+          class="btn-ghost toggle"
           onclick="togglePass('password', this)"
         >
           Показати
@@ -46,7 +46,7 @@
     </label>
 
     <div class="auth-actions">
-      <button class="cmp-btn-primary" type="submit">Увійти</button>
+      <button class="btn-primary" type="submit">Увійти</button>
       <a class="link-muted" href="{{ url_for('auth.reset_password') }}">
         Забув пароль?</a
       >
@@ -55,10 +55,10 @@
     <div class="divider"><span>або</span></div>
 
     <div class="oauth-list">
-      <a class="cmp-oauth-cmp-btn google" href="{{ url_for('google_oauth.google_login') }}
+      <a class="oauth-btn google" href="{{ url_for('google_oauth.google_login') }}
         >Увійти через Google</a
       >
-      <a class="cmp-oauth-cmp-btn github" href="{{ url_for('github.github_login') }}">
+      <a class="oauth-btn github" href="{{ url_for('github.github_login') }}">
         <img
           src="{{ url_for('static', filename='icons/github.svg') }}"
           alt="GitHub"
@@ -73,6 +73,3 @@
   </div>
 </div>
 {% endblock %}
-
-
-
