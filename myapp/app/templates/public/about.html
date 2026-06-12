@@ -1,10 +1,10 @@
-{% extends "public/base_public.html" %} {% block styles %}
+{% if current_user.is_authenticated %} {% extends "app/base_app.html" %} {% else
+%} {% extends "public/base_public.html" %} {% endif %} {% block styles %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/public/about.css') }}"
 />
-{% endblock %} {% block content %}
-
+{% endblock %} {% block body %}
 <section class="pub-hero">
   <div class="pub-container">
     <h1 class="pub-hero-title">Про NosiFit</h1>
@@ -49,5 +49,4 @@
     </p>
   </div>
 </section>
-
 {% endblock %}

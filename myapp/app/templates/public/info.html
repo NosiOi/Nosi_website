@@ -1,27 +1,30 @@
-{% extends "public/base_public.html" %} {% block title %}Про сайт — NOSI FIT{%
-endblock %} {% block body %}
+{% if current_user.is_authenticated %} {% extends "app/base_app.html" %} {% else
+%} {% extends "public/base_public.html" %} {% endif %} {% block title %}Про сайт
+— NOSI FIT{% endblock %} {% block body %}
 <section class="info-page">
-  <h1 class="info-title">Про сайт</h1>
-  <p class="info-text">
-    NOSI FIT — це персональна система тренувань, харчування та аналітики,
-    створена для допомоги комфортного розвитку.
-  </p>
+  <div class="container">
+    <h1 class="info-title">Про сайт</h1>
+    <p class="info-text">
+      NOSI FIT — це персональна система тренувань, харчування та аналітики,
+      створена для того, щоб допомогти тобі розвиватися щодня.
+    </p>
 
-  <h2 class="info-subtitle">Що тут є</h2>
-  <ul class="info-list">
-    <li>Персональні тренувальні плани</li>
-    <li>Щоденний контроль харчування</li>
-    <li>Аналітика прогресу</li>
-    <li>Відстеження водного балансу</li>
-    <li>Поради та рекомендації</li>
-  </ul>
+    <h2 class="info-subtitle">Що тут є</h2>
+    <ul class="info-list">
+      <li>Персональні тренувальні плани</li>
+      <li>Щоденний контроль харчування</li>
+      <li>Аналітика прогресу</li>
+      <li>Відстеження водного балансу</li>
+      <li>Поради та рекомендації</li>
+    </ul>
 
-  <h2 class="info-subtitle">Мета проєкту</h2>
-  <p class="info-text">
-    Створити інструмент, який допомагає людям тренуватися розумніше, харчуватися
-    краще та досягати своїх цілей без зайвого хаосу.
-  </p>
+    <h2 class="info-subtitle">Мета проєкту</h2>
+    <p class="info-text">
+      Створити інструмент, який допомагає людям тренуватися розумніше,
+      харчуватися краще та досягати своїх цілей без зайвого хаосу.
+    </p>
 
-  <p class="info-footer">Дякую за використання NosiFit 💛💜</p>
+    <p class="info-footer">Дякую, що користуєшся NOSI FIT 💛💜</p>
+  </div>
 </section>
 {% endblock %}
