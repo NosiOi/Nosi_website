@@ -49,7 +49,7 @@ def training_plan_page():
 @dashboard_bp.route("/training_explanation")
 @login_required
 def training_explanation_page():
-    return render_template("app/training_explanation.html", user=current_user)
+    return render_template("app/training/explanation.html", user=current_user)
 
 
 @dashboard_bp.route("/profile")
