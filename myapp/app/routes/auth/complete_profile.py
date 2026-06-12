@@ -3,14 +3,18 @@ from flask_login import login_user
 from myapp.app import db
 from myapp.app.models.user import User
 
-complete_profile_bp = Blueprint("complete_profile", __name__)
+complete_profile_bp = Blueprint(
+    "complete_profile",
+    __name__,
+    url_prefix="/auth"
+)
 
-@complete_profile_bp.route("/complete-profile", methods=["GET", "POST"])
+@complete_profile_bp.route("/complete_profile", methods=["GET", "POST"])
 def complete_profile():
     oauth_user = session.get("oauth_user")
 
     if not oauth_user:
-        return redirect("/login")
+        return redirect("/auth/login")
 
     existing_user = User.query.filter_by(email=oauth_user["email"]).first()
     if existing_user:

@@ -14,30 +14,22 @@ class TrainingDay:
         self.exercises.append(entry)
 
     def total_volume(self):
-        """
-        Minimal helper used by tests: sum of sets * reps (if reps numeric).
-        If reps is range/string, ignore or treat as 0.
-        """
         total = 0
         for e in self.exercises:
-            sets = e.get("sets", 0) or 0
-            reps = e.get("reps", 0) or 0
             try:
-                reps_int = int(str(reps).split("-")[0])
+                sets = int(e.get("sets", 0) or 0)
             except Exception:
-                reps_int = 0
-            try:
-                total += int(sets) * int(reps_int)
-            except Exception:
-                pass
+                sets = 0
+            total += sets
         return total
 
-    # dictionary-like access used by PlanValidator in tests
     def get(self, key, default=None):
         if key == "exercises":
             return self.exercises
         if key == "environment":
             return self.environment
+        if key == "day_name":
+            return self.day_name
         return getattr(self, key, default)
 
     @classmethod
