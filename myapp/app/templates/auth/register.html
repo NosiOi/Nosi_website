@@ -207,12 +207,10 @@
       <footer class="card-footer" role="contentinfo">
         <div class="footer-actions" role="group" aria-label="auth actions">
           <div class="action-card google-card">
-            <button
-              type="button"
-              class="action-btn oauth google alt-style"
-              aria-label="Увійти через Google"
+            <a
+              class="action-btn oauth google"
+              href="{{ url_for('google_oauth.google_login') }}"
             >
-              <!-- Google SVG -->
               <svg
                 class="icon"
                 viewBox="0 0 512 512"
@@ -225,16 +223,14 @@
                 />
               </svg>
               <span>Увійти через Google</span>
-            </button>
+            </a>
           </div>
 
           <div class="action-card github-card">
-            <button
-              type="button"
+            <a
               class="action-btn oauth github"
-              aria-label="Увійти через GitHub"
+              href="{{ url_for('github.github_login') }}"
             >
-              <!-- GitHub SVG -->
               <svg
                 class="icon"
                 xmlns="http://www.w3.org/2000/svg"
@@ -247,7 +243,7 @@
                 />
               </svg>
               <span>Увійти через GitHub</span>
-            </button>
+            </a>
           </div>
 
           <div class="action-card">
@@ -270,22 +266,28 @@
     </div>
 
     <script>
-      // Toggle password visibility
-      document.querySelectorAll(".toggle").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const id = btn.dataset.target;
-          const input = document.getElementById(id);
-          input.type = input.type === "password" ? "text" : "password";
-          btn.textContent =
-            input.type === "password" ? "Показати" : "Приховати";
+      // toggle password visibility
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".toggle").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.target;
+            const input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+            btn.textContent =
+              input.type === "password" ? "Показати" : "Приховати";
+          });
         });
-      });
 
-      // Simple stagger reveal for fields (adds class after load)
-      window.addEventListener("load", () => {
+        // stagger reveal for inputs
         document.querySelectorAll("[data-anim]").forEach((el, i) => {
-          el.style.setProperty("--stagger", i * 60 + "ms");
-          el.classList.add("reveal");
+          el.style.transition = "opacity .36s ease, transform .36s ease";
+          el.style.transitionDelay = i * 60 + "ms";
+          el.style.opacity = 0;
+          el.style.transform = "translateY(8px)";
+          requestAnimationFrame(() => {
+            el.style.opacity = 1;
+            el.style.transform = "translateY(0)";
+          });
         });
       });
     </script>
