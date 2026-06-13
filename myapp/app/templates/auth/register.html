@@ -9,220 +9,285 @@
 
   <body>
     <div class="bg"></div>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+    <div class="orb orb-3" aria-hidden="true"></div>
 
-    <div class="auth-card">
-      <div class="brand">
-        <img src="/static/img/Nosi_Logo.png" class="brand-icon" />
-        <h1 class="brand-title">
-          <span class="nos">Nosi</span><span class="fit">Fit</span>
-        </h1>
+    <div class="auth-card" role="main" aria-labelledby="page-title">
+      <!-- header centered -->
+      <div class="top-center" id="page-title">
+        <div class="brand-compact">
+          <img
+            src="/static/img/Nosi_Logo.png"
+            class="brand-icon"
+            alt="NosiFit"
+          />
+          <h1 class="brand-title">
+            <span class="nos">Nosi</span><span class="fit">Fit</span>
+          </h1>
+        </div>
+        <h2 class="title">Створити акаунт</h2>
       </div>
 
-      <h2 class="title">Створити акаунт</h2>
+      <!-- form centered -->
+      <div class="form-left">
+        <div class="form-inner">
+          <form
+            id="register-form"
+            method="POST"
+            action="/verify/send_code"
+            novalidate
+          >
+            <div class="field" data-anim>
+              <label for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="example@gmail.com"
+                required
+              />
+            </div>
 
-      <form method="POST" action="/verify/send_code">
-        <div class="field">
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="example@gmail.com"
-            required
-          />
+            <div class="field" data-anim>
+              <label for="username">Ім’я</label>
+              <input
+                id="username"
+                type="text"
+                name="username"
+                placeholder="Твоє ім’я"
+                required
+              />
+            </div>
+
+            <div class="row two-cols">
+              <div class="field" data-anim>
+                <label for="p1">Пароль</label>
+                <div class="pass-wrap">
+                  <input
+                    id="p1"
+                    type="password"
+                    name="password"
+                    placeholder="Мінімум 8 символів"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="toggle"
+                    data-target="p1"
+                    aria-label="Toggle password"
+                  >
+                    Показати
+                  </button>
+                </div>
+              </div>
+
+              <div class="field" data-anim>
+                <label for="p2">Підтвердження пароля</label>
+                <div class="pass-wrap">
+                  <input
+                    id="p2"
+                    type="password"
+                    name="confirm_password"
+                    placeholder="Повтори пароль"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="toggle"
+                    data-target="p2"
+                    aria-label="Toggle password"
+                  >
+                    Показати
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row three-cols">
+              <div class="field small" data-anim>
+                <label for="age">Вік</label>
+                <input
+                  id="age"
+                  type="number"
+                  name="age"
+                  min="14"
+                  max="90"
+                  placeholder="18"
+                  required
+                />
+              </div>
+
+              <div class="field small" data-anim>
+                <label for="height">Зріст (см)</label>
+                <input
+                  id="height"
+                  type="number"
+                  name="height"
+                  min="120"
+                  max="230"
+                  placeholder="180"
+                  required
+                />
+              </div>
+
+              <div class="field small" data-anim>
+                <label for="weight">Вага (кг)</label>
+                <input
+                  id="weight"
+                  type="number"
+                  name="weight"
+                  min="35"
+                  max="200"
+                  placeholder="75"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="quad-grid">
+              <div class="field" data-anim>
+                <label for="gender">Стать</label>
+                <select id="gender" name="gender" required>
+                  <option value="" disabled selected>Оберіть</option>
+                  <option value="male">Чоловіча</option>
+                  <option value="female">Жіноча</option>
+                </select>
+              </div>
+
+              <div class="field" data-anim>
+                <label for="workouts_per_week">Тренувань на тиждень</label>
+                <select
+                  id="workouts_per_week"
+                  name="workouts_per_week"
+                  required
+                >
+                  <option value="" disabled selected>Оберіть</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                </select>
+              </div>
+
+              <div class="field" data-anim>
+                <label for="activity">Активність</label>
+                <select id="activity" name="activity" required>
+                  <option value="" disabled selected>Оберіть</option>
+                  <option value="1.2">Мінімальна</option>
+                  <option value="1.375">Легка</option>
+                  <option value="1.55">Середня</option>
+                  <option value="1.725">Висока</option>
+                  <option value="1.9">Дуже висока</option>
+                </select>
+              </div>
+
+              <div class="field" data-anim>
+                <label for="goal">Ціль</label>
+                <select id="goal" name="goal" required>
+                  <option value="" disabled selected>Оберіть</option>
+                  <option value="fat_loss">Схуднення</option>
+                  <option value="muscle_gain">Набір м’язів</option>
+                  <option value="recomposition">Рекомпозиція</option>
+                  <option value="performance">Продуктивність</option>
+                </select>
+              </div>
+            </div>
+
+            <label class="check" data-anim>
+              <input type="checkbox" required />
+              Я погоджуюсь з <a href="/privacy">політикою конфіденційності</a>
+            </label>
+          </form>
         </div>
+      </div>
 
-        <div class="field">
-          <label>Ім’я</label>
-          <input type="text" name="username" placeholder="Твоє ім’я" required />
-        </div>
+      <!-- footer: three centered buttons -->
+      <footer class="card-footer" role="contentinfo">
+        <div class="footer-actions" role="group" aria-label="auth actions">
+          <div class="action-card google-card">
+            <button
+              type="button"
+              class="action-btn oauth google alt-style"
+              aria-label="Увійти через Google"
+            >
+              <!-- Google SVG -->
+              <svg
+                class="icon"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M32.582 370.734C15.127 336.291 5.12 297.425 5.12 256c0-41.426 10.007-80.291 27.462-114.735C74.705 57.484 161.047 0 261.12 0c69.12 0 126.836 25.367 171.287 66.793l-73.31 73.309c-26.763-25.135-60.276-38.168-97.977-38.168-66.56 0-123.113 44.917-143.36 105.426-5.12 15.36-8.146 31.65-8.146 48.64 0 16.989 3.026 33.28 8.146 48.64l-.303.232h.303c20.247 60.51 76.8 105.426 143.36 105.426 34.443 0 63.534-9.31 86.341-24.67 27.23-18.152 45.382-45.148 51.433-77.032H261.12v-99.142h241.105c3.025 16.757 4.654 34.211 4.654 52.364 0 77.963-27.927 143.592-76.334 188.276-42.356 39.098-100.305 61.905-169.425 61.905-100.073 0-186.415-57.483-228.538-141.032v-.233z"
+                />
+              </svg>
+              <span>Увійти через Google</span>
+            </button>
+          </div>
 
-        <div class="field">
-          <label>Пароль</label>
-          <div class="pass-wrap">
-            <input
-              type="password"
-              id="p1"
-              name="password"
-              placeholder="Мінімум 8 символів"
-              required
-            />
-            <button type="button" class="toggle" data-target="p1">
-              Показати
+          <div class="action-card github-card">
+            <button
+              type="button"
+              class="action-btn oauth github"
+              aria-label="Увійти через GitHub"
+            >
+              <!-- GitHub SVG -->
+              <svg
+                class="icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 640 640"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M319.988 7.973C143.293 7.973 0 151.242 0 327.96c0 141.392 91.678 261.298 218.826 303.63 16.004 2.964 21.886-6.957 21.886-15.414 0-7.63-.319-32.835-.449-59.552-89.032 19.359-107.8-37.772-107.8-37.772-14.552-36.993-35.529-46.831-35.529-46.831-29.032-19.879 2.209-19.442 2.209-19.442 32.126 2.245 49.04 32.954 49.04 32.954 28.56 48.922 74.883 34.76 93.131 26.598 2.882-20.681 11.15-34.807 20.315-42.803-71.08-8.067-145.797-35.516-145.797-158.14 0-34.926 12.52-63.485 32.965-85.88-3.33-8.078-14.291-40.606 3.083-84.674 0 0 26.87-8.61 88.029 32.8 25.512-7.075 52.878-10.642 80.056-10.76 27.2.118 54.614 3.673 80.162 10.76 61.076-41.386 87.922-32.8 87.922-32.8 17.398 44.08 6.485 76.631 3.154 84.675 20.516 22.394 32.93 50.953 32.93 85.879 0 122.907-74.883 149.93-146.117 157.856 11.481 9.921 21.733 29.398 21.733 59.233 0 42.792-.366 77.28-.366 87.804 0 8.516 5.764 18.473 21.992 15.354 127.076-42.354 218.637-162.274 218.637-303.582 0-176.695-143.269-319.988-320-319.988l-.023.107z"
+                />
+              </svg>
+              <span>Увійти через GitHub</span>
+            </button>
+          </div>
+
+          <div class="action-card">
+            <button
+              type="submit"
+              form="register-form"
+              class="action-btn primary submit-large"
+              aria-label="Створити акаунт"
+            >
+              <span>Створити акаунт</span>
             </button>
           </div>
         </div>
+      </footer>
 
-        <div class="field">
-          <label>Підтвердження пароля</label>
-          <div class="pass-wrap">
-            <input
-              type="password"
-              id="p2"
-              name="confirm_password"
-              placeholder="Повтори пароль"
-              required
-            />
-            <button type="button" class="toggle" data-target="p2">
-              Показати
-            </button>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field small">
-            <label>Вік</label>
-            <input
-              type="number"
-              name="age"
-              min="14"
-              max="90"
-              placeholder="18"
-              required
-              oninput="
-                if (this.value.length > 2) this.value = this.value.slice(0, 2);
-              "
-            />
-          </div>
-
-          <div class="field small">
-            <label>Зріст (см)</label>
-            <input
-              type="number"
-              name="height"
-              min="120"
-              max="230"
-              placeholder="180"
-              required
-              oninput="
-                if (this.value.length > 3) this.value = this.value.slice(0, 3);
-              "
-            />
-          </div>
-
-          <div class="field small">
-            <label>Вага (кг)</label>
-            <input
-              type="number"
-              name="weight"
-              min="35"
-              max="200"
-              placeholder="75"
-              required
-              oninput="
-                if (this.value.length > 3) this.value = this.value.slice(0, 3);
-              "
-            />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field small">
-            <label>Стать</label>
-            <select name="gender" required>
-              <option value="" disabled selected>Оберіть</option>
-              <option value="male">Чоловіча</option>
-              <option value="female">Жіноча</option>
-            </select>
-          </div>
-
-          <div class="field small">
-            <label>Активність</label>
-            <select name="activity" required>
-              <option value="" disabled selected>Оберіть</option>
-              <option value="1.2">Мінімальна</option>
-              <option value="1.375">Легка</option>
-              <option value="1.55">Середня</option>
-              <option value="1.725">Висока</option>
-              <option value="1.9">Дуже висока</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field small">
-            <label>Ціль</label>
-            <select name="goal" required>
-              <option value="" disabled selected>Оберіть</option>
-              <option value="fat_loss">Схуднення</option>
-              <option value="muscle_gain">Набір м’язів</option>
-              <option value="recomposition">Рекомпозиція</option>
-              <option value="performance">Продуктивність</option>
-            </select>
-          </div>
-
-          <div class="field small">
-            <label>Досвід</label>
-            <select name="experience" required>
-              <option value="" disabled selected>Оберіть</option>
-              <option value="beginner">Початківець</option>
-              <option value="intermediate">Середній</option>
-              <option value="advanced">Просунутий</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Тренувань на тиждень</label>
-          <select name="workouts_per_week" required>
-            <option value="" disabled selected>Оберіть</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-          </select>
-        </div>
-
-        <label class="check">
-          <input type="checkbox" required />
-          Я погоджуюсь з <a href="/privacy">політикою конфіденційності</a>
-        </label>
-
-        <div class="oauth-box">
-          <button type="button" class="oauth-btn google">
-            <img src="/static/img/google.svg" alt="" />
-            Увійти через Google
-          </button>
-
-          <button type="button" class="oauth-btn github">
-            <img src="/static/img/github.svg" alt="" />
-            Увійти через GitHub
-          </button>
-        </div>
-
-        <div class="divider">
-          <span>або</span>
-        </div>
-
-        <button type="submit" class="btn">Створити акаунт</button>
-      </form>
-
-      <div class="bottom">
-        Вже маєш акаунт? <a href="/auth/login">Увійти</a>
+      <!-- note bottom -->
+      <div class="account-note" aria-hidden="false">
+        <span>Вже маєш акаунт? <a href="/auth/login">Увійти</a></span>
       </div>
     </div>
 
     <script>
+      // Toggle password visibility
       document.querySelectorAll(".toggle").forEach((btn) => {
-        btn.onclick = () => {
+        btn.addEventListener("click", () => {
           const id = btn.dataset.target;
           const input = document.getElementById(id);
           input.type = input.type === "password" ? "text" : "password";
           btn.textContent =
             input.type === "password" ? "Показати" : "Приховати";
-        };
+        });
       });
 
-      const btn = document.querySelector(".btn");
-      btn.addEventListener("mouseenter", () =>
-        document.body.classList.add("btn-hover"),
-      );
-      btn.addEventListener("mouseleave", () =>
-        document.body.classList.remove("btn-hover"),
-      );
+      // Simple stagger reveal for fields (adds class after load)
+      window.addEventListener("load", () => {
+        document.querySelectorAll("[data-anim]").forEach((el, i) => {
+          el.style.setProperty("--stagger", i * 60 + "ms");
+          el.classList.add("reveal");
+        });
+      });
     </script>
   </body>
 </html>
