@@ -1,515 +1,555 @@
 :root {
-    --core-violet: #9B5DE5;
-    --core-violet-soft: #c79bff;
-    --core-text-main: #f7f7ff;
-    --core-text-muted: #9ca0c2;
-    --core-border-subtle: rgba(255, 255, 255, 0.06);
-    --core-blur-soft: 18px;
-    --core-radius-lg: 22px;
-    --core-radius-sm: 10px;
-    --core-shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.85);
-    --core-yellow: #FFD43B;
+    --black: #050509;
+    --purple: #9B5DE5;
+    --yellow: #FEE440;
+    --white: #ffffff;
+    --soft: #cfcfe8;
+    --gap: 12px;
+    --btn-h: 48px;
+    --input-h: 44px;
+    --brand-h: 56px;
+    --radius-lg: 16px;
+    --shadow: 0 28px 80px rgba(0, 0, 0, 0.75);
+    --transition: 0.22s ease;
 }
 
-
-body.au-register {
-    --page-z: 20;
-}
-
-.au-page-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(800px 400px at 8% 12%, rgba(155, 93, 229, 0.08) 0%, transparent 18%),
-        radial-gradient(600px 300px at 86% 18%, rgba(0, 194, 255, 0.06) 0%, transparent 20%),
-        radial-gradient(500px 260px at 60% 82%, rgba(255, 212, 59, 0.05) 0%, transparent 18%);
-    filter: blur(var(--core-blur-soft, 18px));
-    transform: translateZ(0);
-}
-
-body.au-register .au-auth-card {
-    position: relative;
-    z-index: calc(var(--page-z) + 1);
-    width: 100%;
-    max-width: 980px;
-    margin: 40px auto;
-    display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: 24px;
-    padding: 28px;
-    border-radius: var(--core-radius-lg, 22px);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
-    border: 1px solid var(--core-border-subtle, rgba(255, 255, 255, 0.06));
-    box-shadow: var(--core-shadow-soft, 0 18px 45px rgba(0, 0, 0, 0.85));
-    overflow: visible;
-}
-
-body.au-register .au-left-hero {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 8px 4px 8px 4px;
-}
-
-body.au-register .au-left-hero h2 {
-    font-size: 26px;
-    font-weight: 900;
-    color: var(--core-text-main, #f7f7ff);
+/* #base */
+* {
+    box-sizing: border-box;
     margin: 0;
+    padding: 0
 }
 
-body.au-register .au-left-hero p {
-    color: var(--core-text-muted, #9ca0c2);
-    font-size: 15px;
-    line-height: 1.5;
-    margin: 0;
-    max-width: 56ch;
+html,
+body {
+    height: 100%
 }
 
-body.au-register .au-right-panel {
+body {
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    background: var(--black);
+    color: var(--white);
     display: flex;
-    flex-direction: column;
-    gap: 12px;
     align-items: center;
     justify-content: center;
     padding: 18px;
-    border-radius: 14px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-body.au-register .au-right-panel .au-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    padding: 12px;
-    border-radius: 12px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.01));
-    width: 100%;
+/* subtle animated background orbs */
+.bg {
+    position: fixed;
+    inset: 0;
+    z-index: -4;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(155, 93, 229, 0.12), transparent 60%),
+        radial-gradient(circle at 0% 100%, rgba(0, 187, 249, 0.08), transparent 60%);
+    opacity: 0.9
 }
 
-body.au-register .au-right-panel .au-stat .au-num {
-    font-weight: 900;
-    font-size: 20px;
-    color: var(--core-violet, #9B5DE5);
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(72px);
+    opacity: 0.45;
+    z-index: -3;
+    transform: translateZ(0)
 }
 
-body.au-register .au-right-panel .au-stat .au-label {
-    color: var(--core-text-muted, #9ca0c2);
-    font-size: 13px;
+.orb-1 {
+    width: 420px;
+    height: 420px;
+    top: -80px;
+    left: -160px;
+    background: rgba(155, 93, 229, 0.9);
+    animation: orbMove 12s ease-in-out infinite
 }
 
-body.au-register .au-auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+.orb-2 {
+    width: 420px;
+    height: 420px;
+    bottom: -160px;
+    right: -120px;
+    background: rgba(254, 228, 64, 0.9);
+    animation: orbMove 14s ease-in-out infinite
 }
 
-body.au-register .au-form-label {
-    font-size: 13px;
-    color: var(--core-text-muted, #9ca0c2);
-    font-weight: 700;
-    display: block;
+.orb-3 {
+    width: 320px;
+    height: 320px;
+    top: 30%;
+    left: 60%;
+    background: rgba(0, 187, 249, 0.9);
+    animation: orbMove 18s ease-in-out infinite
 }
 
-body.au-register .au-form-input,
-body.au-register .au-select {
-    height: 48px;
-    padding: 12px 14px;
-    border-radius: var(--core-radius-sm, 10px);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--core-border-subtle, rgba(255, 255, 255, 0.06));
-    color: var(--core-text-main, #f7f7ff);
-    font-size: 15px;
-    transition: box-shadow var(--core-transition, 0.28s), border-color var(--core-transition, 0.28s);
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    width: 100%;
-    box-sizing: border-box;
-}
+@keyframes orbMove {
+    0% {
+        transform: translateY(0) scale(1)
+    }
 
-body.au-register .au-form-input::placeholder {
-    color: rgba(247, 247, 255, 0.45);
-}
+    50% {
+        transform: translateY(12px) scale(1.03)
+    }
 
-body.au-register .au-form-input:focus,
-body.au-register .au-select:focus {
-    outline: none;
-    border-color: var(--core-violet, #9B5DE5);
-    box-shadow: 0 0 30px rgba(155, 93, 229, 0.08);
-}
-
-body.au-register .au-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-body.au-register .au-grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
-
-@media (max-width: 720px) {
-
-    body.au-register .au-grid-2,
-    body.au-register .au-grid-3 {
-        grid-template-columns: 1fr;
+    100% {
+        transform: translateY(0) scale(1)
     }
 }
 
-body.au-register .au-pass-row {
+/* layout grid with header / content / footer */
+.auth-card {
+    width: 100%;
+    max-width: 920px;
+    background: linear-gradient(145deg, #0e0e18, #151525);
+    padding: 28px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 20px;
+    align-items: stretch;
+    min-height: 640px;
+    overflow: visible;
+    margin: 0 auto;
+    animation: cardFade .45s ease both;
+}
+
+/* #anim card fade */
+@keyframes cardFade {
+    from {
+        opacity: 0;
+        transform: translateY(6px)
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}
+
+/* header centered */
+.top-center {
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
     display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-body.au-register .au-pass-row .au-form-input {
-    flex: 1;
-}
-
-body.au-register .au-btn-ghost.au-toggle {
-    padding: 8px 10px;
-    border-radius: 10px;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    color: var(--core-text-muted, #9ca0c2);
-    font-weight: 800;
-    cursor: pointer;
-    transition: all var(--core-transition, 0.28s);
-}
-
-body.au-register .au-btn-ghost.au-toggle:hover {
-    background: rgba(255, 255, 255, 0.02);
-    transform: translateY(-2px);
-}
-
-body.au-register .au-btn-primary {
-    display: inline-flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 12px 18px;
-    border-radius: 14px;
-    background: linear-gradient(90deg, var(--core-violet, #9B5DE5), var(--core-violet-soft, #c79bff));
-    color: #fff;
-    font-weight: 800;
-    border: none;
-    box-shadow: 0 18px 48px rgba(155, 93, 229, 0.18);
-    transition: transform var(--core-transition, 0.28s), box-shadow var(--core-transition, 0.28s);
-}
-
-body.au-register .au-btn-primary:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 28px 70px rgba(155, 93, 229, 0.22);
-}
-
-body.au-register .au-oauth-list {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-body.au-register .au-oauth-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--core-border-subtle, rgba(255, 255, 255, 0.06));
-    color: var(--core-text-main, #f7f7ff);
-    font-weight: 700;
-    transition: transform var(--core-transition, 0.28s), box-shadow var(--core-transition, 0.28s);
-}
-
-body.au-register .au-oauth-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-}
-
-body.au-register .au-divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: var(--core-text-muted, #9ca0c2);
-    font-size: 13px;
-    margin: 6px 0;
-}
-
-body.au-register .au-divider::before,
-body.au-register .au-divider::after {
-    content: "";
-    height: 1px;
-    background: rgba(255, 255, 255, 0.03);
-    flex: 1;
-}
-
-body.au-register .au-divider span {
-    background: linear-gradient(180deg, var(--core-bg-soft, #050712), var(--core-bg, #020308));
-    padding: 0 8px;
-    border-radius: 6px;
-}
-
-body.au-register .au-check {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--core-text-muted, #9ca0c2);
-    font-size: 13px;
-}
-
-body.au-register .au-check input {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--core-violet, #9B5DE5);
-    border-radius: 6px;
-}
-
-body.au-register .au-link-muted {
-    color: var(--core-text-muted, #9ca0c2);
-    font-size: 14px;
-}
-
-body.au-register .au-auth-bottom {
-    text-align: center;
-    color: var(--core-text-muted, #9ca0c2);
-    font-size: 14px;
-    margin-top: 6px;
-}
-
-body.au-register .au-inline-error {
-    color: var(--core-danger, #ff5b6b);
-    font-size: 13px;
-    margin-top: 6px;
-    font-weight: 700;
-}
-
-body.au-register .au-auth-error {
-    background: rgba(255, 91, 107, 0.06);
-    color: var(--core-danger, #ff5b6b);
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 91, 107, 0.12);
-    font-weight: 700;
-}
-
-body.au-register .au-password-strength {
-    height: 10px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.03);
-    overflow: hidden;
-}
-
-body.au-register .au-password-strength>i {
-    display: block;
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--core-yellow, #FFD43B), var(--core-violet, #9B5DE5));
-    transition: width 420ms ease;
-}
-
-body.au-register .au-input-counter {
-    display: flex;
-    align-items: center;
     gap: 8px;
+    margin-bottom: 6px;
 }
 
-body.au-register .au-input-counter button {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--core-border-subtle, rgba(255, 255, 255, 0.06));
-    color: var(--core-text-main, #f7f7ff);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-body.au-register .au-input-counter input {
-    width: 84px;
-    text-align: center;
-    padding: 8px;
-    border-radius: 10px;
-    border: 1px solid var(--core-border-subtle, rgba(255, 255, 255, 0.06));
-    background: rgba(255, 255, 255, 0.02);
-    color: var(--core-text-main, #f7f7ff);
-}
-
-.brand-link {
-    display: inline-flex;
+.brand-compact {
+    display: flex;
     align-items: center;
     gap: 12px;
-    text-decoration: none;
+    height: var(--brand-h)
 }
 
 .brand-icon {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     object-fit: contain;
-    display: inline-block;
-    border-radius: 8px;
-    background: linear-gradient(90deg, rgba(155, 93, 229, 0.08), rgba(0, 194, 255, 0.04));
-    padding: 6px;
+    filter: drop-shadow(0 0 12px rgba(155, 93, 229, 0.45))
 }
 
-.brand-text {
-    font-weight: 900;
-    letter-spacing: 0.4px;
-    font-size: 18px;
-    color: var(--core-text-main, #f7f7ff);
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
+.brand-title {
+    font-size: 22px;
+    font-weight: 800
 }
 
-.brand-accent {
-    color: var(--core-violet, #9B5DE5);
-    margin-left: 2px;
+.nos {
+    color: var(--yellow)
 }
 
-.au-auth-actions {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    justify-content: flex-start;
-    margin-top: 8px;
+.fit {
+    color: var(--purple)
 }
 
-@media (max-width: 520px) {
-    .au-auth-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .au-btn-primary {
-        width: 100%;
-    }
-}
-
-@media (max-width: 520px) {
-    .au-oauth-list {
-        flex-direction: column;
-    }
-
-    .au-oauth-btn {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-:focus {
-    outline: none;
-}
-
-:focus-visible {
-    outline: 3px solid rgba(155, 93, 229, 0.12);
-    outline-offset: 2px;
-}
-
-button:focus,
-input:focus,
-select:focus,
-textarea:focus {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 0 4px rgba(155, 93, 229, 0.06);
-}
-
-.au-divider .label {
+.title {
+    font-size: 20px;
     font-weight: 700;
-    color: var(--core-text-muted, #9ca0c2);
+    color: var(--white);
+    margin: 0
 }
 
-input[type="number"] {
-    -moz-appearance: textfield;
+/* form centered */
+.form-left {
+    grid-column: 1 / -1;
+    grid-row: 2 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+.form-inner {
+    width: 100%;
+    max-width: 720px
 }
 
-body.au-register .brand-link {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 12px !important;
+/* fields */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .36s var(--transition), transform .36s var(--transition)
 }
 
-body.au-register .brand-icon {
-    width: 48px !important;
-    height: 48px !important;
-    padding: 6px !important;
-    background: linear-gradient(90deg, rgba(155, 93, 229, 0.08), rgba(0, 194, 255, 0.04)) !important;
-    border-radius: 8px !important;
+.field.reveal {
+    opacity: 1;
+    transform: translateY(0)
 }
 
-body.au-register .brand-text {
-    color: var(--core-text-main) !important;
-    font-weight: 900 !important;
+.field[data-anim] {
+    transition-delay: var(--stagger, 0ms)
 }
 
-body.au-register .brand-accent {
-    color: var(--core-violet) !important;
+.field label {
+    font-size: 13px;
+    color: var(--soft);
+    font-weight: 600
 }
 
-/* TEMP OVERRIDES for auth page — remove after refactor */
-body.au-register .btn,
-body.au-register .btn-primary,
-body.au-register .btn-ghost,
-body.au-register .oauth-btn,
-body.au-register .oauth .oauth-btn {
-    /* ensure auth buttons use au styles */
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 10px !important;
-    padding: 10px 14px !important;
-    border-radius: 12px !important;
-    font-weight: 800 !important;
-    color: var(--core-text-main) !important;
-    background: linear-gradient(90deg, var(--core-violet), var(--core-violet-soft)) !important;
-    border: 1px solid var(--core-border-subtle) !important;
-    box-shadow: 0 18px 48px rgba(155, 93, 229, 0.18) !important;
+.field input,
+.field select {
+    width: 100%;
+    height: var(--input-h);
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #050509;
+    color: var(--white);
+    font-size: 14px;
+    transition: box-shadow .18s var(--transition), border-color .18s var(--transition), background .18s var(--transition)
 }
 
-/* ensure form inputs on auth page use au styles even if .form-input exists globally */
-body.au-register .form-input,
-body.au-register .input,
-body.au-register .au-form-input {
-    height: 48px !important;
-    padding: 12px 14px !important;
-    border-radius: var(--core-radius-sm) !important;
-    background: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid var(--core-border-subtle) !important;
-    color: var(--core-text-main) !important;
-    box-sizing: border-box !important;
+.field input::placeholder {
+    color: #8f8fb0
 }
 
-/* brand/logo forced in auth context */
-body.au-register .brand-link {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 12px !important;
+.field input:focus,
+.field select:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 8px 30px rgba(155, 93, 229, 0.06);
+    background: rgba(18, 18, 30, 1)
 }
 
-body.au-register .brand-icon {
-    width: 48px !important;
-    height: 48px !important;
-    padding: 6px !important;
-    background: linear-gradient(90deg, rgba(155, 93, 229, 0.08), rgba(0, 194, 255, 0.04)) !important;
-    border-radius: 8px !important;
+/* rows and grids */
+.row {
+    display: flex;
+    gap: 12px
 }
 
-body.au-register .brand-text {
-    color: var(--core-text-main) !important;
-    font-weight: 900 !important;
+.row.two-cols .field {
+    flex: 1
 }
 
-body.au-register .brand-accent {
-    color: var(--core-violet) !important;
+.row.three-cols .field {
+    flex: 1
+}
+
+.quad-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 12px
+}
+
+.quad-grid .field {
+    min-width: 0
+}
+
+/* password toggle */
+.pass-wrap {
+    position: relative
+}
+
+.toggle {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 12px;
+    background: #141414;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--white);
+    cursor: pointer;
+    transition: transform .12s ease;
+}
+
+.toggle:active {
+    transform: translateY(-50%) scale(.98)
+}
+
+/* checkbox */
+.check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--soft);
+    margin: 8px 0
+}
+
+.check a {
+    color: var(--yellow);
+    text-decoration: none;
+    font-weight: 700
+}
+
+/* footer and actions centered and even */
+.card-footer {
+    grid-column: 1 / -1;
+    grid-row: 3 / 4;
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+/* three equal buttons centered */
+.footer-actions {
+    width: 100%;
+    max-width: 720px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+}
+
+/* compact card wrapper */
+.action-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 6px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 260px;
+    transition: transform .18s var(--transition), box-shadow .18s var(--transition);
+}
+
+.action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35)
+}
+
+/* button base */
+.action-card>.action-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+    padding: 0 8px;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: #0b0b10;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform .14s var(--transition), box-shadow .14s var(--transition), background .14s var(--transition);
+    height: var(--btn-h);
+    min-width: 0;
+    white-space: nowrap;
+    width: auto;
+    overflow: visible;
+}
+
+.action-btn .icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px
+}
+
+.action-btn>span {
+    display: inline-block;
+    text-align: center;
+    padding-left: 6px
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28)
+}
+
+.action-btn:active {
+    transform: translateY(-1px) scale(.997)
+}
+
+.action-btn:focus {
+    outline: 3px solid rgba(155, 93, 229, 0.08);
+    outline-offset: 2px
+}
+
+/* Google: remove colored stripe, compact padding */
+.action-btn.oauth.google.alt-style {
+    background: linear-gradient(180deg, #111018, #0e0e14);
+    color: var(--white);
+    border: 1px solid rgba(155, 93, 229, 0.06);
+    box-shadow: 0 8px 30px rgba(155, 93, 229, 0.03);
+}
+
+.action-btn.oauth.google.alt-style::before {
+    display: none
+}
+
+.action-btn.oauth.google.alt-style .icon {
+    filter: brightness(0) invert(1)
+}
+
+/* GitHub compact */
+.action-btn.oauth.github {
+    background: linear-gradient(180deg, #0b0b10, #0f0f14);
+    color: var(--white);
+    border: 1px solid rgba(155, 93, 229, 0.06);
+    box-shadow: 0 8px 30px rgba(155, 93, 229, 0.03)
+}
+
+.action-btn.oauth.github .icon {
+    filter: brightness(0) invert(1)
+}
+
+.action-btn.oauth.github:hover {
+    box-shadow: 0 28px 80px rgba(155, 93, 229, 0.08)
+}
+
+/* primary */
+.action-btn.primary {
+    background: linear-gradient(135deg, var(--yellow), #fff07a);
+    color: #1b1b1b;
+    border: none;
+    font-weight: 900;
+    justify-content: center;
+    box-shadow: 0 14px 40px rgba(254, 228, 64, 0.25)
+}
+
+.action-btn.primary:hover {
+    box-shadow: 0 24px 70px rgba(254, 228, 64, 0.35);
+    transform: translateY(-3px)
+}
+
+/* bottom note separated by thin line */
+.account-note {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: 8px;
+    color: var(--soft);
+    font-size: 13px;
+}
+
+.account-note a {
+    color: var(--purple);
+    text-decoration: none;
+    font-weight: 700
+}
+
+/* hide old link-box */
+.action-btn.link-box {
+    display: none
+}
+
+/* small accessibility: reduce motion */
+@media (prefers-reduced-motion:reduce) {
+
+    .orb,
+    .auth-card,
+    .action-card,
+    .action-btn,
+    .field {
+        animation: none;
+        transition: none
+    }
+}
+
+/* responsive: stack buttons on small screens */
+@media (max-width:980px) {
+    .auth-card {
+        grid-template-columns: 1fr;
+        padding: 22px;
+        min-height: auto
+    }
+
+    .form-left {
+        grid-column: 1/2
+    }
+
+    .card-footer {
+        grid-column: 1/2;
+        padding-top: 10px
+    }
+
+    .footer-actions {
+        max-width: 100%;
+        grid-template-columns: 1fr;
+        gap: 12px
+    }
+
+    .action-card {
+        padding: 0;
+        max-width: none
+    }
+
+    .action-card>.action-btn {
+        justify-content: center
+    }
+
+    .action-btn {
+        height: auto;
+        padding: 12px 14px;
+        border-radius: 12px;
+        font-size: 15px;
+        white-space: normal
+    }
+
+    .quad-grid {
+        grid-template-columns: repeat(2, 1fr)
+    }
+
+    .row.three-cols {
+        flex-wrap: wrap
+    }
+
+    .account-note {
+        padding-top: 10px
+    }
+}
+
+/* small helper: reveal class toggled by JS */
+.field.reveal {
+    opacity: 1;
+    transform: translateY(0)
 }
