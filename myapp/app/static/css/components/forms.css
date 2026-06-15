@@ -1,80 +1,83 @@
-.cmp-input,
-.cmp-select,
-.cmp-textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 14px;
-}
-
-.cmp-input:focus,
-.cmp-select:focus,
-.cmp-textarea:focus {
-    outline: none;
-    border-color: #9b5de5;
-}
-
-.cmp-label {
+.app-layout .cmp-label,
+.public-layout .cmp-label,
+.auth-layout .cmp-label {
     font-size: 13px;
-    color: #ccc;
-    margin-bottom: 4px;
+    color: var(--nf-text-muted);
+    margin-bottom: 6px;
     display: block;
 }
 
-.u-container {
+.app-layout .cmp-input,
+.app-layout .cmp-select,
+.app-layout .cmp-textarea,
+.public-layout .cmp-input,
+.public-layout .cmp-select,
+.public-layout .cmp-textarea,
+.auth-layout .cmp-input,
+.auth-layout .cmp-select,
+.auth-layout .cmp-textarea {
     width: 100%;
-    max-width: var(--core-max-width, 1200px);
-    margin: 0 auto;
-    padding: 0 20px
+    padding: 10px 12px;
+    border-radius: var(--nf-radius-sm);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--nf-border-subtle);
+    color: var(--nf-text-main);
+    font-size: 14px;
+    transition: border-color var(--nf-transition),
+        box-shadow var(--nf-transition), background var(--nf-transition);
 }
 
-.u-center {
-    display: flex;
-    align-items: center;
-    justify-content: center
+.app-layout .cmp-input::placeholder,
+.app-layout .cmp-textarea::placeholder,
+.public-layout .cmp-input::placeholder,
+.public-layout .cmp-textarea::placeholder,
+.auth-layout .cmp-input::placeholder,
+.auth-layout .cmp-textarea::placeholder {
+    color: var(--nf-text-soft);
 }
 
-.u-hidden {
-    display: none
+.app-layout .cmp-input:focus,
+.app-layout .cmp-select:focus,
+.app-layout .cmp-textarea:focus,
+.public-layout .cmp-input:focus,
+.public-layout .cmp-select:focus,
+.public-layout .cmp-textarea:focus,
+.auth-layout .cmp-input:focus,
+.auth-layout .cmp-select:focus,
+.auth-layout .cmp-textarea:focus {
+    outline: none;
+    border-color: var(--nf-violet);
+    box-shadow: 0 0 0 1px rgba(155, 93, 229, 0.6),
+        0 14px 40px rgba(0, 0, 0, 0.85);
+    background: rgba(255, 255, 255, 0.05);
 }
 
-.u-small {
-    font-size: 13px;
-    color: var(--core-text-muted)
+.app-layout .cmp-textarea,
+.public-layout .cmp-textarea,
+.auth-layout .cmp-textarea {
+    min-height: 90px;
+    resize: vertical;
 }
 
-.form-field {
+.app-layout .form-field,
+.public-layout .form-field,
+.auth-layout .form-field {
     display: flex;
     flex-direction: column;
-    gap: 8px
+    gap: 6px;
 }
 
-.input,
-.select,
-textarea {
-    height: 44px;
-    padding: 10px 12px;
-    border-radius: var(--core-radius-sm);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--core-border-subtle);
-    color: var(--core-text-main);
-    font-size: 14px;
-    transition: box-shadow var(--core-transition), border-color var(--core-transition);
+.app-layout .u-small,
+.public-layout .u-small,
+.auth-layout .u-small {
+    font-size: 12px;
+    color: var(--nf-text-soft);
 }
 
-.input:focus,
-.select:focus,
-textarea:focus {
-    outline: none;
-    border-color: var(--core-violet);
-    box-shadow: 0 8px 30px rgba(155, 93, 229, 0.08)
-}
-
-.auth-page .form-input,
-body.au-register .form-input {
-    all: unset;
-    display: block;
+.app-layout .u-container,
+.public-layout .u-container {
+    width: 100%;
+    max-width: var(--nf-max-width);
+    margin: 0 auto;
+    padding: 0 var(--nf-page-padding-x);
 }

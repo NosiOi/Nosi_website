@@ -1,42 +1,104 @@
-.cmp-btn {
+.app-layout .cmp-btn,
+.public-layout .cmp-btn,
+.auth-layout .cmp-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 10px 18px;
-    border-radius: 10px;
+    border-radius: var(--nf-radius-sm);
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.2s ease;
-    border: none;
+    border: 1px solid transparent;
+    transition: background var(--nf-transition-fast),
+        color var(--nf-transition-fast), border-color var(--nf-transition-fast),
+        box-shadow var(--nf-transition-fast), transform var(--nf-transition-fast);
+    white-space: nowrap;
 }
 
-.cmp-btn-primary {
-    background: #9b5de5;
-    color: #fff;
+.app-layout .cmp-btn-primary,
+.public-layout .cmp-btn-primary,
+.auth-layout .cmp-btn-primary {
+    background: var(--nf-violet);
+    color: #ffffff;
+    box-shadow: 0 14px 35px rgba(155, 93, 229, 0.45);
+    border-color: rgba(155, 93, 229, 0.7);
 }
 
-.cmp-btn-primary:hover {
-    background: #b07aff;
+.app-layout .cmp-btn-primary:hover,
+.public-layout .cmp-btn-primary:hover,
+.auth-layout .cmp-btn-primary:hover {
+    background: #b57bff;
+    box-shadow: 0 18px 40px rgba(155, 93, 229, 0.65);
+    transform: translateY(-1px);
 }
 
-.cmp-btn-ghost {
+.app-layout .cmp-btn-primary:active,
+.public-layout .cmp-btn-primary:active,
+.auth-layout .cmp-btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 10px 26px rgba(155, 93, 229, 0.4);
+}
+
+.app-layout .cmp-btn-ghost,
+.public-layout .cmp-btn-ghost,
+.auth-layout .cmp-btn-ghost {
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--nf-text-main);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.app-layout .cmp-btn-ghost:hover,
+.public-layout .cmp-btn-ghost:hover,
+.auth-layout .cmp-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.app-layout .cmp-btn-subtle,
+.public-layout .cmp-btn-subtle,
+.auth-layout .cmp-btn-subtle {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
+    color: var(--nf-text-muted);
+    border-color: transparent;
 }
 
-.cmp-btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.1);
+.app-layout .cmp-btn-subtle:hover,
+.public-layout .cmp-btn-subtle:hover,
+.auth-layout .cmp-btn-subtle:hover {
+    color: var(--nf-text-main);
 }
 
-.auth-page .btn,
-body.au-register .btn {
-    all: unset;
-    display: inline-block;
+.app-layout .cmp-btn-danger,
+.auth-layout .cmp-btn-danger {
+    background: #ff4b5c;
+    color: #ffffff;
+    border-color: rgba(255, 75, 92, 0.7);
+    box-shadow: 0 14px 35px rgba(255, 75, 92, 0.45);
 }
 
-.auth-page .btn-primary,
-body.au-register .btn-primary {
-    all: unset;
+.app-layout .cmp-btn-danger:hover,
+.auth-layout .cmp-btn-danger:hover {
+    background: #ff5f70;
+}
+
+.app-layout .cmp-btn-sm,
+.public-layout .cmp-btn-sm,
+.auth-layout .cmp-btn-sm {
+    padding: 7px 14px;
+    font-size: 13px;
+}
+
+.app-layout .cmp-btn-lg,
+.public-layout .cmp-btn-lg,
+.auth-layout .cmp-btn-lg {
+    padding: 12px 22px;
+    font-size: 15px;
+}
+
+.app-layout .cmp-btn>svg,
+.public-layout .cmp-btn>svg,
+.auth-layout .cmp-btn>svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
 }
