@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, session, flash
+from flask import Blueprint, request, render_template, redirect, session, flash, url_for
 from myapp.app.models.verification_code import VerificationCode
 from myapp.app.models.user import User
 from myapp.app import db, mail
@@ -36,9 +36,13 @@ def send_verification_email(email, code):
 def send_code():
     email = request.form.get("email")
 
+    if not email or email.strip() == "":
+        flash("Введіть коректний email", "error")
+        return redirect(url_for("auth.register"))
+
     if User.query.filter_by(email=email).first():
         flash("Ця пошта вже зареєстрована. Увійдіть у свій акаунт.", "error")
-        return redirect("/auth/login")
+        return redirect(url_for("auth.login"))
 
     session["reg_data"] = request.form.to_dict()
 
@@ -53,8 +57,7 @@ def send_code():
 
     session["pending_email"] = email
 
-    return redirect("/verify/verify_email")
-
+    return redirect(url_for("email_verification.verify_email"))
 
 
 @email_verification_bp.route("/verify_email", methods=["GET", "POST"])
@@ -67,21 +70,41 @@ def verify_email():
 
     if not email:
         flash("Сесія втрачена. Спробуйте ще раз.", "error")
-        return redirect("/auth/register")
+        return redirect(url_for("auth.register"))
 
     record = VerificationCode.query.filter_by(email=email).first()
 
     if not record:
         flash("Код не знайдено. Спробуйте ще раз.", "error")
-        return redirect("/auth/register")
+        return redirect(url_for("auth.register"))
 
     if record.code != code_input:
         flash("Невірний код.", "error")
-        return redirect("/verify/verify_email")
+        return redirect(url_for("email_verification.verify_email"))
 
     session["verified_email"] = email
 
     db.session.delete(record)
     db.session.commit()
 
-    return redirect("/auth/register_complete")
+    return redirect(url_for("auth.register_complete"))
+
+
+@email_verification_bp.route("/resend", methods=["GET"], endpoint="resend")
+def resend_code():
+    email = session.get("pending_email")
+
+    if not email:
+        flash("Сесія втрачена. Спробуйте ще раз.", "error")
+        return redirect(url_for("auth.register"))
+
+    code = f"{random.randint(100000, 999999)}"
+
+    VerificationCode.query.filter_by(email=email).delete()
+    db.session.add(VerificationCode(email=email, code=code))
+    db.session.commit()
+
+    send_verification_email(email, code)
+
+    flash("Код надіслано повторно!", "info")
+    return redirect(url_for("email_verification.verify_email"))

@@ -14,6 +14,23 @@
     <div class="orb orb-3" aria-hidden="true"></div>
 
     <div class="auth-card" role="main" aria-labelledby="page-title">
+      <!-- progress bar with steps -->
+      <div class="progress-wrapper">
+        <div class="progress-line">
+          <!-- 33% because this is step 1 -->
+          <div class="progress-fill" style="width: 33%"></div>
+        </div>
+
+        <div class="progress-steps">
+          <!-- current step -->
+          <div class="step active" data-label="Account setup"></div>
+
+          <!-- next steps -->
+          <div class="step" data-label="Email verification"></div>
+          <div class="step" data-label="Profile info"></div>
+        </div>
+      </div>
+
       <!-- header centered -->
       <div class="top-center" id="page-title">
         <div class="brand-compact">

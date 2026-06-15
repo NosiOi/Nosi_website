@@ -1,29 +1,130 @@
-{% block title %}Підтвердження коду — NOSI FIT{% endblock %} {% block body %}
-<div class="auth-card">
-  <h2 class="auth-card-title">Підтвердження коду</h2>
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Підтвердження коду — NOSI FIT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  {% if error %}
-  <div class="auth-error">{{ error }}</div>
-  {% endif %}
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/auth/verify_email.css') }}"
+    />
+  </head>
 
-  <form method="POST" class="auth-form">
-    <label class="form-label"
-      >Код підтвердження
-      <input
-        class="cmp-input"
-        type="text"
-        name="code"
-        placeholder="Введіть код"
-        required
-      />
-    </label>
+  <body>
+    <div class="bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
-    <div class="auth-actions">
-      <button class="cmp-btn-primary" type="submit">Підтвердити</button>
-      <a class="link-muted" href="{{ url_for('auth.resend') }}"
-        >Надіслати код повторно</a
-      >
+    <div class="auth-card">
+      <div class="progress-wrapper">
+        <div class="progress-line">
+          <div class="progress-fill" style="width: 66%"></div>
+        </div>
+
+        <div class="progress-steps">
+          <div class="step completed" data-label="Account setup"></div>
+
+          <div class="step active" data-label="Email verification"></div>
+
+          <div class="step" data-label="Profile info"></div>
+        </div>
+      </div>
+
+      <div class="top-center">
+        <div class="brand-compact">
+          <img
+            src="{{ url_for('static', filename='img/Nosi_Logo.png') }}"
+            class="brand-icon"
+            alt="NosiFit"
+          />
+          <h1 class="brand-title">
+            <span class="nos">Nosi</span><span class="fit">Fit</span>
+          </h1>
+        </div>
+
+        <h2 class="title">Підтвердження коду</h2>
+
+        <p class="subtitle">
+          Ми надіслали код на <b>{{ session.get('pending_email') }}</b>. Введіть
+          його нижче.
+        </p>
+      </div>
+
+      {% if error %}
+      <div class="auth-error shake">{{ error }}</div>
+      {% endif %}
+
+      <form method="POST" class="auth-form" id="verify-form">
+        <div class="field" data-anim>
+          <label>Код підтвердження</label>
+          <input
+            class="cmp-input code-input"
+            type="text"
+            name="code"
+            id="code-input"
+            maxlength="6"
+            placeholder="000000"
+            required
+          />
+        </div>
+
+        <div class="auth-actions">
+          <button class="btn-save" type="submit">Підтвердити</button>
+
+          <a
+            class="btn-back disabled"
+            id="resend-btn"
+            href="{{ url_for('email_verification.resend') }}"
+          >
+            Надіслати код повторно
+          </a>
+        </div>
+
+        <p class="timer">
+          Надіслати повторно через <span id="timer">30</span> сек
+        </p>
+      </form>
     </div>
-  </form>
-</div>
-{% endblock %}
+
+    <script>
+      // autofocus
+      document.getElementById("code-input").focus();
+
+      // resend timer
+      let t = 30;
+      const timerEl = document.getElementById("timer");
+      const resendBtn = document.getElementById("resend-btn");
+
+      const interval = setInterval(() => {
+        t--;
+        timerEl.textContent = t;
+
+        if (t <= 0) {
+          clearInterval(interval);
+          resendBtn.classList.remove("disabled");
+          document.querySelector(".timer").style.display = "none";
+        }
+      }, 1000);
+
+      // shake if code too short
+      document.getElementById("verify-form").addEventListener("submit", (e) => {
+        const input = document.getElementById("code-input");
+        if (input.value.length < 6) {
+          e.preventDefault();
+          input.classList.add("shake");
+          setTimeout(() => input.classList.remove("shake"), 300);
+        }
+      });
+
+      // reveal animation
+      window.addEventListener("load", () => {
+        document.querySelectorAll("[data-anim]").forEach((el, i) => {
+          el.style.setProperty("--stagger", i * 60 + "ms");
+          el.classList.add("reveal");
+        });
+      });
+    </script>
+  </body>
+</html>
