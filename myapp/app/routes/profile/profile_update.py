@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from myapp.app import db
 
@@ -7,139 +7,116 @@ profile_update_bp = Blueprint("profile_update", __name__)
 @profile_update_bp.route("/profile/update_name", methods=["POST"])
 @login_required
 def update_name():
-    data = request.json
-
-    username = data.get("username")
-    full_name = data.get("full_name")
+    username = request.form.get("username")
 
     if username:
         current_user.username = username
 
-    if full_name:
-        current_user.full_name = full_name
-
     db.session.commit()
-
-    return jsonify({
-        "status": "success",
-        "username": current_user.username,
-        "full_name": current_user.full_name
-    })
+    flash("Ім’я оновлено", "success")
+    return redirect(url_for("dashboard.profile_page"))
 
 
 @profile_update_bp.route("/profile/update_body", methods=["POST"])
 @login_required
 def update_body():
-    data = request.json
+    age = request.form.get("age")
+    height = request.form.get("height")
+    weight = request.form.get("weight")
+    gender = request.form.get("gender")
 
-    if data.get("age") is not None:
-        current_user.age = int(data.get("age"))
+    if age:
+        current_user.age = int(age)
 
-    if data.get("height") is not None:
-        current_user.height_cm = float(data.get("height"))
+    if height:
+        current_user.height = float(height)
 
-    if data.get("weight") is not None:
-        current_user.weight_kg = float(data.get("weight"))
+    if weight:
+        current_user.weight = float(weight)
 
-    if data.get("target_weight") is not None:
-        current_user.target_weight_kg = float(data.get("target_weight"))
-
-    if data.get("gender") is not None:
-        current_user.gender = data.get("gender")
-
-    if data.get("activity_level") is not None:
-        current_user.activity_level = data.get("activity_level")
-
-    if data.get("goal_type") is not None:
-        current_user.goal_type = data.get("goal_type")
-
-    if data.get("waist") is not None:
-        current_user.waist_cm = float(data.get("waist"))
+    if gender:
+        current_user.gender = gender
 
     db.session.commit()
+    flash("Параметри тіла оновлено", "success")
+    return redirect(url_for("dashboard.profile_page"))
 
-    return jsonify({"status": "success"})
 
 @profile_update_bp.route("/profile/update_goal", methods=["POST"])
 @login_required
 def update_goal():
-    data = request.json
+    goal = request.form.get("goal")
+    activity = request.form.get("activity")
+    experience = request.form.get("experience")
+    workouts = request.form.get("workouts_per_week")
 
-    if data.get("main_goal") is not None:
-        current_user.main_goal = data.get("main_goal")
+    if goal:
+        current_user.goal = goal
 
-    if data.get("workouts_per_week") is not None:
-        current_user.workouts_per_week = int(data.get("workouts_per_week"))
+    if activity:
+        current_user.activity = float(activity)
 
-    if data.get("workout_focus") is not None:
-        current_user.workout_focus = data.get("workout_focus")
+    if experience:
+        current_user.experience = experience
 
-    if data.get("calories_target") is not None:
-        current_user.calories_target = int(data.get("calories_target"))
-
-    if data.get("nutrition_focus") is not None:
-        current_user.nutrition_focus = data.get("nutrition_focus")
-
-    if data.get("sleep_target_hours") is not None:
-        current_user.sleep_target_hours = float(data.get("sleep_target_hours"))
-
-    if data.get("recovery_focus") is not None:
-        current_user.recovery_focus = data.get("recovery_focus")
+    if workouts:
+        current_user.workouts_per_week = int(workouts)
 
     db.session.commit()
-
-    return jsonify({"status": "success"})
+    flash("Цілі оновлено", "success")
+    return redirect(url_for("dashboard.profile_page"))
 
 
 @profile_update_bp.route("/profile/change_email", methods=["POST"])
 @login_required
 def change_email():
-    data = request.json
-
-    new_email = data.get("new_email")
-    password = data.get("password")
+    new_email = request.form.get("new_email")
+    password = request.form.get("password")
 
     if not current_user.check_password(password):
-        return jsonify({"status": "error", "message": "Невірний пароль"}), 400
+        flash("Невірний пароль", "error")
+        return redirect(url_for("dashboard.profile_page"))
 
     current_user.email = new_email
     db.session.commit()
 
-    return jsonify({"status": "success", "email": new_email})
+    flash("Email оновлено", "success")
+    return redirect(url_for("dashboard.profile_page"))
 
 
 @profile_update_bp.route("/profile/change_password", methods=["POST"])
 @login_required
 def change_password():
-    data = request.json
-
-    current_password = data.get("current_password")
-    new_password = data.get("new_password")
+    current_password = request.form.get("current_password")
+    new_password = request.form.get("new_password")
 
     if not current_user.check_password(current_password):
-        return jsonify({"status": "error", "message": "Невірний пароль"}), 400
+        flash("Невірний пароль", "error")
+        return redirect(url_for("dashboard.profile_page"))
 
     current_user.set_password(new_password)
     db.session.commit()
 
-    return jsonify({"status": "success"})
+    flash("Пароль змінено", "success")
+    return redirect(url_for("dashboard.profile_page"))
 
 
 @profile_update_bp.route("/profile/delete_account", methods=["POST"])
 @login_required
 def delete_account():
-    data = request.json
-
-    confirm_email = data.get("confirm_email")
-    password = data.get("password")
+    confirm_email = request.form.get("confirm_email")
+    password = request.form.get("password")
 
     if confirm_email != current_user.email:
-        return jsonify({"status": "error", "message": "Email не співпадає"}), 400
+        flash("Email не співпадає", "error")
+        return redirect(url_for("dashboard.profile_page"))
 
     if not current_user.check_password(password):
-        return jsonify({"status": "error", "message": "Невірний пароль"}), 400
+        flash("Невірний пароль", "error")
+        return redirect(url_for("dashboard.profile_page"))
 
     db.session.delete(current_user)
     db.session.commit()
 
-    return jsonify({"status": "success"})
+    flash("Акаунт видалено", "success")
+    return redirect(url_for("auth.login"))
