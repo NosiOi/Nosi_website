@@ -1,43 +1,54 @@
 :root {
-    --core-bg: #020308;
-    --core-bg-soft: #050712;
-    --core-bg-softer: #050509;
+    /* Brand palette */
+    --nf-bg: #020308;
+    --nf-bg-soft: #050712;
+    --nf-bg-softer: #050509;
 
-    --core-card: #070918;
-    --core-card-soft: #090b1c;
-    --core-card-deep: #05050c;
+    --nf-surface: #070918;
+    --nf-surface-soft: #090b1c;
+    --nf-surface-deep: #05050c;
 
-    --core-yellow: #FFD43B;
-    --core-yellow-soft: #ffe680;
-    --core-blue: #00C2FF;
-    --core-blue-soft: #4dd9ff;
-    --core-violet: #9B5DE5;
-    --core-violet-soft: #c79bff;
-    --core-white-soft: #f7f7ff;
+    /* Core colors */
+    --nf-yellow: #ffd43b;
+    --nf-yellow-soft: #ffe680;
+    --nf-blue: #00c2ff;
+    --nf-blue-soft: #4dd9ff;
+    --nf-violet: #9b5de5;
+    --nf-violet-soft: #c79bff;
 
-    --core-text-main: #f7f7ff;
-    --core-text-muted: #9ca0c2;
-    --core-text-soft: #a9a9b5;
+    /* Text */
+    --nf-text-main: #f7f7ff;
+    --nf-text-muted: #9ca0c2;
+    --nf-text-soft: #a9a9b5;
 
-    --core-border-subtle: rgba(255, 255, 255, 0.06);
-    --core-border-soft: rgba(255, 255, 255, 0.04);
+    /* Borders */
+    --nf-border-subtle: rgba(255, 255, 255, 0.06);
+    --nf-border-soft: rgba(255, 255, 255, 0.04);
 
-    --core-radius-lg: 22px;
-    --core-radius-md: 16px;
-    --core-radius-sm: 10px;
-    --core-radius-xs: 8px;
-    --core-radius-pill: 999px;
+    /* Radii */
+    --nf-radius-lg: 22px;
+    --nf-radius-md: 16px;
+    --nf-radius-sm: 10px;
+    --nf-radius-xs: 8px;
+    --nf-radius-pill: 999px;
 
-    --core-shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.85);
-    --core-shadow-inner: 0 0 40px rgba(0, 0, 0, 0.9);
-    --core-shadow-yellow: 0 0 32px rgba(255, 212, 59, 0.55);
-    --core-shadow-blue: 0 0 32px rgba(0, 194, 255, 0.55);
-    --core-shadow-violet: 0 0 32px rgba(155, 93, 229, 0.55);
+    /* Shadows */
+    --nf-shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.85);
+    --nf-shadow-inner: 0 0 40px rgba(0, 0, 0, 0.9);
+    --nf-shadow-yellow: 0 0 32px rgba(255, 212, 59, 0.55);
+    --nf-shadow-blue: 0 0 32px rgba(0, 194, 255, 0.55);
+    --nf-shadow-violet: 0 0 32px rgba(155, 93, 229, 0.55);
 
-    --core-blur-strong: 40px;
-    --core-blur-soft: 18px;
+    /* Blur */
+    --nf-blur-strong: 40px;
+    --nf-blur-soft: 18px;
 
-    --core-transition-fast: 0.18s cubic-bezier(0.22, 1, 0.36, 1);
-    --core-transition: 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-    --core-transition-slow: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    /* Transitions */
+    --nf-transition-fast: 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+    --nf-transition: 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    --nf-transition-slow: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Layout */
+    --nf-max-width: 1200px;
+    --nf-page-padding-x: 24px;
 }

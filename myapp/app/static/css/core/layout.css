@@ -1,92 +1,179 @@
-.app-page {
+.app-layout {
     display: flex;
     min-height: 100vh;
     overflow-x: hidden;
+    background: radial-gradient(circle at top left, #090b1c 0, #020308 55%);
+    color: var(--nf-text-main);
+    position: relative;
 }
 
-.core-sidebar-shell {
+.public-layout {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #090b1c 0, #020308 55%);
+    color: var(--nf-text-main);
+}
+
+.auth-layout {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #090b1c 0, #020308 55%);
+    color: var(--nf-text-main);
+}
+
+
+.app-layout .core-sidebar-shell {
     width: 260px;
     min-width: 260px;
     height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
-    padding: 0px;
-    background: rgba(10, 12, 20, 0.92);
-    backdrop-filter: blur(12px);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0;
+    background: rgba(10, 12, 20, 0.94);
+    backdrop-filter: blur(18px);
+    border-right: 1px solid var(--nf-border-subtle);
     z-index: 20;
     display: flex;
     flex-direction: column;
+    box-shadow: var(--nf-shadow-inner);
 }
 
-.main-content {
+.app-layout .main-content {
     margin-left: 260px;
     width: calc(100% - 260px);
     min-height: 100vh;
-    padding: 0;
     position: relative;
     z-index: 10;
     display: flex;
     flex-direction: column;
-    height: auto;
-    overflow: visible;
 }
 
-.page-content {
+.app-layout .page-content {
     flex: 1;
     position: relative;
     z-index: 5;
+    padding: 24px var(--nf-page-padding-x) 32px;
 }
 
-.core-orb {
-    position: fixed;
-    border-radius: 999px;
-    filter: blur(40px);
-    opacity: 0.55;
-    pointer-events: none;
-    mix-blend-mode: screen;
-    z-index: 1;
+
+.public-layout .public-wrapper {
+    max-width: var(--nf-max-width);
+    margin: 0 auto;
+    padding: 96px var(--nf-page-padding-x) 64px;
 }
+
+
+.auth-layout .auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+}
+
 
 .bg-glow-static,
 .bg-glow-dynamic {
     position: fixed;
-    z-index: 3 !important;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
 }
 
-.main-content {
-    position: relative;
-    z-index: 5 !important;
+.bg-glow-static.glow-purple {
+    background: radial-gradient(circle at 10% 0%,
+            rgba(155, 93, 229, 0.32),
+            transparent 55%);
 }
 
-.core-sidebar-shell {
-    z-index: 20 !important;
+.bg-glow-static.glow-teal {
+    background: radial-gradient(circle at 90% 10%,
+            rgba(0, 194, 255, 0.28),
+            transparent 55%);
+}
+
+.bg-glow-static.glow-yellow {
+    background: radial-gradient(circle at 50% 100%,
+            rgba(255, 212, 59, 0.22),
+            transparent 60%);
+}
+
+.bg-glow-dynamic {
+    background: radial-gradient(circle at 30% 40%,
+            rgba(255, 255, 255, 0.06),
+            transparent 55%);
+    mix-blend-mode: screen;
+    filter: blur(40px);
+    opacity: 0.7;
+    animation: nf-glow-pulse 14s ease-in-out infinite alternate;
+}
+
+
+.u-shell {
+    max-width: var(--nf-max-width);
+    margin: 0 auto;
+    width: 100%;
+}
+
+.u-flex {
+    display: flex;
+}
+
+.u-flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.u-gap-md {
+    gap: 16px;
+}
+
+
+@keyframes nf-glow-pulse {
+    0% {
+        transform: translate3d(-10px, 0, 0) scale(1);
+        opacity: 0.55;
+    }
+
+    50% {
+        transform: translate3d(10px, -10px, 0) scale(1.05);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate3d(-6px, 6px, 0) scale(0.98);
+        opacity: 0.6;
+    }
 }
 
 
 @media (max-width: 900px) {
-    .core-orb-1 {
-        width: 240px;
-        height: 240px;
-        left: 20%;
-        top: -60px;
+    .app-layout .core-sidebar-shell {
+        width: 230px;
+        min-width: 230px;
     }
 
-    .core-orb-2 {
-        width: 200px;
-        height: 200px;
-        left: -20px;
+    .app-layout .main-content {
+        margin-left: 230px;
+        width: calc(100% - 230px);
     }
 
-    .core-orb-3 {
-        width: 200px;
-        height: 200px;
-        right: -10px;
+    .public-layout .public-wrapper {
+        padding-top: 80px;
     }
 }
 
-.bg-glow-static,
-.bg-glow-dynamic {
-    z-index: 2 !important;
+@media (max-width: 720px) {
+    .app-layout .core-sidebar-shell {
+        display: none;
+    }
+
+    .app-layout .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .app-layout .page-content {
+        padding-inline: 16px;
+    }
 }
