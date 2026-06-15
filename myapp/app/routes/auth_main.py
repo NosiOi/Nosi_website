@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, flash, session, url_for, current_app
+from flask import Blueprint, render_template, request, redirect, flash, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user
 from myapp.app import db
 from myapp.app.models.user import User
+from myapp.app.utils.email_service import send_password_reset_email
+from myapp.app.utils.token import verify_reset_token
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 print("LOADED AUTH_MAIN:", __file__)
@@ -83,9 +85,45 @@ def logout():
 def reset_password():
     if request.method == "POST":
         email = request.form.get("email")
-        flash("Якщо адреса існує в системі, лист з інструкцією буде надіслано.", "info")
-        return redirect(url_for("auth.login"))
+        user = User.query.filter_by(email=email).first()
+
+        if user:
+            send_password_reset_email(user)
+
+        return render_template("auth/reset_status.html", mode="sent", email=email)
+
     return render_template("auth/reset_password.html")
+
+
+@auth_bp.route("/reset/<token>", methods=["GET", "POST"], endpoint="reset_with_token")
+def reset_with_token(token):
+    email = verify_reset_token(token)
+    if isinstance(email, bytes):
+        email = email.decode("utf-8")
+    email = email.strip().lower()
+
+
+    if not email:
+        flash("Посилання недійсне або прострочене.", "error")
+        return redirect(url_for("auth.reset_password"))
+
+    if request.method == "POST":
+        password = request.form.get("password")
+        confirm = request.form.get("confirm")
+
+        if password != confirm:
+            flash("Паролі не співпадають.", "error")
+            return redirect(request.url)
+
+        user = User.query.filter(db.func.lower(User.email) == email).first()
+        user.password = generate_password_hash(password)
+        db.session.commit()
+
+        login_user(user, remember=True)
+        return redirect(url_for("dashboard.dashboard"))
+
+
+    return render_template("auth/new_password.html")
 
 
 @auth_bp.route("/forgot", endpoint="forgot")

@@ -20,7 +20,9 @@ body {
     color: var(--white);
     display: flex;
     justify-content: center;
-    padding-top: 256px;
+    align-items: center;
+    padding: 18px;
+    min-height: 100vh;
 }
 
 .bg {
@@ -30,6 +32,7 @@ body {
     background:
         radial-gradient(circle at 50% 0%, rgba(155, 93, 229, 0.12), transparent 60%),
         radial-gradient(circle at 0% 100%, rgba(0, 187, 249, 0.08), transparent 60%);
+    opacity: 0.9;
 }
 
 .orb {
@@ -68,11 +71,12 @@ body {
     width: 100%;
     max-width: 720px;
     background: linear-gradient(145deg, #0e0e18, #151525);
-    padding: 60px 28px 40px 28px;
+    padding: 60px 28px 28px 28px;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
     position: relative;
     text-align: center;
+    margin-top: 40px;
 }
 
 .progress-wrapper {
@@ -93,8 +97,9 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: transparent;
-    width: 0;
+    background: var(--purple);
+    border-radius: 10px;
+    transition: width .4s ease;
 }
 
 .progress-steps {
@@ -155,16 +160,15 @@ body {
 }
 
 .brand-icon {
-    width: 58px;
-    height: 58px;
+    width: 52px;
+    height: 52px;
     object-fit: contain;
-    filter: drop-shadow(0 0 14px rgba(155, 93, 229, 0.55));
+    filter: drop-shadow(0 0 12px rgba(155, 93, 229, 0.45));
 }
 
 .brand-title {
-    font-size: 26px;
-    font-weight: 900;
-    letter-spacing: -0.5px;
+    font-size: 22px;
+    font-weight: 800;
 }
 
 .nos {
@@ -187,17 +191,6 @@ body {
     margin-bottom: 24px;
 }
 
-.cmp-input {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: #050509;
-    color: var(--white);
-    margin-top: 6px;
-}
-
 .auth-actions {
     display: flex;
     flex-direction: column;
@@ -213,7 +206,21 @@ body {
     font-weight: 800;
     border: none;
     cursor: pointer;
-    transition: transform .18s ease, box-shadow .22s ease;
+}
+
+.link-muted {
+    color: var(--soft);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.cmp-btn-primary,
+.link-muted {
+    transition:
+        transform .18s ease,
+        box-shadow .22s ease,
+        background .22s ease,
+        opacity .22s ease;
 }
 
 .cmp-btn-primary:hover {
@@ -226,19 +233,12 @@ body {
     box-shadow: 0 8px 20px rgba(254, 228, 64, 0.25);
 }
 
-.link-muted {
-    color: var(--soft);
-    text-decoration: none;
-    font-weight: 600;
-    transition: opacity .22s ease, transform .18s ease;
-}
-
 .link-muted:hover {
     opacity: 0.75;
     transform: translateY(-1px);
 }
 
 .link-muted:active {
-    transform: scale(0.97);
+    transform: translateY(0) scale(0.97);
     opacity: 0.6;
 }

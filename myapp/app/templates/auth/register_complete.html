@@ -1,22 +1,56 @@
-{% extends "auth/auth_base.html" %} {% block title %}Завершення реєстрації —
-NOSI FIT{% endblock %} {% block body %}
-<div class="auth-card">
-  <h2 class="auth-card-title">Підтвердження даних</h2>
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Завершення реєстрації — NosiFit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/auth/register_complete.css" />
+  </head>
 
-  <p class="muted">
-    Перевірте інформацію та натисніть кнопку, щоб завершити створення акаунта.
-  </p>
+  <body>
+    <div class="bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
-  <form method="POST" action="{{ url_for('auth.register_complete') }}">
-    <div class="auth-actions">
-      <button class="cmp-btn-primary" type="submit">Завершити реєстрацію</button>
-      <a class="link-muted" href="{{ url_for('auth.register') }}"
-        >Повернутися</a
-      >
+    <div class="auth-card">
+      <div class="progress-wrapper">
+        <div class="progress-line">
+          <div class="progress-fill" style="width: 100%"></div>
+        </div>
+
+        <div class="progress-steps">
+          <div class="step completed" data-label="Account setup"></div>
+          <div class="step completed" data-label="Email verification"></div>
+          <div class="step active" data-label="Profile info"></div>
+        </div>
+      </div>
+
+      <div class="brand-compact">
+        <img src="/static/img/Nosi_Logo.png" class="brand-icon" alt="NosiFit" />
+        <h1 class="brand-title">
+          <span class="nos">Nosi</span><span class="fit">Fit</span>
+        </h1>
+      </div>
+
+      <h2 class="auth-card-title">Підтвердження даних</h2>
+
+      <p class="muted">
+        Перевірте інформацію та натисніть кнопку, щоб завершити створення
+        акаунта.
+      </p>
+
+      <form method="POST" action="{{ url_for('auth.register_complete') }}">
+        <div class="auth-actions">
+          <button class="cmp-btn-primary" type="submit">
+            Завершити реєстрацію
+          </button>
+
+          <a class="link-muted" href="{{ url_for('auth.register') }}">
+            Повернутися
+          </a>
+        </div>
+      </form>
     </div>
-  </form>
-</div>
-{% endblock %}
-
-
-
+  </body>
+</html>

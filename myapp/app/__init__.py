@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 
-# Load .env from project root reliably
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
@@ -12,7 +11,6 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from authlib.integrations.flask_client import OAuth
 
-# Extensions
 db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
@@ -24,17 +22,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object("myapp.app.config.Config")
 
-    # Init extensions
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
     oauth.init_app(app)
 
-    # Login manager
     login_manager.login_view = "auth.login"
 
-    # Import models AFTER db.init_app
     from myapp.app.models.user import User
     from myapp.app.models.verification_code import VerificationCode
     from myapp.app.models.oauth_account import OAuthAccount
@@ -43,7 +38,6 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    # OAuth config
     oauth.register(
         name="google",
         client_id=os.getenv("GOOGLE_CLIENT_ID"),
@@ -62,7 +56,6 @@ def create_app():
         client_kwargs={"scope": "user:email"},
     )
 
-    # Blueprints
     from myapp.app.routes.auth.oauth_google import google_bp
     from myapp.app.routes.auth.oauth_github import github_bp
     from myapp.app.routes.auth.email_verification import email_verification_bp
@@ -86,14 +79,13 @@ def create_app():
     from myapp.app.routes.profile.email_change import email_change_bp
     from myapp.app.routes.profile.delete_account import delete_account_bp
     from myapp.app.routes.profile.oauth_disconnect import oauth_disconnect_bp
-    from myapp.app.routes.api_training import bp as api_training_bp
 
+    from myapp.app.routes.api_training import bp as api_training_bp
     from myapp.app.routes.training_session_api import training_session_api
     from myapp.app.routes.onboarding_api import onboarding_api
     from myapp.app.routes.equipment_api import equipment_api
     from myapp.app.routes.injury_api import injury_api
 
-    # Register blueprints
     app.register_blueprint(google_bp)
     app.register_blueprint(github_bp)
     app.register_blueprint(email_verification_bp)
@@ -117,8 +109,8 @@ def create_app():
     app.register_blueprint(email_change_bp)
     app.register_blueprint(delete_account_bp)
     app.register_blueprint(oauth_disconnect_bp)
-    app.register_blueprint(api_training_bp)
 
+    app.register_blueprint(api_training_bp)
     app.register_blueprint(training_session_api)
     app.register_blueprint(onboarding_api)
     app.register_blueprint(equipment_api)

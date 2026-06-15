@@ -20,7 +20,8 @@ body {
     color: var(--white);
     display: flex;
     justify-content: center;
-    padding-top: 256px;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .bg {
@@ -68,11 +69,11 @@ body {
     width: 100%;
     max-width: 720px;
     background: linear-gradient(145deg, #0e0e18, #151525);
-    padding: 60px 28px 40px 28px;
+    padding: 80px 28px 40px 28px;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
-    position: relative;
     text-align: center;
+    position: relative;
 }
 
 .progress-wrapper {
@@ -92,14 +93,15 @@ body {
 }
 
 .progress-fill {
+    width: 100%;
     height: 100%;
-    background: transparent;
-    width: 0;
+    background: var(--purple);
+    border-radius: 10px;
 }
 
 .progress-steps {
     position: absolute;
-    top: -4px;
+    top: -4.5px;
     left: 28px;
     width: calc(100% - 56px);
     display: flex;
@@ -112,7 +114,6 @@ body {
     background: rgba(255, 255, 255, 0.25);
     border-radius: 50%;
     position: relative;
-    transition: .25s ease;
 }
 
 .step.completed {
@@ -183,26 +184,44 @@ body {
 
 .muted {
     color: var(--soft);
-    font-size: 14px;
-    margin-bottom: 24px;
+    font-size: 15px;
+    margin-bottom: 26px;
 }
 
-.cmp-input {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: #050509;
-    color: var(--white);
-    margin-top: 6px;
+.status-icon {
+    font-size: 64px;
+    margin: 20px auto 30px auto;
+    display: inline-block;
+    animation: pop .4s ease;
+}
+
+.status-icon.sent {
+    color: var(--purple);
+    text-shadow: 0 0 18px rgba(155, 93, 229, 0.6);
+}
+
+.status-icon.done {
+    color: var(--yellow);
+    text-shadow: 0 0 18px rgba(254, 228, 64, 0.6);
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .auth-actions {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .cmp-btn-primary {

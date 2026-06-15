@@ -158,17 +158,23 @@ body {
 .brand-compact {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 12px;
+    margin-bottom: 12px;
+    margin-top: -20px;
 }
 
 .brand-icon {
-    width: 52px;
-    height: 52px;
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 14px rgba(155, 93, 229, 0.55));
 }
 
 .brand-title {
-    font-size: 22px;
-    font-weight: 800;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
 }
 
 .nos {
@@ -178,6 +184,7 @@ body {
 .fit {
     color: var(--purple);
 }
+
 
 .title {
     font-size: 20px;

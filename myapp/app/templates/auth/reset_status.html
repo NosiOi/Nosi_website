@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>NosiFit — Статус</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/auth/reset_status.css" />
+  </head>
+
+  <body>
+    <div class="bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="auth-card">
+      <div class="progress-wrapper">
+        <div class="progress-line">
+          <div class="progress-fill"></div>
+        </div>
+
+        <div class="progress-steps">
+          <div class="step completed" data-label="Email"></div>
+          <div class="step completed" data-label="Reset"></div>
+          <div class="step active" data-label="Done"></div>
+        </div>
+      </div>
+
+      <div class="brand-compact">
+        <img src="/static/img/Nosi_Logo.png" class="brand-icon" />
+        <h1 class="brand-title">
+          <span class="nos">Nosi</span><span class="fit">Fit</span>
+        </h1>
+      </div>
+
+      {% if mode == "sent" %}
+      <h2 class="auth-card-title">Лист надіслано</h2>
+      <p class="muted">
+        Ми надіслали інструкцію на <b>{{ email }}</b>. Перевірте пошту.
+      </p>
+
+      <div class="status-icon sent">✉</div>
+
+      <div class="auth-actions">
+        <a class="cmp-btn-primary" href="{{ url_for('auth.login') }}"
+          >Перейти до входу</a
+        >
+        <a class="link-muted" href="{{ url_for('auth.reset_password') }}"
+          >Надіслати повторно</a
+        >
+      </div>
+      {% endif %} {% if mode == "done" %}
+      <h2 class="auth-card-title">Пароль змінено</h2>
+
+      <div class="status-icon done">✔</div>
+
+      <div class="auth-actions">
+        <a class="cmp-btn-primary" href="{{ url_for('auth.login') }}">Увійти</a>
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
