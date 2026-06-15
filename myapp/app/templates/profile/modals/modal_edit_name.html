@@ -1,15 +1,4 @@
-<div class="modal-backdrop" id="edit-name-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>Змінити ім’я</h3>
-      <button class="modal-close" data-close-modal>&times;</button>
-    </div>
-    <div class="modal-body">
-      <form id="form-edit-name">
-        <label>Нове ім’я</label>
-        <input type="text" name="username" value="{{ user.username }}" />
-        <button type="submit" class="modal-submit">Зберегти</button>
-      </form>
-    </div>
-  </div>
-</div>
+<form method="post" action="{{ url_for('profile_update.update_name') }}">
+  <input type="text" name="username" value="{{ current_user.username }}" />
+  <button type="submit">Зберегти</button>
+</form>

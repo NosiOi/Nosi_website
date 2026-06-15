@@ -1,34 +1,7 @@
-<div class="modal-backdrop" id="edit-body-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>Параметри тіла</h3>
-      <button class="modal-close" data-close-modal>&times;</button>
-    </div>
-    <div class="modal-body">
-      <form id="form-edit-body">
-        <div class="modal-grid">
-          <div class="modal-field">
-            <label>Вік</label>
-            <input type="number" name="age" value="{{ user.age }}">
-          </div>
-          <div class="modal-field">
-            <label>Зріст (см)</label>
-            <input type="number" name="height" value="{{ user.height }}">
-          </div>
-          <div class="modal-field">
-            <label>Вага (кг)</label>
-            <input type="number" name="weight" value="{{ user.weight }}">
-          </div>
-          <div class="modal-field">
-            <label>Стать</label>
-            <select name="gender">
-              <option value="male" {{ "selected" if user.gender == "male" else "" }}>Чоловіча</option>
-              <option value="female" {{ "selected" if user.gender == "female" else "" }}>Жіноча</option>
-            </select>
-          </div>
-        </div>
-        <button type="submit" class="modal-submit">Зберегти</button>
-      </form>
-    </div>
-  </div>
-</div>
+<form method="post" action="{{ url_for('profile_update.update_body') }}">
+  <input type="number" name="age" value="{{ current_user.age }}" />
+  <input type="number" name="height" value="{{ current_user.height }}" />
+  <input type="number" name="weight" value="{{ current_user.weight }}" />
+  <input type="text" name="gender" value="{{ current_user.gender }}" />
+  <button type="submit">Зберегти</button>
+</form>

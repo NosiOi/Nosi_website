@@ -1,38 +1,188 @@
-{% extends "app/base_app.html" %} {% block title %}Профіль — NOSIFIT{% endblock
-%} {% block styles %}
+{% extends "app/base_app.html" %} {% block title %}Профіль{% endblock %} {%
+block styles %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/profile/profile.css') }}"
 />
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/profile/modals.css') }}"
-/>
+
 {% endblock %} {% block body %}
-<div class="profile-page">
+
+<section class="profile-page">
+  <div class="profile-top-bar">
+    <h1 class="profile-page-title">Профіль</h1>
+  </div>
+
   <div class="profile-layout">
-    <div class="profile-main">
-      {% include "profile/components/profile_header.html" %} {% include
-      "profile/components/profile_stats.html" %} {% include
-      "profile/components/profile_goals.html" %}
+    <div class="profile-left">
+      <div class="cmp-card profile-header">
+        <div class="profile-header-top">
+          <div class="profile-avatar">
+            {% if current_user.avatar_url %}
+            <img src="{{ current_user.avatar_url }}" alt="avatar" />
+            {% else %}
+            <span
+              >{{ (current_user.username or current_user.email)[0] | upper
+              }}</span
+            >
+            {% endif %}
+          </div>
+
+          <div class="profile-header-info">
+            <div class="profile-header-name">{{ current_user.username }}</div>
+
+            <div class="profile-header-meta">
+              <div class="meta-item">
+                <span class="meta-label">Email</span>
+                <span class="meta-value">{{ current_user.email }}</span>
+              </div>
+
+              <div class="meta-item">
+                <span class="meta-label">Вік</span>
+                <span class="meta-value"
+                  >{{ current_user.age or 'Не вказано' }}</span
+                >
+              </div>
+
+              <div class="meta-item">
+                <span class="meta-label">Стать</span>
+                <span class="meta-value"
+                  >{{ current_user.gender or 'Не вказано' }}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmp-card profile-stats-card">
+        <div class="cmp-card-header">
+          <div>
+            <div class="cmp-card-title">Параметри тіла</div>
+            <div class="cmp-card-sub">Актуальні дані</div>
+          </div>
+        </div>
+
+        <div class="profile-stats-grid">
+          <div class="stat-item">
+            <span class="stat-label">Зріст</span>
+            <span class="stat-value">
+              {% if current_user.height %} {{ current_user.height }} см {% else
+              %} Не вказано {% endif %}
+            </span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-label">Вага</span>
+            <span class="stat-value">
+              {% if current_user.weight %} {{ current_user.weight }} кг {% else
+              %} Не вказано {% endif %}
+            </span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-label">Активність</span>
+            <span class="stat-value">
+              {{ current_user.activity or 'Не вказано' }}
+            </span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-label">Досвід</span>
+            <span class="stat-value">
+              {{ current_user.experience or 'Не вказано' }}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="profile-side">
-      {% include "profile/components/profile_actions.html" %}
+    <div class="profile-right">
+      <div class="cmp-card profile-goals-card">
+        <div class="cmp-card-header">
+          <div>
+            <div class="cmp-card-title">Цілі</div>
+            <div class="cmp-card-sub">Ваші пріоритети</div>
+          </div>
+        </div>
+
+        <div class="profile-goals-list">
+          <div class="goal-item">
+            <div class="goal-row">
+              <span class="goal-name">Головна ціль</span>
+              <span class="goal-pill">
+                {{ current_user.goal or 'Не вказано' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="goal-item">
+            <div class="goal-row">
+              <span class="goal-name">Тренування</span>
+              <span class="goal-pill">
+                {% if current_user.workouts_per_week %} {{
+                current_user.workouts_per_week }} разів/тиждень {% else %} Не
+                вказано {% endif %}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmp-card profile-actions-card">
+        <div class="cmp-card-header">
+          <div class="cmp-card-title">Дії</div>
+        </div>
+
+        <div class="profile-actions-list">
+          <button
+            class="cmp-btn cmp-btn-primary"
+            data-modal-target="#modal_edit_body"
+          >
+            Редагувати профіль
+          </button>
+
+          <button
+            class="cmp-btn cmp-btn-danger"
+            data-modal-target="#modal_delete_account"
+          >
+            Видалити акаунт
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
+
+<div class="cmp-modal" id="modal_delete_account">
+  <div class="cmp-modal-dialog">
+    <div class="cmp-modal-header">
+      <h2>Видалити акаунт</h2>
+      <button class="cmp-modal-close" data-modal-close>✕</button>
+    </div>
+
+    <form method="post" action="{{ url_for('profile_update.delete_account') }}">
+      <div class="cmp-modal-body">
+        <p>Цю дію неможливо скасувати.</p>
+
+        <div class="form-field">
+          <label class="cmp-label">Підтвердіть email</label>
+          <input type="email" name="confirm_email" class="cmp-input" required />
+        </div>
+
+        <div class="form-field">
+          <label class="cmp-label">Пароль</label>
+          <input type="password" name="password" class="cmp-input" required />
+        </div>
+      </div>
+
+      <div class="cmp-modal-footer">
+        <button type="button" class="cmp-btn cmp-btn-ghost" data-modal-close>
+          Скасувати
+        </button>
+        <button type="submit" class="cmp-btn cmp-btn-danger">Видалити</button>
+      </div>
+    </form>
   </div>
 </div>
 
-{% include "profile/modals/modal_edit_name.html" %} {% include
-"profile/modals/modal_edit_body.html" %} {% include
-"profile/modals/modal_edit_goal.html" %} {% include
-"profile/modals/modal_change_password.html" %} {% include
-"profile/modals/modal_change_email.html" %}
-
-<script src="{{ url_for('static', filename='js/profile/modals.js') }}"></script>
-<script src="{{ url_for('static', filename='js/profile/update_name.js') }}"></script>
-<script src="{{ url_for('static', filename='js/profile/update_body.js') }}"></script>
-<script src="{{ url_for('static', filename='js/profile/update_goal.js') }}"></script>
-<script src="{{ url_for('static', filename='js/profile/change_password.js') }}"></script>
-<script src="{{ url_for('static', filename='js/profile/change_email.js') }}"></script>
 {% endblock %}

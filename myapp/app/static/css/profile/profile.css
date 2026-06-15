@@ -1,0 +1,285 @@
+.profile-page {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.profile-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.profile-left,
+.profile-right {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.cmp-card {
+    background: #1a1a1d;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #2a2a2d;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+}
+
+.cmp-card-header {
+    margin-bottom: 15px;
+}
+
+.cmp-card-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.cmp-card-sub {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.profile-header-top {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.profile-avatar {
+    width: 70px;
+    height: 70px;
+    background: #2d2d32;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-header-name {
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.profile-header-meta {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.meta-item {
+    display: flex;
+    justify-content: space-between;
+    color: #ccc;
+}
+
+.meta-label {
+    color: #888;
+}
+
+
+.profile-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.stat-item {
+    background: #222226;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #2f2f33;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+
+.profile-goals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.goal-item {
+    background: #222226;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #2f2f33;
+}
+
+.goal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.goal-name {
+    font-size: 16px;
+    color: #fff;
+}
+
+.goal-pill {
+    background: #3a3a40;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #fff;
+}
+
+
+.profile-actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cmp-btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+}
+
+.cmp-btn-primary {
+    background: #7b4dff;
+    color: #fff;
+}
+
+.cmp-btn-primary:hover {
+    background: #6a3df0;
+}
+
+.cmp-btn-danger {
+    background: #ff4d4d;
+    color: #fff;
+}
+
+.cmp-btn-danger:hover {
+    background: #e63c3c;
+}
+
+
+.cmp-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.cmp-modal.open {
+    display: flex;
+}
+
+.cmp-modal-dialog {
+    background: #1a1a1d;
+    padding: 25px;
+    border-radius: 14px;
+    width: 380px;
+    border: 1px solid #2a2a2d;
+}
+
+.cmp-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.cmp-modal-header h2 {
+    color: #fff;
+    font-size: 20px;
+}
+
+.cmp-modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.cmp-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cmp-modal-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cmp-label {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.cmp-input {
+    padding: 10px;
+    border-radius: 8px;
+    background: #2a2a2d;
+    border: 1px solid #3a3a3d;
+    color: #fff;
+    font-size: 15px;
+}
+
+.cmp-input:focus {
+    outline: none;
+    border-color: #7b4dff;
+}
+
+
+@media (max-width: 900px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+}
