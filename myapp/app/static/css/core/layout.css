@@ -56,9 +56,9 @@
 
 
 .public-layout .public-wrapper {
-    max-width: var(--nf-max-width);
+    max-width: 100% !important;
     margin: 0 auto;
-    padding: 96px var(--nf-page-padding-x) 64px;
+    padding: 0 !important;
 }
 
 

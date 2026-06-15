@@ -47,10 +47,9 @@
   </head>
 
   <body class="public-page public-layout">
-    {% include "components/public_nav.html" %}
-
     <main class="public-wrapper">
-      {% block body %}{% block content %}{% endblock %}{% endblock %}
+      {% include "components/public_nav.html" %} {% block body %} {% block
+      content %}{% endblock %} {% endblock %}
     </main>
 
     {% block scripts %}{% endblock %}
