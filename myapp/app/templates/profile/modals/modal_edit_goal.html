@@ -1,7 +1,0 @@
-<form method="post" action="{{ url_for('profile_update.update_body') }}">
-  <input type="number" name="age" value="{{ current_user.age }}" />
-  <input type="number" name="height" value="{{ current_user.height }}" />
-  <input type="number" name="weight" value="{{ current_user.weight }}" />
-  <input type="text" name="gender" value="{{ current_user.gender }}" />
-  <button type="submit">Зберегти</button>
-</form>
