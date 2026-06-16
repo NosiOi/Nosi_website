@@ -77,7 +77,10 @@ def create_app():
     from myapp.app.routes.profile.profile_update import profile_update_bp
     from myapp.app.routes.profile.password_change import password_change_bp
     from myapp.app.routes.profile.email_change import email_change_bp
-    from myapp.app.routes.profile.delete_account import delete_account_bp
+    from myapp.app.routes.profile.delete_account_request import delete_request_bp
+    from myapp.app.routes.profile.delete_account_confirm import delete_confirm_bp
+    from myapp.app.routes.profile.delete_account_final import delete_final_bp
+
     from myapp.app.routes.profile.oauth_disconnect import oauth_disconnect_bp
 
     from myapp.app.routes.api_training import bp as api_training_bp
@@ -107,7 +110,10 @@ def create_app():
     app.register_blueprint(profile_update_bp)
     app.register_blueprint(password_change_bp)
     app.register_blueprint(email_change_bp)
-    app.register_blueprint(delete_account_bp)
+    app.register_blueprint(delete_request_bp)
+    app.register_blueprint(delete_confirm_bp)
+    app.register_blueprint(delete_final_bp)
+
     app.register_blueprint(oauth_disconnect_bp)
 
     app.register_blueprint(api_training_bp)
