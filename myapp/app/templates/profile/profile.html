@@ -146,11 +146,11 @@
         <div class="nf-training-grid">
           <div class="nf-training-item">
             <div class="nf-training-label">Локація тренувань</div>
-            <div class="nf-training-value">
+            <div class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.training_location }}">
               {% if user.profile and user.profile.training_location %}
-              {{ user.profile.training_location }}
+                {{ user.profile.training_location }}
               {% else %}
-              Не вказано
+                Не вказано
               {% endif %}
             </div>
           </div>
@@ -228,6 +228,7 @@
           <h2 class="nf-card-title">Цілі</h2>
           <p class="nf-card-subtitle">Фітнес‑вектор та частота тренувань</p>
         </div>
+
         <div class="nf-goals-grid">
           <div class="nf-goal-item">
             <div class="nf-goal-label">Фітнес‑вектор</div>
@@ -239,6 +240,7 @@
               {% endif %}
             </div>
           </div>
+
           <div class="nf-goal-item">
             <div class="nf-goal-label">Головна ціль</div>
             <div class="nf-goal-value">
@@ -249,6 +251,7 @@
               {% endif %}
             </div>
           </div>
+
           <div class="nf-goal-item">
             <div class="nf-goal-label">Тренування</div>
             <div class="nf-goal-value">

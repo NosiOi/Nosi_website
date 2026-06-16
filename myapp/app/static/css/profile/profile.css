@@ -371,26 +371,34 @@ body {
 
 .nf-goals-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px 18px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
 }
 
 .nf-goal-item {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    background: linear-gradient(180deg, rgba(255, 255, 0, 0.12), rgba(0, 194, 255, 0.04));
+    border: 1px solid rgba(255, 255, 0, 0.25);
+    border-radius: 14px;
+    padding: 16px 18px;
+    transition: 0.25s ease;
+}
+
+.nf-goal-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 26px 64px rgba(255, 242, 0, 0.22);
 }
 
 .nf-goal-label {
-    font-size: 12px;
+    font-size: 13px;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
     color: var(--nf-text-muted);
 }
 
 .nf-goal-value {
-    font-size: 15px;
-    font-weight: 500;
+    margin-top: 6px;
+    font-size: 17px;
+    font-weight: 700;
     color: var(--nf-text);
 }
 
