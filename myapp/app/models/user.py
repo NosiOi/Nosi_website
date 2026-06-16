@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask_login import UserMixin
 from myapp.app import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model, UserMixin):
@@ -105,6 +106,12 @@ class User(db.Model, UserMixin):
         lazy="dynamic",
         foreign_keys="UserPreference.user_id"
     )
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
     def __repr__(self):
         return f"<User id={self.id} username={self.username}>"
