@@ -19,8 +19,10 @@
 {% if user.profile and user.profile.training_location %}{% set ns.filled = ns.filled + 1 %}{% endif %}
 {% if user.profile and user.profile.onboarding_completed %}{% set ns.filled = ns.filled + 1 %}{% endif %}
 {% set completion = (ns.filled * 100 // ns.total) %}
+
 <div class="nf-profile-page">
   <div class="nf-profile-grid">
+
     <div class="nf-profile-column nf-profile-column-left">
       <section class="nf-card nf-card-main">
         <div class="nf-card-header">
@@ -33,35 +35,33 @@
             <span class="nf-id-value">#{{ user.id }}</span>
           </div>
         </div>
+
         <div class="nf-main-info">
           <div class="nf-main-row">
             <div class="nf-main-label">Ім’я користувача</div>
             <div class="nf-main-value">{{ user.username }}</div>
           </div>
+
           <div class="nf-main-row">
             <div class="nf-main-label">Email</div>
             <div class="nf-main-value">{{ user.email }}</div>
           </div>
+
           <div class="nf-main-row nf-main-row-inline">
             <div class="nf-main-inline-block">
               <div class="nf-main-label">Реєстрація</div>
-              <div class="nf-main-value">
-                {{ user.created_at.strftime("%d.%m.%Y") if user.created_at }}
-              </div>
+              <div class="nf-main-value">{{ user.created_at.strftime("%d.%m.%Y") if user.created_at }}</div>
             </div>
             <div class="nf-main-inline-block">
               <div class="nf-main-label">Останнє оновлення</div>
-              <div class="nf-main-value">
-                {{ user.updated_at.strftime("%d.%m.%Y") if user.updated_at }}
-              </div>
+              <div class="nf-main-value">{{ user.updated_at.strftime("%d.%m.%Y") if user.updated_at }}</div>
             </div>
           </div>
+
           <div class="nf-main-row nf-main-row-inline">
             <div class="nf-main-inline-block">
               <div class="nf-main-label">Статус</div>
-              <div class="nf-badge nf-badge-status">
-                {{ "Premium" if user.is_premium else "Standard" }}
-              </div>
+              <div class="nf-badge nf-badge-status">{{ "Premium" if user.is_premium else "Standard" }}</div>
             </div>
             <div class="nf-main-inline-block">
               <div class="nf-main-label">Безпека акаунту</div>
@@ -70,123 +70,90 @@
           </div>
         </div>
       </section>
+
       <section class="nf-card nf-card-body">
         <div class="nf-card-header">
           <h2 class="nf-card-title">Параметри тіла</h2>
           <p class="nf-card-subtitle">Базові фізичні характеристики</p>
         </div>
+
         <div class="nf-body-grid">
           <div class="nf-body-item">
             <div class="nf-body-label">Вік</div>
-            <div class="nf-body-value">
-              {% if user.age %}
-              {{ user.age }} років
-              {% else %}
-              Не вказано
-              {% endif %}
-            </div>
+            <div class="nf-body-value">{{ user.age or "Не вказано" }}</div>
           </div>
+
           <div class="nf-body-item">
             <div class="nf-body-label">Стать</div>
-            <div class="nf-body-value">
-              {% if user.gender %}
-              {{ user.gender }}
-              {% else %}
-              Не вказано
-              {% endif %}
-            </div>
+            <div class="nf-body-value">{{ user.gender or "Не вказано" }}</div>
           </div>
+
           <div class="nf-body-item">
             <div class="nf-body-label">Зріст</div>
             <div class="nf-body-value">
-              {% if user.height %}
-              {{ "%.1f"|format(user.height) }} см
-              {% else %}
-              Не вказано
-              {% endif %}
+              {% if user.height %}{{ "%.1f"|format(user.height) }} см{% else %}Не вказано{% endif %}
             </div>
           </div>
+
           <div class="nf-body-item">
             <div class="nf-body-label">Вага</div>
             <div class="nf-body-value">
-              {% if user.weight %}
-              {{ "%.1f"|format(user.weight) }} кг
-              {% else %}
-              Не вказано
-              {% endif %}
+              {% if user.weight %}{{ "%.1f"|format(user.weight) }} кг{% else %}Не вказано{% endif %}
             </div>
           </div>
+
           <div class="nf-body-item">
             <div class="nf-body-label">Активність</div>
             <div class="nf-body-value">
-              {% if user.activity %}
-              {{ "%.3f"|format(user.activity) }}
-              {% else %}
-              Не вказано
-              {% endif %}
+              {% if user.activity %}{{ "%.3f"|format(user.activity) }}{% else %}Не вказано{% endif %}
             </div>
           </div>
+
           <div class="nf-body-item">
             <div class="nf-body-label">Досвід</div>
-            <div class="nf-body-value">
-              {% if user.experience %}
-              {{ user.experience }}
-              {% else %}
-              Не вказано
-              {% endif %}
-            </div>
+            <div class="nf-body-value">{{ user.experience or "Не вказано" }}</div>
           </div>
         </div>
       </section>
+
       <section class="nf-card nf-card-training">
         <div class="nf-card-header">
           <h2 class="nf-card-title">Профіль тренувань</h2>
           <p class="nf-card-subtitle">Контекст тренувань та сервісів</p>
         </div>
+
         <div class="nf-training-grid">
           <div class="nf-training-item">
             <div class="nf-training-label">Локація тренувань</div>
             <div class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.training_location }}">
-              {% if user.profile and user.profile.training_location %}
-                {{ user.profile.training_location }}
-              {% else %}
-                Не вказано
-              {% endif %}
+              {{ user.profile.training_location or "Не вказано" }}
             </div>
           </div>
+
           <div class="nf-training-item">
             <div class="nf-training-label">Харчування</div>
             <div class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.wants_nutrition }}">
-              {% if user.profile and user.profile.wants_nutrition %}
-              Активовано
-              {% else %}
-              Не активовано
-              {% endif %}
+              {% if user.profile and user.profile.wants_nutrition %}Активовано{% else %}Не активовано{% endif %}
             </div>
           </div>
+
           <div class="nf-training-item">
             <div class="nf-training-label">Відновлення</div>
             <div class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.wants_recovery }}">
-              {% if user.profile and user.profile.wants_recovery %}
-              Активовано
-              {% else %}
-              Не активовано
-              {% endif %}
+              {% if user.profile and user.profile.wants_recovery %}Активовано{% else %}Не активовано{% endif %}
             </div>
           </div>
+
           <div class="nf-training-item">
             <div class="nf-training-label">Онбординг</div>
             <div class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.onboarding_completed }}">
-              {% if user.profile and user.profile.onboarding_completed %}
-              Завершено
-              {% else %}
-              Не завершено
-              {% endif %}
+              {% if user.profile and user.profile.onboarding_completed %}Завершено{% else %}Не завершено{% endif %}
             </div>
           </div>
         </div>
       </section>
     </div>
+
     <div class="nf-profile-column nf-profile-column-right">
       <section class="nf-card nf-card-progress">
         <div class="nf-card-header nf-card-header-progress">
@@ -196,6 +163,7 @@
           </div>
           <div class="nf-progress-percentage">{{ completion }}%</div>
         </div>
+
         <div class="nf-progress-content">
           <div class="nf-progress-circle" data-completion="{{ completion }}">
             <div class="nf-progress-inner">
@@ -203,19 +171,23 @@
               <span class="nf-progress-label">готово</span>
             </div>
           </div>
+
           <div class="nf-progress-list">
             <div class="nf-progress-item">
               <span class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.username and user.email }}"></span>
               <span class="nf-progress-text">Основні дані</span>
             </div>
+
             <div class="nf-progress-item">
               <span class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.age or user.height or user.weight or user.gender }}"></span>
               <span class="nf-progress-text">Параметри тіла</span>
             </div>
+
             <div class="nf-progress-item">
               <span class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.goal or user.activity or user.workouts_per_week }}"></span>
               <span class="nf-progress-text">Цілі та активність</span>
             </div>
+
             <div class="nf-progress-item">
               <span class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.profile and (user.profile.training_location or user.profile.onboarding_completed) }}"></span>
               <span class="nf-progress-text">Профіль тренувань</span>
@@ -223,6 +195,7 @@
           </div>
         </div>
       </section>
+
       <section class="nf-card nf-card-goals">
         <div class="nf-card-header">
           <h2 class="nf-card-title">Цілі</h2>
@@ -232,170 +205,50 @@
         <div class="nf-goals-grid">
           <div class="nf-goal-item">
             <div class="nf-goal-label">Фітнес‑вектор</div>
-            <div class="nf-goal-value">
-              {% if user.goal %}
-              {{ user.goal }}
-              {% else %}
-              Не вказано
-              {% endif %}
-            </div>
+            <div class="nf-goal-value">{{ user.goal or "Не вказано" }}</div>
           </div>
 
           <div class="nf-goal-item">
             <div class="nf-goal-label">Головна ціль</div>
-            <div class="nf-goal-value">
-              {% if user.goal %}
-              {{ user.goal }}
-              {% else %}
-              Не вказано
-              {% endif %}
-            </div>
+            <div class="nf-goal-value">{{ user.goal or "Не вказано" }}</div>
           </div>
 
           <div class="nf-goal-item">
             <div class="nf-goal-label">Тренування</div>
             <div class="nf-goal-value">
-              {% if user.workouts_per_week %}
-              {{ user.workouts_per_week }} разів/тиждень
-              {% else %}
-              Не вказано
-              {% endif %}
+              {% if user.workouts_per_week %}{{ user.workouts_per_week }} разів/тиждень{% else %}Не вказано{% endif %}
             </div>
           </div>
         </div>
       </section>
+
       <section class="nf-card nf-card-actions">
         <div class="nf-card-header">
           <h2 class="nf-card-title">Дії з акаунтом</h2>
           <p class="nf-card-subtitle">Керування профілем та безпекою</p>
         </div>
+
         <div class="nf-actions-grid">
-          <button type="button" class="nf-btn nf-btn-soft-primary" data-modal-open="modal-edit-profile">
-            Редагувати профіль
-          </button>
-          <button type="button" class="nf-btn nf-btn-soft-secondary" data-modal-open="modal-change-email">
-            Змінити email
-          </button>
-          <button type="button" class="nf-btn nf-btn-soft-info" data-modal-open="modal-change-password">
-            Змінити пароль
-          </button>
-          <button type="button" class="nf-btn nf-btn-soft-danger" data-modal-open="modal-delete-account">
-            Видалити акаунт
-          </button>
+          <button type="button" class="nf-btn nf-btn-soft-primary" data-modal-open="modal-edit-profile">Редагувати профіль</button>
+          <button type="button" class="nf-btn nf-btn-soft-secondary" data-modal-open="modal-change-email">Змінити email</button>
+          <button type="button" class="nf-btn nf-btn-soft-info" data-modal-open="modal-change-password">Змінити пароль</button>
+          <button type="button" class="nf-btn nf-btn-soft-danger" data-modal-open="modal-delete-account">Видалити акаунт</button>
         </div>
       </section>
     </div>
+
   </div>
-  <div class="nf-modal-backdrop" data-modal="modal-edit-profile">
-    <div class="nf-modal">
-      <div class="nf-modal-header">
-        <h3 class="nf-modal-title">Редагувати профіль</h3>
-        <button type="button" class="nf-modal-close" data-modal-close>&times;</button>
-      </div>
-      <form method="post" action="{{ url_for('profile_update.update_name') }}">
-        <div class="nf-modal-body">
-          <div class="nf-field-group">
-            <label class="nf-field-label">Ім’я користувача</label>
-            <input class="nf-input" type="text" name="username" value="{{ user.username }}" required>
-          </div>
-        </div>
-        <div class="nf-modal-footer">
-          <button type="button" class="nf-btn nf-btn-ghost" data-modal-close>Скасувати</button>
-          <button type="submit" class="nf-btn nf-btn-soft-primary">Зберегти</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  <div class="nf-modal-backdrop" data-modal="modal-change-email">
-    <div class="nf-modal">
-      <div class="nf-modal-header">
-        <h3 class="nf-modal-title">Змінити email</h3>
-        <button type="button" class="nf-modal-close" data-modal-close>&times;</button>
-      </div>
-      <form method="post" action="{{ url_for('profile_update.change_email') }}">
-        <div class="nf-modal-body">
-          <div class="nf-field-group">
-            <label class="nf-field-label">Новий email</label>
-            <input class="nf-input" type="email" name="new_email" required>
-          </div>
-          <div class="nf-field-group nf-field-with-toggle">
-            <label class="nf-field-label">Пароль</label>
-            <div class="nf-input-wrapper">
-              <input class="nf-input nf-input-password" type="password" name="password" required>
-              <button type="button" class="nf-password-toggle">показати</button>
-            </div>
-          </div>
-        </div>
-        <div class="nf-modal-footer">
-          <button type="button" class="nf-btn nf-btn-ghost" data-modal-close>Скасувати</button>
-          <button type="submit" class="nf-btn nf-btn-soft-secondary">Зберегти</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  <div class="nf-modal-backdrop" data-modal="modal-change-password">
-    <div class="nf-modal">
-      <div class="nf-modal-header">
-        <h3 class="nf-modal-title">Змінити пароль</h3>
-        <button type="button" class="nf-modal-close" data-modal-close>&times;</button>
-      </div>
-      <form method="post" action="{{ url_for('profile_update.change_password') }}">
-        <div class="nf-modal-body">
-          <div class="nf-field-group nf-field-with-toggle">
-            <label class="nf-field-label">Поточний пароль</label>
-            <div class="nf-input-wrapper">
-              <input class="nf-input nf-input-password" type="password" name="current_password" required>
-              <button type="button" class="nf-password-toggle">показати</button>
-            </div>
-          </div>
-          <div class="nf-field-group nf-field-with-toggle">
-            <label class="nf-field-label">Новий пароль</label>
-            <div class="nf-input-wrapper">
-              <input class="nf-input nf-input-password" type="password" name="new_password" required>
-              <button type="button" class="nf-password-toggle">показати</button>
-            </div>
-          </div>
-        </div>
-        <div class="nf-modal-footer">
-          <button type="button" class="nf-btn nf-btn-ghost" data-modal-close>Скасувати</button>
-          <button type="submit" class="nf-btn nf-btn-soft-info">Зберегти</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  <div class="nf-modal-backdrop" data-modal="modal-delete-account">
-    <div class="nf-modal nf-modal-danger">
-      <div class="nf-modal-header">
-        <h3 class="nf-modal-title">Видалити акаунт</h3>
-        <button type="button" class="nf-modal-close" data-modal-close>&times;</button>
-      </div>
-      <form method="post" action="{{ url_for('profile_update.delete_account') }}">
-        <div class="nf-modal-body">
-          <p class="nf-modal-warning">
-            Ця дія незворотна. Всі дані тренувань, харчування та прогресу будуть видалені.
-          </p>
-          <div class="nf-field-group">
-            <label class="nf-field-label">Підтвердіть email</label>
-            <input class="nf-input" type="email" name="confirm_email" required>
-          </div>
-          <div class="nf-field-group nf-field-with-toggle">
-            <label class="nf-field-label">Пароль</label>
-            <div class="nf-input-wrapper">
-              <input class="nf-input nf-input-password" type="password" name="password" required>
-              <button type="button" class="nf-password-toggle">показати</button>
-            </div>
-          </div>
-        </div>
-        <div class="nf-modal-footer">
-          <button type="button" class="nf-btn nf-btn-ghost" data-modal-close>Скасувати</button>
-          <button type="submit" class="nf-btn nf-btn-soft-danger">Видалити</button>
-        </div>
-      </form>
-    </div>
-  </div>
+
+  {% include "profile/modals/modal_edit_profile.html" %}
+  {% include "profile/modals/modal_change_email.html" %}
+  {% include "profile/modals/modal_change_password.html" %}
+  {% include "profile/modals/modal_delete_account.html" %}
+
 </div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+
   var circles = document.querySelectorAll(".nf-progress-circle");
   circles.forEach(function (circle) {
     var value = parseInt(circle.getAttribute("data-completion") || "0", 10);
@@ -404,6 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var emptyColor = "rgba(255,255,255,0.06)";
     circle.style.background = "conic-gradient(" + filledColor + " 0 " + clamped + "%," + emptyColor + " " + clamped + "% 100%)";
   });
+
   var toggles = document.querySelectorAll(".nf-password-toggle");
   toggles.forEach(function (toggle) {
     toggle.addEventListener("click", function () {
@@ -420,9 +274,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
   var openButtons = document.querySelectorAll("[data-modal-open]");
   var closeButtons = document.querySelectorAll("[data-modal-close]");
   var backdrops = document.querySelectorAll(".nf-modal-backdrop");
+
   openButtons.forEach(function (btn) {
     btn.addEventListener("click", function () {
       var target = btn.getAttribute("data-modal-open");
@@ -433,12 +289,14 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   });
+
   closeButtons.forEach(function (btn) {
     btn.addEventListener("click", function () {
       var bd = btn.closest(".nf-modal-backdrop");
       if (bd) bd.classList.remove("nf-modal-open");
     });
   });
+
   backdrops.forEach(function (bd) {
     bd.addEventListener("click", function (e) {
       if (e.target === bd) {
@@ -446,6 +304,8 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
 });
 </script>
+
 {% endblock %}

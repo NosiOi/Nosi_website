@@ -573,6 +573,22 @@ body {
     border: 1px solid rgba(255, 59, 92, 0.6);
 }
 
+.nf-modal-grid-2col {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 18px 24px !important;
+    width: 100%;
+}
+
+.nf-modal-wide {
+    max-width: 900px !important;
+    width: 100%;
+}
+
+.nf-field-group {
+    width: 100%;
+}
+
 .nf-field-group {
     display: flex;
     flex-direction: column;

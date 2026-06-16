@@ -4,67 +4,34 @@ from myapp.app import db
 
 profile_update_bp = Blueprint("profile_update", __name__)
 
-@profile_update_bp.route("/profile/update_name", methods=["POST"])
+@profile_update_bp.route("/profile/update_full", methods=["POST"])
 @login_required
-def update_name():
-    username = request.form.get("username")
+def update_full():
+    user = current_user
 
-    if username:
-        current_user.username = username
+    user.username = request.form.get("username")
+    user.email = request.form.get("email")
+    user.age = request.form.get("age")
+    user.height = request.form.get("height")
+    user.weight = request.form.get("weight")
+    user.gender = request.form.get("gender")
+    user.activity = request.form.get("activity")
+    user.goal = request.form.get("goal")
+    user.experience = request.form.get("experience")
+    user.workouts_per_week = request.form.get("workouts_per_week")
+
+    if not user.profile:
+        from myapp.app.models.user_profile import UserProfile
+        user.profile = UserProfile(user_id=user.id)
+
+    user.profile.training_location = request.form.get("training_location")
+    user.profile.wants_nutrition = bool(int(request.form.get("wants_nutrition", 0)))
+    user.profile.wants_recovery = bool(int(request.form.get("wants_recovery", 0)))
+    user.profile.onboarding_completed = bool(int(request.form.get("onboarding_completed", 0)))
 
     db.session.commit()
-    flash("Ім’я оновлено", "success")
-    return redirect(url_for("dashboard.profile_page"))
 
-
-@profile_update_bp.route("/profile/update_body", methods=["POST"])
-@login_required
-def update_body():
-    age = request.form.get("age")
-    height = request.form.get("height")
-    weight = request.form.get("weight")
-    gender = request.form.get("gender")
-
-    if age:
-        current_user.age = int(age)
-
-    if height:
-        current_user.height = float(height)
-
-    if weight:
-        current_user.weight = float(weight)
-
-    if gender:
-        current_user.gender = gender
-
-    db.session.commit()
-    flash("Параметри тіла оновлено", "success")
-    return redirect(url_for("dashboard.profile_page"))
-
-
-@profile_update_bp.route("/profile/update_goal", methods=["POST"])
-@login_required
-def update_goal():
-    goal = request.form.get("goal")
-    activity = request.form.get("activity")
-    experience = request.form.get("experience")
-    workouts = request.form.get("workouts_per_week")
-
-    if goal:
-        current_user.goal = goal
-
-    if activity:
-        current_user.activity = float(activity)
-
-    if experience:
-        current_user.experience = experience
-
-    if workouts:
-        current_user.workouts_per_week = int(workouts)
-
-    db.session.commit()
-    flash("Цілі оновлено", "success")
-    return redirect(url_for("dashboard.profile_page"))
+    return redirect("/profile")
 
 
 @profile_update_bp.route("/profile/change_email", methods=["POST"])
