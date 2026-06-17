@@ -1,6 +1,9 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+
 from myapp.app import db
-from myapp.app.models import Meal, MealItem, UserGoals, NutritionPlan
+from myapp.app.models import Meal, MealItem, UserGoals, NutritionPlan, User
+from myapp.app.services.nutrition.quality_service import calculate_quality
+from myapp.app.services.nutrition.water_service import calculate_water
 
 
 def get_goals(user_id):
@@ -15,80 +18,7 @@ def get_goals(user_id):
     return 0, 0, 0, 0
 
 
-def recalc_meal_totals(meal: Meal):
-    meal.total_calories = sum(i.calories for i in meal.items)
-    meal.total_protein = sum(i.protein for i in meal.items)
-    meal.total_fat = sum(i.fat for i in meal.items)
-    meal.total_carbs = sum(i.carbs for i in meal.items)
-
-
-def calculate_quality(ration_items):
-    if not ration_items:
-        return {
-            "whole_foods_percent": 0,
-            "processed_foods_percent": 0,
-            "fiber": 0,
-            "score": 0
-        }
-
-    total_kcal = 0
-    whole_kcal = 0
-    fiber_total = 0
-
-    WHOLE_FOODS = {
-        "овоч", "фрукт", "круп", "рис", "греч", "вівсян",
-        "м'яс", "риба", "яйц", "горіх", "бобов", "йогурт"
-    }
-
-    PROCESSED = {
-        "печиво", "цукер", "шокол", "ковбас", "чіпс",
-        "фаст", "сосиск", "булоч", "батонч"
-    }
-
-    for item in ration_items:
-        name = (item.name or "").lower()
-        kcal = item.calories or 0
-
-        total_kcal += kcal
-
-        if any(w in name for w in WHOLE_FOODS):
-            whole_kcal += kcal
-
-        if hasattr(item, "fiber") and item.fiber:
-            fiber_total += item.fiber
-
-    if total_kcal == 0:
-        return {
-            "whole_foods_percent": 0,
-            "processed_foods_percent": 0,
-            "fiber": 0,
-            "score": 0
-        }
-
-    whole_percent = round((whole_kcal / total_kcal) * 100)
-    processed_percent = 100 - whole_percent
-
-    fiber_score = min((fiber_total / 30) * 100, 100)
-
-    score = (
-        whole_percent * 0.5 +
-        (100 - processed_percent) * 0.2 +
-        fiber_score * 0.3
-    )
-
-    return {
-        "whole_foods_percent": whole_percent,
-        "processed_foods_percent": processed_percent,
-        "fiber": round(fiber_total),
-        "score": round(score)
-    }
-
-
-
 def get_daily_nutrition_data(user_id):
-    from myapp.app.models import User
-    from myapp.app.services.water_calculator import calculate_water
-
     user = User.query.get(user_id)
     today = date.today()
 
@@ -141,11 +71,6 @@ def get_daily_nutrition_data(user_id):
     else:
         macros_ratio = {"protein": 0, "fat": 0, "carbs": 0}
 
-    ration_items = []
-    for meal in meals:
-        for item in meal.items:
-            ration_items.append(item)
-
     ration_items = [item for meal in meals for item in meal.items]
 
     quality = calculate_quality(ration_items)
@@ -182,8 +107,8 @@ def get_daily_nutrition_data(user_id):
     fat_yesterday = sum(m.total_fat for m in meals_yesterday)
     carb_yesterday = sum(m.total_carbs for m in meals_yesterday)
 
-    def diff_label(today, yest):
-        diff = today - yest
+    def diff_label(today_val, yest_val):
+        diff = today_val - yest_val
         if diff > 0:
             return f"+{diff}"
         if diff < 0:
@@ -218,14 +143,12 @@ def get_daily_nutrition_data(user_id):
     current_month_label = today.strftime("%B %Y")
 
     day_chart = {
-    "labels": [m.time.strftime("%H:%M") for m in meals],
-    "kcal": [m.total_calories for m in meals],
-    "protein": [m.total_protein for m in meals],
-    "fat": [m.total_fat for m in meals],
-    "carb": [m.total_carbs for m in meals],
+        "labels": [m.time.strftime("%H:%M") for m in meals if m.time],
+        "kcal": [m.total_calories for m in meals],
+        "protein": [m.total_protein for m in meals],
+        "fat": [m.total_fat for m in meals],
+        "carb": [m.total_carbs for m in meals],
     }
-
-    from datetime import timedelta
 
     week_labels = []
     week_kcal = []
@@ -234,10 +157,10 @@ def get_daily_nutrition_data(user_id):
     week_carb = []
 
     for i in range(7):
-        day = today - timedelta(days=i)
-        meals_day = Meal.query.filter_by(user_id=user_id, date=day).all()
+        day_val = today - timedelta(days=i)
+        meals_day = Meal.query.filter_by(user_id=user_id, date=day_val).all()
 
-        week_labels.append(day.strftime("%d.%m"))
+        week_labels.append(day_val.strftime("%d.%m"))
         week_kcal.append(sum(m.total_calories for m in meals_day))
         week_protein.append(sum(m.total_protein for m in meals_day))
         week_fat.append(sum(m.total_fat for m in meals_day))
@@ -256,6 +179,7 @@ def get_daily_nutrition_data(user_id):
         "fat": week_fat,
         "carb": week_carb,
     }
+
     first_day = today.replace(day=1)
 
     month_meals = Meal.query.filter(
@@ -307,11 +231,11 @@ def get_daily_nutrition_data(user_id):
 
     history_days = []
     for i in range(1, 15):
-        d = today - timedelta(days=i)
-        meals_day = Meal.query.filter_by(user_id=user_id, date=d).all()
+        d_val = today - timedelta(days=i)
+        meals_day = Meal.query.filter_by(user_id=user_id, date=d_val).all()
         if meals_day:
             history_days.append({
-                "date": d.strftime("%d.%m.%Y"),
+                "date": d_val.strftime("%d.%m.%Y"),
                 "total_kcal": sum(m.total_calories for m in meals_day),
                 "meals": [
                     {"name": m.name, "kcal": m.total_calories}
@@ -388,146 +312,6 @@ def get_daily_nutrition_data(user_id):
         "day_chart": day_chart,
         "week_chart": week_chart,
 
-        "month_avg_kcal": month_avg_kcal,
-        "month_in_target": month_in_target,
-        "month_max_kcal": month_max_kcal,
-        "month_min_kcal": month_min_kcal,
-        "month_avg_protein": month_avg_protein,
-        "month_avg_fat": month_avg_fat,
-        "month_avg_carb": month_avg_carb,
-        "month_stability_label": month_stability_label,
-        "current_month_label": current_month_label,
-
         "meals_history": history_days,
         "meal_templates": meal_templates,
     }
-
-
-
-def add_meal_service(user_id, form):
-    meal = Meal(
-        user_id=user_id,
-        date=date.today(),
-        time=form["time"],
-        name=form["name"],
-        category=form["category"],
-        total_calories=int(form["kcal"]),
-        total_protein=int(form["protein"]),
-        total_fat=int(form["fat"]),
-        total_carbs=int(form["carb"]),
-    )
-
-    db.session.add(meal)
-    db.session.commit()
-
-
-
-def add_item_service(user_id, form):
-    from myapp.app.models import User
-    from myapp.app.services.food_api_service import fetch_food_data
-
-    user = User.query.get(user_id)
-
-    meal_id = int(form["meal_id"])
-    meal = Meal.query.filter_by(id=meal_id, user_id=user_id).first()
-    if not meal:
-        return
-
-    if user.is_premium:
-        api_data = fetch_food_data(form["name"])
-
-        item = MealItem(
-            meal_id=meal.id,
-            name=form["name"],
-            calories=api_data["calories"],
-            protein=api_data["protein"],
-            fat=api_data["fat"],
-            carbs=api_data["carbs"],
-            fiber=api_data["fiber"],
-            category_label=api_data["category"]
-        )
-
-    else:
-        item = MealItem(
-            meal_id=meal.id,
-            name=form["name"],
-            calories=int(form.get("calories", 0)),
-            protein=int(form.get("protein", 0)),
-            fat=int(form.get("fat", 0)),
-            carbs=int(form.get("carbs", 0)),
-            fiber=0,
-            category_label=None
-        )
-
-    db.session.add(item)
-    db.session.flush()
-
-    recalc_meal_totals(meal)
-
-    db.session.add(meal)
-    db.session.commit()
-
-
-
-def delete_meal_service(user_id, meal_id):
-    meal = Meal.query.filter_by(id=meal_id, user_id=user_id).first()
-    if meal:
-        db.session.delete(meal)
-        db.session.commit()
-
-
-def delete_item_service(user_id, item_id):
-    item = (
-        MealItem.query.join(Meal)
-        .filter(MealItem.id == item_id, Meal.user_id == user_id)
-        .first()
-    )
-    if not item:
-        return
-
-    meal = item.meal
-
-    db.session.delete(item)
-    db.session.flush()
-
-    recalc_meal_totals(meal)
-
-    db.session.add(meal)
-    db.session.commit()
-
-
-def copy_meal_service(user_id, meal_id):
-    source = Meal.query.filter_by(id=meal_id, user_id=user_id).first()
-    if not source:
-        return
-
-    new_meal = Meal(
-        user_id=user_id,
-        date=date.today(),
-        time=datetime.now().time(),
-        total_calories=0,
-        total_protein=0,
-        total_fat=0,
-        total_carbs=0,
-    )
-
-    db.session.add(new_meal)
-    db.session.flush()
-
-    for item in source.items:
-        db.session.add(
-            MealItem(
-                meal_id=new_meal.id,
-                name=item.name,
-                calories=item.calories,
-                protein=item.protein,
-                fat=item.fat,
-                carbs=item.carbs,
-            )
-        )
-
-    db.session.flush()
-
-    recalc_meal_totals(new_meal)
-
-    db.session.commit()

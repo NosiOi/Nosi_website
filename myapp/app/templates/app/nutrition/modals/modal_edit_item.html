@@ -1,42 +1,42 @@
-<div class="nf-modal-backdrop" data-modal="modal-add-item">
+<div class="nf-modal-backdrop" data-modal="modal-edit-item">
   <div class="nf-modal nf-modal-wide">
     <div class="nf-modal-header">
-      <h3 class="nf-modal-title">Додати продукт</h3>
+      <h3 class="nf-modal-title">Редагувати продукт</h3>
       <button class="nf-modal-close" data-modal-close>&times;</button>
     </div>
 
     <div class="nf-modal-body">
-      <input type="hidden" id="item-meal-id" />
+      <input type="hidden" id="edit-item-id" />
 
       <div class="nf-field-group">
         <label class="nf-field-label">Назва</label>
-        <input class="nf-input" id="item-name" />
+        <input class="nf-input" id="edit-item-name" />
       </div>
 
       <div class="nf-field-group">
         <label class="nf-field-label">Вага (г)</label>
-        <input class="nf-input" id="item-weight" type="number" />
+        <input class="nf-input" id="edit-item-weight" type="number" />
       </div>
 
       <div class="nf-grid-4">
         <div class="nf-field-group">
           <label class="nf-field-label">Ккал</label>
-          <input class="nf-input" id="item-kcal" type="number" />
+          <input class="nf-input" id="edit-item-kcal" type="number" />
         </div>
 
         <div class="nf-field-group">
           <label class="nf-field-label">Білки</label>
-          <input class="nf-input" id="item-protein" type="number" />
+          <input class="nf-input" id="edit-item-protein" type="number" />
         </div>
 
         <div class="nf-field-group">
           <label class="nf-field-label">Жири</label>
-          <input class="nf-input" id="item-fat" type="number" />
+          <input class="nf-input" id="edit-item-fat" type="number" />
         </div>
 
         <div class="nf-field-group">
           <label class="nf-field-label">Вуглеводи</label>
-          <input class="nf-input" id="item-carbs" type="number" />
+          <input class="nf-input" id="edit-item-carbs" type="number" />
         </div>
       </div>
     </div>
@@ -45,8 +45,8 @@
       <button class="cmp-btn cmp-btn-subtle cmp-btn-sm" data-modal-close>
         Скасувати
       </button>
-      <button class="cmp-btn cmp-btn-primary cmp-btn-sm" id="btn-add-item">
-        Додати
+      <button class="cmp-btn cmp-btn-primary cmp-btn-sm" id="btn-save-item">
+        Зберегти
       </button>
     </div>
   </div>

@@ -1,7 +1,7 @@
 from myapp.app import db
 
 
-class UserWeightHistory(db.Model):
+class UserWeight(db.Model):
     __tablename__ = "user_weight_history"
 
     id = db.Column(db.Integer, primary_key=True)

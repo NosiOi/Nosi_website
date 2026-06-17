@@ -10,6 +10,6 @@ def calculate_water(weight, activity=None):
         act = float(activity)
     except Exception:
         act = 1.2
-    base = weight * 0.03  # 30 ml/kg baseline when activity specified
-    extra = (act - 1.2) * 0.5  # activity bonus (liters)
-    return round(base + extra, 2)
+    base = weight * 0.03
+    extra = (act - 1.2) * 0.5 # 30 ml/kg baseline when activity specified
+    return round(base + extra, 2) # activity bonus (liters)

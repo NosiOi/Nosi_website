@@ -4,4 +4,993 @@ endblock %} {% block styles %}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/nutrition.css') }}"
 />
+{% endblock %} {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %} {% block body %}
+
+<div class="nutrition-page u-shell">
+  <div class="nutrition-header">
+    <div class="nutrition-header-main">
+      <div>
+        <h1 class="nutrition-title">Харчування</h1>
+        <p class="nutrition-subtitle">
+          Щоденний контроль калорій, БЖВ та прогресу
+        </p>
+      </div>
+    </div>
+
+    <div class="nutrition-header-controls">
+      <div class="nutrition-date-picker">
+        <button class="nutrition-date-btn" id="nutrition-prev-day">
+          &larr;
+        </button>
+        <div class="nutrition-date-display">
+          <span id="nutrition-date-label">Сьогодні</span>
+          <input type="date" id="nutrition-date-input" />
+        </div>
+        <button class="nutrition-date-btn" id="nutrition-next-day">
+          &rarr;
+        </button>
+      </div>
+
+      <div class="nutrition-header-actions">
+        <button
+          class="cmp-btn cmp-btn-subtle cmp-btn-sm"
+          id="nutrition-today-btn"
+        >
+          Сьогодні
+        </button>
+        <button
+          class="cmp-btn cmp-btn-primary cmp-btn-sm"
+          data-modal-open="modal-add-meal"
+        >
+          Новий прийом
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <section class="nutrition-section">
+    <div class="nutrition-section-header">
+      <h2 class="nutrition-section-title">Сьогоднішній баланс</h2>
+    </div>
+
+    <div class="nutrition-today-grid">
+      <div class="nutrition-card nutrition-card-kcal">
+        <div class="nutrition-card-header">
+          <span class="nutrition-card-label">Калорії</span>
+          <span class="nutrition-card-tag">Kcal</span>
+        </div>
+        <div class="nutrition-card-main">
+          <div class="nutrition-card-value-row">
+            <span class="nutrition-card-value" id="today-kcal">0</span>
+            <span class="nutrition-card-goal"
+              >з <span id="goal-kcal">0</span></span
+            >
+          </div>
+          <div class="nutrition-card-progress">
+            <div class="nutrition-card-progress-bar">
+              <div
+                class="nutrition-card-progress-fill"
+                id="today-kcal-progress"
+              ></div>
+            </div>
+            <span class="nutrition-card-progress-label" id="today-kcal-percent"
+              >0%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="nutrition-card nutrition-card-macro">
+        <div class="nutrition-card-header">
+          <span class="nutrition-card-label">Білки</span>
+          <span class="nutrition-card-tag">g</span>
+        </div>
+        <div class="nutrition-card-main">
+          <div class="nutrition-card-value-row">
+            <span class="nutrition-card-value" id="today-protein-val">0 г</span>
+            <span class="nutrition-card-goal"
+              >з <span id="goal-protein">0</span> г</span
+            >
+          </div>
+          <div class="nutrition-card-progress">
+            <div class="nutrition-card-progress-bar">
+              <div
+                class="nutrition-card-progress-fill"
+                id="today-protein-progress"
+              ></div>
+            </div>
+            <span
+              class="nutrition-card-progress-label"
+              id="today-protein-percent"
+              >0%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="nutrition-card nutrition-card-macro">
+        <div class="nutrition-card-header">
+          <span class="nutrition-card-label">Жири</span>
+          <span class="nutrition-card-tag">g</span>
+        </div>
+        <div class="nutrition-card-main">
+          <div class="nutrition-card-value-row">
+            <span class="nutrition-card-value" id="today-fat-val">0 г</span>
+            <span class="nutrition-card-goal"
+              >з <span id="goal-fat">0</span> г</span
+            >
+          </div>
+          <div class="nutrition-card-progress">
+            <div class="nutrition-card-progress-bar">
+              <div
+                class="nutrition-card-progress-fill"
+                id="today-fat-progress"
+              ></div>
+            </div>
+            <span class="nutrition-card-progress-label" id="today-fat-percent"
+              >0%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="nutrition-card nutrition-card-macro">
+        <div class="nutrition-card-header">
+          <span class="nutrition-card-label">Вуглеводи</span>
+          <span class="nutrition-card-tag">g</span>
+        </div>
+        <div class="nutrition-card-main">
+          <div class="nutrition-card-value-row">
+            <span class="nutrition-card-value" id="today-carbs-val">0 г</span>
+            <span class="nutrition-card-goal"
+              >з <span id="goal-carbs">0</span> г</span
+            >
+          </div>
+          <div class="nutrition-card-progress">
+            <div class="nutrition-card-progress-bar">
+              <div
+                class="nutrition-card-progress-fill"
+                id="today-carbs-progress"
+              ></div>
+            </div>
+            <span class="nutrition-card-progress-label" id="today-carbs-percent"
+              >0%</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nutrition-summary" id="nutrition-summary-text">
+      Дані завантажуються…
+    </div>
+  </section>
+
+  <section class="nutrition-section">
+    <div class="nutrition-section-header">
+      <h2 class="nutrition-section-title">Прийоми їжі</h2>
+      <div class="nutrition-section-actions">
+        <button
+          class="cmp-btn cmp-btn-subtle cmp-btn-sm"
+          id="nutrition-copy-yesterday"
+        >
+          Скопіювати вчора
+        </button>
+        <button
+          class="cmp-btn cmp-btn-primary cmp-btn-sm"
+          data-modal-open="modal-add-meal"
+        >
+          Додати прийом
+        </button>
+      </div>
+    </div>
+
+    <div id="meals-list" class="meals-list"></div>
+  </section>
+
+  <section class="nutrition-section nutrition-section-split">
+    <div class="nutrition-panel">
+      <div class="nutrition-section-header">
+        <h2 class="nutrition-section-title">Статистика</h2>
+        <div class="nutrition-period-switch">
+          <button class="nutrition-period-btn active" data-days="7">
+            7 днів
+          </button>
+          <button class="nutrition-period-btn" data-days="30">30 днів</button>
+        </div>
+      </div>
+
+      <div class="nutrition-chart-card">
+        <div class="nutrition-chart-header">
+          <div>
+            <div class="nutrition-chart-label">Середній калораж</div>
+            <div class="nutrition-chart-value" id="avg-kcal">0 ккал</div>
+          </div>
+          <div class="nutrition-chart-meta">
+            <span class="nutrition-chart-meta-label">Ціль</span>
+            <span class="nutrition-chart-meta-value" id="avg-kcal-goal"
+              >0 ккал</span
+            >
+          </div>
+        </div>
+
+        <div class="nutrition-chart-body">
+          <canvas id="kcal-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="nutrition-panel">
+      <div class="nutrition-section-header">
+        <h2 class="nutrition-section-title">Вага</h2>
+        <button
+          class="cmp-btn cmp-btn-ghost cmp-btn-sm"
+          data-modal-open="modal-update-weight"
+        >
+          Оновити вагу
+        </button>
+      </div>
+
+      <div class="nutrition-chart-card">
+        <div class="nutrition-chart-header">
+          <div>
+            <div class="nutrition-chart-label">Поточна вага</div>
+            <div class="nutrition-chart-value" id="current-weight">– кг</div>
+          </div>
+          <div class="nutrition-chart-meta">
+            <span class="nutrition-chart-meta-label">Тренд</span>
+            <span class="nutrition-chart-meta-value" id="weight-trend">–</span>
+          </div>
+        </div>
+
+        <div class="nutrition-chart-body">
+          <canvas id="weight-chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="nf-modal-backdrop" data-modal="modal-add-meal">
+  <div class="nf-modal nf-modal-wide">
+    <div class="nf-modal-header">
+      <h3 class="nf-modal-title">Новий прийом їжі</h3>
+      <button class="nf-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="nf-modal-body">
+      <div class="nf-field-group">
+        <label class="nf-field-label">Назва</label>
+        <input class="nf-input" id="meal-name" />
+      </div>
+      <div class="nf-field-group">
+        <label class="nf-field-label">Категорія</label>
+        <select class="nf-input" id="meal-category">
+          <option value="breakfast">Сніданок</option>
+          <option value="lunch">Обід</option>
+          <option value="dinner">Вечеря</option>
+          <option value="snack">Перекус</option>
+        </select>
+      </div>
+      <div class="nf-field-group">
+        <label class="nf-field-label">Час</label>
+        <input class="nf-input" type="time" id="meal-time" />
+      </div>
+    </div>
+    <div class="nf-modal-footer">
+      <button class="cmp-btn cmp-btn-subtle cmp-btn-sm" data-modal-close>
+        Скасувати
+      </button>
+      <button class="cmp-btn cmp-btn-primary cmp-btn-sm" id="btn-create-meal">
+        Створити
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="nf-modal-backdrop" data-modal="modal-add-item">
+  <div class="nf-modal nf-modal-wide">
+    <div class="nf-modal-header">
+      <h3 class="nf-modal-title">Додати продукт</h3>
+      <button class="nf-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="nf-modal-body">
+      <input type="hidden" id="item-meal-id" />
+      <div class="nf-field-group">
+        <label class="nf-field-label">Назва</label>
+        <input class="nf-input" id="item-name" />
+      </div>
+      <div class="nf-field-group">
+        <label class="nf-field-label">Вага (г)</label>
+        <input class="nf-input" id="item-weight" type="number" />
+      </div>
+      <div class="nf-grid-4">
+        <div class="nf-field-group">
+          <label class="nf-field-label">Ккал</label>
+          <input class="nf-input" id="item-kcal" type="number" />
+        </div>
+        <div class="nf-field-group">
+          <label class="nf-field-label">Білки</label>
+          <input class="nf-input" id="item-protein" type="number" />
+        </div>
+        <div class="nf-field-group">
+          <label class="nf-field-label">Жири</label>
+          <input class="nf-input" id="item-fat" type="number" />
+        </div>
+        <div class="nf-field-group">
+          <label class="nf-field-label">Вуглеводи</label>
+          <input class="nf-input" id="item-carbs" type="number" />
+        </div>
+      </div>
+    </div>
+    <div class="nf-modal-footer">
+      <button class="cmp-btn cmp-btn-subtle cmp-btn-sm" data-modal-close>
+        Скасувати
+      </button>
+      <button class="cmp-btn cmp-btn-primary cmp-btn-sm" id="btn-add-item">
+        Додати
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="nf-modal-backdrop" data-modal="modal-update-weight">
+  <div class="nf-modal nf-modal-small">
+    <div class="nf-modal-header">
+      <h3 class="nf-modal-title">Оновити вагу</h3>
+      <button class="nf-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="nf-modal-body">
+      <div class="nf-field-group">
+        <label class="nf-field-label">Вага (кг)</label>
+        <input class="nf-input" id="weight-value" type="number" step="0.1" />
+      </div>
+    </div>
+    <div class="nf-modal-footer">
+      <button class="cmp-btn cmp-btn-subtle cmp-btn-sm" data-modal-close>
+        Скасувати
+      </button>
+      <button class="cmp-btn cmp-btn-primary cmp-btn-sm" id="btn-update-weight">
+        Оновити
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="nf-modal-backdrop" data-modal="modal-edit-meal">
+  <div class="nf-modal nf-modal-wide">
+    <div class="nf-modal-header">
+      <h3 class="nf-modal-title">Редагувати прийом</h3>
+      <button class="nf-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="nf-modal-body">
+      <input type="hidden" id="edit-meal-id" />
+      <div class="nf-field-group">
+        <label class="nf-field-label">Назва</label>
+        <input class="nf-input" id="edit-meal-name" />
+      </div>
+      <div class="nf-field-group">
+        <label class="nf-field-label">Категорія</label>
+        <select class="nf-input" id="edit-meal-category">
+          <option value="breakfast">Сніданок</option>
+          <option value="lunch">Обід</option>
+          <option value="dinner">Вечеря</option>
+          <option value="snack">Перекус</option>
+        </select>
+      </div>
+      <div class="nf-field-group">
+        <label class="nf-field-label">Час</label>
+        <input class="nf-input" type="time" id="edit-meal-time" />
+      </div>
+    </div>
+    <div class="nf-modal-footer">
+      <button class="cmp-btn cmp-btn-subtle cmp-btn-sm" data-modal-close>
+        Скасувати
+      </button>
+      <button class="cmp-btn cmp-btn-primary cmp-btn-sm" id="btn-save-meal">
+        Зберегти
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="nf-modal-backdrop" data-modal="modal-edit-item">
+  <div class="nf-modal nf-modal-wide">
+    <div class="nf-modal-header">
+      <h3 class="nf-modal-title">Редагувати продукт</h3>
+      <button class="nf-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="nf-modal-body">
+      <input type="hidden" id="edit-item-id" />
+      <div class="nf-field-group">
+        <label class="nf-field-label">Назва</label>
+        <input class="nf-input" id="edit-item-name" />
+      </div>
+      <div class="nf-field-group">
+        <label class="nf-field-label">Вага (г)</label>
+        <input class="nf-input" id="edit-item-weight" type="number" />
+      </div>
+      <div class="nf-grid-4">
+        <div class="nf-field-group">
+          <label class="nf-field-label">Ккал</label>
+          <input class="nf-input" id="edit-item-kcal" type="number" />
+        </div>
+        <div class="nf-field-group">
+          <label class="nf-field-label">Білки</label>
+          <input class="nf-input" id="edit-item-protein" type="number" />
+        </div>
+        <div class="nf-field-group">
+          <label class="nf-field-label">Жири</label>
+          <input class="nf-input" id="edit-item-fat" type="number" />
+        </div>
+        <div class="nf-field-group">
+          <label class="nf-field-label">Вуглеводи</label>
+          <input class="nf-input" id="edit-item-carbs" type="number" />
+        </div>
+      </div>
+    </div>
+    <div class="nf-modal-footer">
+      <button class="cmp-btn cmp-btn-subtle cmp-btn-sm" data-modal-close>
+        Скасувати
+      </button>
+      <button class="cmp-btn cmp-btn-primary cmp-btn-sm" id="btn-save-item">
+        Зберегти
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentDate = new Date();
+  let kcalChart = null;
+  let weightChart = null;
+
+  const formatDate = (d) => d.toISOString().split("T")[0];
+
+  function setDateLabel() {
+    const label = document.getElementById("nutrition-date-label");
+    const input = document.getElementById("nutrition-date-input");
+    const todayStr = formatDate(new Date());
+    const curStr = formatDate(currentDate);
+    if (curStr === todayStr) {
+      label.textContent = "Сьогодні";
+    } else {
+      label.textContent = curStr;
+    }
+    input.value = curStr;
+  }
+
+  function updateProgressBar(idFill, idPercent, value, goal) {
+    const fill = document.getElementById(idFill);
+    const percentEl = document.getElementById(idPercent);
+    if (!fill || !percentEl) return;
+    const pct = goal > 0 ? Math.round((value / goal) * 100) : 0;
+    const clamped = Math.min(pct, 180);
+    fill.style.width = clamped + "%";
+    percentEl.textContent = pct + "%";
+  }
+
+  function updateDayUI(data) {
+    document.getElementById("today-kcal").textContent = data.total.calories;
+    document.getElementById("today-protein-val").textContent =
+      data.total.protein + " г";
+    document.getElementById("today-fat-val").textContent =
+      data.total.fat + " г";
+    document.getElementById("today-carbs-val").textContent =
+      data.total.carbs + " г";
+
+    document.getElementById("goal-kcal").textContent = data.goals.calories;
+    document.getElementById("goal-protein").textContent = data.goals.protein;
+    document.getElementById("goal-fat").textContent = data.goals.fat;
+    document.getElementById("goal-carbs").textContent = data.goals.carbs;
+
+    updateProgressBar(
+      "today-kcal-progress",
+      "today-kcal-percent",
+      data.total.calories,
+      data.goals.calories,
+    );
+    updateProgressBar(
+      "today-protein-progress",
+      "today-protein-percent",
+      data.total.protein,
+      data.goals.protein,
+    );
+    updateProgressBar(
+      "today-fat-progress",
+      "today-fat-percent",
+      data.total.fat,
+      data.goals.fat,
+    );
+    updateProgressBar(
+      "today-carbs-progress",
+      "today-carbs-percent",
+      data.total.carbs,
+      data.goals.carbs,
+    );
+
+    document.getElementById("nutrition-summary-text").textContent =
+      data.summary;
+
+    renderMeals(data.meals);
+  }
+
+  function renderMeals(meals) {
+    const container = document.getElementById("meals-list");
+    container.innerHTML = "";
+    if (!meals || meals.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "nutrition-summary";
+      empty.textContent = "За цей день ще немає прийомів їжі.";
+      container.appendChild(empty);
+      return;
+    }
+
+    meals.forEach((meal) => {
+      const card = document.createElement("div");
+      card.className = "nutrition-card";
+
+      const header = document.createElement("div");
+      header.className = "nutrition-card-header";
+
+      const left = document.createElement("div");
+      const name = document.createElement("div");
+      name.className = "nutrition-card-label";
+      name.textContent = meal.name;
+      const meta = document.createElement("div");
+      meta.className = "nutrition-card-goal";
+      meta.textContent = (meal.time || "") + " • " + meal.category_label;
+      left.appendChild(name);
+      left.appendChild(meta);
+
+      const right = document.createElement("div");
+      right.className = "nutrition-card-main";
+      const kcal = document.createElement("div");
+      kcal.className = "nutrition-card-value-row";
+      const kcalVal = document.createElement("span");
+      kcalVal.className = "nutrition-card-value";
+      kcalVal.textContent = meal.total_calories + " ккал";
+      kcal.appendChild(kcalVal);
+      right.appendChild(kcal);
+
+      header.appendChild(left);
+      header.appendChild(right);
+
+      const body = document.createElement("div");
+      body.className = "nutrition-card-main";
+
+      const macros = document.createElement("div");
+      macros.className = "nutrition-card-goal";
+      macros.textContent =
+        "Б: " +
+        meal.total_protein +
+        " г • Ж: " +
+        meal.total_fat +
+        " г • В: " +
+        meal.total_carbs +
+        " г";
+      body.appendChild(macros);
+
+      const itemsList = document.createElement("div");
+      itemsList.className = "meals-items-list";
+
+      meal.items.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "meal-item-row";
+
+        const leftCol = document.createElement("div");
+        leftCol.className = "meal-item-main";
+        const title = document.createElement("div");
+        title.className = "meal-item-name";
+        title.textContent = item.name;
+        const sub = document.createElement("div");
+        sub.className = "meal-item-meta";
+        sub.textContent =
+          (item.weight || 0) + " г • " + item.calories + " ккал";
+        leftCol.appendChild(title);
+        leftCol.appendChild(sub);
+
+        const rightCol = document.createElement("div");
+        rightCol.className = "meal-item-actions";
+        const btnEdit = document.createElement("button");
+        btnEdit.className = "cmp-btn cmp-btn-subtle cmp-btn-sm";
+        btnEdit.textContent = "Редагувати";
+        btnEdit.onclick = () => openEditItemModal(meal.id, item);
+        const btnDelete = document.createElement("button");
+        btnDelete.className = "cmp-btn cmp-btn-subtle cmp-btn-sm";
+        btnDelete.textContent = "Видалити";
+        btnDelete.onclick = () => deleteItem(item.id);
+        rightCol.appendChild(btnEdit);
+        rightCol.appendChild(btnDelete);
+
+        row.appendChild(leftCol);
+        row.appendChild(rightCol);
+        itemsList.appendChild(row);
+      });
+
+      const footer = document.createElement("div");
+      footer.className = "meal-footer-actions";
+
+      const btnAddItem = document.createElement("button");
+      btnAddItem.className = "cmp-btn cmp-btn-ghost cmp-btn-sm";
+      btnAddItem.textContent = "Додати продукт";
+      btnAddItem.onclick = () => openAddItemModal(meal.id);
+
+      const btnEditMeal = document.createElement("button");
+      btnEditMeal.className = "cmp-btn cmp-btn-subtle cmp-btn-sm";
+      btnEditMeal.textContent = "Редагувати прийом";
+      btnEditMeal.onclick = () => openEditMealModal(meal);
+
+      const btnDeleteMeal = document.createElement("button");
+      btnDeleteMeal.className = "cmp-btn cmp-btn-subtle cmp-btn-sm";
+      btnDeleteMeal.textContent = "Видалити";
+      btnDeleteMeal.onclick = () => deleteMeal(meal.id);
+
+      footer.appendChild(btnAddItem);
+      footer.appendChild(btnEditMeal);
+      footer.appendChild(btnDeleteMeal);
+
+      card.appendChild(header);
+      card.appendChild(body);
+      card.appendChild(itemsList);
+      card.appendChild(footer);
+
+      container.appendChild(card);
+    });
+  }
+
+  function loadDay() {
+    const dateStr = formatDate(currentDate);
+    fetch(`/api/nutrition/day?date=${dateStr}`)
+      .then((r) => r.json())
+      .then(updateDayUI)
+      .catch(() => {
+        document.getElementById("nutrition-summary-text").textContent =
+          "Помилка завантаження даних.";
+      });
+  }
+
+  function loadStats(days) {
+    fetch(`/api/nutrition/stats?days=${days}`)
+      .then((r) => r.json())
+      .then(updateStatsUI);
+  }
+
+  function updateStatsUI(data) {
+    document.getElementById("avg-kcal").textContent = data.avg_kcal + " ккал";
+    document.getElementById("avg-kcal-goal").textContent =
+      data.goal_kcal + " ккал";
+    document.getElementById("current-weight").textContent =
+      data.current_weight + " кг";
+    document.getElementById("weight-trend").textContent = data.weight_trend;
+
+    const kcalCtx = document.getElementById("kcal-chart").getContext("2d");
+    const weightCtx = document.getElementById("weight-chart").getContext("2d");
+
+    if (kcalChart) kcalChart.destroy();
+    if (weightChart) weightChart.destroy();
+
+    kcalChart = new Chart(kcalCtx, {
+      type: "bar",
+      data: {
+        labels: data.kcal.labels,
+        datasets: [
+          {
+            data: data.kcal.values,
+            backgroundColor: "rgba(155, 93, 229, 0.7)",
+            borderRadius: 8,
+          },
+        ],
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: "#9ca0c2" }, grid: { display: false } },
+          y: {
+            ticks: { color: "#9ca0c2" },
+            grid: { color: "rgba(255,255,255,0.06)" },
+          },
+        },
+      },
+    });
+
+    weightChart = new Chart(weightCtx, {
+      type: "line",
+      data: {
+        labels: data.weight.labels,
+        datasets: [
+          {
+            data: data.weight.values,
+            borderColor: "#00c2ff",
+            backgroundColor: "rgba(0,194,255,0.2)",
+            tension: 0.35,
+            fill: true,
+            pointRadius: 3,
+            pointBackgroundColor: "#00c2ff",
+          },
+        ],
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: "#9ca0c2" }, grid: { display: false } },
+          y: {
+            ticks: { color: "#9ca0c2" },
+            grid: { color: "rgba(255,255,255,0.06)" },
+          },
+        },
+      },
+    });
+  }
+
+  function openModal(id) {
+    const backdrop = document.querySelector(
+      `.nf-modal-backdrop[data-modal="${id}"]`,
+    );
+    if (backdrop) backdrop.style.display = "flex";
+  }
+
+  function closeModal(el) {
+    const backdrop = el.closest(".nf-modal-backdrop");
+    if (backdrop) backdrop.style.display = "none";
+  }
+
+  function attachModalHandlers() {
+    document.querySelectorAll("[data-modal-open]").forEach((btn) => {
+      btn.addEventListener("click", () =>
+        openModal(btn.getAttribute("data-modal-open")),
+      );
+    });
+    document.querySelectorAll("[data-modal-close]").forEach((btn) => {
+      btn.addEventListener("click", () => closeModal(btn));
+    });
+    document.querySelectorAll(".nf-modal-backdrop").forEach((backdrop) => {
+      backdrop.addEventListener("click", (e) => {
+        if (e.target === backdrop) backdrop.style.display = "none";
+      });
+    });
+  }
+
+  function openAddItemModal(mealId) {
+    document.getElementById("item-meal-id").value = mealId;
+    document.getElementById("item-name").value = "";
+    document.getElementById("item-weight").value = "";
+    document.getElementById("item-kcal").value = "";
+    document.getElementById("item-protein").value = "";
+    document.getElementById("item-fat").value = "";
+    document.getElementById("item-carbs").value = "";
+    openModal("modal-add-item");
+  }
+
+  function openEditMealModal(meal) {
+    document.getElementById("edit-meal-id").value = meal.id;
+    document.getElementById("edit-meal-name").value = meal.name;
+    document.getElementById("edit-meal-category").value = meal.category;
+    document.getElementById("edit-meal-time").value = meal.time || "";
+    openModal("modal-edit-meal");
+  }
+
+  function openEditItemModal(mealId, item) {
+    document.getElementById("edit-item-id").value = item.id;
+    document.getElementById("edit-item-name").value = item.name;
+    document.getElementById("edit-item-weight").value = item.weight || "";
+    document.getElementById("edit-item-kcal").value = item.calories;
+    document.getElementById("edit-item-protein").value = item.protein;
+    document.getElementById("edit-item-fat").value = item.fat;
+    document.getElementById("edit-item-carbs").value = item.carbs;
+    openModal("modal-edit-item");
+  }
+
+  function createMeal() {
+    const payload = {
+      date: formatDate(currentDate),
+      name: document.getElementById("meal-name").value,
+      category: document.getElementById("meal-category").value,
+      time: document.getElementById("meal-time").value || null,
+    };
+    fetch("/api/nutrition/meals", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((r) => r.json())
+      .then(() => {
+        closeModal(
+          document.querySelector(
+            '[data-modal="modal-add-meal"] .nf-modal-close',
+          ),
+        );
+        loadDay();
+      });
+  }
+
+  function addItem() {
+    const payload = {
+      meal_id: document.getElementById("item-meal-id").value,
+      name: document.getElementById("item-name").value,
+      weight: document.getElementById("item-weight").value || null,
+      calories: document.getElementById("item-kcal").value || 0,
+      protein: document.getElementById("item-protein").value || 0,
+      fat: document.getElementById("item-fat").value || 0,
+      carbs: document.getElementById("item-carbs").value || 0,
+    };
+    fetch("/api/nutrition/items", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((r) => r.json())
+      .then(() => {
+        closeModal(
+          document.querySelector(
+            '[data-modal="modal-add-item"] .nf-modal-close',
+          ),
+        );
+        loadDay();
+      });
+  }
+
+  function saveMeal() {
+    const payload = {
+      id: document.getElementById("edit-meal-id").value,
+      name: document.getElementById("edit-meal-name").value,
+      category: document.getElementById("edit-meal-category").value,
+      time: document.getElementById("edit-meal-time").value || null,
+    };
+    fetch("/api/nutrition/meals/" + payload.id, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((r) => r.json())
+      .then(() => {
+        closeModal(
+          document.querySelector(
+            '[data-modal="modal-edit-meal"] .nf-modal-close',
+          ),
+        );
+        loadDay();
+      });
+  }
+
+  function saveItem() {
+    const id = document.getElementById("edit-item-id").value;
+    const payload = {
+      name: document.getElementById("edit-item-name").value,
+      weight: document.getElementById("edit-item-weight").value || null,
+      calories: document.getElementById("edit-item-kcal").value || 0,
+      protein: document.getElementById("edit-item-protein").value || 0,
+      fat: document.getElementById("edit-item-fat").value || 0,
+      carbs: document.getElementById("edit-item-carbs").value || 0,
+    };
+    fetch("/api/nutrition/items/" + id, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((r) => r.json())
+      .then(() => {
+        closeModal(
+          document.querySelector(
+            '[data-modal="modal-edit-item"] .nf-modal-close',
+          ),
+        );
+        loadDay();
+      });
+  }
+
+  function deleteMeal(id) {
+    fetch("/api/nutrition/meals/" + id, { method: "DELETE" }).then(() =>
+      loadDay(),
+    );
+  }
+
+  function deleteItem(id) {
+    fetch("/api/nutrition/items/" + id, { method: "DELETE" }).then(() =>
+      loadDay(),
+    );
+  }
+
+  function updateWeight() {
+    const payload = {
+      date: formatDate(currentDate),
+      weight: document.getElementById("weight-value").value,
+    };
+    fetch("/api/nutrition/weight", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((r) => r.json())
+      .then(() => {
+        closeModal(
+          document.querySelector(
+            '[data-modal="modal-update-weight"] .nf-modal-close',
+          ),
+        );
+        loadStats(7);
+      });
+  }
+
+  function copyYesterday() {
+    const dateStr = formatDate(currentDate);
+    fetch("/api/nutrition/copy_yesterday", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date: dateStr }),
+    })
+      .then((r) => r.json())
+      .then(() => loadDay());
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    setDateLabel();
+    attachModalHandlers();
+
+    document
+      .getElementById("nutrition-prev-day")
+      .addEventListener("click", () => {
+        currentDate.setDate(currentDate.getDate() - 1);
+        setDateLabel();
+        loadDay();
+      });
+
+    document
+      .getElementById("nutrition-next-day")
+      .addEventListener("click", () => {
+        currentDate.setDate(currentDate.getDate() + 1);
+        setDateLabel();
+        loadDay();
+      });
+
+    document
+      .getElementById("nutrition-today-btn")
+      .addEventListener("click", () => {
+        currentDate = new Date();
+        setDateLabel();
+        loadDay();
+      });
+
+    document
+      .getElementById("nutrition-date-input")
+      .addEventListener("change", (e) => {
+        currentDate = new Date(e.target.value);
+        setDateLabel();
+        loadDay();
+      });
+
+    document
+      .getElementById("btn-create-meal")
+      .addEventListener("click", createMeal);
+    document.getElementById("btn-add-item").addEventListener("click", addItem);
+    document
+      .getElementById("btn-save-meal")
+      .addEventListener("click", saveMeal);
+    document
+      .getElementById("btn-save-item")
+      .addEventListener("click", saveItem);
+    document
+      .getElementById("btn-update-weight")
+      .addEventListener("click", updateWeight);
+    document
+      .getElementById("nutrition-copy-yesterday")
+      .addEventListener("click", copyYesterday);
+
+    document.querySelectorAll(".nutrition-period-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document
+          .querySelectorAll(".nutrition-period-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const days = btn.getAttribute("data-days");
+        loadStats(days);
+      });
+    });
+
+    loadDay();
+    loadStats(7);
+  });
+</script>
+
 {% endblock %}

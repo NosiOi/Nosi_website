@@ -1,18 +1,22 @@
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
-from myapp.app import db
+from datetime import date, datetime, timedelta
 
-from myapp.app.services.nutrition_service import (
-    get_daily_nutrition_data,
+from myapp.app import db
+from myapp.app.models import Meal, MealItem, UserWeight
+
+from myapp.app.services.nutrition.day_service import get_daily_nutrition_data
+from myapp.app.services.nutrition.meal_service import (
     add_meal_service,
-    add_item_service,
     delete_meal_service,
-    delete_item_service,
     copy_meal_service
 )
+from myapp.app.services.nutrition.item_service import (
+    add_item_service,
+    delete_item_service
+)
+from myapp.app.services.nutrition.stats_service import get_stats
 
-from myapp.app.models import Meal, MealItem, UserWeight
-from datetime import date, datetime, timedelta
 
 nutrition_api = Blueprint("nutrition_api", __name__, url_prefix="/api/nutrition")
 
@@ -30,7 +34,6 @@ def parse_date():
 @nutrition_api.get("/day")
 @login_required
 def api_day():
-    d = parse_date()
     data = get_daily_nutrition_data(current_user.id)
     return jsonify(data)
 
@@ -40,8 +43,7 @@ def api_day():
 def api_add_meal():
     form = request.json or {}
 
-    required = ["name", "category"]
-    if not all(k in form for k in required):
+    if "name" not in form or "category" not in form:
         return jsonify({"error": "Missing fields"}), 400
 
     add_meal_service(current_user.id, {
@@ -88,8 +90,7 @@ def api_delete_meal(meal_id):
 def api_add_item():
     form = request.json or {}
 
-    required = ["meal_id", "name"]
-    if not all(k in form for k in required):
+    if "meal_id" not in form or "name" not in form:
         return jsonify({"error": "Missing fields"}), 400
 
     add_item_service(current_user.id, {
@@ -177,43 +178,5 @@ def api_update_weight():
 @login_required
 def api_stats():
     days = int(request.args.get("days", 7))
-    today = date.today()
-
-    labels = []
-    kcal = []
-    weight_labels = []
-    weight_values = []
-
-    for i in range(days):
-        d = today - timedelta(days=i)
-        meals = Meal.query.filter_by(user_id=current_user.id, date=d).all()
-        labels.append(d.strftime("%d.%m"))
-        kcal.append(sum(m.total_calories for m in meals))
-
-    labels.reverse()
-    kcal.reverse()
-
-    weights = (
-        UserWeight.query.filter_by(user_id=current_user.id)
-        .order_by(UserWeight.date.asc())
-        .all()
-    )
-
-    for w in weights:
-        weight_labels.append(w.date.strftime("%d.%m"))
-        weight_values.append(w.weight)
-
-    return jsonify({
-        "kcal": {
-            "labels": labels,
-            "values": kcal
-        },
-        "weight": {
-            "labels": weight_labels,
-            "values": weight_values
-        },
-        "avg_kcal": sum(kcal) // len(kcal) if kcal else 0,
-        "goal_kcal": get_daily_nutrition_data(current_user.id)["kcal_goal"],
-        "current_weight": weight_values[-1] if weight_values else None,
-        "weight_trend": "Стабільно"
-    })
+    data = get_stats(current_user.id, days)
+    return jsonify(data)

@@ -7,7 +7,6 @@ from myapp.app.training_engine.models.equipment import TEEquipment
 from myapp.app.training_engine.models.training_plan import TrainingPlan
 from myapp.app.training_engine.models.session import Session
 from myapp.app.training_engine.models.user_pref import UserPreference
-from myapp.app.services.analytics_service import compute_weekly_report
 from myapp.app.services.training_engine_service import TrainingEngineService
 from sqlalchemy import func
 import datetime as dt
@@ -298,13 +297,6 @@ def report_muscle_load():
             except Exception:
                 return None
 
-        report = compute_weekly_report(session_payloads, exercise_lookup)
-        return jsonify({
-            "raw": report["raw"],
-            "normalized": report["normalized"],
-            "from": from_dt.isoformat(),
-            "to": to_dt.isoformat()
-        })
     except Exception as e:
         return _error_response(e)
 
