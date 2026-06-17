@@ -1,0 +1,369 @@
+{% extends "app/base_app.html" %} {% block title %}Профіль{% endblock %} {%
+block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/profile/profile.css') }}"
+/>
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+{% endblock %} {% block body %} {% set ns = namespace(filled=0, total=12) %} {%
+if user.username %}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if
+user.email %}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if user.age %}{%
+set ns.filled = ns.filled + 1 %}{% endif %} {% if user.height %}{% set ns.filled
+= ns.filled + 1 %}{% endif %} {% if user.weight %}{% set ns.filled = ns.filled +
+1 %}{% endif %} {% if user.gender %}{% set ns.filled = ns.filled + 1 %}{% endif
+%} {% if user.activity %}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if
+user.goal %}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if user.experience
+%}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if user.workouts_per_week
+%}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if user.profile and
+user.profile.training_location %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if user.profile and user.profile.onboarding_completed %}{% set ns.filled =
+ns.filled + 1 %}{% endif %} {% set completion = (ns.filled * 100 // ns.total) %}
+
+<div class="nf-profile-page">
+  <div class="nf-profile-grid">
+    <div class="nf-profile-column nf-profile-column-left">
+      <section class="nf-card nf-card-main">
+        <div class="nf-card-header">
+          <div class="nf-card-title-block">
+            <h1 class="nf-title">Профіль</h1>
+            <p class="nf-subtitle">Особисті дані та статус акаунту</p>
+          </div>
+          <div class="nf-id-block">
+            <span class="nf-id-label">ID</span>
+            <span class="nf-id-value">#{{ user.id }}</span>
+          </div>
+        </div>
+
+        <div class="nf-main-info">
+          <div class="nf-main-row">
+            <div class="nf-main-label">Ім’я користувача</div>
+            <div class="nf-main-value">{{ user.username }}</div>
+          </div>
+
+          <div class="nf-main-row">
+            <div class="nf-main-label">Email</div>
+            <div class="nf-main-value">{{ user.email }}</div>
+          </div>
+
+          <div class="nf-main-row nf-main-row-inline">
+            <div class="nf-main-inline-block">
+              <div class="nf-main-label">Реєстрація</div>
+              <div class="nf-main-value">
+                {{ user.created_at.strftime("%d.%m.%Y") if user.created_at }}
+              </div>
+            </div>
+            <div class="nf-main-inline-block">
+              <div class="nf-main-label">Останнє оновлення</div>
+              <div class="nf-main-value">
+                {{ user.updated_at.strftime("%d.%m.%Y") if user.updated_at }}
+              </div>
+            </div>
+          </div>
+
+          <div class="nf-main-row nf-main-row-inline">
+            <div class="nf-main-inline-block">
+              <div class="nf-main-label">Статус</div>
+              <div class="nf-badge nf-badge-status">
+                {{ "Premium" if user.is_premium else "Standard" }}
+              </div>
+            </div>
+            <div class="nf-main-inline-block">
+              <div class="nf-main-label">Безпека акаунту</div>
+              <div class="nf-badge nf-badge-secure">Активний</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-card nf-card-body">
+        <div class="nf-card-header">
+          <h2 class="nf-card-title">Параметри тіла</h2>
+          <p class="nf-card-subtitle">Базові фізичні характеристики</p>
+        </div>
+
+        <div class="nf-body-grid">
+          <div class="nf-body-item">
+            <div class="nf-body-label">Вік</div>
+            <div class="nf-body-value">{{ user.age or "Не вказано" }}</div>
+          </div>
+
+          <div class="nf-body-item">
+            <div class="nf-body-label">Стать</div>
+            <div class="nf-body-value">{{ user.gender or "Не вказано" }}</div>
+          </div>
+
+          <div class="nf-body-item">
+            <div class="nf-body-label">Зріст</div>
+            <div class="nf-body-value">
+              {% if user.height %}{{ "%.1f"|format(user.height) }} см{% else
+              %}Не вказано{% endif %}
+            </div>
+          </div>
+
+          <div class="nf-body-item">
+            <div class="nf-body-label">Вага</div>
+            <div class="nf-body-value">
+              {% if user.weight %}{{ "%.1f"|format(user.weight) }} кг{% else
+              %}Не вказано{% endif %}
+            </div>
+          </div>
+
+          <div class="nf-body-item">
+            <div class="nf-body-label">Активність</div>
+            <div class="nf-body-value">
+              {% if user.activity %}{{ "%.3f"|format(user.activity) }}{% else
+              %}Не вказано{% endif %}
+            </div>
+          </div>
+
+          <div class="nf-body-item">
+            <div class="nf-body-label">Досвід</div>
+            <div class="nf-body-value">
+              {{ user.experience or "Не вказано" }}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-card nf-card-training">
+        <div class="nf-card-header">
+          <h2 class="nf-card-title">Профіль тренувань</h2>
+          <p class="nf-card-subtitle">Контекст тренувань та сервісів</p>
+        </div>
+
+        <div class="nf-training-grid">
+          <div class="nf-training-item">
+            <div class="nf-training-label">Локація тренувань</div>
+            <div
+              class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.training_location }}"
+            >
+              {{ user.profile.training_location or "Не вказано" }}
+            </div>
+          </div>
+
+          <div class="nf-training-item">
+            <div class="nf-training-label">Харчування</div>
+            <div
+              class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.wants_nutrition }}"
+            >
+              {% if user.profile and user.profile.wants_nutrition %}Активовано{%
+              else %}Не активовано{% endif %}
+            </div>
+          </div>
+
+          <div class="nf-training-item">
+            <div class="nf-training-label">Відновлення</div>
+            <div
+              class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.wants_recovery }}"
+            >
+              {% if user.profile and user.profile.wants_recovery %}Активовано{%
+              else %}Не активовано{% endif %}
+            </div>
+          </div>
+
+          <div class="nf-training-item">
+            <div class="nf-training-label">Онбординг</div>
+            <div
+              class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.onboarding_completed }}"
+            >
+              {% if user.profile and user.profile.onboarding_completed
+              %}Завершено{% else %}Не завершено{% endif %}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="nf-profile-column nf-profile-column-right">
+      <section class="nf-card nf-card-progress">
+        <div class="nf-card-header nf-card-header-progress">
+          <div>
+            <h2 class="nf-card-title">Завершеність профілю</h2>
+            <p class="nf-card-subtitle">Заповнені ключові дані акаунту</p>
+          </div>
+          <div class="nf-progress-percentage">{{ completion }}%</div>
+        </div>
+
+        <div class="nf-progress-content">
+          <div class="nf-progress-circle" data-completion="{{ completion }}">
+            <div class="nf-progress-inner">
+              <span class="nf-progress-value">{{ completion }}%</span>
+              <span class="nf-progress-label">готово</span>
+            </div>
+          </div>
+
+          <div class="nf-progress-list">
+            <div class="nf-progress-item">
+              <span
+                class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.username and user.email }}"
+              ></span>
+              <span class="nf-progress-text">Основні дані</span>
+            </div>
+
+            <div class="nf-progress-item">
+              <span
+                class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.age or user.height or user.weight or user.gender }}"
+              ></span>
+              <span class="nf-progress-text">Параметри тіла</span>
+            </div>
+
+            <div class="nf-progress-item">
+              <span
+                class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.goal or user.activity or user.workouts_per_week }}"
+              ></span>
+              <span class="nf-progress-text">Цілі та активність</span>
+            </div>
+
+            <div class="nf-progress-item">
+              <span
+                class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.profile and (user.profile.training_location or user.profile.onboarding_completed) }}"
+              ></span>
+              <span class="nf-progress-text">Профіль тренувань</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-card nf-card-goals">
+        <div class="nf-card-header">
+          <h2 class="nf-card-title">Цілі</h2>
+          <p class="nf-card-subtitle">Фітнес‑вектор та частота тренувань</p>
+        </div>
+
+        <div class="nf-goals-grid">
+          <div class="nf-goal-item">
+            <div class="nf-goal-label">Фітнес‑вектор</div>
+            <div class="nf-goal-value">{{ user.goal or "Не вказано" }}</div>
+          </div>
+
+          <div class="nf-goal-item">
+            <div class="nf-goal-label">Головна ціль</div>
+            <div class="nf-goal-value">{{ user.goal or "Не вказано" }}</div>
+          </div>
+
+          <div class="nf-goal-item">
+            <div class="nf-goal-label">Тренування</div>
+            <div class="nf-goal-value">
+              {% if user.workouts_per_week %}{{ user.workouts_per_week }}
+              разів/тиждень{% else %}Не вказано{% endif %}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-card nf-card-actions">
+        <div class="nf-card-header">
+          <h2 class="nf-card-title">Дії з акаунтом</h2>
+          <p class="nf-card-subtitle">Керування профілем та безпекою</p>
+        </div>
+
+        <div class="nf-actions-grid">
+          <button
+            type="button"
+            class="nf-btn nf-btn-soft-primary"
+            data-modal-open="modal-edit-profile"
+          >
+            Редагувати профіль
+          </button>
+          <button
+            type="button"
+            class="nf-btn nf-btn-soft-secondary"
+            data-modal-open="modal-change-email"
+          >
+            Змінити email
+          </button>
+          <button
+            type="button"
+            class="nf-btn nf-btn-soft-info"
+            data-modal-open="modal-change-password"
+          >
+            Змінити пароль
+          </button>
+          <button
+            type="button"
+            class="nf-btn nf-btn-soft-danger"
+            data-modal-open="modal-delete-account"
+          >
+            Видалити акаунт
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  {% include "app/profile/modals/modal_edit_profile.html" %} {% include
+  "app/profile/modals/modal_change_email.html" %} {% include
+  "app/profile/modals/modal_change_password.html" %} {% include
+  "app/profile/modals/modal_delete_account.html" %}
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var circles = document.querySelectorAll(".nf-progress-circle");
+    circles.forEach(function (circle) {
+      var value = parseInt(circle.getAttribute("data-completion") || "0", 10);
+      var clamped = Math.max(0, Math.min(100, value));
+      var filledColor = "var(--nf-accent)";
+      var emptyColor = "rgba(255,255,255,0.06)";
+      circle.style.background =
+        "conic-gradient(" +
+        filledColor +
+        " 0 " +
+        clamped +
+        "%," +
+        emptyColor +
+        " " +
+        clamped +
+        "% 100%)";
+    });
+
+    var toggles = document.querySelectorAll(".nf-password-toggle");
+    toggles.forEach(function (toggle) {
+      toggle.addEventListener("click", function () {
+        var wrapper = toggle.closest(".nf-input-wrapper");
+        if (!wrapper) return;
+        var input = wrapper.querySelector(".nf-input-password");
+        if (!input) return;
+        if (input.type === "password") {
+          input.type = "text";
+          toggle.textContent = "приховати";
+        } else {
+          input.type = "password";
+          toggle.textContent = "показати";
+        }
+      });
+    });
+
+    var openButtons = document.querySelectorAll("[data-modal-open]");
+    var closeButtons = document.querySelectorAll("[data-modal-close]");
+    var backdrops = document.querySelectorAll(".nf-modal-backdrop");
+
+    openButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var target = btn.getAttribute("data-modal-open");
+        backdrops.forEach(function (bd) {
+          if (bd.getAttribute("data-modal") === target) {
+            bd.classList.add("nf-modal-open");
+          }
+        });
+      });
+    });
+
+    closeButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var bd = btn.closest(".nf-modal-backdrop");
+        if (bd) bd.classList.remove("nf-modal-open");
+      });
+    });
+
+    backdrops.forEach(function (bd) {
+      bd.addEventListener("click", function (e) {
+        if (e.target === bd) {
+          bd.classList.remove("nf-modal-open");
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock %}
