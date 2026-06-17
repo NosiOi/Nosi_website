@@ -1,39 +1,36 @@
-<div class="nf-modal-backdrop" data-modal="modal-add-meal">
-  <div class="nf-modal nf-modal-wide">
-    <div class="nf-modal-header">
-      <h3 class="nf-modal-title">Новий прийом їжі</h3>
-      <button class="nf-modal-close" data-modal-close>&times;</button>
-    </div>
+<div class="modal" id="modal-add-meal">
+  <div class="modal-content">
+    <h2>Новий прийом їжі</h2>
 
-    <div class="nf-modal-body">
-      <div class="nf-field-group">
-        <label class="nf-field-label">Назва</label>
-        <input class="nf-input" id="meal-name" />
-      </div>
+    <label>Назва</label>
+    <input type="text" id="add-meal-name" />
 
-      <div class="nf-field-group">
-        <label class="nf-field-label">Категорія</label>
-        <select class="nf-input" id="meal-category">
-          <option value="breakfast">Сніданок</option>
-          <option value="lunch">Обід</option>
-          <option value="dinner">Вечеря</option>
-          <option value="snack">Перекус</option>
-        </select>
-      </div>
+    <label>Категорія</label>
+    <select id="add-meal-category">
+      <option value="Сніданок">Сніданок</option>
+      <option value="Обід">Обід</option>
+      <option value="Вечеря">Вечеря</option>
+      <option value="Перекус">Перекус</option>
+    </select>
 
-      <div class="nf-field-group">
-        <label class="nf-field-label">Час</label>
-        <input class="nf-input" type="time" id="meal-time" />
-      </div>
-    </div>
+    <label>Час</label>
+    <input type="time" id="add-meal-time" />
 
-    <div class="nf-modal-footer">
-      <button class="cmp-btn cmp-btn-subtle cmp-btn-sm" data-modal-close>
-        Скасувати
-      </button>
-      <button class="cmp-btn cmp-btn-primary cmp-btn-sm" id="btn-create-meal">
-        Створити
-      </button>
+    <label>Калорії</label>
+    <input type="number" id="add-meal-kcal" value="0" />
+
+    <label>Білки</label>
+    <input type="number" id="add-meal-protein" value="0" />
+
+    <label>Жири</label>
+    <input type="number" id="add-meal-fat" value="0" />
+
+    <label>Вуглеводи</label>
+    <input type="number" id="add-meal-carb" value="0" />
+
+    <div class="modal-actions">
+      <button class="btn" id="close-add-meal">Скасувати</button>
+      <button class="btn primary" id="save-add-meal">Створити</button>
     </div>
   </div>
 </div>

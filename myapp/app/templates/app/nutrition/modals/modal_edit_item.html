@@ -1,53 +1,27 @@
-<div class="nf-modal-backdrop" data-modal="modal-edit-item">
-  <div class="nf-modal nf-modal-wide">
-    <div class="nf-modal-header">
-      <h3 class="nf-modal-title">Редагувати продукт</h3>
-      <button class="nf-modal-close" data-modal-close>&times;</button>
-    </div>
+<div class="modal" id="modal-edit-item">
+  <div class="modal-content">
+    <h2>Редагувати продукт</h2>
 
-    <div class="nf-modal-body">
-      <input type="hidden" id="edit-item-id" />
+    <input type="hidden" id="edit-item-id" />
 
-      <div class="nf-field-group">
-        <label class="nf-field-label">Назва</label>
-        <input class="nf-input" id="edit-item-name" />
-      </div>
+    <label>Назва</label>
+    <input type="text" id="edit-item-name" />
 
-      <div class="nf-field-group">
-        <label class="nf-field-label">Вага (г)</label>
-        <input class="nf-input" id="edit-item-weight" type="number" />
-      </div>
+    <label>Калорії</label>
+    <input type="number" id="edit-item-kcal" />
 
-      <div class="nf-grid-4">
-        <div class="nf-field-group">
-          <label class="nf-field-label">Ккал</label>
-          <input class="nf-input" id="edit-item-kcal" type="number" />
-        </div>
+    <label>Білки</label>
+    <input type="number" id="edit-item-protein" />
 
-        <div class="nf-field-group">
-          <label class="nf-field-label">Білки</label>
-          <input class="nf-input" id="edit-item-protein" type="number" />
-        </div>
+    <label>Жири</label>
+    <input type="number" id="edit-item-fat" />
 
-        <div class="nf-field-group">
-          <label class="nf-field-label">Жири</label>
-          <input class="nf-input" id="edit-item-fat" type="number" />
-        </div>
+    <label>Вуглеводи</label>
+    <input type="number" id="edit-item-carb" />
 
-        <div class="nf-field-group">
-          <label class="nf-field-label">Вуглеводи</label>
-          <input class="nf-input" id="edit-item-carbs" type="number" />
-        </div>
-      </div>
-    </div>
-
-    <div class="nf-modal-footer">
-      <button class="cmp-btn cmp-btn-subtle cmp-btn-sm" data-modal-close>
-        Скасувати
-      </button>
-      <button class="cmp-btn cmp-btn-primary cmp-btn-sm" id="btn-save-item">
-        Зберегти
-      </button>
+    <div class="modal-actions">
+      <button class="btn" id="close-edit-item">Скасувати</button>
+      <button class="btn primary" id="save-edit-item">Зберегти</button>
     </div>
   </div>
 </div>

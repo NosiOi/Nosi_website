@@ -1,41 +1,26 @@
-<div class="nf-modal-backdrop" data-modal="modal-edit-meal">
-  <div class="nf-modal nf-modal-wide">
-    <div class="nf-modal-header">
-      <h3 class="nf-modal-title">Редагувати прийом</h3>
-      <button class="nf-modal-close" data-modal-close>&times;</button>
-    </div>
+<div class="modal" id="modal-edit-meal">
+  <div class="modal-content">
+    <h2>Редагувати прийом</h2>
 
-    <div class="nf-modal-body">
-      <input type="hidden" id="edit-meal-id" />
+    <input type="hidden" id="edit-meal-id" />
 
-      <div class="nf-field-group">
-        <label class="nf-field-label">Назва</label>
-        <input class="nf-input" id="edit-meal-name" />
-      </div>
+    <label>Назва</label>
+    <input type="text" id="edit-meal-name" />
 
-      <div class="nf-field-group">
-        <label class="nf-field-label">Категорія</label>
-        <select class="nf-input" id="edit-meal-category">
-          <option value="breakfast">Сніданок</option>
-          <option value="lunch">Обід</option>
-          <option value="dinner">Вечеря</option>
-          <option value="snack">Перекус</option>
-        </select>
-      </div>
+    <label>Категорія</label>
+    <select id="edit-meal-category">
+      <option value="Сніданок">Сніданок</option>
+      <option value="Обід">Обід</option>
+      <option value="Вечеря">Вечеря</option>
+      <option value="Перекус">Перекус</option>
+    </select>
 
-      <div class="nf-field-group">
-        <label class="nf-field-label">Час</label>
-        <input class="nf-input" type="time" id="edit-meal-time" />
-      </div>
-    </div>
+    <label>Час</label>
+    <input type="time" id="edit-meal-time" />
 
-    <div class="nf-modal-footer">
-      <button class="cmp-btn cmp-btn-subtle cmp-btn-sm" data-modal-close>
-        Скасувати
-      </button>
-      <button class="cmp-btn cmp-btn-primary cmp-btn-sm" id="btn-save-meal">
-        Зберегти
-      </button>
+    <div class="modal-actions">
+      <button class="btn" id="close-edit-meal">Скасувати</button>
+      <button class="btn primary" id="save-edit-meal">Зберегти</button>
     </div>
   </div>
 </div>
