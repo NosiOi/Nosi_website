@@ -19,7 +19,7 @@ def training_page():
 @dashboard_bp.route("/nutrition")
 @login_required
 def nutrition_page():
-    return redirect("/nutrition")
+    return render_template("app/nutrition/nutrition.html")
 
 
 @dashboard_bp.route("/recovery")
@@ -55,7 +55,7 @@ def training_explanation_page():
 @dashboard_bp.route("/profile")
 @login_required
 def profile_page():
-    return render_template("profile/profile.html", user=current_user)
+    return render_template("app/profile/profile.html", user=current_user)
 
 
 @dashboard_bp.route("/questionnaire")
