@@ -149,48 +149,38 @@
 </style>
 
 <script>
-  function generateHeatmapData() {
-    let days = 365;
-    let data = [];
-
-    for (let i = 0; i < days; i++) {
-      let percent = Math.floor(Math.random() * 101);
-      let level =
-        percent === 0
-          ? 0
-          : percent <= 25
-            ? 1
-            : percent <= 50
-              ? 2
-              : percent <= 75
-                ? 3
-                : 4;
-
-      data.push({ percent, level });
-    }
-
-    return data;
+  async function loadHeatmap(year) {
+    const res = await fetch(`/api/nutrition/heatmap?year=${year}`);
+    const data = await res.json();
+    renderHeatmap(data.days);
   }
 
-  function renderHeatmap() {
+  function renderHeatmap(days) {
     const grid = document.getElementById("heatmap-grid");
     grid.innerHTML = "";
 
-    let data = generateHeatmapData();
-
-    data.forEach((d) => {
-      let cell = document.createElement("div");
+    days.forEach((d) => {
+      const cell = document.createElement("div");
       cell.className = "heatmap-cell";
       cell.dataset.level = d.level;
 
-      let tooltip = document.createElement("div");
+      const tooltip = document.createElement("div");
       tooltip.className = "heatmap-tooltip";
-      tooltip.textContent = d.percent + "%";
+      tooltip.textContent = `${d.kcal} ккал (${d.percent}%)`;
 
       cell.appendChild(tooltip);
       grid.appendChild(cell);
     });
   }
 
-  renderHeatmap();
+  document.addEventListener("DOMContentLoaded", () => {
+    const yearSelect = document.getElementById("heatmap-year");
+
+    function reload() {
+      loadHeatmap(yearSelect.value);
+    }
+
+    yearSelect.addEventListener("change", reload);
+    reload();
+  });
 </script>

@@ -46,3 +46,48 @@ def get_stats(user_id, days=7):
         "current_weight": weight_values[-1] if weight_values else None,
         "weight_trend": "Стабільно"
     }
+
+
+def get_year_heatmap(user_id, year: int):
+    start = date(year, 1, 1)
+    end = date(year, 12, 31)
+
+    goal_cal, _, _, _ = get_goals(user_id)
+
+    days = []
+    d = start
+    while d <= end:
+        meals = Meal.query.filter_by(user_id=user_id, date=d).all()
+        kcal = sum(m.total_calories for m in meals)
+
+        if goal_cal > 0:
+            percent = round((kcal / goal_cal) * 100)
+        else:
+            percent = 0
+
+        if percent == 0:
+            level = 0
+        elif percent <= 25:
+            level = 1
+        elif percent <= 50:
+            level = 2
+        elif percent <= 75:
+            level = 3
+        else:
+            level = 4
+
+        days.append(
+            {
+                "date": d.isoformat(),
+                "kcal": kcal,
+                "percent": percent,
+                "level": level,
+            }
+        )
+
+        d += timedelta(days=1)
+
+    return {
+        "year": year,
+        "days": days,
+    }

@@ -15,7 +15,7 @@ from myapp.app.services.nutrition.item_service import (
     add_item_service,
     delete_item_service
 )
-from myapp.app.services.nutrition.stats_service import get_stats
+from myapp.app.services.nutrition.stats_service import get_stats, get_year_heatmap
 
 
 nutrition_api = Blueprint("nutrition_api", __name__, url_prefix="/api/nutrition")
@@ -179,4 +179,17 @@ def api_update_weight():
 def api_stats():
     days = int(request.args.get("days", 7))
     data = get_stats(current_user.id, days)
+    return jsonify(data)
+
+
+@nutrition_api.get("/heatmap")
+@login_required
+def api_heatmap():
+    y = request.args.get("year")
+    try:
+        year = int(y) if y else date.today().year
+    except:
+        year = date.today().year
+
+    data = get_year_heatmap(current_user.id, year)
     return jsonify(data)

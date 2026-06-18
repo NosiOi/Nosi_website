@@ -254,7 +254,7 @@ def get_daily_nutrition_data(user_id):
     } for t in templates]
 
     return {
-        "meals": meals,
+        "meals": [serialize_meal(m) for m in meals],
         "progress": progress,
         "result": result,
         "macros_ratio": macros_ratio,
@@ -314,4 +314,26 @@ def get_daily_nutrition_data(user_id):
 
         "meals_history": history_days,
         "meal_templates": meal_templates,
+    }
+def serialize_meal(meal):
+    return {
+        "id": meal.id,
+        "name": meal.name,
+        "category": meal.category,
+        "time": meal.time.strftime("%H:%M") if meal.time else None,
+        "total_calories": meal.total_calories,
+        "total_protein": meal.total_protein,
+        "total_fat": meal.total_fat,
+        "total_carbs": meal.total_carbs,
+        "items": [
+            {
+                "id": item.id,
+                "name": item.name,
+                "calories": item.calories,
+                "protein": item.protein,
+                "fat": item.fat,
+                "carbs": item.carbs,
+            }
+            for item in meal.items
+        ]
     }

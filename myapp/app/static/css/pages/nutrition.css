@@ -324,27 +324,41 @@
 }
 
 .modal-content {
-    background: #0c0f14;
-    padding: 18px;
-    border-radius: 12px;
-    width: 330px;
-    border: 1px solid #1f2430;
-    animation: modalIn 0.22s ease-out;
+    width: 380px;
+    padding: 24px 26px;
+    border-radius: 14px;
+    background: #0d1117;
+    border: 1px solid #1f2937;
+}
+
+.modal-content h2 {
+    margin-bottom: 18px;
+    font-size: 20px;
+}
+
+.modal-content label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    font-size: 14px;
 }
 
 .modal-content input,
 .modal-content select {
-    background: #0f121a;
-    border: 1px solid #232837;
-    padding: 6px 8px;
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
     border-radius: 8px;
-    color: #e5f9f7;
-    font-size: 13px;
+    border: 1px solid #2a3441;
+    background: #11161d;
+    color: #fff;
 }
 
 .modal-actions {
+    margin-top: 22px;
     display: flex;
-    gap: 8px;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
 @keyframes modalIn {
