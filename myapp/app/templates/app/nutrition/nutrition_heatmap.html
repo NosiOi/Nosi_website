@@ -2,11 +2,15 @@
   <div class="heatmap-header">
     <h3>Баланс харчування</h3>
 
-    <select id="heatmap-year">
-      <option value="2026">2026</option>
-      <option value="2025">2025</option>
-      <option value="2024">2024</option>
-    </select>
+    <div class="heatmap-controls">
+      <select id="heatmap-year">
+        <option value="2026">2026</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+      </select>
+
+      <button class="btn small" id="open-calendar">Календар</button>
+    </div>
   </div>
 
   <div class="heatmap-months">
@@ -19,134 +23,13 @@
 
   <div class="heatmap-legend">
     <span>Менше</span>
-    <div class="legend-box low"></div>
-    <div class="legend-box mid"></div>
-    <div class="legend-box high"></div>
-    <div class="legend-box max"></div>
+    <div class="legend-box l1"></div>
+    <div class="legend-box l2"></div>
+    <div class="legend-box l3"></div>
+    <div class="legend-box l4"></div>
     <span>Більше</span>
   </div>
 </div>
-
-<style>
-  .heatmap-container {
-    margin-top: 20px;
-    background: #0b0e13;
-    border: 1px solid #1a1f27;
-    border-radius: 14px;
-    padding: 18px;
-  }
-
-  .heatmap-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .heatmap-header h3 {
-    margin: 0;
-    font-size: 16px;
-    color: #17ead9;
-  }
-
-  #heatmap-year {
-    background: #11141c;
-    border: 1px solid #1f2430;
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 6px;
-  }
-
-  .heatmap-months {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    margin-top: 10px;
-    margin-bottom: 6px;
-    font-size: 12px;
-    color: #7f8fa6;
-    text-align: center;
-  }
-
-  .heatmap-grid {
-    display: grid;
-    grid-template-columns: repeat(53, 12px);
-    grid-auto-rows: 12px;
-    gap: 3px;
-    padding: 10px 0;
-  }
-
-  .heatmap-cell {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-    background: #1a1f27;
-    transition: background 0.15s ease;
-    position: relative;
-  }
-
-  .heatmap-cell:hover {
-    outline: 1px solid #17ead9;
-  }
-
-  .heatmap-cell[data-level="1"] {
-    background: #0c5f63;
-  }
-  .heatmap-cell[data-level="2"] {
-    background: #109a9e;
-  }
-  .heatmap-cell[data-level="3"] {
-    background: #14c9ce;
-  }
-  .heatmap-cell[data-level="4"] {
-    background: #17ead9;
-  }
-
-  .heatmap-tooltip {
-    position: absolute;
-    background: #11141c;
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    white-space: nowrap;
-    transform: translate(-50%, -130%);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-    border: 1px solid #17ead9;
-  }
-
-  .heatmap-cell:hover .heatmap-tooltip {
-    opacity: 1;
-  }
-
-  .heatmap-legend {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 10px;
-    font-size: 12px;
-    color: #7f8fa6;
-  }
-
-  .legend-box {
-    width: 14px;
-    height: 14px;
-    border-radius: 3px;
-  }
-
-  .legend-box.low {
-    background: #0c5f63;
-  }
-  .legend-box.mid {
-    background: #109a9e;
-  }
-  .legend-box.high {
-    background: #14c9ce;
-  }
-  .legend-box.max {
-    background: #17ead9;
-  }
-</style>
 
 <script>
   async function loadHeatmap(year) {
@@ -164,23 +47,31 @@
       cell.className = "heatmap-cell";
       cell.dataset.level = d.level;
 
+      if (d.is_today) cell.classList.add("today");
+
+      cell.addEventListener("click", () => openDayHistory(d.date));
+
       const tooltip = document.createElement("div");
       tooltip.className = "heatmap-tooltip";
-      tooltip.textContent = `${d.kcal} ккал (${d.percent}%)`;
+      tooltip.textContent = `${d.kcal} ккал`;
 
       cell.appendChild(tooltip);
       grid.appendChild(cell);
     });
   }
 
+  function openDayHistory(date) {
+    document.getElementById("history-date").textContent = date;
+    openModal("modal-day-history");
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     const yearSelect = document.getElementById("heatmap-year");
+    yearSelect.addEventListener("change", () => loadHeatmap(yearSelect.value));
+    loadHeatmap(yearSelect.value);
 
-    function reload() {
-      loadHeatmap(yearSelect.value);
-    }
-
-    yearSelect.addEventListener("change", reload);
-    reload();
+    document.getElementById("open-calendar").addEventListener("click", () => {
+      openModal("modal-calendar");
+    });
   });
 </script>

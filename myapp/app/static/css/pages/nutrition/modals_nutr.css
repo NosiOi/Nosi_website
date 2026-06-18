@@ -1,0 +1,99 @@
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-content {
+    background: #11141c;
+    border: 1px solid #1f2430;
+    border-radius: 16px;
+    padding: 28px;
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    animation: modalPop .25s ease;
+}
+
+@keyframes modalPop {
+    from {
+        transform: scale(.92);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-content label {
+    font-size: 14px;
+    opacity: .8;
+}
+
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    padding: 12px 14px;
+    background: #0f131a;
+    border: 1px solid #1f2430;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 15px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: #1a1f27;
+    border: 1px solid #1f2430;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: .25s ease;
+}
+
+.btn:hover {
+    background: #a259ff;
+    border-color: #a259ff;
+    transform: translateY(-2px);
+}
+
+.btn.primary {
+    background: #a259ff;
+    border-color: #a259ff;
+    color: #fff;
+    font-weight: 600;
+}
+
+.btn.primary:hover {
+    background: #c89dff;
+    border-color: #c89dff;
+}
+
+.btn.danger {
+    background: #ff4d4d;
+    border-color: #ff4d4d;
+}
