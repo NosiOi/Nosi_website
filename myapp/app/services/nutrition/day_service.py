@@ -4,6 +4,8 @@ from myapp.app import db
 from myapp.app.models import Meal, MealItem, UserGoals, NutritionPlan, User
 from myapp.app.services.nutrition.quality_service import calculate_quality
 from myapp.app.services.nutrition.water_service import calculate_water
+from myapp.app.models.nutrition.user_weight import UserWeight
+from myapp.app.models import UserWater
 
 
 def get_goals(user_id):
@@ -120,9 +122,20 @@ def get_daily_nutrition_data(user_id):
     fat_diff_label = diff_label(fat, fat_yesterday)
     carb_diff_label = diff_label(carb, carb_yesterday)
 
-    water = calculate_water(user.weight, user.activity)
-    water_goal = round(user.weight * 0.03, 2)
-    water_percent = round((water / water_goal) * 100, 1) if water_goal > 0 else 0
+    water = calculate_water(
+        weight=user.weight,
+        height=user.height,
+        age=user.age,
+        gender=user.gender,
+        activity=user.activity,
+        goal=user.goal
+    )
+
+    water_entry = UserWater.query.filter_by(user_id=user_id, date=today).first()
+    water_today = water_entry.amount if water_entry else 0
+
+    water_goal = water
+    water_percent = round((water_today / water_goal) * 100, 1) if water_goal > 0 else 0
 
     weekly = {
         "calorie_balance": kcal_balance,
@@ -253,6 +266,17 @@ def get_daily_nutrition_data(user_id):
         "carb": t.carbs
     } for t in templates]
 
+    last_weight = (
+    UserWeight.query.filter_by(user_id=user_id)
+    .order_by(UserWeight.date.desc())
+    .first()
+    )
+    current_weight = last_weight.weight if last_weight else None
+
+
+    water_entry = UserWater.query.filter_by(user_id=user_id, date=today).first()
+    water_today = water_entry.amount if water_entry else 0
+
     return {
         "meals": [serialize_meal(m) for m in meals],
         "progress": progress,
@@ -260,6 +284,8 @@ def get_daily_nutrition_data(user_id):
         "macros_ratio": macros_ratio,
         "ration_items": ration_items,
         "quality": quality,
+
+        "current_weight": current_weight,
 
         "kcal": kcal,
         "kcal_goal": kcal_goal,
@@ -290,8 +316,8 @@ def get_daily_nutrition_data(user_id):
         "fat_diff_label": fat_diff_label,
         "carb_diff_label": carb_diff_label,
 
-        "water": water,
-        "water_goal": water_goal,
+        "water": water_today,
+        "water_goal": water,
         "water_percent": water_percent,
 
         "weekly": weekly,

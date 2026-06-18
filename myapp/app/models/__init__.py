@@ -11,6 +11,7 @@ from myapp.app.models.nutrition.category import Category
 from myapp.app.models.nutrition.user_goals import UserGoals
 from myapp.app.models.nutrition.user_weight import UserWeight
 from myapp.app.models.nutrition.saved_meal import SavedMeal
+from .nutrition.user_water import UserWater
 
 # Recovery subsystem
 from myapp.app.models.recovery.plan import RecoveryPlan

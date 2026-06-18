@@ -16,6 +16,7 @@ from myapp.app.services.nutrition.item_service import (
     delete_item_service
 )
 from myapp.app.services.nutrition.stats_service import get_stats, get_year_heatmap
+from myapp.app.models.nutrition.user_water import UserWater
 
 
 nutrition_api = Blueprint("nutrition_api", __name__, url_prefix="/api/nutrition")
@@ -169,6 +170,11 @@ def api_update_weight():
     )
 
     db.session.add(entry)
+
+    user = current_user
+    user.weight = float(w)
+    db.session.add(user)
+
     db.session.commit()
 
     return jsonify({"status": "ok"})
@@ -193,3 +199,25 @@ def api_heatmap():
 
     data = get_year_heatmap(current_user.id, year)
     return jsonify(data)
+
+
+@nutrition_api.post("/water")
+@login_required
+def api_add_water():
+    form = request.json or {}
+    amount = form.get("amount")
+
+    if not amount:
+        return jsonify({"error": "Missing amount"}), 400
+
+    today = date.today()
+
+    entry = UserWater.query.filter_by(user_id=current_user.id, date=today).first()
+    if not entry:
+        entry = UserWater(user_id=current_user.id, date=today, amount=0)
+        db.session.add(entry)
+
+    entry.amount += float(amount)
+    db.session.commit()
+
+    return jsonify({"status": "ok"})
