@@ -3,7 +3,6 @@ from datetime import date, datetime
 from myapp.app import db
 from myapp.app.models import Meal
 
-
 def recalc_meal_totals(meal: Meal):
     meal.total_calories = sum(i.calories for i in meal.items)
     meal.total_protein = sum(i.protein for i in meal.items)
@@ -12,20 +11,31 @@ def recalc_meal_totals(meal: Meal):
 
 
 def add_meal_service(user_id, form):
+    from myapp.app.models import MealItem
     meal = Meal(
         user_id=user_id,
         date=date.today(),
         time=form.get("time"),
         name=form["name"],
         category=form["category"],
-        total_calories=int(form.get("kcal", 0)),
-        total_protein=int(form.get("protein", 0)),
-        total_fat=int(form.get("fat", 0)),
-        total_carbs=int(form.get("carb", 0)),
     )
-
     db.session.add(meal)
+    db.session.flush()
+
+    if form.get("kcal") or form.get("protein") or form.get("fat") or form.get("carb"):
+        item = MealItem(
+            meal_id=meal.id,
+            name=meal.name,
+            calories=int(form.get("kcal", 0)),
+            protein=int(form.get("protein", 0)),
+            fat=int(form.get("fat", 0)),
+            carbs=int(form.get("carb", 0)),
+        )
+        db.session.add(item)
+
+    recalc_meal_totals(meal)
     db.session.commit()
+
 
 
 def delete_meal_service(user_id, meal_id):

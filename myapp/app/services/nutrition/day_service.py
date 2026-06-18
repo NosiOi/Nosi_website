@@ -30,10 +30,10 @@ def get_daily_nutrition_data(user_id):
         .all()
     )
 
-    total_calories = sum(m.total_calories for m in meals)
-    total_protein = sum(m.total_protein for m in meals)
-    total_fat = sum(m.total_fat for m in meals)
-    total_carbs = sum(m.total_carbs for m in meals)
+    total_calories = sum(i.calories for m in meals for i in m.items)
+    total_protein = sum(i.protein for m in meals for i in m.items)
+    total_fat = sum(i.fat for m in meals for i in m.items)
+    total_carbs = sum(i.carbs for m in meals for i in m.items)
 
     goal_cal, goal_prot, goal_fat, goal_carb = get_goals(user_id)
 

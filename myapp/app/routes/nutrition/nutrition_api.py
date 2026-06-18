@@ -43,21 +43,17 @@ def api_day():
 @login_required
 def api_add_meal():
     form = request.json or {}
-
-    if "name" not in form or "category" not in form:
-        return jsonify({"error": "Missing fields"}), 400
-
     add_meal_service(current_user.id, {
         "name": form["name"],
         "category": form["category"],
         "time": form.get("time"),
-        "kcal": form.get("calories", 0),
+        "kcal": form.get("calories", 0), 
         "protein": form.get("protein", 0),
         "fat": form.get("fat", 0),
-        "carb": form.get("carbs", 0),
+        "carb": form.get("carbs", 0), 
     })
-
     return jsonify({"status": "ok"})
+
 
 
 @nutrition_api.put("/meals/<int:meal_id>")
@@ -191,14 +187,52 @@ def api_stats():
 @nutrition_api.get("/heatmap")
 @login_required
 def api_heatmap():
-    y = request.args.get("year")
-    try:
-        year = int(y) if y else date.today().year
-    except:
-        year = date.today().year
+    year = int(request.args.get("year", date.today().year))
+    user_id = current_user.id
 
-    data = get_year_heatmap(current_user.id, year)
-    return jsonify(data)
+    start = date(year, 1, 1)
+    end = date(year, 12, 31)
+
+    meals = Meal.query.filter(
+        Meal.user_id == user_id,
+        Meal.date >= start,
+        Meal.date <= end
+    ).all()
+
+    days = {}
+
+    for m in meals:
+        if m.date not in days:
+            days[m.date] = 0
+        days[m.date] += m.total_calories
+
+    result = []
+    for d in range(365):
+        day = start + timedelta(days=d)
+        if day > end:
+            break
+
+        kcal = days.get(day, 0)
+
+        if kcal == 0:
+            level = 0
+        elif kcal < 800:
+            level = 1
+        elif kcal < 1600:
+            level = 2
+        elif kcal < 2400:
+            level = 3
+        else:
+            level = 4
+
+        result.append({
+            "date": day.strftime("%Y-%m-%d"),
+            "kcal": kcal,
+            "level": level,
+            "is_today": (day == date.today())
+        })
+
+    return jsonify({"days": result})
 
 
 @nutrition_api.post("/water")

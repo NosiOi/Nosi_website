@@ -15,4 +15,7 @@ class MealItem(db.Model):
     fat = db.Column(db.Integer, nullable=False, default=0)
     carbs = db.Column(db.Integer, nullable=False, default=0)
 
+    fiber = db.Column(db.Integer, default=0)
+    category_label = db.Column(db.String(50), nullable=True)
+
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
