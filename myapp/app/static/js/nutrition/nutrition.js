@@ -15,35 +15,37 @@ function setTodayDate() {
     el.textContent = d.toLocaleDateString("uk-UA", opts);
 }
 
+function safeSet(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+}
+
 function fillBalance(data) {
-    document.getElementById("kcal-main-value").textContent = data.kcal;
-    document.getElementById("kcal-main-goal").textContent = `з ${data.kcal_goal} ккал`;
+    safeSet("kcal-main-value", data.kcal);
+    safeSet("kcal-main-goal", `з ${data.kcal_goal} ккал`);
 
-    document.getElementById("macro-protein-value").textContent = `${data.protein} / ${data.protein_goal} г`;
-    document.getElementById("macro-protein-percent").textContent = `${data.protein_percent}%`;
+    safeSet("macro-protein-value", `${data.protein} / ${data.protein_goal} г`);
+    safeSet("macro-protein-percent", `${data.protein_percent}%`);
 
-    document.getElementById("macro-fat-value").textContent = `${data.fat} / ${data.fat_goal} г`;
-    document.getElementById("macro-fat-percent").textContent = `${data.fat_percent}%`;
+    safeSet("macro-fat-value", `${data.fat} / ${data.fat_goal} г`);
+    safeSet("macro-fat-percent", `${data.fat_percent}%`);
 
-    document.getElementById("macro-carb-value").textContent = `${data.carb} / ${data.carb_goal} г`;
-    document.getElementById("macro-carb-percent").textContent = `${data.carb_percent}%`;
+    safeSet("macro-carb-value", `${data.carb} / ${data.carb_goal} г`);
+    safeSet("macro-carb-percent", `${data.carb_percent}%`);
 
-    document.getElementById("kcal-balance-label").textContent = `${data.kcal_balance} ккал`;
-    document.getElementById("kcal-balance-status").textContent = data.balance_status;
+    safeSet("kcal-balance-label", `${data.kcal_balance} ккал`);
+    safeSet("kcal-balance-status", data.balance_status);
 
-    document.getElementById("kcal-diff").textContent = `${data.kcal_diff_label} ккал`;
-    document.getElementById("protein-diff").textContent = `${data.protein_diff_label} Б`;
-    document.getElementById("fat-diff").textContent = `${data.fat_diff_label} Ж`;
-    document.getElementById("carb-diff").textContent = `${data.carb_diff_label} В`;
+    safeSet("kcal-diff", `${data.kcal_diff_label} ккал`);
+    safeSet("protein-diff", `${data.protein_diff_label} Б`);
+    safeSet("fat-diff", `${data.fat_diff_label} Ж`);
+    safeSet("carb-diff", `${data.carb_diff_label} В`);
 
-    if (data.water !== undefined)
-        document.getElementById("water-today").textContent = `${data.water} л`;
+    safeSet("water-today", `${data.water} л`);
+    safeSet("water-goal", `${data.water_goal} л`);
 
-    if (data.water_goal !== undefined)
-        document.getElementById("water-goal").textContent = `${data.water_goal} л`;
-
-    if (data.current_weight !== undefined && data.current_weight !== null)
-        document.getElementById("weight-current").textContent = `${data.current_weight} кг`;
+    if (data.current_weight !== null)
+        safeSet("weight-current", `${data.current_weight} кг`);
 }
 
 function loadDay() {
@@ -56,8 +58,6 @@ function loadDay() {
 }
 
 function setupModals() {
-
-    // ДОДАТИ ПРИЙОМ
     document.getElementById("open-add-meal").addEventListener("click", () => {
         document.getElementById("add-meal-name").value = "";
         document.getElementById("add-meal-category").value = "Сніданок";
@@ -86,7 +86,6 @@ function setupModals() {
         });
     });
 
-    // РЕДАГУВАТИ ПРИЙОМ
     document.getElementById("close-edit-meal").addEventListener("click", () => {
         closeModal("modal-edit-meal");
     });
@@ -109,7 +108,6 @@ function setupModals() {
         });
     });
 
-    // ДОДАТИ ПРОДУКТ
     document.getElementById("close-add-item").addEventListener("click", () => {
         closeModal("modal-add-item");
     });
@@ -134,7 +132,6 @@ function setupModals() {
         });
     });
 
-    // РЕДАГУВАТИ ПРОДУКТ
     document.getElementById("close-edit-item").addEventListener("click", () => {
         closeModal("modal-edit-item");
     });
@@ -159,7 +156,6 @@ function setupModals() {
         });
     });
 
-    // ОНОВИТИ ВАГУ
     document.getElementById("open-update-weight").addEventListener("click", () => {
         document.getElementById("update-weight-value").value = "";
         openModal("modal-update-weight");
@@ -183,7 +179,6 @@ function setupModals() {
         });
     });
 
-    // ДОДАТИ ВОДУ
     document.getElementById("open-water-modal").addEventListener("click", () => {
         document.getElementById("water-amount").value = "";
         openModal("modal-water");
@@ -213,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupModals();
     loadDay();
 });
+
 function renderMeals(meals) {
     const list = document.getElementById("meals-list");
     list.innerHTML = "";

@@ -22,16 +22,15 @@ def calculate_quality(ration_items):
     }
 
     for item in ration_items:
-        name = (item.name or "").lower()
-        kcal = item.calories or 0
+        name = (item.get("name", "") or "").lower()
+        kcal = item.get("calories", 0)
 
         total_kcal += kcal
 
         if any(w in name for w in WHOLE_FOODS):
             whole_kcal += kcal
 
-        if hasattr(item, "fiber") and item.fiber:
-            fiber_total += item.fiber
+        fiber_total += item.get("fiber", 0)
 
     if total_kcal == 0:
         return {
