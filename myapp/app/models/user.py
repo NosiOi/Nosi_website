@@ -14,18 +14,6 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
-    # Physical data
-    age = db.Column(db.Integer, nullable=True)
-    height = db.Column(db.Float, nullable=True)
-    weight = db.Column(db.Float, nullable=True)
-    gender = db.Column(db.String(10), nullable=True)
-
-    # Activity & goals
-    activity = db.Column(db.Float, nullable=True)
-    goal = db.Column(db.String(50), nullable=True)
-    experience = db.Column(db.String(50), nullable=True)
-    workouts_per_week = db.Column(db.Integer, nullable=True)
-
     # Premium
     is_premium = db.Column(db.Boolean, default=False)
 
@@ -55,7 +43,7 @@ class User(db.Model, UserMixin):
         cascade="all, delete-orphan"
     )
 
-    # Equipment (1:N) - user's available equipment
+    # Equipment (1:N)
     user_equipment = db.relationship(
         "UserEquipment",
         back_populates="user",

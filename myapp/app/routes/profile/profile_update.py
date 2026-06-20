@@ -8,26 +8,33 @@ profile_update_bp = Blueprint("profile_update", __name__)
 @login_required
 def update_full():
     user = current_user
+    profile = current_user.profile
 
+    # Helpers
+    def to_float(v):
+        return float(v) if v not in (None, "", " ") else None
+
+    def to_int(v):
+        return int(v) if v not in (None, "", " ") else None
+
+    # User fields
     user.username = request.form.get("username")
     user.email = request.form.get("email")
-    user.age = request.form.get("age")
-    user.height = request.form.get("height")
-    user.weight = request.form.get("weight")
-    user.gender = request.form.get("gender")
-    user.activity = request.form.get("activity")
-    user.goal = request.form.get("goal")
-    user.experience = request.form.get("experience")
-    user.workouts_per_week = request.form.get("workouts_per_week")
 
-    if not user.profile:
-        from myapp.app.models.user_profile import UserProfile
-        user.profile = UserProfile(user_id=user.id)
+    # UserProfile fields
+    profile.age = to_int(request.form.get("age"))
+    profile.height = to_float(request.form.get("height"))
+    profile.weight = to_float(request.form.get("weight"))
+    profile.gender = request.form.get("gender") or None
+    profile.activity = request.form.get("activity") or None
+    profile.goal = request.form.get("goal") or None
+    profile.experience = request.form.get("experience") or None
+    profile.workouts_per_week = to_int(request.form.get("workouts_per_week"))
 
-    user.profile.training_location = request.form.get("training_location")
-    user.profile.wants_nutrition = bool(int(request.form.get("wants_nutrition", 0)))
-    user.profile.wants_recovery = bool(int(request.form.get("wants_recovery", 0)))
-    user.profile.onboarding_completed = bool(int(request.form.get("onboarding_completed", 0)))
+    profile.training_location = request.form.get("training_location") or None
+    profile.wants_nutrition = bool(int(request.form.get("wants_nutrition", 0)))
+    profile.wants_recovery = bool(int(request.form.get("wants_recovery", 0)))
+    profile.onboarding_completed = bool(int(request.form.get("onboarding_completed", 0)))
 
     db.session.commit()
 

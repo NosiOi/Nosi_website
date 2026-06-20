@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user
 from myapp.app import db
 from myapp.app.models.user import User
+from myapp.app.models.user_profile import UserProfile
 from myapp.app.utils.email_service import send_password_reset_email
 from myapp.app.utils.token import verify_reset_token
 
@@ -25,6 +26,15 @@ def login():
         if not check_password_hash(user.password, password):
             flash("Невірний пароль", "error")
             return redirect(url_for("auth.login"))
+
+        if not user.profile:
+            profile = UserProfile(
+                user_id=user.id,
+                training_location="home",
+                onboarding_completed=False
+            )
+            db.session.add(profile)
+            db.session.commit()
 
         login_user(user, remember=True)
         return redirect(url_for("dashboard.dashboard"))
@@ -53,17 +63,29 @@ def register_complete():
             username=reg_data["username"],
             email=verified_email,
             password=hashed_password,
-            age=int(reg_data.get("age", 0)) if reg_data.get("age") else None,
-            height=float(reg_data.get("height", 0)) if reg_data.get("height") else None,
+        )
+
+        db.session.add(user)
+        db.session.commit()
+
+        profile = UserProfile(
+            user_id=user.id,
+            training_location=reg_data.get("training_location", "home"),
+            wants_nutrition=True,
+            wants_recovery=False,
+            onboarding_completed=False,
+
             weight=float(reg_data.get("weight", 0)) if reg_data.get("weight") else None,
+            height=float(reg_data.get("height", 0)) if reg_data.get("height") else None,
+            age=int(reg_data.get("age", 0)) if reg_data.get("age") else None,
             gender=reg_data.get("gender"),
-            activity=float(reg_data.get("activity")) if reg_data.get("activity") else None,
+            activity=reg_data.get("activity"),
             goal=reg_data.get("goal"),
             experience=reg_data.get("experience"),
             workouts_per_week=int(reg_data.get("workouts_per_week", 0)) if reg_data.get("workouts_per_week") else None,
         )
 
-        db.session.add(user)
+        db.session.add(profile)
         db.session.commit()
 
         session.pop("reg_data", None)
@@ -102,7 +124,6 @@ def reset_with_token(token):
         email = email.decode("utf-8")
     email = email.strip().lower()
 
-
     if not email:
         flash("Посилання недійсне або прострочене.", "error")
         return redirect(url_for("auth.reset_password"))
@@ -121,7 +142,6 @@ def reset_with_token(token):
 
         login_user(user, remember=True)
         return redirect(url_for("dashboard.dashboard"))
-
 
     return render_template("auth/new_password.html")
 

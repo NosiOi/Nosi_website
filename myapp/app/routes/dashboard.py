@@ -55,7 +55,11 @@ def training_explanation_page():
 @dashboard_bp.route("/profile")
 @login_required
 def profile_page():
-    return render_template("app/profile/profile.html", user=current_user)
+    return render_template(
+        "app/profile/profile.html",
+        user=current_user,
+        profile=current_user.profile
+    )
 
 
 @dashboard_bp.route("/questionnaire")

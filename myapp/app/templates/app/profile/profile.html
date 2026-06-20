@@ -1,27 +1,37 @@
-{% extends "app/base_app.html" %} {% block title %}Профіль{% endblock %} {%
-block styles %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/profile/profile.css') }}"
-/>
-<link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-{% endblock %} {% block body %} {% set ns = namespace(filled=0, total=12) %} {%
-if user.username %}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if
-user.email %}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if user.age %}{%
-set ns.filled = ns.filled + 1 %}{% endif %} {% if user.height %}{% set ns.filled
-= ns.filled + 1 %}{% endif %} {% if user.weight %}{% set ns.filled = ns.filled +
-1 %}{% endif %} {% if user.gender %}{% set ns.filled = ns.filled + 1 %}{% endif
-%} {% if user.activity %}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if
-user.goal %}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if user.experience
-%}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if user.workouts_per_week
-%}{% set ns.filled = ns.filled + 1 %}{% endif %} {% if user.profile and
-user.profile.training_location %}{% set ns.filled = ns.filled + 1 %}{% endif %}
-{% if user.profile and user.profile.onboarding_completed %}{% set ns.filled =
-ns.filled + 1 %}{% endif %} {% set completion = (ns.filled * 100 // ns.total) %}
+{% extends "app/base_app.html" %}
+{% block title %}Профіль{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile/profile.css') }}">
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+{% endblock %}
+
+{% block body %}
+
+{% set ns = namespace(filled=0, total=12) %}
+
+{% if user.username %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if user.email %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if profile.age %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if profile.height %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if profile.weight %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if profile.gender %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if profile.activity %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if profile.goal %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if profile.experience %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if profile.workouts_per_week %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if profile.training_location %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+{% if profile.onboarding_completed %}{% set ns.filled = ns.filled + 1 %}{% endif %}
+
+{% set completion = (ns.filled * 100 // ns.total) %}
 
 <div class="nf-profile-page">
   <div class="nf-profile-grid">
+
+    <!-- LEFT COLUMN -->
     <div class="nf-profile-column nf-profile-column-left">
+
+      <!-- MAIN CARD -->
       <section class="nf-card nf-card-main">
         <div class="nf-card-header">
           <div class="nf-card-title-block">
@@ -75,6 +85,7 @@ ns.filled + 1 %}{% endif %} {% set completion = (ns.filled * 100 // ns.total) %}
         </div>
       </section>
 
+      <!-- BODY PARAMETERS -->
       <section class="nf-card nf-card-body">
         <div class="nf-card-header">
           <h2 class="nf-card-title">Параметри тіла</h2>
@@ -82,49 +93,47 @@ ns.filled + 1 %}{% endif %} {% set completion = (ns.filled * 100 // ns.total) %}
         </div>
 
         <div class="nf-body-grid">
+
           <div class="nf-body-item">
             <div class="nf-body-label">Вік</div>
-            <div class="nf-body-value">{{ user.age or "Не вказано" }}</div>
+            <div class="nf-body-value">{{ profile.age or "Не вказано" }}</div>
           </div>
 
           <div class="nf-body-item">
             <div class="nf-body-label">Стать</div>
-            <div class="nf-body-value">{{ user.gender or "Не вказано" }}</div>
+            <div class="nf-body-value">{{ profile.gender or "Не вказано" }}</div>
           </div>
 
           <div class="nf-body-item">
             <div class="nf-body-label">Зріст</div>
             <div class="nf-body-value">
-              {% if user.height %}{{ "%.1f"|format(user.height) }} см{% else
-              %}Не вказано{% endif %}
+              {% if profile.height %}{{ "%.1f"|format(profile.height) }} см{% else %}Не вказано{% endif %}
             </div>
           </div>
 
           <div class="nf-body-item">
             <div class="nf-body-label">Вага</div>
             <div class="nf-body-value">
-              {% if user.weight %}{{ "%.1f"|format(user.weight) }} кг{% else
-              %}Не вказано{% endif %}
+              {% if profile.weight %}{{ "%.1f"|format(profile.weight) }} кг{% else %}Не вказано{% endif %}
             </div>
           </div>
 
           <div class="nf-body-item">
             <div class="nf-body-label">Активність</div>
             <div class="nf-body-value">
-              {% if user.activity %}{{ "%.3f"|format(user.activity) }}{% else
-              %}Не вказано{% endif %}
+              {% if profile.activity %}{{ profile.activity }}{% else %}Не вказано{% endif %}
             </div>
           </div>
 
           <div class="nf-body-item">
             <div class="nf-body-label">Досвід</div>
-            <div class="nf-body-value">
-              {{ user.experience or "Не вказано" }}
-            </div>
+            <div class="nf-body-value">{{ profile.experience or "Не вказано" }}</div>
           </div>
+
         </div>
       </section>
 
+      <!-- TRAINING PROFILE -->
       <section class="nf-card nf-card-training">
         <div class="nf-card-header">
           <h2 class="nf-card-title">Профіль тренувань</h2>
@@ -132,49 +141,44 @@ ns.filled + 1 %}{% endif %} {% set completion = (ns.filled * 100 // ns.total) %}
         </div>
 
         <div class="nf-training-grid">
+
           <div class="nf-training-item">
             <div class="nf-training-label">Локація тренувань</div>
-            <div
-              class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.training_location }}"
-            >
-              {{ user.profile.training_location or "Не вказано" }}
+            <div class="nf-training-pill {{ 'nf-pill-active' if profile.training_location }}">
+              {{ profile.training_location or "Не вказано" }}
             </div>
           </div>
 
           <div class="nf-training-item">
             <div class="nf-training-label">Харчування</div>
-            <div
-              class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.wants_nutrition }}"
-            >
-              {% if user.profile and user.profile.wants_nutrition %}Активовано{%
-              else %}Не активовано{% endif %}
+            <div class="nf-training-pill {{ 'nf-pill-active' if profile.wants_nutrition }}">
+              {{ "Активовано" if profile.wants_nutrition else "Не активовано" }}
             </div>
           </div>
 
           <div class="nf-training-item">
             <div class="nf-training-label">Відновлення</div>
-            <div
-              class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.wants_recovery }}"
-            >
-              {% if user.profile and user.profile.wants_recovery %}Активовано{%
-              else %}Не активовано{% endif %}
+            <div class="nf-training-pill {{ 'nf-pill-active' if profile.wants_recovery }}">
+              {{ "Активовано" if profile.wants_recovery else "Не активовано" }}
             </div>
           </div>
 
           <div class="nf-training-item">
             <div class="nf-training-label">Онбординг</div>
-            <div
-              class="nf-training-pill {{ 'nf-pill-active' if user.profile and user.profile.onboarding_completed }}"
-            >
-              {% if user.profile and user.profile.onboarding_completed
-              %}Завершено{% else %}Не завершено{% endif %}
+            <div class="nf-training-pill {{ 'nf-pill-active' if profile.onboarding_completed }}">
+              {{ "Завершено" if profile.onboarding_completed else "Не завершено" }}
             </div>
           </div>
+
         </div>
       </section>
+
     </div>
 
+    <!-- RIGHT COLUMN -->
     <div class="nf-profile-column nf-profile-column-right">
+
+      <!-- COMPLETION -->
       <section class="nf-card nf-card-progress">
         <div class="nf-card-header nf-card-header-progress">
           <div>
@@ -193,37 +197,32 @@ ns.filled + 1 %}{% endif %} {% set completion = (ns.filled * 100 // ns.total) %}
           </div>
 
           <div class="nf-progress-list">
+
             <div class="nf-progress-item">
-              <span
-                class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.username and user.email }}"
-              ></span>
+              <span class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.username and user.email }}"></span>
               <span class="nf-progress-text">Основні дані</span>
             </div>
 
             <div class="nf-progress-item">
-              <span
-                class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.age or user.height or user.weight or user.gender }}"
-              ></span>
+              <span class="nf-progress-dot {{ 'nf-progress-dot-filled' if profile.age or profile.height or profile.weight or profile.gender }}"></span>
               <span class="nf-progress-text">Параметри тіла</span>
             </div>
 
             <div class="nf-progress-item">
-              <span
-                class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.goal or user.activity or user.workouts_per_week }}"
-              ></span>
+              <span class="nf-progress-dot {{ 'nf-progress-dot-filled' if profile.goal or profile.activity or profile.workouts_per_week }}"></span>
               <span class="nf-progress-text">Цілі та активність</span>
             </div>
 
             <div class="nf-progress-item">
-              <span
-                class="nf-progress-dot {{ 'nf-progress-dot-filled' if user.profile and (user.profile.training_location or user.profile.onboarding_completed) }}"
-              ></span>
+              <span class="nf-progress-dot {{ 'nf-progress-dot-filled' if profile.training_location or profile.onboarding_completed }}"></span>
               <span class="nf-progress-text">Профіль тренувань</span>
             </div>
+
           </div>
         </div>
       </section>
 
+      <!-- GOALS -->
       <section class="nf-card nf-card-goals">
         <div class="nf-card-header">
           <h2 class="nf-card-title">Цілі</h2>
@@ -231,26 +230,32 @@ ns.filled + 1 %}{% endif %} {% set completion = (ns.filled * 100 // ns.total) %}
         </div>
 
         <div class="nf-goals-grid">
+
           <div class="nf-goal-item">
             <div class="nf-goal-label">Фітнес‑вектор</div>
-            <div class="nf-goal-value">{{ user.goal or "Не вказано" }}</div>
+            <div class="nf-goal-value">{{ profile.goal or "Не вказано" }}</div>
           </div>
 
           <div class="nf-goal-item">
             <div class="nf-goal-label">Головна ціль</div>
-            <div class="nf-goal-value">{{ user.goal or "Не вказано" }}</div>
+            <div class="nf-goal-value">{{ profile.goal or "Не вказано" }}</div>
           </div>
 
           <div class="nf-goal-item">
             <div class="nf-goal-label">Тренування</div>
             <div class="nf-goal-value">
-              {% if user.workouts_per_week %}{{ user.workouts_per_week }}
-              разів/тиждень{% else %}Не вказано{% endif %}
+              {% if profile.workouts_per_week %}
+                {{ profile.workouts_per_week }} разів/тиждень
+              {% else %}
+                Не вказано
+              {% endif %}
             </div>
           </div>
+
         </div>
       </section>
 
+      <!-- ACTIONS -->
       <section class="nf-card nf-card-actions">
         <div class="nf-card-header">
           <h2 class="nf-card-title">Дії з акаунтом</h2>
@@ -258,43 +263,29 @@ ns.filled + 1 %}{% endif %} {% set completion = (ns.filled * 100 // ns.total) %}
         </div>
 
         <div class="nf-actions-grid">
-          <button
-            type="button"
-            class="nf-btn nf-btn-soft-primary"
-            data-modal-open="modal-edit-profile"
-          >
+          <button type="button" class="nf-btn nf-btn-soft-primary" data-modal-open="modal-edit-profile">
             Редагувати профіль
           </button>
-          <button
-            type="button"
-            class="nf-btn nf-btn-soft-secondary"
-            data-modal-open="modal-change-email"
-          >
+          <button type="button" class="nf-btn nf-btn-soft-secondary" data-modal-open="modal-change-email">
             Змінити email
           </button>
-          <button
-            type="button"
-            class="nf-btn nf-btn-soft-info"
-            data-modal-open="modal-change-password"
-          >
+          <button type="button" class="nf-btn nf-btn-soft-info" data-modal-open="modal-change-password">
             Змінити пароль
           </button>
-          <button
-            type="button"
-            class="nf-btn nf-btn-soft-danger"
-            data-modal-open="modal-delete-account"
-          >
+          <button type="button" class="nf-btn nf-btn-soft-danger" data-modal-open="modal-delete-account">
             Видалити акаунт
           </button>
         </div>
       </section>
+
     </div>
   </div>
 
-  {% include "app/profile/modals/modal_edit_profile.html" %} {% include
-  "app/profile/modals/modal_change_email.html" %} {% include
-  "app/profile/modals/modal_change_password.html" %} {% include
-  "app/profile/modals/modal_delete_account.html" %}
+  {% include "app/profile/modals/modal_edit_profile.html" %}
+  {% include "app/profile/modals/modal_change_email.html" %}
+  {% include "app/profile/modals/modal_change_password.html" %}
+  {% include "app/profile/modals/modal_delete_account.html" %}
+
 </div>
 
 <script>

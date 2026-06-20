@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, url_for, session, jsonify
 from flask_login import login_user
 from myapp.app.models.user import User
 from myapp.app.models.oauth_account import OAuthAccount
+from myapp.app.models.user_profile import UserProfile
 from myapp.app import db, oauth
 
 google_bp = Blueprint("google_oauth", __name__)
@@ -40,13 +41,30 @@ def google_callback():
 
     if oauth_acc:
         user = oauth_acc.user
+
+        if not user.profile:
+            profile = UserProfile(
+                user_id=user.id,
+                training_location="home",
+                onboarding_completed=False
+            )
+            db.session.add(profile)
+            db.session.commit()
+
         login_user(user)
         return redirect("/profile")
 
     if email:
         user = User.query.filter_by(email=email).first()
         if user:
-            login_user(user)
+
+            if not user.profile:
+                profile = UserProfile(
+                    user_id=user.id,
+                    training_location="home",
+                    onboarding_completed=False
+                )
+                db.session.add(profile)
 
             db.session.add(OAuthAccount(
                 provider="google",
@@ -55,6 +73,7 @@ def google_callback():
             ))
             db.session.commit()
 
+            login_user(user)
             return redirect("/profile")
 
     session["oauth_user"] = {

@@ -6,4 +6,8 @@ profile_view_bp = Blueprint("profile_view", __name__)
 @profile_view_bp.route("/profile")
 @login_required
 def profile():
-    return render_template("app/profile/profile.html", user=current_user)
+    return render_template(
+        "app/profile/profile.html",
+        user=current_user,
+        profile=current_user.profile
+    )

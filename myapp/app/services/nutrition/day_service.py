@@ -128,11 +128,22 @@ def get_daily_nutrition_data(user_id):
     fat_diff_label = diff_label(fat, fat_yesterday)
     carb_diff_label = diff_label(carbs, carb_yesterday)
 
+    def parse_float(value, default=0.0):
+        try:
+            if value is None:
+                return default
+            if isinstance(value, (int, float)):
+                return float(value)
+            value = str(value).replace(",", ".").strip()
+            return float(value)
+        except:
+            return default
+
     profile = UserProfile.query.filter_by(user_id=user_id).first()
 
-    weight = safe_profile_value(profile, "weight", 0)
-    height = safe_profile_value(profile, "height", 170)
-    age = safe_profile_value(profile, "age", 25)
+    weight = parse_float(safe_profile_value(profile, "weight", 0))
+    height = parse_float(safe_profile_value(profile, "height", 170))
+    age = int(parse_float(safe_profile_value(profile, "age", 25)))
     gender = safe_profile_value(profile, "gender", "male")
     activity = safe_profile_value(profile, "activity", "low")
     goal = safe_profile_value(profile, "goal", "maintain")
@@ -271,7 +282,11 @@ def get_daily_nutrition_data(user_id):
         .order_by(UserWeight.date.desc())
         .first()
     )
-    current_weight = last_weight.weight if last_weight else None
+    current_weight = (
+        user.profile.weight
+        if user.profile and user.profile.weight is not None
+        else None
+    )
 
     return {
         "meals": [serialize_meal(m) for m in meals],

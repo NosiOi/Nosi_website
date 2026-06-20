@@ -4,7 +4,7 @@ from datetime import date, datetime, timedelta
 
 from myapp.app import db
 from myapp.app.models import Meal, MealItem, UserWeight
-
+from myapp.app.models.user_profile import UserProfile
 from myapp.app.services.nutrition.day_service import get_daily_nutrition_data
 from myapp.app.services.nutrition.meal_service import (
     add_meal_service,
@@ -47,13 +47,12 @@ def api_add_meal():
         "name": form["name"],
         "category": form["category"],
         "time": form.get("time"),
-        "kcal": form.get("calories", 0), 
+        "kcal": form.get("calories", 0),
         "protein": form.get("protein", 0),
         "fat": form.get("fat", 0),
-        "carb": form.get("carbs", 0), 
+        "carb": form.get("carbs", 0),
     })
     return jsonify({"status": "ok"})
-
 
 
 @nutrition_api.put("/meals/<int:meal_id>")
@@ -164,12 +163,15 @@ def api_update_weight():
         date=date.today(),
         weight=float(w)
     )
-
     db.session.add(entry)
 
-    user = current_user
-    user.weight = float(w)
-    db.session.add(user)
+    profile = current_user.profile
+    if profile is None:
+        profile = UserProfile(user_id=current_user.id, training_location="home")
+        db.session.add(profile)
+
+    profile.weight = float(w)
+    db.session.add(profile)
 
     db.session.commit()
 

@@ -64,6 +64,12 @@
     gap: 12px;
 }
 
+.modal-hint {
+    font-size: 13px;
+    color: #9aa0a6;
+    margin-bottom: 12px;
+}
+
 .btn {
     padding: 10px 16px;
     border-radius: 10px;
@@ -96,4 +102,26 @@
 .btn.danger {
     background: #ff4d4d;
     border-color: #ff4d4d;
+}
+
+.btn.icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1a1f27;
+    border: 1px solid #1f2430;
+    border-radius: 10px;
+    font-size: 18px;
+    color: #ff4d4d;
+    transition: .25s ease;
+}
+
+.btn.icon:hover {
+    background: #ff4d4d;
+    color: #fff;
+    border-color: #ff4d4d;
+    transform: translateY(-2px);
 }

@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, session, redirect, request
+from flask import Blueprint, render_template, redirect, request
 from flask_login import login_required, current_user
-from myapp.app.models import User
 from myapp.app import db
+from myapp.app.models.user_profile import UserProfile
 
 profile_bp = Blueprint("profile", __name__)
 
@@ -9,8 +9,7 @@ profile_bp = Blueprint("profile", __name__)
 @profile_bp.route("/profile")
 @login_required
 def profile():
-    user = User.query.get(session["user"])
-    return render_template("profile.html", user=user)
+    return render_template("profile.html", user=current_user, profile=current_user.profile)
 
 
 @profile_bp.route("/equipment")
@@ -34,37 +33,27 @@ def equipment_page():
 @profile_bp.route("/profile/edit", methods=["GET", "POST"])
 @login_required
 def edit_profile():
-    user = User.query.get(session["user"])
+    user = current_user
+    profile = current_user.profile
 
     if request.method == "POST":
         user.username = request.form["username"]
         user.email = request.form["email"]
-        user.age = int(request.form["age"])
-        user.height = float(request.form["height"])
-        user.weight = float(request.form["weight"])
-        user.gender = request.form["gender"]
-        user.activity = float(request.form["activity"])
-        user.goal = request.form["goal"]
-        user.experience = request.form["experience"]
-        user.workouts_per_week = int(request.form["workouts_per_week"])
+
+        profile.age = int(request.form["age"])
+        profile.height = float(request.form["height"])
+        profile.weight = float(request.form["weight"])
+        profile.gender = request.form["gender"]
+        profile.activity = request.form["activity"]
+        profile.goal = request.form["goal"]
+        profile.experience = request.form["experience"]
+        profile.workouts_per_week = int(request.form["workouts_per_week"])
 
         if "environment" in request.form:
-            user.environment = request.form["environment"]
-
-        if "aesthetic_focus" in request.form:
-            user.aesthetic_focus = request.form["aesthetic_focus"]
-
-        if "performance_focus" in request.form:
-            user.performance_focus = request.form["performance_focus"]
-
-        if "weak_points" in request.form:
-            user.weak_points = request.form.getlist("weak_points")
-
-        if "strong_points" in request.form:
-            user.strong_points = request.form.getlist("strong_points")
+            profile.training_location = request.form["environment"]
 
         db.session.commit()
 
         return redirect("/profile")
 
-    return render_template("app/profile_edit.html", user=user)
+    return render_template("app/profile_edit.html", user=user, profile=profile)
