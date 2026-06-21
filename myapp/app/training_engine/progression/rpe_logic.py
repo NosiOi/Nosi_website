@@ -3,28 +3,17 @@ from dataclasses import dataclass
 
 @dataclass
 class RPELogic:
-    """
-    RPE-based progression model.
-
-    RPE scale:
-    6 = easy
-    7 = moderate
-    8 = challenging
-    9 = near max
-    10 = max effort
-    """
-
     def adjust_load(self, load: float, rpe: float) -> float:
         if rpe <= 6:
-            return round(load * 1.05, 2)  # +5%
+            return round(load * 1.05, 2)
         if rpe == 7:
-            return round(load * 1.02, 2)  # +2%
+            return round(load * 1.02, 2)
         if rpe == 8:
-            return load  # maintain
+            return load
         if rpe == 9:
-            return round(load * 0.97, 2)  # -3%
+            return round(load * 0.97, 2)
         if rpe >= 10:
-            return round(load * 0.90, 2)  # -10%
+            return round(load * 0.90, 2)
         return load
 
     def adjust_reps(self, reps: int, rpe: float) -> int:

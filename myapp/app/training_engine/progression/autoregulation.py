@@ -3,12 +3,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Autoregulation:
-    """
-    Adjusts training load based on fatigue score.
-    """
-
     fatigue_threshold: float = 6.0
-    reduction_percent: float = 0.15  # -15%
+    reduction_percent: float = 0.15
 
     def adjust_load(self, load: float, fatigue_score: float) -> float:
         if fatigue_score > self.fatigue_threshold:

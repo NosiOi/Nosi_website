@@ -3,18 +3,9 @@ from dataclasses import dataclass
 
 @dataclass
 class DeloadLogic:
-    """
-    Determines when a deload week is needed.
-
-    Triggers:
-    - high fatigue score
-    - multiple high-RPE sessions
-    - poor recovery
-    """
-
     fatigue_trigger: float = 8.0
-    rpe_trigger: int = 3  # 3 sessions with RPE >= 9
-    reduction_percent: float = 0.30  # -30%
+    rpe_trigger: int = 3
+    reduction_percent: float = 0.30
 
     def needs_deload(self, fatigue_score: float, high_rpe_sessions: int) -> bool:
         return fatigue_score > self.fatigue_trigger or high_rpe_sessions >= self.rpe_trigger

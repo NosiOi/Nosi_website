@@ -4,13 +4,11 @@ from .exercise_loader import ExerciseLoader
 
 
 class ExerciseProgressions:
-
     @staticmethod
     def next_progression(exercise: Exercise) -> Optional[Exercise]:
         chain = exercise.progression_chain
         if not chain:
             return None
-
         try:
             idx = chain.index(exercise.id)
             next_id = chain[idx + 1]
@@ -28,8 +26,4 @@ class ExerciseProgressions:
 
     @staticmethod
     def can_progress(exercise: Exercise, performance_score: float) -> bool:
-        """
-        Placeholder logic:
-        - if performance_score > difficulty * 10 → progress
-        """
         return performance_score > exercise.difficulty * 10

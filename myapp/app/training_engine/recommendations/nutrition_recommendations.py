@@ -2,9 +2,6 @@ from typing import Dict
 
 
 class NutritionRecommendations:
-    
-    # Provides nutrition suggestions based on user's goal.
-
     @staticmethod
     def generate(goal: str) -> Dict:
         if goal == "gain":

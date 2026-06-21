@@ -5,16 +5,13 @@ from ..models.exercise import Exercise
 
 
 class ExerciseLoader:
-
     _cache: Dict[str, Exercise] = {}
 
     @classmethod
     def load_base_exercises(cls, base_path: str):
         file_path = os.path.join(base_path, "base_exercises.json")
-
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-
         for ex_id, ex_data in data.items():
             cls._cache[ex_id] = Exercise(
                 id=ex_data["id"],
@@ -40,7 +37,4 @@ class ExerciseLoader:
 
     @classmethod
     def filter_by_environment(cls, env: str) -> Dict[str, Exercise]:
-        return {
-            k: v for k, v in cls._cache.items()
-            if env in v.environment
-        }
+        return {k: v for k, v in cls._cache.items() if env in v.environment}

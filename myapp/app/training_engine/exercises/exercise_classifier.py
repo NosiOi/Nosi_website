@@ -3,7 +3,6 @@ from ..models.exercise import Exercise
 
 
 class ExerciseClassifier:
-
     @staticmethod
     def by_primary_muscle(exercises: Dict[str, Exercise], muscle: str) -> List[Exercise]:
         return [ex for ex in exercises.values() if muscle in ex.muscles_primary]
@@ -18,4 +17,9 @@ class ExerciseClassifier:
 
     @staticmethod
     def by_equipment(exercises: Dict[str, Exercise], equipment: str) -> List[Exercise]:
-        return [ex for ex in exercises.values() if equipment in ex.equipment]
+        result = []
+        for ex in exercises.values():
+            legacy = getattr(ex, "_legacy_equipment", []) or []
+            if any(equipment.lower() == str(x).lower() for x in legacy):
+                result.append(ex)
+        return result

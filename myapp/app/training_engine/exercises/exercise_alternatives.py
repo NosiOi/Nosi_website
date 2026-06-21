@@ -5,11 +5,10 @@ from .exercise_classifier import ExerciseClassifier
 
 
 class ExerciseAlternatives:
-
     @staticmethod
     def by_muscle(exercise: Exercise) -> List[Exercise]:
         all_ex = ExerciseLoader.all()
-        return ExerciseClassifier.by_primary_muscle(all_ex, exercise.muscles_primary[0])
+        return ExerciseClassifier.by_primary_muscle(all_ex, exercise.muscles_primary[0]) if exercise.muscles_primary else []
 
     @staticmethod
     def by_pattern(exercise: Exercise) -> List[Exercise]:

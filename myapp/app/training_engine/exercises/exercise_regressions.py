@@ -4,13 +4,11 @@ from .exercise_loader import ExerciseLoader
 
 
 class ExerciseRegressions:
-
     @staticmethod
     def previous_regression(exercise: Exercise) -> Optional[Exercise]:
         chain = exercise.regression_chain
         if not chain:
             return None
-
         try:
             idx = chain.index(exercise.id)
             prev_id = chain[idx - 1]
@@ -28,8 +26,4 @@ class ExerciseRegressions:
 
     @staticmethod
     def should_regress(exercise: Exercise, fatigue_score: float) -> bool:
-        """
-        Placeholder logic:
-        - if fatigue_score > 5 → regress
-        """
         return fatigue_score > 5
