@@ -1,10 +1,9 @@
-from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional
-import json
+from typing import Any, Dict
 
 from myapp.app import db
 from myapp.app.training_engine.models.training_day import TrainingDay
+import json
 
 
 class TrainingPlan(db.Model):
@@ -22,7 +21,6 @@ class TrainingPlan(db.Model):
     owner = db.relationship("User", back_populates="training_plans", lazy="joined")
 
     def __init__(self, *args, **kwargs):
-        # allow legacy/test kwargs (goal, experience, workouts_per_week) as plain attributes
         db_fields = {"id", "user_id", "name", "meta", "is_active", "created_at", "updated_at"}
         init_kwargs = {}
         for k in list(kwargs.keys()):
@@ -43,12 +41,10 @@ class TrainingPlan(db.Model):
 
     @property
     def days(self):
-        # Return meta['days'] as dict (compat with tests that expect plan.days).
         meta = self.get_meta()
         days = meta.get("days", {})
         if isinstance(days, dict):
             return days
-        # if stored as list, convert to dict with indices or day_name
         if isinstance(days, list):
             out = {}
             for i, d in enumerate(days):
@@ -57,12 +53,7 @@ class TrainingPlan(db.Model):
             return out
         return {}
 
-
     def add_day(self, key: str, day: TrainingDay):
-        """
-        Add or replace a day in plan.meta under 'days'.
-        Keeps 'days' as dict keyed by provided key for compatibility with tests.
-        """
         meta = self.get_meta()
         days = meta.get("days", {})
         if not isinstance(days, dict):

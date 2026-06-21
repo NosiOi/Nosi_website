@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
+
 @dataclass
 class TrainingDay:
     day_name: Optional[str] = None
@@ -40,4 +41,8 @@ class TrainingDay:
         return cls(day_name=dn, name=dn, environment=env, exercises=list(exercises))
 
     def to_dict(self):
-        return {"day_name": self.day_name or self.name, "environment": self.environment, "exercises": list(self.exercises)}
+        return {
+            "day_name": self.day_name or self.name,
+            "environment": self.environment,
+            "exercises": list(self.exercises),
+        }
