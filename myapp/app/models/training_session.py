@@ -11,7 +11,7 @@ class TrainingSession(db.Model):
     started_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     finished_at = db.Column(db.DateTime)
 
-    status = db.Column(db.String(20), default="active")  # active, finished, aborted
+    status = db.Column(db.String(20), default="active")
 
     fatigue_before = db.Column(db.Float)
     fatigue_after = db.Column(db.Float)
