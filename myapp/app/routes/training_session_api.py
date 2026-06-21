@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from myapp.app import db
 from myapp.app.models.training_session import TrainingSession
 from myapp.app.services.training_session_service import TrainingSessionService
 
