@@ -5,10 +5,9 @@ from myapp.app.training_engine.models.exercise import Exercise
 from myapp.app.training_engine.models.muscle import Muscle
 from myapp.app.training_engine.models.equipment import TEEquipment
 from myapp.app.training_engine.models.training_plan import TrainingPlan
-from myapp.app.training_engine.models.session import Session
 from myapp.app.training_engine.models.user_pref import UserPreference
 from myapp.app.services.training_engine_service import TrainingEngineService
-from myapp.app.models.training_session import TrainingSession, SessionExercise
+from myapp.app.models.training_session import TrainingSession
 from sqlalchemy import func
 import datetime as dt
 import json
@@ -74,7 +73,7 @@ def list_exercises():
         return _error_response(e)
 
 
-@bp.route("/exercises/<int:exercise_id>", methods=["GET"])
+@bp.route("/exercises/<exercise_id>", methods=["GET"])
 @login_required
 def get_exercise(exercise_id):
     try:
@@ -105,7 +104,7 @@ def training_today():
             payload["title"] = "Активна сесія"
             ex_objs = []
             for se in active.exercises:
-                ex = Exercise.query.get(int(se.exercise_id))
+                ex = Exercise.query.get(se.exercise_id)
                 if not ex:
                     continue
                 ex_objs.append(ex)
@@ -125,17 +124,17 @@ def training_today():
                 if isinstance(days, dict):
                     for day in days.values():
                         for ex in day.get("exercises", []):
-                            if isinstance(ex, int):
+                            if isinstance(ex, str):
                                 ex_ids.append(ex)
                             elif isinstance(ex, dict) and ex.get("id"):
-                                ex_ids.append(ex.get("id"))
+                                ex_ids.append(str(ex.get("id")))
                 elif isinstance(days, list):
                     for day in days:
                         for ex in day.get("exercises", []):
-                            if isinstance(ex, int):
+                            if isinstance(ex, str):
                                 ex_ids.append(ex)
                             elif isinstance(ex, dict) and ex.get("id"):
-                                ex_ids.append(ex.get("id"))
+                                ex_ids.append(str(ex.get("id")))
                 if ex_ids:
                     ex_objs = Exercise.query.filter(Exercise.id.in_(ex_ids)).all()
                 else:
@@ -218,9 +217,9 @@ def training_heatmap():
             total_load = 0
             for se in s.exercises:
                 sets = se.sets_done or se.sets_planned or 0
-                reps = 0
                 try:
-                    reps = int((se.reps_done or se.reps_planned or "0").split("-")[0])
+                    reps_val = se.reps_done or se.reps_planned or "0"
+                    reps = int(str(reps_val).split("-")[0])
                 except Exception:
                     reps = 0
                 load = (se.load_done or se.load_planned or 0) * sets * max(reps, 1)
