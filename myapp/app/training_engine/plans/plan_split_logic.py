@@ -3,8 +3,6 @@ from typing import Dict, List
 
 class PlanSplitLogic:
 
-    # Defines muscle group distribution depending on: workouts per week, experience, goal
-
     @staticmethod
     def choose_split(workouts_per_week: int) -> str:
         if workouts_per_week <= 1:
@@ -23,19 +21,8 @@ class PlanSplitLogic:
 
     @staticmethod
     def base_distribution(split: str) -> Dict[str, List[str]]:
-        """
-        Returns a dictionary:
-        {
-            "day1": ["chest", "back", "core"],
-            "day2": ["legs", "glutes", "calves"],
-            ...
-        }
-        """
-
         splits = {
-            "full_body_1": {
-                "day1": ["chest", "back", "legs", "core"]
-            },
+            "full_body_1": {"day1": ["chest", "back", "legs", "core"]},
             "full_body_2": {
                 "day1": ["chest", "back", "legs"],
                 "day2": ["shoulders", "arms", "core"]
@@ -76,5 +63,4 @@ class PlanSplitLogic:
                 "day7": ["mobility"]
             }
         }
-
         return splits.get(split, splits["full_body_1"])

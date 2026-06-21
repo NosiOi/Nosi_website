@@ -1,13 +1,10 @@
-from typing import Dict, List
+from typing import Dict
 from ..progression.autoregulation import Autoregulation
 from ..progression.rpe_logic import RPELogic
 from ..progression.deload_logic import DeloadLogic
 
 
 class PlanAdaptive:
-
-    # Applies adaptive logic to training plan: fatigue adjustments, RPE adjustments, deload logic
-
     def __init__(self):
         self.auto = Autoregulation()
         self.rpe = RPELogic()
