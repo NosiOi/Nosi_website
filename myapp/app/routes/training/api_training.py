@@ -24,7 +24,6 @@ def _error_response(e):
     return jsonify({"error": "internal_server_error", "message": msg}), 500
 
 
-# Core API: muscles / equipment / exercises / sessions / reports
 @bp.route("/muscles", methods=["GET"])
 @login_required
 def list_muscles():
@@ -297,6 +296,62 @@ def report_muscle_load():
             except Exception:
                 return None
 
+        return jsonify({"sessions": len(session_payloads)})
+    except Exception as e:
+        return _error_response(e)
+
+
+@bp.route("/training/heatmap", methods=["GET"])
+@login_required
+def training_heatmap():
+    try:
+        year = int(request.args.get("year", dt.date.today().year))
+        start = dt.date(year, 1, 1)
+        end = dt.date(year, 12, 31)
+
+        sessions = Session.query.filter(
+            Session.user_id == current_user.id,
+            Session.created_at >= dt.datetime.combine(start, dt.time.min),
+            Session.created_at <= dt.datetime.combine(end, dt.time.max)
+        ).all()
+
+        loads = {}
+        for s in sessions:
+            day = s.created_at.date()
+            try:
+                payload = json.loads(s.data) if s.data else {}
+            except Exception:
+                payload = {}
+            exs = payload.get("exercises", [])
+            load_value = len(exs) * 20
+            loads[day] = loads.get(day, 0) + load_value
+
+        days = []
+        d = start
+        today = dt.date.today()
+        while d <= end:
+            load = loads.get(d, 0)
+            if load == 0:
+                level = 0
+            elif load < 30:
+                level = 1
+            elif load < 60:
+                level = 2
+            elif load < 90:
+                level = 3
+            else:
+                level = 4
+
+            days.append({
+                "date": d.strftime("%Y-%m-%d"),
+                "load": load,
+                "level": level,
+                "is_today": (d == today)
+            })
+
+            d += dt.timedelta(days=1)
+
+        return jsonify({"days": days})
     except Exception as e:
         return _error_response(e)
 

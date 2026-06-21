@@ -1,0 +1,86 @@
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-content {
+    background: #11141c;
+    border-radius: 14px;
+    padding: 18px 20px;
+    border: 1px solid #1a1f27;
+    min-width: 320px;
+    max-width: 520px;
+    color: #ffffff;
+}
+
+.modal-content h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.modal-content label {
+    display: block;
+    font-size: 13px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #1a1f27;
+    background: #0b0e13;
+    color: #ffffff;
+    font-size: 13px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.btn {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #1a1f27;
+    color: #ffffff;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+}
+
+.btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 600;
+}
+
+.btn.primary:hover {
+    background: var(--accent-light);
+}
+
+.btn.danger {
+    background: var(--danger);
+    border-color: var(--danger);
+}

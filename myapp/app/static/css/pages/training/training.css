@@ -1,0 +1,337 @@
+:root {
+    --bg: #0b0e13;
+    --card: #11141c;
+    --border: #1a1f27;
+    --text: #ffffff;
+    --text-dim: #8b8fa3;
+    --accent: #FFD43B;
+    --accent-light: #FFE680;
+    --danger: #ff4d4d;
+    --radius: 14px;
+    --transition: 0.25s ease;
+}
+
+body.training-page {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, sans-serif;
+}
+
+.training-page-wrapper {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.training-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.page-title {
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.page-subtitle {
+    font-size: 15px;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+.date-display {
+    font-size: 16px;
+    opacity: 0.7;
+}
+
+.training-main-grid {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 24px;
+}
+
+.training-left,
+.training-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.tr-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    transition: var(--transition);
+}
+
+.tr-card:hover {
+    border-color: var(--accent);
+}
+
+.tr-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.tr-card-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.tr-analytics-grid {
+    display: flex;
+    gap: 18px;
+}
+
+.tr-analytics-item {
+    flex: 1;
+    background: #0b0e13;
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1px solid #1a1f27;
+}
+
+.tr-analytics-label {
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.tr-analytics-value {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.tr-plan-info {
+    margin-bottom: 12px;
+}
+
+.plan-name {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.plan-meta {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+}
+
+.tr-plan-days {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.plan-day {
+    background: #0b0e13;
+    border-radius: 10px;
+    padding: 10px 12px;
+    border: 1px solid #1a1f27;
+}
+
+.plan-day-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.plan-day-exercises {
+    font-size: 12px;
+    color: var(--text-dim);
+}
+
+.tr-muscle-list,
+.tr-hints-list,
+.tr-recommendations-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tr-muscle-list li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.muscle-value {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.tr-hints-list li,
+.tr-recommendations-list li {
+    font-size: 14px;
+    color: var(--text-dim);
+}
+
+.tr-recommendations-block {
+    margin-top: 10px;
+}
+
+.tr-recommendations-block h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.tr-session-info {
+    margin-bottom: 12px;
+}
+
+.tr-session-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.tr-session-type {
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.tr-session-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.tr-exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.session-exercise {
+    background: #0b0e13;
+    border-radius: 10px;
+    padding: 10px 12px;
+    border: 1px solid #1a1f27;
+}
+
+.session-ex-name {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.session-ex-meta {
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.tr-btn {
+    padding: 9px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #1a1f27;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.tr-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+}
+
+.tr-btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 600;
+}
+
+.tr-btn-primary:hover {
+    background: var(--accent-light);
+}
+
+.tr-btn-ghost {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text-dim);
+}
+
+.tr-btn-ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.tr-btn-danger {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: #fff;
+}
+
+.exercise-search {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.exercise-search input,
+.exercise-search select {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #1a1f27;
+    background: #0b0e13;
+    color: var(--text);
+    font-size: 13px;
+}
+
+.exercise-list {
+    max-height: 320px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.exercise-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0b0e13;
+    border-radius: 8px;
+    padding: 8px 10px;
+    border: 1px solid #1a1f27;
+}
+
+.exercise-name {
+    font-size: 14px;
+}
+
+.history-list {
+    max-height: 320px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+@media (max-width: 1400px) {
+    .training-main-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .training-header-left {
+        max-width: 100%;
+    }
+
+    .training-main-grid {
+        grid-template-columns: 1fr;
+    }
+}
