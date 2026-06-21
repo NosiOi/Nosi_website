@@ -19,7 +19,6 @@ from myapp.app.models.recovery.plan import RecoveryPlan
 # Training Session Engine
 from myapp.app.models.training_session import TrainingSession, SessionExercise
 from myapp.app.models.equipment import Equipment
-from myapp.app.training_engine.models.session import Session
 from myapp.app.training_engine.models.user_pref import UserPreference
 
 # Onboarding subsystem

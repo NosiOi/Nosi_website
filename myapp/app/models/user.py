@@ -9,19 +9,15 @@ class User(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    # Basic info
     username = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
-    # Premium
     is_premium = db.Column(db.Boolean, default=False)
 
-    # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    # Workout / nutrition / recovery plans (1:1)
     workout_plan = db.relationship(
         "WorkoutPlan",
         back_populates="user",
@@ -43,7 +39,6 @@ class User(db.Model, UserMixin):
         cascade="all, delete-orphan"
     )
 
-    # Equipment (1:N)
     user_equipment = db.relationship(
         "UserEquipment",
         back_populates="user",
@@ -52,7 +47,6 @@ class User(db.Model, UserMixin):
         foreign_keys="UserEquipment.user_id"
     )
 
-    # Meals (1:N)
     meals = db.relationship(
         "Meal",
         back_populates="user",
@@ -61,7 +55,6 @@ class User(db.Model, UserMixin):
         foreign_keys="Meal.user_id"
     )
 
-    # OAuth accounts (1:N)
     oauth_accounts = db.relationship(
         "OAuthAccount",
         back_populates="user",
@@ -70,7 +63,6 @@ class User(db.Model, UserMixin):
         foreign_keys="OAuthAccount.user_id"
     )
 
-    # Training engine relationships
     training_plans = db.relationship(
         "TrainingPlan",
         back_populates="owner",
@@ -79,12 +71,12 @@ class User(db.Model, UserMixin):
         foreign_keys="TrainingPlan.user_id"
     )
 
-    sessions = db.relationship(
-        "Session",
-        back_populates="owner",
+    training_sessions = db.relationship(
+        "TrainingSession",
+        back_populates="user",
         cascade="all, delete-orphan",
         lazy="dynamic",
-        foreign_keys="Session.user_id"
+        foreign_keys="TrainingSession.user_id"
     )
 
     preferences = db.relationship(

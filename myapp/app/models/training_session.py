@@ -18,7 +18,14 @@ class TrainingSession(db.Model):
 
     rpe_avg = db.Column(db.Float)
 
-    exercises = db.relationship("SessionExercise", backref="session", lazy=True)
+    user = db.relationship("User", back_populates="training_sessions")
+
+    exercises = db.relationship(
+        "SessionExercise",
+        backref="session",
+        cascade="all, delete-orphan",
+        lazy=True
+    )
 
 
 class SessionExercise(db.Model):
@@ -28,6 +35,7 @@ class SessionExercise(db.Model):
     session_id = db.Column(db.Integer, db.ForeignKey("training_sessions.id"), nullable=False)
 
     exercise_id = db.Column(db.String(64), nullable=False)
+
     sets_planned = db.Column(db.Integer, nullable=False)
     sets_done = db.Column(db.Integer, default=0)
 
