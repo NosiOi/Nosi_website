@@ -2,7 +2,7 @@ from datetime import datetime
 from myapp.app import db
 import json
 
-# Association tables: exercise id is string to match Exercise.id (string)
+
 exercise_muscle = db.Table(
     "te_exercise_muscle",
     db.Column("exercise_id", db.String(250), db.ForeignKey("te_exercises.id"), primary_key=True),
@@ -22,7 +22,7 @@ class Exercise(db.Model):
 
     id = db.Column(db.String(250), primary_key=True)
     name = db.Column(db.String(250), nullable=False, unique=True)
-    slug = db.Column(db.String(250), nullable=True, unique=False)
+    slug = db.Column(db.String(250), nullable=True)
     description = db.Column(db.Text, nullable=True)
     difficulty = db.Column(db.Integer, default=1)
     location = db.Column(db.String(30), default="any")
@@ -83,25 +83,10 @@ class Exercise(db.Model):
         else:
             self._regression_chain = []
 
-        if "environment" in kwargs:
-            self._environment = kwargs.pop("environment")
-        else:
-            self._environment = []
-
-        if "equipment" in kwargs:
-            self._legacy_equipment = kwargs.pop("equipment")
-        else:
-            self._legacy_equipment = []
-
-        if "muscles_primary" in kwargs:
-            self._muscles_primary = kwargs.pop("muscles_primary")
-        else:
-            self._muscles_primary = []
-
-        if "muscles_secondary" in kwargs:
-            self._muscles_secondary = kwargs.pop("muscles_secondary")
-        else:
-            self._muscles_secondary = []
+        self._environment = kwargs.pop("environment", [])
+        self._legacy_equipment = kwargs.pop("equipment", [])
+        self._muscles_primary = kwargs.pop("muscles_primary", [])
+        self._muscles_secondary = kwargs.pop("muscles_secondary", [])
 
         for k, v in kwargs.items():
             setattr(self, k, v)
@@ -187,12 +172,10 @@ class Exercise(db.Model):
             return False
 
     def to_dict(self):
-        muscles = []
         try:
             muscles = [{"id": m.id, "name": m.name, "slug": m.slug} for m in self.muscles]
         except Exception:
             muscles = [{"slug": s} for s in (getattr(self, "_muscles_primary", []) + getattr(self, "_muscles_secondary", []))]
-        equipment = []
         try:
             equipment = [{"id": e.id, "name": e.name} for e in self.equipment]
         except Exception:
