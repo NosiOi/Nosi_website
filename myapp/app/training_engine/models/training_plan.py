@@ -20,16 +20,6 @@ class TrainingPlan(db.Model):
 
     owner = db.relationship("User", back_populates="training_plans", lazy="joined")
 
-    def __init__(self, *args, **kwargs):
-        db_fields = {"id", "user_id", "name", "meta", "is_active", "created_at", "updated_at"}
-        init_kwargs = {}
-        for k in list(kwargs.keys()):
-            if k in db_fields:
-                init_kwargs[k] = kwargs.pop(k)
-        super().__init__(**init_kwargs)
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-
     def get_meta(self) -> Dict[str, Any]:
         try:
             return json.loads(self.meta) if self.meta else {}
@@ -43,22 +33,20 @@ class TrainingPlan(db.Model):
     def days(self):
         meta = self.get_meta()
         days = meta.get("days", {})
-        if isinstance(days, dict):
-            return days
-        if isinstance(days, list):
-            out = {}
-            for i, d in enumerate(days):
-                key = d.get("day_name") or d.get("name") or str(i)
-                out[key] = d
-            return out
-        return {}
+
+        normalized = {}
+        for key, raw in days.items():
+            if isinstance(raw, dict):
+                normalized[key] = TrainingDay.from_dict(raw)
+            else:
+                normalized[key] = raw
+
+        return normalized
 
     def add_day(self, key: str, day: TrainingDay):
         meta = self.get_meta()
         days = meta.get("days", {})
-        if not isinstance(days, dict):
-            days = {}
-        days[key] = day.to_dict() if hasattr(day, "to_dict") else dict(day)
+        days[key] = day.to_dict()
         meta["days"] = days
         self.set_meta(meta)
 
@@ -72,6 +60,3 @@ class TrainingPlan(db.Model):
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }
-
-    def __repr__(self) -> str:
-        return f"<TrainingPlan id={self.id} name={self.name}>"

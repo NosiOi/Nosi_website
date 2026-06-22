@@ -1,14 +1,13 @@
 from dataclasses import dataclass
-from typing import List
-
+from typing import List, Optional
 
 @dataclass
 class UserProfileSnapshot:
     age: int
     sex: str
-    weight: float
-    height: float
-    activity: float
+    weight: Optional[float]
+    height: Optional[float]
+    activity: Optional[str]
     goal: str
     experience: str
     workouts_per_week: int

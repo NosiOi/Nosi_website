@@ -1,22 +1,13 @@
-from dataclasses import dataclass
+from myapp.app import db
 
+class FatigueState(db.Model):
+    __tablename__ = "te_fatigue_state"
 
-@dataclass
-class FatigueState:
-    """
-    Represents user's fatigue level.
-    Used for:
-    - adaptive load
-    - deload logic
-    - recovery recommendations
-    """
+    id = db.Column(db.Integer, primary_key=True)
 
-    sleep_hours: float = 8.0
-    stress_level: int = 1  # 1–5
-    soreness_level: int = 1  # 1–5
+    sleep = db.Column(db.Float, default=7.0)
+    stress = db.Column(db.Integer, default=0)
+    soreness = db.Column(db.Integer, default=0)
+    hydration = db.Column(db.Float, default=2.0)
 
-    def fatigue_score(self) -> float:
-        """Simple placeholder formula."""
-        return (self.stress_level + self.soreness_level) - (self.sleep_hours / 2)
-
-    # TODO: integrate with analytics.fatigue_model
+    user = db.relationship("User", back_populates="fatigue_state", uselist=False)
