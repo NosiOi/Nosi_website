@@ -16,8 +16,35 @@ class User(db.Model, UserMixin):
     is_premium = db.Column(db.Boolean, default=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+        nullable=False
+    )
 
+    # -------- TRAINING ENGINE FIELDS --------
+    age = db.Column(db.Integer, nullable=True)
+    sex = db.Column(db.String(20), default="unspecified")
+    weight = db.Column(db.Float, nullable=True)
+    height = db.Column(db.Float, nullable=True)
+
+    activity = db.Column(db.String(50), nullable=True)
+    goal = db.Column(db.String(50), default="maintenance")
+    experience = db.Column(db.String(50), default="beginner")
+    workouts_per_week = db.Column(db.Integer, default=3)
+    environment = db.Column(db.String(50), default="gym")
+
+    weak_points = db.Column(db.JSON, default=list)
+    strong_points = db.Column(db.JSON, default=list)
+
+    performance_state_id = db.Column(db.Integer, db.ForeignKey("te_performance_state.id"))
+    fatigue_state_id = db.Column(db.Integer, db.ForeignKey("te_fatigue_state.id"))
+
+    performance_state = db.relationship("PerformanceState", back_populates="user", uselist=False)
+    fatigue_state = db.relationship("FatigueState", back_populates="user", uselist=False)
+
+    # -------- ТВОЇ ІСНУЮЧІ ЗВ’ЯЗКИ --------
     workout_plan = db.relationship(
         "WorkoutPlan",
         back_populates="user",
