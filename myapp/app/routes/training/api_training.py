@@ -7,7 +7,8 @@ from myapp.app.training_engine.models.equipment import TEEquipment
 from myapp.app.training_engine.models.training_plan import TrainingPlan
 from myapp.app.training_engine.models.user_pref import UserPreference
 from myapp.app.services.training_engine_service import TrainingEngineService
-from myapp.app.models.training_session import TrainingSession
+from myapp.app.services.training_session_service import TrainingSessionService
+from myapp.app.models.training_session import TrainingSession, SessionExercise
 from sqlalchemy import func
 import datetime as dt
 import json
@@ -97,7 +98,7 @@ def training_today():
         no_equipment = prefs.get("no_equipment", "")
         no_equipment_list = [s.strip().lower() for s in (no_equipment or "").split(",") if s.strip()]
 
-        payload = {"sessionId": None, "title": None, "exercises": [], "muscles": {}, "plan": []}
+        payload = {"sessionId": None, "title": None, "exercises": [], "muscles": {}, "plan": [], "hints": []}
 
         if active:
             payload["sessionId"] = str(active.id)
@@ -110,7 +111,7 @@ def training_today():
                 ex_objs.append(ex)
         else:
             plan = TrainingPlan.query.filter_by(user_id=current_user.id, is_active=True).first()
-            payload["sessionId"] = "fallback"
+            payload["sessionId"] = None
             payload["title"] = "Рекомендована сесія"
             payload["plan"] = []
             if plan:
@@ -299,14 +300,24 @@ def get_recommendations():
 
         profile = TrainingEngineService.build_profile(current_user)
 
-        weak = WeakPointAnalysis.analyze(profile.weak_points, profile.strong_points)
-        ex = ExerciseRecommendations.for_weak_points(profile.weak_points, profile.environment)
+        weak = WeakPointAnalysis.analyze(profile.weak_points or [], profile.strong_points or [])
+
+        env = getattr(profile, "environment", "gym")
+        ex = ExerciseRecommendations.for_weak_points(profile.weak_points or [], env)
+
+        fs = getattr(current_user, "fatigue_state", None)
+        sleep = getattr(fs, "sleep", 7) if fs else 7
+        stress = getattr(fs, "stress", 0) if fs else 0
+        soreness = getattr(fs, "soreness", 0) if fs else 0
+        hydration = getattr(fs, "hydration", 2.0) if fs else 2.0
+
         rec = RecoveryRecommendations.generate(
-            sleep=getattr(current_user.fatigue_state, "sleep", None),
-            stress=getattr(current_user.fatigue_state, "stress", None),
-            soreness=getattr(current_user.fatigue_state, "soreness", None),
-            hydration=getattr(current_user.fatigue_state, "hydration", None)
+            sleep=sleep,
+            stress=stress,
+            soreness=soreness,
+            hydration=hydration
         )
+
         nut = NutritionRecommendations.generate(profile.goal)
 
         return jsonify({
@@ -318,3 +329,71 @@ def get_recommendations():
     except Exception as e:
         current_app.logger.exception("Error generating recommendations")
         return jsonify({"error": "failed to generate recommendations", "message": str(e)}), 500
+
+
+@bp.route("/session/start", methods=["POST"])
+@login_required
+def start_session():
+    try:
+        data = request.get_json() or {}
+        fatigue_before = data.get("fatigue_before")
+        session = TrainingSessionService.start_session(current_user, fatigue_before=fatigue_before)
+        return jsonify({"id": session.id})
+    except Exception as e:
+        return _error_response(e)
+
+
+@bp.route("/session/<int:session_id>/exercise/<exercise_id>", methods=["POST"])
+@login_required
+def update_session_exercise(session_id, exercise_id):
+    try:
+        data = request.get_json() or {}
+        session = TrainingSession.query.filter_by(id=session_id, user_id=current_user.id).first_or_404()
+        se = TrainingSessionService.update_exercise(session, exercise_id, data)
+        return jsonify({"exercise_id": se.exercise_id})
+    except Exception as e:
+        return _error_response(e)
+
+
+@bp.route("/session/<int:session_id>/finish", methods=["POST"])
+@login_required
+def finish_session(session_id):
+    try:
+        data = request.get_json() or {}
+        fatigue_after = data.get("fatigue_after")
+        session = TrainingSession.query.filter_by(id=session_id, user_id=current_user.id).first_or_404()
+        TrainingSessionService.finish_session(session, fatigue_after=fatigue_after)
+        return jsonify({"status": "ok"})
+    except Exception as e:
+        return _error_response(e)
+
+
+@bp.route("/strength-test", methods=["POST"])
+@login_required
+def strength_test():
+    data = request.json or {}
+
+    pushups = data.get("pushups", 0)
+    squats = data.get("squats", 0)
+    situps = data.get("situps", 0)
+
+    if not current_user.performance_state:
+        from myapp.app.training_engine.models.performance_state import PerformanceState
+        ps = PerformanceState(
+            pushups=pushups,
+            squats=squats,
+            situps=situps,
+            weight=current_user.weight
+        )
+        db.session.add(ps)
+        db.session.flush()
+        current_user.performance_state_id = ps.id
+    else:
+        ps = current_user.performance_state
+        ps.pushups = pushups
+        ps.squats = squats
+        ps.situps = situps
+
+    db.session.commit()
+
+    return jsonify({"status": "ok"})
