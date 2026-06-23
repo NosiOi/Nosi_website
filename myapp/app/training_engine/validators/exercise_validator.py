@@ -1,28 +1,29 @@
-from ..models.exercise import Exercise
+from myapp.app.training_engine.models.exercise import Exercise
 
 
 class ExerciseValidator:
-    
-    # Ensures exercise objects are valid and safe to use.
-
     @staticmethod
     def validate(ex: Exercise):
-        if not ex.id or not isinstance(ex.id, str):
+        if not getattr(ex, "id", None):
             raise ValueError("Exercise must have a valid ID")
 
-        if not ex.name:
+        if not getattr(ex, "name", None):
             raise ValueError("Exercise must have a name")
 
-        if not ex.muscles_primary:
+        muscles_primary = getattr(ex, "muscles_primary", None)
+        if not muscles_primary:
             raise ValueError("Exercise must have at least one primary muscle")
 
-        if ex.difficulty < 1 or ex.difficulty > 10:
+        difficulty = getattr(ex, "difficulty", None)
+        if difficulty is None or difficulty < 1 or difficulty > 10:
             raise ValueError("Difficulty must be between 1 and 10")
 
-        if ex.risk_level < 1 or ex.risk_level > 5:
+        risk_level = getattr(ex, "risk_level", None)
+        if risk_level is None or risk_level < 1 or risk_level > 5:
             raise ValueError("Risk level must be between 1 and 5")
 
-        if not isinstance(ex.environment, list):
+        environment = getattr(ex, "environment", None)
+        if not isinstance(environment, list):
             raise ValueError("Environment must be a list")
 
         return True

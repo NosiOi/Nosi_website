@@ -2,10 +2,6 @@ from typing import List
 
 
 class InputValidator:
-    
-    # Validates user input before generating training plan.
-    # Ensures: correct ranges, correct types, normalized values
-
     @staticmethod
     def validate_age(age: int):
         if not (10 <= age <= 100):
