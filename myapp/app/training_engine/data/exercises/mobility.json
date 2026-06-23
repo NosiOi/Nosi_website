@@ -1,0 +1,170 @@
+[
+    {
+        "name": "Котик-корова",
+        "slug": "cat-cow",
+        "description": "Розігрів та мобілізація хребта.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "muscles_primary": [
+            "spine"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Розтяжка грудних м'язів у дверях",
+        "slug": "doorway-chest-stretch",
+        "description": "Відкриття грудної клітки.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "muscles_primary": [
+            "chest"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Глибокий випад з поворотом",
+        "slug": "lunge-twist",
+        "description": "Мобільність тазу та хребта.",
+        "difficulty": 2,
+        "location": "any",
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "muscles_primary": [
+            "hip-flexors"
+        ],
+        "muscles_secondary": [
+            "core"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Розтяжка підколінних сухожиль",
+        "slug": "hamstring-stretch",
+        "description": "Покращує гнучкість задньої поверхні стегна.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "muscles_primary": [
+            "hamstrings"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Розтяжка квадрицепса стоячи",
+        "slug": "quad-stretch",
+        "description": "Розслаблення передньої поверхні стегна.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "muscles_primary": [
+            "quads"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Поза голуба",
+        "slug": "pigeon-pose",
+        "description": "Глибока розтяжка сідниць.",
+        "difficulty": 2,
+        "location": "any",
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "muscles_primary": [
+            "glutes"
+        ],
+        "muscles_secondary": [
+            "hip-flexors"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Кругові рухи плечима",
+        "slug": "shoulder-circles",
+        "description": "Мобілізація плечового суглоба.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "muscles_primary": [
+            "shoulders"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Розтяжка литок",
+        "slug": "calf-stretch",
+        "description": "Покращує рухливість гомілковостопу.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "muscles_primary": [
+            "calves"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Поза дитини",
+        "slug": "child-pose",
+        "description": "Розслаблення спини та тазу.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "muscles_primary": [
+            "lower-back"
+        ],
+        "muscles_secondary": [
+            "glutes"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Кобра",
+        "slug": "cobra-stretch",
+        "description": "Розкриття грудної клітки та розтяжка преса.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "muscles_primary": [
+            "abs"
+        ],
+        "muscles_secondary": [
+            "spine"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    }
+]

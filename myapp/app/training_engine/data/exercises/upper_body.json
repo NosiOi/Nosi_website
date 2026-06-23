@@ -1,0 +1,266 @@
+[
+    {
+        "name": "Жим штанги лежачи",
+        "slug": "bench-press",
+        "description": "Базова вправа для розвитку грудних м'язів.",
+        "difficulty": 4,
+        "location": "gym",
+        "movement_pattern": "push",
+        "risk_level": 3,
+        "muscles_primary": [
+            "chest"
+        ],
+        "muscles_secondary": [
+            "triceps",
+            "shoulders"
+        ],
+        "equipment": [
+            "barbell"
+        ]
+    },
+    {
+        "name": "Жим гантелей лежачи",
+        "slug": "dumbbell-bench-press",
+        "description": "Альтернатива жиму штанги з більшою амплітудою.",
+        "difficulty": 3,
+        "location": "gym",
+        "movement_pattern": "push",
+        "risk_level": 2,
+        "muscles_primary": [
+            "chest"
+        ],
+        "muscles_secondary": [
+            "triceps",
+            "shoulders"
+        ],
+        "equipment": [
+            "dumbbells"
+        ]
+    },
+    {
+        "name": "Віджимання від підлоги",
+        "slug": "push-ups",
+        "description": "Базова вправа з власною вагою.",
+        "difficulty": 2,
+        "location": "any",
+        "movement_pattern": "push",
+        "risk_level": 1,
+        "muscles_primary": [
+            "chest"
+        ],
+        "muscles_secondary": [
+            "triceps",
+            "shoulders"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Тяга штанги в нахилі",
+        "slug": "barbell-row",
+        "description": "Сильна вправа для розвитку спини.",
+        "difficulty": 4,
+        "location": "gym",
+        "movement_pattern": "pull",
+        "risk_level": 3,
+        "muscles_primary": [
+            "back"
+        ],
+        "muscles_secondary": [
+            "biceps"
+        ],
+        "equipment": [
+            "barbell"
+        ]
+    },
+    {
+        "name": "Підтягування широким хватом",
+        "slug": "pull-ups-wide",
+        "description": "Вправа для ширини спини.",
+        "difficulty": 5,
+        "location": "any",
+        "movement_pattern": "pull",
+        "risk_level": 3,
+        "muscles_primary": [
+            "back"
+        ],
+        "muscles_secondary": [
+            "biceps",
+            "shoulders"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Підтягування зворотним хватом",
+        "slug": "chin-ups",
+        "description": "Акцент на біцепс і нижню частину спини.",
+        "difficulty": 4,
+        "location": "any",
+        "movement_pattern": "pull",
+        "risk_level": 2,
+        "muscles_primary": [
+            "back"
+        ],
+        "muscles_secondary": [
+            "biceps"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Тяга горизонтального блока",
+        "slug": "seated-row",
+        "description": "Контрольована вправа для середини спини.",
+        "difficulty": 3,
+        "location": "gym",
+        "movement_pattern": "pull",
+        "risk_level": 1,
+        "muscles_primary": [
+            "back"
+        ],
+        "muscles_secondary": [
+            "biceps"
+        ],
+        "equipment": [
+            "machine"
+        ]
+    },
+    {
+        "name": "Армійський жим стоячи",
+        "slug": "overhead-press",
+        "description": "Базова вправа для плечей.",
+        "difficulty": 4,
+        "location": "gym",
+        "movement_pattern": "push",
+        "risk_level": 3,
+        "muscles_primary": [
+            "shoulders"
+        ],
+        "muscles_secondary": [
+            "triceps"
+        ],
+        "equipment": [
+            "barbell"
+        ]
+    },
+    {
+        "name": "Жим гантелей сидячи",
+        "slug": "dumbbell-shoulder-press",
+        "description": "Безпечніша альтернатива армійському жиму.",
+        "difficulty": 3,
+        "location": "gym",
+        "movement_pattern": "push",
+        "risk_level": 2,
+        "muscles_primary": [
+            "shoulders"
+        ],
+        "muscles_secondary": [
+            "triceps"
+        ],
+        "equipment": [
+            "dumbbells"
+        ]
+    },
+    {
+        "name": "Підйоми гантелей в сторони",
+        "slug": "lateral-raises",
+        "description": "Ізоляція середнього пучка дельт.",
+        "difficulty": 2,
+        "location": "gym",
+        "movement_pattern": "accessory",
+        "risk_level": 1,
+        "muscles_primary": [
+            "shoulders"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "dumbbells"
+        ]
+    },
+    {
+        "name": "Підйоми гантелей на біцепс",
+        "slug": "bicep-curl",
+        "description": "Класична вправа на біцепс.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "accessory",
+        "risk_level": 1,
+        "muscles_primary": [
+            "biceps"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "dumbbells"
+        ]
+    },
+    {
+        "name": "Молоткові підйоми",
+        "slug": "hammer-curl",
+        "description": "Акцент на плечовий м'яз.",
+        "difficulty": 2,
+        "location": "any",
+        "movement_pattern": "accessory",
+        "risk_level": 1,
+        "muscles_primary": [
+            "biceps"
+        ],
+        "muscles_secondary": [
+            "forearms"
+        ],
+        "equipment": [
+            "dumbbells"
+        ]
+    },
+    {
+        "name": "Французький жим лежачи",
+        "slug": "skullcrushers",
+        "description": "Ізоляція трицепса.",
+        "difficulty": 3,
+        "location": "gym",
+        "movement_pattern": "push",
+        "risk_level": 3,
+        "muscles_primary": [
+            "triceps"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "barbell"
+        ]
+    },
+    {
+        "name": "Трицепс на канаті",
+        "slug": "tricep-rope-pushdown",
+        "description": "Безпечна вправа для трицепса.",
+        "difficulty": 1,
+        "location": "gym",
+        "movement_pattern": "push",
+        "risk_level": 1,
+        "muscles_primary": [
+            "triceps"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "machine"
+        ]
+    },
+    {
+        "name": "Зведення рук у тренажері",
+        "slug": "pec-deck",
+        "description": "Ізоляція грудних м'язів.",
+        "difficulty": 1,
+        "location": "gym",
+        "movement_pattern": "push",
+        "risk_level": 1,
+        "muscles_primary": [
+            "chest"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "machine"
+        ]
+    }
+]

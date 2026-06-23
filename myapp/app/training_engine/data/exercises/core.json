@@ -1,0 +1,174 @@
+[
+    {
+        "name": "Планка",
+        "slug": "plank",
+        "description": "Статична вправа для стабілізації корпусу.",
+        "difficulty": 2,
+        "location": "any",
+        "movement_pattern": "core",
+        "risk_level": 1,
+        "muscles_primary": [
+            "core"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Скручування",
+        "slug": "crunches",
+        "description": "Класична вправа на верхній прес.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "core",
+        "risk_level": 1,
+        "muscles_primary": [
+            "abs"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Підйом ніг у висі",
+        "slug": "hanging-leg-raise",
+        "description": "Сильна вправа на нижній прес.",
+        "difficulty": 4,
+        "location": "gym",
+        "movement_pattern": "core",
+        "risk_level": 3,
+        "muscles_primary": [
+            "abs"
+        ],
+        "muscles_secondary": [
+            "hip-flexors"
+        ],
+        "equipment": [
+            "bar"
+        ]
+    },
+    {
+        "name": "Велосипед",
+        "slug": "bicycle-crunch",
+        "description": "Активує косі м'язи та верхній прес.",
+        "difficulty": 2,
+        "location": "any",
+        "movement_pattern": "core",
+        "risk_level": 1,
+        "muscles_primary": [
+            "obliques"
+        ],
+        "muscles_secondary": [
+            "abs"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Бічна планка",
+        "slug": "side-plank",
+        "description": "Стабілізація та розвиток косих м'язів.",
+        "difficulty": 2,
+        "location": "any",
+        "movement_pattern": "core",
+        "risk_level": 1,
+        "muscles_primary": [
+            "obliques"
+        ],
+        "muscles_secondary": [
+            "core"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Підйом корпусу на римському стільці",
+        "slug": "roman-chair-situp",
+        "description": "Посилене навантаження на прес.",
+        "difficulty": 3,
+        "location": "gym",
+        "movement_pattern": "core",
+        "risk_level": 2,
+        "muscles_primary": [
+            "abs"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "machine"
+        ]
+    },
+    {
+        "name": "Анти-ротаційна тяга (Pallof Press)",
+        "slug": "pallof-press",
+        "description": "Сильна вправа для стабілізації корпусу.",
+        "difficulty": 3,
+        "location": "gym",
+        "movement_pattern": "core",
+        "risk_level": 1,
+        "muscles_primary": [
+            "core"
+        ],
+        "muscles_secondary": [
+            "obliques"
+        ],
+        "equipment": [
+            "machine"
+        ]
+    },
+    {
+        "name": "Скручування на канаті",
+        "slug": "cable-crunch",
+        "description": "Вправа на прес з додатковою вагою.",
+        "difficulty": 3,
+        "location": "gym",
+        "movement_pattern": "core",
+        "risk_level": 2,
+        "muscles_primary": [
+            "abs"
+        ],
+        "muscles_secondary": [],
+        "equipment": [
+            "machine"
+        ]
+    },
+    {
+        "name": "Підйом ніг лежачи",
+        "slug": "lying-leg-raise",
+        "description": "Ефективна вправа на нижній прес.",
+        "difficulty": 2,
+        "location": "any",
+        "movement_pattern": "core",
+        "risk_level": 1,
+        "muscles_primary": [
+            "abs"
+        ],
+        "muscles_secondary": [
+            "hip-flexors"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    },
+    {
+        "name": "Супермен",
+        "slug": "superman",
+        "description": "Зміцнює поперек і стабілізатори корпусу.",
+        "difficulty": 1,
+        "location": "any",
+        "movement_pattern": "core",
+        "risk_level": 1,
+        "muscles_primary": [
+            "lower-back"
+        ],
+        "muscles_secondary": [
+            "glutes"
+        ],
+        "equipment": [
+            "bodyweight"
+        ]
+    }
+]

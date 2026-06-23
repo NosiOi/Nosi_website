@@ -1,0 +1,85 @@
+{
+    "name": "Hybrid",
+    "days": {
+        "full_body": {
+            "name": "Full Body",
+            "exercises": [
+                {
+                    "id": "squat"
+                },
+                {
+                    "id": "bench_press"
+                },
+                {
+                    "id": "barbell_row"
+                },
+                {
+                    "id": "lateral_raise"
+                },
+                {
+                    "id": "biceps_curl"
+                },
+                {
+                    "id": "plank"
+                }
+            ]
+        },
+        "upper": {
+            "name": "Upper Body",
+            "exercises": [
+                {
+                    "id": "shoulder_press"
+                },
+                {
+                    "id": "lat_pulldown"
+                },
+                {
+                    "id": "incline_dumbbell_press"
+                },
+                {
+                    "id": "face_pull"
+                },
+                {
+                    "id": "triceps_pushdown"
+                }
+            ]
+        },
+        "lower": {
+            "name": "Lower Body",
+            "exercises": [
+                {
+                    "id": "romanian_deadlift"
+                },
+                {
+                    "id": "lunges"
+                },
+                {
+                    "id": "leg_press"
+                },
+                {
+                    "id": "calf_raise"
+                },
+                {
+                    "id": "glute_bridge"
+                }
+            ]
+        },
+        "core": {
+            "name": "Core",
+            "exercises": [
+                {
+                    "id": "plank"
+                },
+                {
+                    "id": "hanging_leg_raise"
+                },
+                {
+                    "id": "side_plank"
+                },
+                {
+                    "id": "hyperextension"
+                }
+            ]
+        }
+    }
+}

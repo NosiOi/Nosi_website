@@ -1,0 +1,57 @@
+{
+    "name": "Upper Lower",
+    "days": {
+        "upper": {
+            "name": "Upper Body",
+            "exercises": [
+                {
+                    "id": "bench_press"
+                },
+                {
+                    "id": "barbell_row"
+                },
+                {
+                    "id": "shoulder_press"
+                },
+                {
+                    "id": "lat_pulldown"
+                },
+                {
+                    "id": "lateral_raise"
+                },
+                {
+                    "id": "biceps_curl"
+                },
+                {
+                    "id": "triceps_pushdown"
+                }
+            ]
+        },
+        "lower": {
+            "name": "Lower Body",
+            "exercises": [
+                {
+                    "id": "squat"
+                },
+                {
+                    "id": "romanian_deadlift"
+                },
+                {
+                    "id": "lunges"
+                },
+                {
+                    "id": "leg_press"
+                },
+                {
+                    "id": "calf_raise"
+                },
+                {
+                    "id": "glute_bridge"
+                },
+                {
+                    "id": "plank"
+                }
+            ]
+        }
+    }
+}

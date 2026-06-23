@@ -1,0 +1,74 @@
+{
+    "name": "PPL",
+    "days": {
+        "push": {
+            "name": "Push",
+            "exercises": [
+                {
+                    "id": "pushups"
+                },
+                {
+                    "id": "bench_press"
+                },
+                {
+                    "id": "incline_dumbbell_press"
+                },
+                {
+                    "id": "shoulder_press"
+                },
+                {
+                    "id": "lateral_raise"
+                },
+                {
+                    "id": "triceps_pushdown"
+                }
+            ]
+        },
+        "pull": {
+            "name": "Pull",
+            "exercises": [
+                {
+                    "id": "barbell_row"
+                },
+                {
+                    "id": "lat_pulldown"
+                },
+                {
+                    "id": "seated_row"
+                },
+                {
+                    "id": "face_pull"
+                },
+                {
+                    "id": "biceps_curl"
+                },
+                {
+                    "id": "hammer_curl"
+                }
+            ]
+        },
+        "legs": {
+            "name": "Legs",
+            "exercises": [
+                {
+                    "id": "squat"
+                },
+                {
+                    "id": "romanian_deadlift"
+                },
+                {
+                    "id": "lunges"
+                },
+                {
+                    "id": "leg_press"
+                },
+                {
+                    "id": "calf_raise"
+                },
+                {
+                    "id": "glute_bridge"
+                }
+            ]
+        }
+    }
+}
