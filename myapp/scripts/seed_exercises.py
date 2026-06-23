@@ -1,59 +1,88 @@
 import json
 import os
 import sys
-
 from myapp.app import create_app, db
 
-
-def get_default_data_path():
-    return os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "app",
-            "training_engine",
-            "data",
-            "exercises",
-            "base_exercises.json",
-        )
-    )
+BASE_DIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "app", "training_engine", "data")
+)
 
 
-def run_seed(data_path=None):
+def load_json(path):
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            return data if isinstance(data, list) else []
+    except Exception:
+        return []
+
+
+def load_all_from_dir(path):
+    items = []
+    if not os.path.exists(path):
+        return items
+    for fname in os.listdir(path):
+        if fname.endswith(".json"):
+            fpath = os.path.join(path, fname)
+            try:
+                with open(fpath, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, list):
+                        items.extend(data)
+            except Exception:
+                continue
+    return items
+
+
+def run_seed():
     app = create_app()
 
-    if data_path is None:
-        data_path = get_default_data_path()
-
-    if not os.path.exists(data_path):
-        raise FileNotFoundError(f"Seed file not found: {data_path}")
+    muscles_path = os.path.join(BASE_DIR, "muscles", "muscles.json")
+    equipment_path = os.path.join(BASE_DIR, "equipment", "equipment.json")
+    exercises_dir = os.path.join(BASE_DIR, "exercises")
 
     with app.app_context():
-        from myapp.app.training_engine.models.exercise import Exercise
         from myapp.app.training_engine.models.muscle import Muscle
         from myapp.app.training_engine.models.equipment import TEEquipment
+        from myapp.app.training_engine.models.exercise import Exercise
 
-        def get_or_create_muscle(slug, name=None):
-            m = Muscle.query.filter_by(slug=slug).first()
-            if not m:
-                m = Muscle(slug=slug, name=name or slug.capitalize())
-                db.session.add(m)
-                db.session.flush()
-            return m
+        muscles = load_json(muscles_path)
+        equipment = load_json(equipment_path)
+        exercises = load_all_from_dir(exercises_dir)
 
-        def get_or_create_equipment(name):
-            e = TEEquipment.query.filter_by(name=name).first()
-            if not e:
-                e = TEEquipment(name=name)
-                db.session.add(e)
-                db.session.flush()
-            return e
+        for m in muscles:
+            slug = m.get("slug")
+            name = m.get("name")
+            desc = m.get("description")
+            if not slug or not name:
+                continue
+            obj = Muscle.query.filter_by(slug=slug).first()
+            if not obj:
+                obj = Muscle(slug=slug, name=name, description=desc)
+                db.session.add(obj)
 
-        with open(data_path, "r", encoding="utf-8") as f:
-            items = json.load(f)
+        for e in equipment:
+            slug = e.get("slug")
+            name = e.get("name")
+            desc = e.get("description")
+            tags = e.get("tags", [])
+            if not slug or not name:
+                continue
+            obj = TEEquipment.query.filter_by(slug=slug).first()
+            if not obj:
+                obj = TEEquipment(slug=slug, name=name, description=desc)
+                obj.set_tags(tags)
+                db.session.add(obj)
 
-        for it in items:
+        db.session.flush()
+
+        for it in exercises:
             slug = it.get("slug") or it["name"].lower().replace(" ", "-")
+            if not slug:
+                continue
+
             ex = Exercise.query.filter_by(slug=slug).first()
             if ex:
                 continue
@@ -72,20 +101,26 @@ def run_seed(data_path=None):
             db.session.add(ex)
             db.session.flush()
 
-            # append muscles to association table (no load_percent required)
-            for mslug in it.get("muscles_primary", []) + it.get("muscles_secondary", []):
-                m = get_or_create_muscle(mslug, mslug.capitalize())
-                if m not in ex.muscles:
+            for mslug in it.get("muscles_primary", []) + it.get(
+                "muscles_secondary", []
+            ):
+                m = Muscle.query.filter_by(slug=mslug).first()
+                if m and m not in ex.muscles:
                     ex.muscles.append(m)
 
             for ename in it.get("equipment", []):
-                e = get_or_create_equipment(ename)
-                ex.equipment.append(e)
+                eslug = ename.lower().replace(" ", "-")
+                eq = TEEquipment.query.filter_by(slug=eslug).first()
+                if eq:
+                    ex.equipment.append(eq)
 
         db.session.commit()
-        print("Seed complete.")
+        print(
+            f"Seed complete: {len(muscles)} muscles, "
+            f"{len(equipment)} equipment items, "
+            f"{len(exercises)} exercises processed."
+        )
 
 
 if __name__ == "__main__":
-    arg = sys.argv[1] if len(sys.argv) > 1 else None
-    run_seed(arg)
+    run_seed()
