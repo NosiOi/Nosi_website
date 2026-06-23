@@ -20,7 +20,7 @@ class TrainingDay:
             day_name=data.get("day_name") or data.get("name"),
             name=data.get("day_name") or data.get("name"),
             environment=data.get("environment"),
-            exercises=list(data.get("exercises", []))
+            exercises=list(data.get("exercises", [])),
         )
 
     def to_dict(self):
@@ -28,5 +28,17 @@ class TrainingDay:
             "day_name": self.day_name or self.name,
             "name": self.day_name or self.name,
             "environment": self.environment,
-            "exercises": list(self.exercises),
+            "exercises": [
+                {
+                    "exercise": (
+                        ex["exercise"].to_dict()
+                        if hasattr(ex["exercise"], "to_dict")
+                        else ex["exercise"]
+                    ),
+                    "sets": ex["sets"],
+                    "reps": ex["reps"],
+                    "load": ex.get("load"),
+                }
+                for ex in self.exercises
+            ],
         }

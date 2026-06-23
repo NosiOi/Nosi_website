@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
+
 @dataclass
 class UserProfileSnapshot:
     age: int
@@ -14,3 +15,4 @@ class UserProfileSnapshot:
     environment: str
     weak_points: List[str]
     strong_points: List[str]
+    user_id: int | None = None
