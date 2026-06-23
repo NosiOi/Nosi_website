@@ -17,10 +17,7 @@ class User(db.Model, UserMixin):
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(
-        db.DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        nullable=False
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
 
     # -------- TRAINING ENGINE FIELDS --------
@@ -38,32 +35,30 @@ class User(db.Model, UserMixin):
     weak_points = db.Column(db.JSON, default=list)
     strong_points = db.Column(db.JSON, default=list)
 
-    performance_state_id = db.Column(db.Integer, db.ForeignKey("te_performance_state.id"))
+    performance_state_id = db.Column(
+        db.Integer, db.ForeignKey("te_performance_state.id")
+    )
     fatigue_state_id = db.Column(db.Integer, db.ForeignKey("te_fatigue_state.id"))
 
-    performance_state = db.relationship("PerformanceState", back_populates="user", uselist=False)
-    fatigue_state = db.relationship("FatigueState", back_populates="user", uselist=False)
-
-    # -------- ТВОЇ ІСНУЮЧІ ЗВ’ЯЗКИ --------
-    workout_plan = db.relationship(
-        "WorkoutPlan",
-        back_populates="user",
-        uselist=False,
-        cascade="all, delete-orphan"
+    performance_state = db.relationship(
+        "PerformanceState", back_populates="user", uselist=False
+    )
+    fatigue_state = db.relationship(
+        "FatigueState", back_populates="user", uselist=False
     )
 
     nutrition_plan = db.relationship(
         "NutritionPlan",
         back_populates="user",
         uselist=False,
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
     )
 
     recovery_plan = db.relationship(
         "RecoveryPlan",
         back_populates="user",
         uselist=False,
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
     )
 
     user_equipment = db.relationship(
@@ -71,7 +66,7 @@ class User(db.Model, UserMixin):
         back_populates="user",
         cascade="all, delete-orphan",
         lazy="dynamic",
-        foreign_keys="UserEquipment.user_id"
+        foreign_keys="UserEquipment.user_id",
     )
 
     meals = db.relationship(
@@ -79,7 +74,7 @@ class User(db.Model, UserMixin):
         back_populates="user",
         cascade="all, delete-orphan",
         lazy="dynamic",
-        foreign_keys="Meal.user_id"
+        foreign_keys="Meal.user_id",
     )
 
     oauth_accounts = db.relationship(
@@ -87,7 +82,7 @@ class User(db.Model, UserMixin):
         back_populates="user",
         cascade="all, delete-orphan",
         lazy="dynamic",
-        foreign_keys="OAuthAccount.user_id"
+        foreign_keys="OAuthAccount.user_id",
     )
 
     training_plans = db.relationship(
@@ -95,7 +90,7 @@ class User(db.Model, UserMixin):
         back_populates="owner",
         cascade="all, delete-orphan",
         lazy="dynamic",
-        foreign_keys="TrainingPlan.user_id"
+        foreign_keys="TrainingPlan.user_id",
     )
 
     training_sessions = db.relationship(
@@ -103,7 +98,7 @@ class User(db.Model, UserMixin):
         back_populates="user",
         cascade="all, delete-orphan",
         lazy="dynamic",
-        foreign_keys="TrainingSession.user_id"
+        foreign_keys="TrainingSession.user_id",
     )
 
     preferences = db.relationship(
@@ -111,7 +106,7 @@ class User(db.Model, UserMixin):
         back_populates="user",
         cascade="all, delete-orphan",
         lazy="dynamic",
-        foreign_keys="UserPreference.user_id"
+        foreign_keys="UserPreference.user_id",
     )
 
     def set_password(self, password):
