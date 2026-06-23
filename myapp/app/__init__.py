@@ -24,6 +24,12 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+
+    from myapp.app.training_engine.models.exercise import Exercise
+    from myapp.app.training_engine.models.muscle import Muscle
+    from myapp.app.training_engine.models.equipment import TEEquipment
+    from myapp.app.training_engine.models.exercise import exercise_muscle, exercise_equipment
+
     migrate.init_app(app, db)
     mail.init_app(app)
     oauth.init_app(app)
@@ -72,7 +78,6 @@ def create_app():
     from myapp.app.routes.questionnaire import questionnaire_bp
 
     from myapp.app.routes.nutrition.nutrition_api import nutrition_api
-
     from myapp.app.routes.premium import premium_bp
 
     from myapp.app.routes.profile.profile_view import profile_view_bp
@@ -107,7 +112,6 @@ def create_app():
     app.register_blueprint(questionnaire_bp)
 
     app.register_blueprint(nutrition_api)
-
     app.register_blueprint(premium_bp)
 
     app.register_blueprint(profile_view_bp)
