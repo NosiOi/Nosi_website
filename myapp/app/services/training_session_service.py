@@ -12,9 +12,7 @@ class TrainingSessionService:
         day = plan.days[day_key]
 
         session = TrainingSession(
-            user_id=user.id,
-            fatigue_before=fatigue_before,
-            status="active"
+            user_id=user.id, fatigue_before=fatigue_before, status="active"
         )
         db.session.add(session)
         db.session.flush()
@@ -22,10 +20,10 @@ class TrainingSessionService:
         for ex in day["exercises"]:
             se = SessionExercise(
                 session_id=session.id,
-                exercise_id=ex["exercise"].id,
+                exercise_id=ex["exercise"]["id"],
                 sets_planned=ex["sets"],
                 reps_planned=ex["reps"],
-                load_planned=ex.get("load")
+                load_planned=ex.get("load"),
             )
             db.session.add(se)
 
@@ -35,17 +33,14 @@ class TrainingSessionService:
     @staticmethod
     def add_exercise(session, exercise_id):
         existing = SessionExercise.query.filter_by(
-            session_id=session.id,
-            exercise_id=exercise_id
+            session_id=session.id, exercise_id=exercise_id
         ).first()
 
         if existing:
             return existing
 
         se = SessionExercise(
-            session_id=session.id,
-            exercise_id=exercise_id,
-            sets_planned=0
+            session_id=session.id, exercise_id=exercise_id, sets_planned=0
         )
         db.session.add(se)
         db.session.commit()
@@ -54,8 +49,7 @@ class TrainingSessionService:
     @staticmethod
     def update_exercise(session, exercise_id, data):
         se = SessionExercise.query.filter_by(
-            session_id=session.id,
-            exercise_id=exercise_id
+            session_id=session.id, exercise_id=exercise_id
         ).first()
 
         if not se:
