@@ -1,11 +1,9 @@
-from typing import List
-from ..exercises.exercise_loader import ExerciseLoader
-from ..exercises.exercise_classifier import ExerciseClassifier
+from myapp.app.training_engine.models.exercise import Exercise
 
 
 class PlanAdapter:
     @staticmethod
-    def pick_for_muscle(muscle: str, environment: str) -> List:
-        all_ex = ExerciseLoader.all()
-        candidates = ExerciseClassifier.by_primary_muscle(all_ex, muscle)
-        return [ex for ex in candidates if environment in ex.environment][:3]
+    def by_slug(slug: str):
+        if not slug:
+            return None
+        return Exercise.query.filter_by(slug=slug).first()

@@ -1,40 +1,76 @@
-from typing import Dict
-from ..models.training_plan import TrainingPlan as ORMTrainingPlan
-from ..models.training_day import TrainingDay as ORMTrainingDay
-from .plan_split_logic import PlanSplitLogic
-from .plan_adapter import PlanAdapter
-from .plan_periodization import PlanPeriodization
+import json
+from pathlib import Path
+from myapp.app.training_engine.models.training_plan import (
+    TrainingPlan as ORMTrainingPlan,
+)
+from myapp.app.training_engine.models.training_day import TrainingDay as ORMTrainingDay
+from myapp.app.training_engine.models.exercise import Exercise
 from .plan_validator import PlanValidator
 
 
 class PlanGenerator:
-
     def __init__(self, profile_snapshot):
         self.profile = profile_snapshot
 
-    def generate(self, week: int = 1) -> ORMTrainingPlan:
-        split = PlanSplitLogic.choose_split(self.profile.workouts_per_week)
-        distribution = PlanSplitLogic.base_distribution(split)
+    def _template_path(self, split: str) -> str:
+        base = Path(__file__).resolve().parents[1] / "data" / "templates" / "splits"
+        return str(base / f"{split}.json")
 
-        PlanPeriodization.apply("linear", week)
+    def _load_template(self, split: str):
+        path = self._template_path(split)
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    def _choose_split(self, workouts_per_week: int) -> str:
+        if workouts_per_week <= 1:
+            return "full_body"
+        if workouts_per_week == 2:
+            return "full_body"
+        if workouts_per_week == 3:
+            return "full_body"
+        if workouts_per_week == 4:
+            return "upper_lower"
+        if workouts_per_week == 5:
+            return "ppl"
+        if workouts_per_week == 6:
+            return "ppl"
+        return "hybrid"
+
+    def generate(self, week: int = 1):
+        split = self._choose_split(self.profile.workouts_per_week)
+        tpl = self._load_template(split)
+        days_def = tpl.get("days", {})
 
         plan = ORMTrainingPlan(
             user_id=getattr(self.profile, "user_id", None),
-            name="Training Plan",
-            is_active=False
+            name=tpl.get("name", "Training Plan"),
+            is_active=False,
         )
 
-        for day_name, muscles in distribution.items():
-            day = ORMTrainingDay(day_name=day_name, environment=self.profile.environment)
+        for key, day_cfg in days_def.items():
+            day = ORMTrainingDay(
+                day_name=key,
+                name=day_cfg.get("name", key),
+                environment=[self.profile.environment],
+                exercises=[],
+            )
 
-            for muscle in muscles:
-                exercises = PlanAdapter.pick_for_muscle(muscle, self.profile.environment) or []
-                for ex in exercises:
-                    day.add_exercise(exercise=ex, sets=3, reps="8-12")
+            for ex_def in day_cfg.get("exercises", []):
+                slug = ex_def.get("id")
+                if not slug:
+                    continue
 
-            plan.add_day(day_name, day)
+                ex = Exercise.query.filter_by(slug=slug).first()
+                if not ex:
+                    continue
 
-        if not PlanValidator.validate(plan.days):
-            raise ValueError("Generated plan is invalid")
+                day.add_exercise(
+                    exercise=ex,
+                    sets=ex_def.get("sets", 3),
+                    reps=ex_def.get("reps", "8-12"),
+                )
 
+            plan.add_day(key, day)
+
+        PlanValidator.validate(plan.days)
         return plan
