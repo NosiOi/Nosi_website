@@ -1,43 +1,41 @@
 from typing import List, Dict
-from ..exercises.exercise_loader import ExerciseLoader
-from ..exercises.exercise_classifier import ExerciseClassifier
+from myapp.app.training_engine.models.exercise import Exercise
+from myapp.app.training_engine.models.muscle import Muscle
 
 
 class ExerciseRecommendations:
+
     @staticmethod
     def for_weak_points(weak_points: List[str], environment: str) -> Dict[str, List]:
-        all_ex = ExerciseLoader.all()
         result = {}
 
-        for muscle in weak_points or []:
-            candidates = ExerciseClassifier.by_primary_muscle(all_ex, muscle)
-            filtered = [ex for ex in candidates if environment in ex.environment]
-            result[muscle] = filtered[:3]
+        for muscle_slug in weak_points or []:
+            q = Exercise.query.join(Exercise.muscles).filter(Muscle.slug == muscle_slug)
+
+            if environment:
+                q = q.filter(Exercise.location.in_([environment, "any"]))
+
+            result[muscle_slug] = [ex.to_dict() for ex in q.limit(5).all()]
 
         return result
 
     @staticmethod
-    def for_goal(goal: str, environment: str) -> List:
-        all_ex = ExerciseLoader.all()
+    def for_goal(goal: str, environment: str) -> List[Dict]:
+        q = Exercise.query
 
-        def env_ok(ex):
-            envs = ex.environment if isinstance(ex.environment, (list, tuple)) else [ex.environment]
-            return environment in envs
+        if environment:
+            q = q.filter(Exercise.location.in_([environment, "any"]))
 
         if goal == "gain":
-            candidates = [
-                ex for ex in all_ex.values()
-                if ex.difficulty_level >= 4 and env_ok(ex)
-            ]
-            return candidates[:5]
+            q = q.filter(Exercise.difficulty >= 4)
+            return [ex.to_dict() for ex in q.limit(5).all()]
 
         if goal == "lose":
-            return [
-                ex for ex in all_ex.values()
-                if (ex.movement_pattern or "") in ("squat", "hinge", "push")
-            ][:5]
+            patterns = ["squat", "hinge", "push"]
+            q = q.filter(Exercise.movement_pattern.in_(patterns))
+            return [ex.to_dict() for ex in q.limit(5).all()]
 
         if goal == "maintain":
-            return [ex for ex in all_ex.values() if env_ok(ex)][:5]
+            return [ex.to_dict() for ex in q.limit(5).all()]
 
         return []

@@ -11,7 +11,7 @@ class WeakPointAnalysis:
         critical = WeakPointAnalysis.CRITICAL.intersection(weak_points)
         if critical:
             recs.append(
-                f"Critical weak zones detected: {', '.join(critical)}. Increase core stability and posterior chain work."
+                f"Critical weak zones detected: {', '.join(critical)}. Increase core and posterior chain work."
             )
 
         if "chest" in weak_points:

@@ -9,7 +9,7 @@ class NutritionRecommendations:
                 "nutrition_recommendations": [
                     "Increase protein intake.",
                     "Add calorie-dense foods like nuts, rice, and oats.",
-                    "Eat 4–5 meals per day."
+                    "Eat 4–5 meals per day.",
                 ]
             }
 
@@ -18,7 +18,7 @@ class NutritionRecommendations:
                 "nutrition_recommendations": [
                     "Increase fiber and vegetables.",
                     "Reduce sugar and liquid calories.",
-                    "Maintain a moderate calorie deficit."
+                    "Maintain a moderate calorie deficit.",
                 ]
             }
 
@@ -26,6 +26,6 @@ class NutritionRecommendations:
             "nutrition_recommendations": [
                 "Maintain balanced macros.",
                 "Keep hydration high.",
-                "Eat whole foods."
+                "Eat whole foods.",
             ]
         }

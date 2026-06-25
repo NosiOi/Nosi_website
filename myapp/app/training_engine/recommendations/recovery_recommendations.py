@@ -7,11 +7,13 @@ class RecoveryRecommendations:
         recs = []
 
         if sleep < 7:
-            recs.append("Increase sleep to at least 7–8 hours for optimal recovery.")
+            recs.append("Increase sleep to at least 7–8 hours.")
         if stress >= 4:
-            recs.append("High stress detected. Add breathing exercises or light stretching.")
+            recs.append("High stress detected. Add breathing exercises or stretching.")
         if soreness >= 4:
-            recs.append("Severe soreness detected. Reduce intensity and add mobility work.")
+            recs.append(
+                "Severe soreness detected. Reduce intensity and add mobility work."
+            )
         if hydration < 2:
             recs.append("Increase water intake to 2–2.5 liters per day.")
         if not recs:
