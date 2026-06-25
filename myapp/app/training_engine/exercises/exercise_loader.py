@@ -12,20 +12,26 @@ class ExerciseLoader:
         file_path = os.path.join(base_path, "base_exercises.json")
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        for ex_id, ex_data in data.items():
-            cls._cache[ex_id] = Exercise(
-                id=ex_data["id"],
+        cls._cache = {}
+        for ex_data in data:
+            ex_id = ex_data.get("slug") or ex_data.get("id")
+            if not ex_id:
+                continue
+            ex = Exercise(
                 name=ex_data["name"],
-                muscles_primary=ex_data["muscles_primary"],
-                muscles_secondary=ex_data.get("muscles_secondary", []),
+                slug=ex_data["slug"],
+                description=ex_data.get("description"),
                 difficulty=ex_data.get("difficulty", 1),
-                equipment=ex_data.get("equipment", []),
-                environment=ex_data.get("environment", []),
+                location=ex_data.get("location", "any"),
                 movement_pattern=ex_data.get("movement_pattern"),
                 risk_level=ex_data.get("risk_level", 1),
-                progression_chain=ex_data.get("progression_chain", []),
-                regression_chain=ex_data.get("regression_chain", []),
             )
+            setattr(ex, "muscles_primary", ex_data.get("muscles_primary", []))
+            setattr(ex, "muscles_secondary", ex_data.get("muscles_secondary", []))
+            setattr(ex, "_legacy_equipment", ex_data.get("equipment", []))
+            setattr(ex, "progression_chain", ex_data.get("progression_chain", []))
+            setattr(ex, "regression_chain", ex_data.get("regression_chain", []))
+            cls._cache[ex_id] = ex
 
     @classmethod
     def get(cls, exercise_id: str) -> Exercise:
@@ -37,4 +43,4 @@ class ExerciseLoader:
 
     @classmethod
     def filter_by_environment(cls, env: str) -> Dict[str, Exercise]:
-        return {k: v for k, v in cls._cache.items() if env in v.environment}
+        return {k: v for k, v in cls._cache.items() if env in getattr(v, "environment", [])}
