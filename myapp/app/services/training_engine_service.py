@@ -21,6 +21,24 @@ class TrainingEngineService:
 
     @staticmethod
     def build_profile(user):
+        perf = getattr(user, "performance_state", None)
+        weak_points = getattr(user, "weak_points", []) or []
+        strong_points = getattr(user, "strong_points", []) or []
+
+        if perf:
+            if (perf.pushups or 0) < 10:
+                weak_points.append("push_strength")
+            else:
+                strong_points.append("push_strength")
+            if (perf.squats or 0) < 15:
+                weak_points.append("lower_body_strength")
+            else:
+                strong_points.append("lower_body_strength")
+            if (perf.plank_sec or 0) < 30:
+                weak_points.append("core_endurance")
+            else:
+                strong_points.append("core_endurance")
+
         return UserProfileSnapshot(
             age=TrainingEngineService._safe(user, "age", 25),
             sex=TrainingEngineService._safe(user, "sex", "unspecified"),
@@ -31,8 +49,8 @@ class TrainingEngineService:
             experience=TrainingEngineService._safe(user, "experience", "beginner"),
             workouts_per_week=TrainingEngineService._safe(user, "workouts_per_week", 3),
             environment=TrainingEngineService._safe(user, "environment", "gym"),
-            weak_points=TrainingEngineService._safe(user, "weak_points", []) or [],
-            strong_points=TrainingEngineService._safe(user, "strong_points", []) or [],
+            weak_points=weak_points,
+            strong_points=strong_points,
             user_id=user.id,
         )
 

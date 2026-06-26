@@ -64,6 +64,40 @@ class TrainingSessionService:
         return se
 
     @staticmethod
+    def _compute_session_load(session):
+        total = 0
+        for se in session.exercises:
+            sets = se.sets_done or se.sets_planned or 0
+            reps_raw = se.reps_done or se.reps_planned or "0"
+            try:
+                reps = int(str(reps_raw).split("-")[0])
+            except Exception:
+                reps = 0
+            load = (se.load_done or se.load_planned or 0) * sets * max(reps, 1)
+            total += load
+        return total
+
+    @staticmethod
+    def update_training_load_from_session(session, user):
+        from myapp.app.training_engine.models.performance_state import PerformanceState
+
+        total_load = TrainingSessionService._compute_session_load(session)
+
+        if not user.performance_state:
+            ps = PerformanceState(
+                training_load=total_load,
+                weight=user.weight,
+            )
+            db.session.add(ps)
+            db.session.flush()
+            user.performance_state_id = ps.id
+        else:
+            ps = user.performance_state
+            ps.training_load = (ps.training_load or 0) + total_load
+
+        db.session.commit()
+
+    @staticmethod
     def finish_session(session, fatigue_after=None):
         from datetime import datetime
 
@@ -75,4 +109,5 @@ class TrainingSessionService:
         session.rpe_avg = sum(rpes) / len(rpes) if rpes else None
 
         db.session.commit()
+        TrainingSessionService.update_training_load_from_session(session, session.user)
         return session

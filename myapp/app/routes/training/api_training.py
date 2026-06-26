@@ -10,6 +10,7 @@ from myapp.app.services.training_session_service import TrainingSessionService
 from myapp.app.models.training_session import TrainingSession, SessionExercise
 from myapp.app.training_engine.models.training_plan import TrainingPlan
 from myapp.app.training_engine.models.training_day import TrainingDay
+from myapp.app.training_engine.models.performance_state import PerformanceState
 from sqlalchemy import func
 import datetime as dt
 
@@ -89,6 +90,30 @@ def get_exercise(exercise_id):
         return _error_response(e)
 
 
+def _get_active_plan_for_user(user):
+    plan = (
+        TrainingPlan.query.filter_by(user_id=user.id, is_active=True)
+        .order_by(TrainingPlan.id.desc())
+        .first()
+    )
+    if not plan:
+        plan = TrainingEngineService.generate_plan(user)
+    return plan
+
+
+def _get_day_key_for_today():
+    mapping = {
+        0: "mon",
+        1: "tue",
+        2: "wed",
+        3: "thu",
+        4: "fri",
+        5: "sat",
+        6: "sun",
+    }
+    return mapping[dt.date.today().weekday()]
+
+
 @bp.route("/today", methods=["GET"])
 @login_required
 def training_today():
@@ -132,12 +157,17 @@ def training_today():
                 if Exercise.query.get(se.exercise_id)
             ]
         else:
-            plan = TrainingEngineService.generate_plan(current_user)
-            day_key = next(iter(plan.days.keys()))
-            day = plan.days[day_key]
-            ex_objs = [ex["exercise"] for ex in day["exercises"]]
+            plan = _get_active_plan_for_user(current_user)
+            day_key = _get_day_key_for_today()
+            day = plan.days.get(day_key) or next(iter(plan.days.values()))
+            ex_objs = []
+            for ex in day["exercises"]:
+                if isinstance(ex, dict) and "exercise" in ex:
+                    ex_objs.append(ex["exercise"])
+                else:
+                    ex_objs.append(ex)
             payload["title"] = "Рекомендована сесія"
-            payload["plan"] = [{"id": 0, "name": "Auto Plan"}]
+            payload["plan"] = [{"id": getattr(plan, "id", 0), "name": plan.name}]
 
         filtered = []
         for ex in ex_objs:
@@ -236,7 +266,7 @@ def training_heatmap():
 @login_required
 def get_plan():
     try:
-        plan = TrainingEngineService.generate_plan(current_user)
+        plan = _get_active_plan_for_user(current_user)
         return jsonify(plan.to_dict())
     except Exception as e:
         return _error_response(e)
@@ -256,6 +286,10 @@ def get_analytics():
             "plank_sec": getattr(perf, "plank_sec", 0),
             "weight": getattr(current_user, "weight", 70),
             "training_load": getattr(perf, "training_load", 0),
+            "hip": getattr(perf, "hip", 0),
+            "shoulder": getattr(perf, "shoulder", 0),
+            "thoracic": getattr(perf, "thoracic", 0),
+            "ankle": getattr(perf, "ankle", 0),
         }
 
         recovery = {
@@ -368,16 +402,14 @@ def strength_test():
         pushups = data.get("pushups", 0)
         squats = data.get("squats", 0)
         situps = data.get("situps", 0)
+        plank_sec = data.get("plank_sec", 0)
 
         if not current_user.performance_state:
-            from myapp.app.training_engine.models.performance_state import (
-                PerformanceState,
-            )
-
             ps = PerformanceState(
                 pushups=pushups,
                 squats=squats,
                 situps=situps,
+                plank_sec=plank_sec,
                 weight=current_user.weight,
             )
             db.session.add(ps)
@@ -388,6 +420,7 @@ def strength_test():
             ps.pushups = pushups
             ps.squats = squats
             ps.situps = situps
+            ps.plank_sec = plank_sec
 
         db.session.commit()
         return jsonify({"status": "ok"})
@@ -413,8 +446,9 @@ def create_plan():
         data = request.get_json() or {}
         name = data.get("name", "Plan")
         days_data = data.get("days", {})
+        is_active = data.get("is_active", False)
 
-        plan = TrainingPlan(user_id=current_user.id, name=name)
+        plan = TrainingPlan(user_id=current_user.id, name=name, is_active=is_active)
 
         for key, items in days_data.items():
             day = TrainingDay(name=key)
@@ -426,6 +460,11 @@ def create_plan():
                     load=ex.get("load"),
                 )
             plan.add_day(key, day)
+
+        if is_active:
+            TrainingPlan.query.filter_by(
+                user_id=current_user.id, is_active=True
+            ).update({"is_active": False})
 
         db.session.add(plan)
         db.session.commit()
@@ -457,6 +496,7 @@ def update_plan(plan_id):
         data = request.get_json() or {}
         plan.name = data.get("name", plan.name)
         plan.days = {}
+        is_active = data.get("is_active", plan.is_active)
 
         for key, items in data.get("days", {}).items():
             day = TrainingDay(name=key)
@@ -468,6 +508,14 @@ def update_plan(plan_id):
                     load=ex.get("load"),
                 )
             plan.add_day(key, day)
+
+        if is_active:
+            TrainingPlan.query.filter_by(
+                user_id=current_user.id, is_active=True
+            ).update({"is_active": False})
+            plan.is_active = True
+        else:
+            plan.is_active = False
 
         db.session.commit()
         return jsonify(plan.to_dict())
@@ -494,8 +542,6 @@ def delete_plan(plan_id):
 def complete_session():
     try:
         data = request.get_json() or {}
-        plan_id = data.get("plan_id")
-        day_key = data.get("day_key")
         exercises = data.get("exercises", [])
 
         session = TrainingSession(
@@ -517,6 +563,7 @@ def complete_session():
             db.session.add(se)
 
         db.session.commit()
+        TrainingSessionService.update_training_load_from_session(session, current_user)
         return jsonify({"id": session.id})
     except Exception as e:
         return _error_response(e)
