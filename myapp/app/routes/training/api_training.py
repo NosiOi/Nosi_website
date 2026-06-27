@@ -9,7 +9,6 @@ from myapp.app.services.training_engine_service import TrainingEngineService
 from myapp.app.services.training_session_service import TrainingSessionService
 from myapp.app.models.training_session import TrainingSession, SessionExercise
 from myapp.app.training_engine.models.training_plan import TrainingPlan
-from myapp.app.training_engine.models.training_day import TrainingDay
 from myapp.app.training_engine.models.performance_state import PerformanceState
 from sqlalchemy import func
 import datetime as dt
@@ -161,11 +160,15 @@ def training_today():
             day_key = _get_day_key_for_today()
             day = plan.days.get(day_key) or next(iter(plan.days.values()))
             ex_objs = []
-            for ex in day["exercises"]:
-                if isinstance(ex, dict) and "exercise" in ex:
-                    ex_objs.append(ex["exercise"])
-                else:
+
+            for ex in day.get("exercises", []):
+                if isinstance(ex, dict) and "exercise_id" in ex:
+                    ex_obj = Exercise.query.get(ex["exercise_id"])
+                    if ex_obj:
+                        ex_objs.append(ex_obj)
+                elif isinstance(ex, Exercise):
                     ex_objs.append(ex)
+
             payload["title"] = "Рекомендована сесія"
             payload["plan"] = [{"id": getattr(plan, "id", 0), "name": plan.name}]
 
@@ -445,21 +448,26 @@ def create_plan():
     try:
         data = request.get_json() or {}
         name = data.get("name", "Plan")
-        days_data = data.get("days", {})
+        days_data_raw = data.get("days", {})
         is_active = data.get("is_active", False)
 
         plan = TrainingPlan(user_id=current_user.id, name=name, is_active=is_active)
 
-        for key, items in days_data.items():
-            day = TrainingDay(name=key)
-            for ex in items:
-                day.add_exercise(
-                    exercise_id=ex["exercise_id"],
-                    sets=ex.get("sets"),
-                    reps=ex.get("reps"),
-                    load=ex.get("load"),
-                )
-            plan.add_day(key, day)
+        days_struct = {}
+        for key, items in days_data_raw.items():
+            days_struct[key] = {
+                "exercises": [
+                    {
+                        "exercise_id": ex["exercise_id"],
+                        "sets": ex.get("sets"),
+                        "reps": ex.get("reps"),
+                        "load": ex.get("load"),
+                    }
+                    for ex in items
+                ]
+            }
+
+        plan.days = days_struct
 
         if is_active:
             TrainingPlan.query.filter_by(
@@ -495,19 +503,24 @@ def update_plan(plan_id):
 
         data = request.get_json() or {}
         plan.name = data.get("name", plan.name)
-        plan.days = {}
         is_active = data.get("is_active", plan.is_active)
 
-        for key, items in data.get("days", {}).items():
-            day = TrainingDay(name=key)
-            for ex in items:
-                day.add_exercise(
-                    exercise_id=ex["exercise_id"],
-                    sets=ex.get("sets"),
-                    reps=ex.get("reps"),
-                    load=ex.get("load"),
-                )
-            plan.add_day(key, day)
+        days_data_raw = data.get("days", {})
+        days_struct = {}
+        for key, items in days_data_raw.items():
+            days_struct[key] = {
+                "exercises": [
+                    {
+                        "exercise_id": ex["exercise_id"],
+                        "sets": ex.get("sets"),
+                        "reps": ex.get("reps"),
+                        "load": ex.get("load"),
+                    }
+                    for ex in items
+                ]
+            }
+
+        plan.days = days_struct
 
         if is_active:
             TrainingPlan.query.filter_by(
@@ -542,7 +555,16 @@ def delete_plan(plan_id):
 def complete_session():
     try:
         data = request.get_json() or {}
-        exercises = data.get("exercises", [])
+
+        raw = data.get("exercises", [])
+        exercises = []
+
+        if isinstance(raw, dict):
+            for day_items in raw.values():
+                if isinstance(day_items, list):
+                    exercises.extend(day_items)
+        elif isinstance(raw, list):
+            exercises = raw
 
         session = TrainingSession(
             user_id=current_user.id,
@@ -556,9 +578,9 @@ def complete_session():
             se = SessionExercise(
                 session_id=session.id,
                 exercise_id=ex["exercise_id"],
-                sets_done=ex.get("sets_done"),
-                reps_done=ex.get("reps_done"),
-                load_done=ex.get("load_done"),
+                sets_done=ex.get("sets") or ex.get("sets_done"),
+                reps_done=ex.get("reps") or ex.get("reps_done"),
+                load_done=ex.get("load") or ex.get("load_done"),
             )
             db.session.add(se)
 
