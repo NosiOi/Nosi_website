@@ -16,34 +16,74 @@ import datetime as dt
 bp = Blueprint("api_training", __name__, url_prefix="/api/training")
 
 
-def _error_response(e):
+def _error(e):
     current_app.logger.exception("API error")
     return jsonify({"error": "internal_server_error", "message": str(e)}), 500
 
 
-@bp.route("/muscles", methods=["GET"])
+def _active_plan(user):
+    plan = (
+        TrainingPlan.query.filter_by(user_id=user.id, is_active=True)
+        .order_by(TrainingPlan.id.desc())
+        .first()
+    )
+    return plan or TrainingEngineService.generate_plan(user)
+
+
+def _today_key():
+    return ["mon", "tue", "wed", "thu", "fri", "sat", "sun"][dt.date.today().weekday()]
+
+
+def _plan_days_struct(raw):
+    return {
+        key: {
+            "exercises": [
+                {
+                    "exercise_id": ex["exercise_id"],
+                    "sets": ex.get("sets"),
+                    "reps": ex.get("reps"),
+                    "load": ex.get("load"),
+                }
+                for ex in items
+            ]
+        }
+        for key, items in raw.items()
+    }
+
+
+def _session_load(session):
+    total = 0
+    for se in session.exercises:
+        sets = se.sets_done or se.sets_planned or 0
+        reps = int(str(se.reps_done or se.reps_planned or "0").split("-")[0])
+        load = (se.load_done or se.load_planned or 0) * sets * max(reps, 1)
+        total += load
+    return total
+
+
+@bp.route("/muscles")
 @login_required
-def list_muscles():
+def muscles():
     try:
-        items = Muscle.query.order_by(Muscle.name).all()
-        return jsonify([m.to_dict() for m in items])
+        return jsonify([m.to_dict() for m in Muscle.query.order_by(Muscle.name)])
     except Exception as e:
-        return _error_response(e)
+        return _error(e)
 
 
-@bp.route("/equipment", methods=["GET"])
+@bp.route("/equipment")
 @login_required
-def list_equipment():
+def equipment():
     try:
-        items = TEEquipment.query.order_by(TEEquipment.name).all()
-        return jsonify([e.to_dict() for e in items])
+        return jsonify(
+            [e.to_dict() for e in TEEquipment.query.order_by(TEEquipment.name)]
+        )
     except Exception as e:
-        return _error_response(e)
+        return _error(e)
 
 
-@bp.route("/exercises", methods=["GET"])
+@bp.route("/exercises")
 @login_required
-def list_exercises():
+def exercises():
     try:
         q = Exercise.query
         muscle = request.args.get("muscle")
@@ -76,46 +116,12 @@ def list_exercises():
             }
         )
     except Exception as e:
-        return _error_response(e)
+        return _error(e)
 
 
-@bp.route("/exercises/<exercise_id>", methods=["GET"])
+@bp.route("/today")
 @login_required
-def get_exercise(exercise_id):
-    try:
-        ex = Exercise.query.get_or_404(exercise_id)
-        return jsonify(ex.to_dict())
-    except Exception as e:
-        return _error_response(e)
-
-
-def _get_active_plan_for_user(user):
-    plan = (
-        TrainingPlan.query.filter_by(user_id=user.id, is_active=True)
-        .order_by(TrainingPlan.id.desc())
-        .first()
-    )
-    if not plan:
-        plan = TrainingEngineService.generate_plan(user)
-    return plan
-
-
-def _get_day_key_for_today():
-    mapping = {
-        0: "mon",
-        1: "tue",
-        2: "wed",
-        3: "thu",
-        4: "fri",
-        5: "sat",
-        6: "sun",
-    }
-    return mapping[dt.date.today().weekday()]
-
-
-@bp.route("/today", methods=["GET"])
-@login_required
-def training_today():
+def today():
     try:
         active = (
             TrainingSession.query.filter_by(user_id=current_user.id, status="active")
@@ -125,14 +131,14 @@ def training_today():
 
         prefs = {
             p.key: p.value
-            for p in UserPreference.query.filter_by(user_id=current_user.id).all()
+            for p in UserPreference.query.filter_by(user_id=current_user.id)
         }
-        avoid_muscles = [
+        avoid = [
             k.split("injury_")[1]
             for k, v in prefs.items()
             if k.startswith("injury_") and v == "true"
         ]
-        no_equipment_list = [
+        no_eq = [
             s.strip().lower()
             for s in (prefs.get("no_equipment") or "").split(",")
             if s.strip()
@@ -144,71 +150,47 @@ def training_today():
             "exercises": [],
             "muscles": {},
             "plan": [],
-            "hints": [],
         }
 
         if active:
             payload["sessionId"] = str(active.id)
             payload["title"] = "Активна сесія"
-            ex_objs = [
-                Exercise.query.get(se.exercise_id)
-                for se in active.exercises
-                if Exercise.query.get(se.exercise_id)
-            ]
+            ex_objs = [Exercise.query.get(se.exercise_id) for se in active.exercises]
         else:
-            plan = _get_active_plan_for_user(current_user)
-            day_key = _get_day_key_for_today()
-            day = plan.days.get(day_key) or next(iter(plan.days.values()))
-            ex_objs = []
-
-            for ex in day.get("exercises", []):
-                if isinstance(ex, dict) and "exercise_id" in ex:
-                    ex_obj = Exercise.query.get(ex["exercise_id"])
-                    if ex_obj:
-                        ex_objs.append(ex_obj)
-                elif isinstance(ex, Exercise):
-                    ex_objs.append(ex)
-
+            plan = _active_plan(current_user)
+            day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
+            ex_objs = [Exercise.query.get(ex["exercise_id"]) for ex in day["exercises"]]
             payload["title"] = "Рекомендована сесія"
-            payload["plan"] = [{"id": getattr(plan, "id", 0), "name": plan.name}]
+            payload["plan"] = [{"id": plan.id, "name": plan.name}]
 
         filtered = []
         for ex in ex_objs:
-            muscles = getattr(ex, "muscles", [])
-            if any(m.slug.lower() in avoid_muscles for m in muscles):
+            if not ex:
                 continue
-            if no_equipment_list:
-                eq_names = [e.name.lower() for e in getattr(ex, "equipment", [])]
-                if any(ne in eq_names for ne in no_equipment_list):
-                    continue
+            if any(m.slug.lower() in avoid for m in ex.muscles):
+                continue
+            if no_eq and any(e.name.lower() in no_eq for e in ex.equipment):
+                continue
             filtered.append(ex)
 
-        muscles_count = {}
+        muscles = {}
         for ex in filtered:
-            muscles = getattr(ex, "muscles", [])
-            if not muscles:
-                continue
-            per = 100.0 / len(muscles)
-            for m in muscles:
-                muscles_count[m.slug] = muscles_count.get(m.slug, 0) + per
+            per = 100 / len(ex.muscles) if ex.muscles else 0
+            for m in ex.muscles:
+                muscles[m.slug] = muscles.get(m.slug, 0) + per
 
-        total = sum(muscles_count.values()) or 1
-        muscles_pct = {k: round(v / total, 3) for k, v in muscles_count.items()}
-
-        payload["exercises"] = [
-            ex if isinstance(ex, dict) else ex.to_dict() for ex in filtered
-        ]
-        payload["muscles"] = muscles_pct
+        total = sum(muscles.values()) or 1
+        payload["muscles"] = {k: round(v / total, 3) for k, v in muscles.items()}
+        payload["exercises"] = [ex.to_dict() for ex in filtered]
 
         return jsonify(payload)
-
     except Exception as e:
-        return _error_response(e)
+        return _error(e)
 
 
-@bp.route("/heatmap", methods=["GET"])
+@bp.route("/heatmap")
 @login_required
-def training_heatmap():
+def heatmap():
     try:
         year = int(request.args.get("year", dt.date.today().year))
         start = dt.date(year, 1, 1)
@@ -218,18 +200,12 @@ def training_heatmap():
             TrainingSession.user_id == current_user.id,
             TrainingSession.started_at >= dt.datetime.combine(start, dt.time.min),
             TrainingSession.started_at <= dt.datetime.combine(end, dt.time.max),
-        ).all()
+        )
 
         loads = {}
         for s in sessions:
             day = s.started_at.date()
-            total_load = 0
-            for se in s.exercises:
-                sets = se.sets_done or se.sets_planned or 0
-                reps = int(str(se.reps_done or se.reps_planned or "0").split("-")[0])
-                load = (se.load_done or se.load_planned or 0) * sets * max(reps, 1)
-                total_load += load
-            loads[day] = loads.get(day, 0) + total_load
+            loads[day] = loads.get(day, 0) + _session_load(s)
 
         days = []
         d = start
@@ -253,193 +229,25 @@ def training_heatmap():
                     "date": d.strftime("%Y-%m-%d"),
                     "load": int(load),
                     "level": level,
-                    "is_today": (d == today),
+                    "is_today": d == today,
                 }
             )
-
             d += dt.timedelta(days=1)
 
         return jsonify({"days": days})
-
     except Exception as e:
-        return _error_response(e)
-
-
-@bp.route("/plan", methods=["GET"])
-@login_required
-def get_plan():
-    try:
-        plan = _get_active_plan_for_user(current_user)
-        return jsonify(plan.to_dict())
-    except Exception as e:
-        return _error_response(e)
-
-
-@bp.route("/analytics", methods=["GET"])
-@login_required
-def get_analytics():
-    try:
-        perf = current_user.performance_state
-        rec = current_user.fatigue_state
-
-        performance = {
-            "pushups": getattr(perf, "pushups", 0),
-            "squats": getattr(perf, "squats", 0),
-            "situps": getattr(perf, "situps", 0),
-            "plank_sec": getattr(perf, "plank_sec", 0),
-            "weight": getattr(current_user, "weight", 70),
-            "training_load": getattr(perf, "training_load", 0),
-            "hip": getattr(perf, "hip", 0),
-            "shoulder": getattr(perf, "shoulder", 0),
-            "thoracic": getattr(perf, "thoracic", 0),
-            "ankle": getattr(perf, "ankle", 0),
-        }
-
-        recovery = {
-            "sleep": getattr(rec, "sleep", 7),
-            "stress": getattr(rec, "stress", 0),
-            "soreness": getattr(rec, "soreness", 0),
-            "hydration": getattr(rec, "hydration", 2.0),
-        }
-
-        result = TrainingEngineService.compute_analytics(performance, recovery)
-        return jsonify(result)
-
-    except Exception as e:
-        return _error_response(e)
-
-
-@bp.route("/recommendations", methods=["GET"])
-@login_required
-def get_recommendations():
-    try:
-        from myapp.app.training_engine.recommendations.weak_point_analysis import (
-            WeakPointAnalysis,
-        )
-        from myapp.app.training_engine.recommendations.exercise_recommendations import (
-            ExerciseRecommendations,
-        )
-        from myapp.app.training_engine.recommendations.recovery_recommendations import (
-            RecoveryRecommendations,
-        )
-        from myapp.app.training_engine.recommendations.nutrition_recommendations import (
-            NutritionRecommendations,
-        )
-
-        profile = TrainingEngineService.build_profile(current_user)
-
-        weak = WeakPointAnalysis.analyze(profile.weak_points, profile.strong_points)
-        ex = ExerciseRecommendations.for_weak_points(
-            profile.weak_points, profile.environment
-        )
-
-        fs = getattr(current_user, "fatigue_state", None)
-        sleep = getattr(fs, "sleep", 7) if fs else 7
-        stress = getattr(fs, "stress", 0) if fs else 0
-        soreness = getattr(fs, "soreness", 0) if fs else 0
-        hydration = getattr(fs, "hydration", 2.0) if fs else 2.0
-
-        rec = RecoveryRecommendations.generate(sleep, stress, soreness, hydration)
-        nut = NutritionRecommendations.generate(profile.goal)
-
-        return jsonify(
-            {
-                "weak_points": weak,
-                "exercise_recommendations": ex,
-                "recovery": rec,
-                "nutrition": nut,
-            }
-        )
-
-    except Exception as e:
-        return _error_response(e)
-
-
-@bp.route("/session/start", methods=["POST"])
-@login_required
-def start_session():
-    try:
-        data = request.get_json() or {}
-        fatigue_before = data.get("fatigue_before")
-        session = TrainingSessionService.start_session(current_user, fatigue_before)
-        return jsonify({"id": session.id})
-    except Exception as e:
-        return _error_response(e)
-
-
-@bp.route("/session/<int:session_id>/exercise/<exercise_id>", methods=["POST"])
-@login_required
-def update_session_exercise(session_id, exercise_id):
-    try:
-        data = request.get_json() or {}
-        session = TrainingSession.query.filter_by(
-            id=session_id, user_id=current_user.id
-        ).first_or_404()
-        se = TrainingSessionService.update_exercise(session, exercise_id, data)
-        return jsonify({"exercise_id": se.exercise_id})
-    except Exception as e:
-        return _error_response(e)
-
-
-@bp.route("/session/<int:session_id>/finish", methods=["POST"])
-@login_required
-def finish_session(session_id):
-    try:
-        data = request.get_json() or {}
-        fatigue_after = data.get("fatigue_after")
-        session = TrainingSession.query.filter_by(
-            id=session_id, user_id=current_user.id
-        ).first_or_404()
-        TrainingSessionService.finish_session(session, fatigue_after)
-        return jsonify({"status": "ok"})
-    except Exception as e:
-        return _error_response(e)
-
-
-@bp.route("/strength-test", methods=["POST"])
-@login_required
-def strength_test():
-    try:
-        data = request.json or {}
-
-        pushups = data.get("pushups", 0)
-        squats = data.get("squats", 0)
-        situps = data.get("situps", 0)
-        plank_sec = data.get("plank_sec", 0)
-
-        if not current_user.performance_state:
-            ps = PerformanceState(
-                pushups=pushups,
-                squats=squats,
-                situps=situps,
-                plank_sec=plank_sec,
-                weight=current_user.weight,
-            )
-            db.session.add(ps)
-            db.session.flush()
-            current_user.performance_state_id = ps.id
-        else:
-            ps = current_user.performance_state
-            ps.pushups = pushups
-            ps.squats = squats
-            ps.situps = situps
-            ps.plank_sec = plank_sec
-
-        db.session.commit()
-        return jsonify({"status": "ok"})
-
-    except Exception as e:
-        return _error_response(e)
+        return _error(e)
 
 
 @bp.route("/plans", methods=["GET"])
 @login_required
-def list_plans():
+def plans():
     try:
-        plans = TrainingPlan.query.filter_by(user_id=current_user.id).all()
-        return jsonify([p.to_dict() for p in plans])
+        return jsonify(
+            [p.to_dict() for p in TrainingPlan.query.filter_by(user_id=current_user.id)]
+        )
     except Exception as e:
-        return _error_response(e)
+        return _error(e)
 
 
 @bp.route("/plans", methods=["POST"])
@@ -447,29 +255,14 @@ def list_plans():
 def create_plan():
     try:
         data = request.get_json() or {}
-        name = data.get("name", "Plan")
-        days_data_raw = data.get("days", {})
-        is_active = data.get("is_active", False)
+        plan = TrainingPlan(
+            user_id=current_user.id,
+            name=data.get("name", "Plan"),
+            is_active=data.get("is_active", False),
+            days=_plan_days_struct(data.get("days", {})),
+        )
 
-        plan = TrainingPlan(user_id=current_user.id, name=name, is_active=is_active)
-
-        days_struct = {}
-        for key, items in days_data_raw.items():
-            days_struct[key] = {
-                "exercises": [
-                    {
-                        "exercise_id": ex["exercise_id"],
-                        "sets": ex.get("sets"),
-                        "reps": ex.get("reps"),
-                        "load": ex.get("load"),
-                    }
-                    for ex in items
-                ]
-            }
-
-        plan.days = days_struct
-
-        if is_active:
+        if plan.is_active:
             TrainingPlan.query.filter_by(
                 user_id=current_user.id, is_active=True
             ).update({"is_active": False})
@@ -478,19 +271,7 @@ def create_plan():
         db.session.commit()
         return jsonify(plan.to_dict())
     except Exception as e:
-        return _error_response(e)
-
-
-@bp.route("/plans/<int:plan_id>", methods=["GET"])
-@login_required
-def get_plan_by_id(plan_id):
-    try:
-        plan = TrainingPlan.query.filter_by(
-            id=plan_id, user_id=current_user.id
-        ).first_or_404()
-        return jsonify(plan.to_dict())
-    except Exception as e:
-        return _error_response(e)
+        return _error(e)
 
 
 @bp.route("/plans/<int:plan_id>", methods=["PUT"])
@@ -500,29 +281,12 @@ def update_plan(plan_id):
         plan = TrainingPlan.query.filter_by(
             id=plan_id, user_id=current_user.id
         ).first_or_404()
-
         data = request.get_json() or {}
+
         plan.name = data.get("name", plan.name)
-        is_active = data.get("is_active", plan.is_active)
+        plan.days = _plan_days_struct(data.get("days", {}))
 
-        days_data_raw = data.get("days", {})
-        days_struct = {}
-        for key, items in days_data_raw.items():
-            days_struct[key] = {
-                "exercises": [
-                    {
-                        "exercise_id": ex["exercise_id"],
-                        "sets": ex.get("sets"),
-                        "reps": ex.get("reps"),
-                        "load": ex.get("load"),
-                    }
-                    for ex in items
-                ]
-            }
-
-        plan.days = days_struct
-
-        if is_active:
+        if data.get("is_active", plan.is_active):
             TrainingPlan.query.filter_by(
                 user_id=current_user.id, is_active=True
             ).update({"is_active": False})
@@ -533,7 +297,7 @@ def update_plan(plan_id):
         db.session.commit()
         return jsonify(plan.to_dict())
     except Exception as e:
-        return _error_response(e)
+        return _error(e)
 
 
 @bp.route("/plans/<int:plan_id>", methods=["DELETE"])
@@ -547,7 +311,7 @@ def delete_plan(plan_id):
         db.session.commit()
         return jsonify({"status": "ok"})
     except Exception as e:
-        return _error_response(e)
+        return _error(e)
 
 
 @bp.route("/sessions/complete", methods=["POST"])
@@ -555,15 +319,13 @@ def delete_plan(plan_id):
 def complete_session():
     try:
         data = request.get_json() or {}
-
         raw = data.get("exercises", [])
         exercises = []
 
         if isinstance(raw, dict):
-            for day_items in raw.values():
-                if isinstance(day_items, list):
-                    exercises.extend(day_items)
-        elif isinstance(raw, list):
+            for items in raw.values():
+                exercises.extend(items)
+        else:
             exercises = raw
 
         session = TrainingSession(
@@ -575,17 +337,60 @@ def complete_session():
         db.session.flush()
 
         for ex in exercises:
-            se = SessionExercise(
-                session_id=session.id,
-                exercise_id=ex["exercise_id"],
-                sets_done=ex.get("sets") or ex.get("sets_done"),
-                reps_done=ex.get("reps") or ex.get("reps_done"),
-                load_done=ex.get("load") or ex.get("load_done"),
+            db.session.add(
+                SessionExercise(
+                    session_id=session.id,
+                    exercise_id=ex["exercise_id"],
+                    sets_done=ex.get("sets") or ex.get("sets_done"),
+                    reps_done=ex.get("reps") or ex.get("reps_done"),
+                    load_done=ex.get("load") or ex.get("load_done"),
+                )
             )
-            db.session.add(se)
 
         db.session.commit()
         TrainingSessionService.update_training_load_from_session(session, current_user)
         return jsonify({"id": session.id})
     except Exception as e:
-        return _error_response(e)
+        return _error(e)
+
+
+@bp.route("/day/<date>")
+@login_required
+def day_details(date):
+    try:
+        target = dt.datetime.strptime(date, "%Y-%m-%d").date()
+
+        sessions = TrainingSession.query.filter(
+            TrainingSession.user_id == current_user.id,
+            TrainingSession.started_at >= dt.datetime.combine(target, dt.time.min),
+            TrainingSession.started_at <= dt.datetime.combine(target, dt.time.max),
+        )
+
+        result = []
+        for s in sessions:
+            exercises = []
+            for ex in s.exercises:
+                obj = Exercise.query.get(ex.exercise_id)
+                if obj:
+                    exercises.append(
+                        {
+                            "name": obj.name,
+                            "sets": ex.sets_done or ex.sets_planned,
+                            "reps": ex.reps_done or ex.reps_planned,
+                            "load": ex.load_done or ex.load_planned,
+                            "rpe": ex.rpe,
+                        }
+                    )
+
+            result.append(
+                {
+                    "session_id": s.id,
+                    "fatigue_before": s.fatigue_before,
+                    "fatigue_after": s.fatigue_after,
+                    "exercises": exercises,
+                }
+            )
+
+        return jsonify({"sessions": result})
+    except Exception as e:
+        return _error(e)
