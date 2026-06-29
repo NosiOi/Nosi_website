@@ -394,3 +394,83 @@ def day_details(date):
         return jsonify({"sessions": result})
     except Exception as e:
         return _error(e)
+
+
+@bp.route("/analytics")
+@login_required
+def analytics():
+    try:
+        perf = current_user.performance_state
+        rec = current_user.fatigue_state
+
+        performance = {
+            "pushups": getattr(perf, "pushups", 0),
+            "squats": getattr(perf, "squats", 0),
+            "situps": getattr(perf, "situps", 0),
+            "plank_sec": getattr(perf, "plank_sec", 0),
+            "weight": getattr(current_user, "weight", 70),
+            "training_load": getattr(perf, "training_load", 0),
+            "hip": getattr(perf, "hip", 0),
+            "shoulder": getattr(perf, "shoulder", 0),
+            "thoracic": getattr(perf, "thoracic", 0),
+            "ankle": getattr(perf, "ankle", 0),
+        }
+
+        recovery = {
+            "sleep": getattr(rec, "sleep", 7),
+            "stress": getattr(rec, "stress", 0),
+            "soreness": getattr(rec, "soreness", 0),
+            "hydration": getattr(rec, "hydration", 2.0),
+        }
+
+        result = TrainingEngineService.compute_analytics(performance, recovery)
+        return jsonify(result)
+
+    except Exception as e:
+        return _error(e)
+
+
+@bp.route("/recommendations")
+@login_required
+def recommendations():
+    try:
+        from myapp.app.training_engine.recommendations.weak_point_analysis import (
+            WeakPointAnalysis,
+        )
+        from myapp.app.training_engine.recommendations.exercise_recommendations import (
+            ExerciseRecommendations,
+        )
+        from myapp.app.training_engine.recommendations.recovery_recommendations import (
+            RecoveryRecommendations,
+        )
+        from myapp.app.training_engine.recommendations.nutrition_recommendations import (
+            NutritionRecommendations,
+        )
+
+        profile = TrainingEngineService.build_profile(current_user)
+
+        weak = WeakPointAnalysis.analyze(profile.weak_points, profile.strong_points)
+        ex = ExerciseRecommendations.for_weak_points(
+            profile.weak_points, profile.environment
+        )
+
+        fs = getattr(current_user, "fatigue_state", None)
+        sleep = getattr(fs, "sleep", 7) if fs else 7
+        stress = getattr(fs, "stress", 0) if fs else 0
+        soreness = getattr(fs, "soreness", 0) if fs else 0
+        hydration = getattr(fs, "hydration", 2.0) if fs else 2.0
+
+        rec = RecoveryRecommendations.generate(sleep, stress, soreness, hydration)
+        nut = NutritionRecommendations.generate(profile.goal)
+
+        return jsonify(
+            {
+                "weak_points": weak,
+                "exercise_recommendations": ex,
+                "recovery": rec,
+                "nutrition": nut,
+            }
+        )
+
+    except Exception as e:
+        return _error(e)
