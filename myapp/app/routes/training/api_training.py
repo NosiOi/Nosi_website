@@ -424,6 +424,13 @@ def analytics():
         }
 
         result = TrainingEngineService.compute_analytics(performance, recovery)
+
+        result["raw_performance"] = {
+            "pushups": performance["pushups"],
+            "squats": performance["squats"],
+            "situps": performance["situps"],
+        }
+
         return jsonify(result)
 
     except Exception as e:
@@ -469,6 +476,43 @@ def recommendations():
                 "exercise_recommendations": ex,
                 "recovery": rec,
                 "nutrition": nut,
+            }
+        )
+
+    except Exception as e:
+        return _error(e)
+
+
+@bp.route("/strength-test", methods=["POST"])
+@login_required
+def strength_test():
+    try:
+        data = request.get_json() or {}
+
+        pushups = int(data.get("pushups", 0))
+        squats = int(data.get("squats", 0))
+        situps = int(data.get("situps", 0))
+
+        perf = current_user.performance_state
+
+        if not perf:
+            perf = PerformanceState(user_id=current_user.id)
+            db.session.add(perf)
+
+        perf.pushups = pushups
+        perf.squats = squats
+        perf.situps = situps
+
+        db.session.commit()
+
+        return jsonify(
+            {
+                "status": "ok",
+                "raw_performance": {
+                    "pushups": pushups,
+                    "squats": squats,
+                    "situps": situps,
+                },
             }
         )
 
