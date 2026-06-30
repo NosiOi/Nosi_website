@@ -354,6 +354,35 @@ def complete_session():
         return _error(e)
 
 
+@bp.route("/sessions/start", methods=["POST"])
+@login_required
+def start_session():
+    try:
+        data = request.get_json() or {}
+        fatigue_before = data.get("fatigue_before")
+
+        existing = (
+            TrainingSession.query.filter_by(user_id=current_user.id, status="active")
+            .order_by(TrainingSession.started_at.desc())
+            .first()
+        )
+        if existing:
+            return jsonify({"id": existing.id})
+
+        plan = _active_plan(current_user)
+        day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
+
+        session = TrainingSessionService.start_session_from_day(
+            current_user,
+            day,
+            fatigue_before=fatigue_before,
+        )
+
+        return jsonify({"id": session.id})
+    except Exception as e:
+        return _error(e)
+
+
 @bp.route("/day/<date>")
 @login_required
 def day_details(date):
