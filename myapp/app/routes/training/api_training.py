@@ -39,7 +39,7 @@ def _plan_days_struct(raw):
         key: {
             "exercises": [
                 {
-                    "exercise_id": ex["exercise_id"],
+                    "exercise_id": ex["exercise"]["id"],
                     "sets": ex.get("sets"),
                     "reps": ex.get("reps"),
                     "load": ex.get("load"),
@@ -155,11 +155,17 @@ def today():
         if active:
             payload["sessionId"] = str(active.id)
             payload["title"] = "Активна сесія"
-            ex_objs = [Exercise.query.get(se.exercise_id) for se in active.exercises]
+            ex_objs = [
+                Exercise.query.filter_by(id=se.exercise_id).first()
+                for se in active.exercises
+            ]
         else:
             plan = _active_plan(current_user)
             day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
-            ex_objs = [Exercise.query.get(ex["exercise_id"]) for ex in day["exercises"]]
+            ex_objs = [
+                Exercise.query.filter_by(id=ex["exercise"]["id"]).first()
+                for ex in day["exercises"]
+            ]
             payload["title"] = "Рекомендована сесія"
             payload["plan"] = [{"id": plan.id, "name": plan.name}]
 
@@ -340,7 +346,7 @@ def complete_session():
             db.session.add(
                 SessionExercise(
                     session_id=session.id,
-                    exercise_id=ex["exercise_id"],
+                    exercise_id=ex["exercise"]["id"],
                     sets_done=ex.get("sets") or ex.get("sets_done"),
                     reps_done=ex.get("reps") or ex.get("reps_done"),
                     load_done=ex.get("load") or ex.get("load_done"),
@@ -350,6 +356,32 @@ def complete_session():
         db.session.commit()
         TrainingSessionService.update_training_load_from_session(session, current_user)
         return jsonify({"id": session.id})
+    except Exception as e:
+        return _error(e)
+
+
+@bp.route("/sessions/<int:session_id>/exercise/<exercise_id>", methods=["POST"])
+@login_required
+def update_session_exercise(session_id, exercise_id):
+    try:
+        data = request.get_json() or {}
+
+        session = TrainingSession.query.filter_by(
+            id=session_id, user_id=current_user.id, status="active"
+        ).first_or_404()
+
+        se = TrainingSessionService.update_exercise(session, exercise_id, data)
+
+        return jsonify(
+            {
+                "status": "ok",
+                "exercise_id": exercise_id,
+                "sets_done": se.sets_done,
+                "reps_done": se.reps_done,
+                "load_done": se.load_done,
+                "rpe": se.rpe,
+            }
+        )
     except Exception as e:
         return _error(e)
 
@@ -369,16 +401,30 @@ def start_session():
         if existing:
             return jsonify({"id": existing.id})
 
-        plan = _active_plan(current_user)
-        day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
-
-        session = TrainingSessionService.start_session_from_day(
+        session = TrainingSessionService.start_session(
             current_user,
-            day,
             fatigue_before=fatigue_before,
         )
 
         return jsonify({"id": session.id})
+    except Exception as e:
+        return _error(e)
+
+
+@bp.route("/sessions/<int:session_id>/finish", methods=["POST"])
+@login_required
+def finish_session(session_id):
+    try:
+        data = request.get_json() or {}
+        fatigue_after = data.get("fatigue_after")
+
+        session = TrainingSession.query.filter_by(
+            id=session_id, user_id=current_user.id, status="active"
+        ).first_or_404()
+
+        TrainingSessionService.finish_session(session, fatigue_after)
+
+        return jsonify({"status": "ok", "id": session.id})
     except Exception as e:
         return _error(e)
 

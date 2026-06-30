@@ -6,22 +6,24 @@ from myapp.app.services.training_engine_service import TrainingEngineService
 class TrainingSessionService:
 
     @staticmethod
-    def start_session_from_day(user, day, fatigue_before=None):
+    def start_session(user, fatigue_before=None):
+        plan = TrainingEngineService.generate_plan(user, week=1)
+        day_key = next(iter(plan.days.keys()))
+        day = plan.days[day_key]
+
         session = TrainingSession(
-            user_id=user.id,
-            fatigue_before=fatigue_before,
-            status="active",
+            user_id=user.id, fatigue_before=fatigue_before, status="active"
         )
         db.session.add(session)
         db.session.flush()
 
-        for ex in day.get("exercises", []):
+        for ex in day["exercises"]:
             se = SessionExercise(
                 session_id=session.id,
-                exercise_id=ex["exercise_id"],
+                exercise_id=ex["exercise"]["id"],
                 sets_planned=ex.get("sets") or 0,
                 reps_planned=ex.get("reps"),
-                load_planned=ex.get("load"),
+                load_planned=ex.get("load") or 0,
             )
             db.session.add(se)
 
@@ -31,17 +33,14 @@ class TrainingSessionService:
     @staticmethod
     def add_exercise(session, exercise_id):
         existing = SessionExercise.query.filter_by(
-            session_id=session.id,
-            exercise_id=exercise_id,
+            session_id=session.id, exercise_id=exercise_id
         ).first()
 
         if existing:
             return existing
 
         se = SessionExercise(
-            session_id=session.id,
-            exercise_id=exercise_id,
-            sets_planned=0,
+            session_id=session.id, exercise_id=exercise_id, sets_planned=0
         )
         db.session.add(se)
         db.session.commit()
@@ -50,8 +49,7 @@ class TrainingSessionService:
     @staticmethod
     def update_exercise(session, exercise_id, data):
         se = SessionExercise.query.filter_by(
-            session_id=session.id,
-            exercise_id=exercise_id,
+            session_id=session.id, exercise_id=exercise_id
         ).first()
 
         if not se:

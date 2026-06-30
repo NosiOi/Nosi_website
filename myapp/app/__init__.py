@@ -28,7 +28,10 @@ def create_app():
     from myapp.app.training_engine.models.exercise import Exercise
     from myapp.app.training_engine.models.muscle import Muscle
     from myapp.app.training_engine.models.equipment import TEEquipment
-    from myapp.app.training_engine.models.exercise import exercise_muscle, exercise_equipment
+    from myapp.app.training_engine.models.exercise import (
+        exercise_muscle,
+        exercise_equipment,
+    )
 
     migrate.init_app(app, db)
     mail.init_app(app)
@@ -91,7 +94,6 @@ def create_app():
     from myapp.app.routes.profile.oauth_disconnect import oauth_disconnect_bp
 
     from myapp.app.routes.training.api_training import bp as training_api_bp
-    from myapp.app.routes.training_session_api import training_session_api
     from myapp.app.routes.onboarding_api import onboarding_api
     from myapp.app.routes.equipment_api import equipment_api
     from myapp.app.routes.injury_api import injury_api
@@ -125,7 +127,6 @@ def create_app():
     app.register_blueprint(oauth_disconnect_bp)
 
     app.register_blueprint(training_api_bp)
-    app.register_blueprint(training_session_api)
     app.register_blueprint(onboarding_api)
     app.register_blueprint(equipment_api)
     app.register_blueprint(injury_api)
