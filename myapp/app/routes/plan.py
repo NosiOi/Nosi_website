@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, jsonify
 from flask_login import login_required, current_user
-
 from myapp.app.services.training_engine_service import TrainingEngineService
 
 plan_bp = Blueprint("plan", __name__, url_prefix="/plan")

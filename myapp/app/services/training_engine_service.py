@@ -10,7 +10,6 @@ from myapp.app.training_engine import (
 
 
 class TrainingEngineService:
-
     @staticmethod
     def _safe(obj, attr, default=None):
         try:

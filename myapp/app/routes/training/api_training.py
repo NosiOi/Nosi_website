@@ -35,20 +35,22 @@ def _today_key():
 
 
 def _plan_days_struct(raw):
-    return {
-        key: {
-            "exercises": [
+    result = {}
+    for key, items in raw.items():
+        day_ex = []
+        for ex in items:
+            ex_id = ex["exercise"]["id"]
+            obj = Exercise.query.get(ex_id)
+            day_ex.append(
                 {
-                    "exercise_id": ex["exercise"]["id"],
-                    "sets": ex.get("sets"),
-                    "reps": ex.get("reps"),
-                    "load": ex.get("load"),
+                    "exercise": {"id": obj.id, "name": obj.name},
+                    "sets": ex.get("sets") or 3,
+                    "reps": ex.get("reps") or "8-12",
+                    "load": ex.get("load") or 0,
                 }
-                for ex in items
-            ]
-        }
-        for key, items in raw.items()
-    }
+            )
+        result[key] = {"exercises": day_ex}
+    return result
 
 
 def _session_load(session):
@@ -152,44 +154,121 @@ def today():
             "plan": [],
         }
 
+        exercises_raw = []
+
         if active:
             payload["sessionId"] = str(active.id)
             payload["title"] = "Активна сесія"
-            ex_objs = [
-                Exercise.query.filter_by(id=se.exercise_id).first()
-                for se in active.exercises
-            ]
+            for se in active.exercises:
+                ex_obj = Exercise.query.filter_by(id=se.exercise_id).first()
+                if not ex_obj:
+                    continue
+                exercises_raw.append(
+                    {
+                        "exercise": ex_obj,
+                        "sets": se.sets_done or se.sets_planned or 0,
+                        "reps": se.reps_done or se.reps_planned or "8-12",
+                        "load": se.load_done or se.load_planned or 0,
+                    }
+                )
         else:
             plan = _active_plan(current_user)
             day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
-            ex_objs = [
-                Exercise.query.filter_by(id=ex["exercise"]["id"]).first()
-                for ex in day["exercises"]
-            ]
+            for ex in day["exercises"]:
+                ex_id = ex["exercise"]["id"]
+                ex_obj = Exercise.query.get(ex_id)
+                if not ex_obj:
+                    continue
+                exercises_raw.append(
+                    {
+                        "exercise": ex_obj,
+                        "sets": ex.get("sets") or 3,
+                        "reps": ex.get("reps") or "8-12",
+                        "load": ex.get("load") or 0,
+                    }
+                )
+
             payload["title"] = "Рекомендована сесія"
             payload["plan"] = [{"id": plan.id, "name": plan.name}]
 
         filtered = []
-        for ex in ex_objs:
-            if not ex:
-                continue
+        for item in exercises_raw:
+            ex = item["exercise"]
             if any(m.slug.lower() in avoid for m in ex.muscles):
                 continue
             if no_eq and any(e.name.lower() in no_eq for e in ex.equipment):
                 continue
-            filtered.append(ex)
+            filtered.append(item)
 
         muscles = {}
-        for ex in filtered:
+        for item in filtered:
+            ex = item["exercise"]
             per = 100 / len(ex.muscles) if ex.muscles else 0
             for m in ex.muscles:
                 muscles[m.slug] = muscles.get(m.slug, 0) + per
 
         total = sum(muscles.values()) or 1
         payload["muscles"] = {k: round(v / total, 3) for k, v in muscles.items()}
-        payload["exercises"] = [ex.to_dict() for ex in filtered]
+        payload["exercises"] = [
+            {
+                "name": item["exercise"].name,
+                "sets": item["sets"],
+                "reps": item["reps"],
+                "load": item["load"],
+            }
+            for item in filtered
+        ]
 
         return jsonify(payload)
+    except Exception as e:
+        return _error(e)
+
+
+@bp.route("/today-session")
+@login_required
+def today_session():
+    try:
+        active = (
+            TrainingSession.query.filter_by(user_id=current_user.id, status="active")
+            .order_by(TrainingSession.started_at.desc())
+            .first()
+        )
+
+        result = {"exercises": []}
+
+        if active:
+            for se in active.exercises:
+                ex = Exercise.query.get(se.exercise_id)
+                if not ex:
+                    continue
+                result["exercises"].append(
+                    {
+                        "name": ex.name,
+                        "sets": se.sets_done or se.sets_planned or 0,
+                        "reps": se.reps_done or se.reps_planned or "8-12",
+                        "load": se.load_done or se.load_planned or 0,
+                    }
+                )
+            return jsonify(result)
+
+        plan = _active_plan(current_user)
+        day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
+
+        for item in day["exercises"]:
+            ex_id = item["exercise"]["id"]
+            ex = Exercise.query.get(ex_id)
+            if not ex:
+                continue
+            result["exercises"].append(
+                {
+                    "name": ex.name,
+                    "sets": item.get("sets") or 3,
+                    "reps": item.get("reps") or "8-12",
+                    "load": item.get("load") or 0,
+                }
+            )
+
+        return jsonify(result)
     except Exception as e:
         return _error(e)
 
@@ -324,15 +403,20 @@ def delete_plan(plan_id):
 @login_required
 def complete_session():
     try:
+        existing = TrainingSession.query.filter_by(
+            user_id=current_user.id, status="active"
+        ).first()
+
+        if existing:
+            existing.status = "finished"
+            existing.finished_at = dt.datetime.utcnow()
+            db.session.commit()
+
         data = request.get_json() or {}
         raw = data.get("exercises", [])
-        exercises = []
-
-        if isinstance(raw, dict):
-            for items in raw.values():
-                exercises.extend(items)
-        else:
-            exercises = raw
+        exercises = (
+            raw if isinstance(raw, list) else [i for v in raw.values() for i in v]
+        )
 
         session = TrainingSession(
             user_id=current_user.id,
@@ -347,9 +431,9 @@ def complete_session():
                 SessionExercise(
                     session_id=session.id,
                     exercise_id=ex["exercise"]["id"],
-                    sets_done=ex.get("sets") or ex.get("sets_done"),
-                    reps_done=ex.get("reps") or ex.get("reps_done"),
-                    load_done=ex.get("load") or ex.get("load_done"),
+                    sets_done=ex.get("sets"),
+                    reps_done=ex.get("reps"),
+                    load_done=ex.get("load"),
                 )
             )
 

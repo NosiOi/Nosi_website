@@ -4,7 +4,6 @@ from myapp.app.services.training_engine_service import TrainingEngineService
 
 
 class TrainingSessionService:
-
     @staticmethod
     def start_session(user, fatigue_before=None):
         plan = TrainingEngineService.generate_plan(user, week=1)
