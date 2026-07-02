@@ -1,0 +1,8 @@
+#tr-confirm-modal .tr-modal-content {
+    max-width: 420px;
+}
+
+#tr-confirm-message {
+    font-size: 15px;
+    color: var(--text);
+}
