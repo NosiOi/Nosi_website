@@ -1,0 +1,41 @@
+<div id="tr-exercise-modal" class="tr-modal">
+  <div class="tr-modal-content">
+    <div class="tr-modal-header">
+      <h3 id="tr-exercise-title">Виконання вправи</h3>
+      <button class="tr-modal-close" data-close-exercise>&times;</button>
+    </div>
+
+    <div class="tr-modal-body">
+      <div class="tr-ex-field">
+        <label>Підходи</label>
+        <input id="tr-ex-sets" type="number" min="0" class="tr-input" />
+      </div>
+
+      <div class="tr-ex-field">
+        <label>Повтори</label>
+        <input id="tr-ex-reps" type="text" class="tr-input" />
+      </div>
+
+      <div class="tr-ex-field">
+        <label>Вага (кг)</label>
+        <input
+          id="tr-ex-load"
+          type="number"
+          min="0"
+          step="0.5"
+          class="tr-input"
+        />
+      </div>
+
+      <div class="tr-ex-field">
+        <label>RPE</label>
+        <input id="tr-ex-rpe" type="number" min="1" max="10" class="tr-input" />
+      </div>
+    </div>
+
+    <div class="tr-modal-footer">
+      <button class="tr-btn tr-btn-ghost" data-close-exercise>Скасувати</button>
+      <button id="tr-ex-save" class="tr-btn tr-btn-primary">Зберегти</button>
+    </div>
+  </div>
+</div>
