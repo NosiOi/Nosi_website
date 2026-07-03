@@ -6,7 +6,35 @@ endblock %} {% block styles %} {{ super() }}
 />
 <link
   rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals_training.css') }}"
+  href="{{ url_for('static', filename='css/pages/training/modals/modal_calendar.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/modals/modal_base.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/modals/modal_exercise.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/modals/modal_session.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/modals/modal_confirm.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/modals/modal_history.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/modals/modal_strength.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/modals/modal_exercise_picker.css') }}"
 />
 <link
   rel="stylesheet"
@@ -14,16 +42,14 @@ endblock %} {% block styles %} {{ super() }}
 />
 {% endblock %} {% block body_class %}training-page{% endblock %} {% block body
 %}
-
 <div class="training-page-wrapper">
   <div class="training-header-row">
     <div class="training-header-left">
       <h1 class="page-title">Тренування</h1>
       <div class="page-subtitle">
-        План, прогрес, навантаження, рекомендації та сьогоднішня сесія
+        Сьогоднішнє тренування, прогрес та рекомендації
       </div>
     </div>
-
     <div class="training-header-right">
       <div class="date-display" id="current-date"></div>
     </div>
@@ -31,69 +57,48 @@ endblock %} {% block styles %} {{ super() }}
 
   <div class="training-main-grid">
     <div class="training-left">
-      <section class="tr-card tr-card-analytics">
+      <section class="tr-card tr-card-strength">
         <div class="tr-card-header">
-          <h3 class="tr-card-title">Стан організму</h3>
-        </div>
-        <div class="tr-analytics-grid">
-          <div class="tr-analytics-item">
-            <div class="tr-analytics-label">Продуктивність</div>
-            <div id="tr-performance" class="tr-analytics-value">—</div>
-          </div>
-          <div class="tr-analytics-item">
-            <div class="tr-analytics-label">Відновлення</div>
-            <div id="tr-recovery" class="tr-analytics-value">—</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="tr-card tr-card-plan">
-        <div class="tr-card-header">
-          <h3 class="tr-card-title">Тренувальний план</h3>
-          <button id="tr-edit-plan" class="tr-btn tr-btn-ghost">
-            Редагувати
+          <h3 class="tr-card-title">Тест сили</h3>
+          <button id="tr-strength-open" class="tr-btn tr-btn-primary">
+            Тест
           </button>
         </div>
-        <div id="tr-plan-info" class="tr-plan-info"></div>
-        <div id="tr-plan-days" class="tr-plan-days"></div>
-      </section>
 
-      <section class="tr-card tr-card-heatmap">
-        <div class="tr-card-header">
-          <h3 class="tr-card-title">Активність за рік</h3>
+        <div class="tr-strength-results-grid">
+          <div class="tr-strength-result-box">
+            <h4>Віджимання</h4>
+            <span id="st-result-pushups">—</span>
+          </div>
+          <div class="tr-strength-result-box">
+            <h4>Присідання</h4>
+            <span id="st-result-squats">—</span>
+          </div>
+          <div class="tr-strength-result-box">
+            <h4>Скручування</h4>
+            <span id="st-result-situps">—</span>
+          </div>
         </div>
-        {% include "app/training/training_heatmap.html" %}
-      </section>
-
-      <section class="tr-card tr-card-muscles">
-        <div class="tr-card-header">
-          <h3 class="tr-card-title">Баланс м’язів</h3>
-        </div>
-        <ul id="tr-muscle-balance" class="tr-muscle-list"></ul>
-      </section>
-
-      <section class="tr-card tr-card-hints">
-        <div class="tr-card-header">
-          <h3 class="tr-card-title">Поради</h3>
-        </div>
-        <ul id="tr-hints-list" class="tr-hints-list"></ul>
       </section>
 
       <section class="tr-card tr-card-recommendations">
         <div class="tr-card-header">
           <h3 class="tr-card-title">Рекомендації</h3>
         </div>
+
         <div class="tr-recommendations-block">
           <h4>Слабкі місця</h4>
           <ul id="tr-weak-points" class="tr-recommendations-list"></ul>
         </div>
+
         <div class="tr-recommendations-block">
-          <h4>Рекомендовані вправи</h4>
+          <h4>Корисні вправи</h4>
           <ul
             id="tr-exercise-recommendations"
             class="tr-recommendations-list"
           ></ul>
         </div>
+
         <div class="tr-recommendations-block">
           <h4>Відновлення</h4>
           <ul
@@ -101,6 +106,7 @@ endblock %} {% block styles %} {{ super() }}
             class="tr-recommendations-list"
           ></ul>
         </div>
+
         <div class="tr-recommendations-block">
           <h4>Харчування</h4>
           <ul
@@ -109,48 +115,59 @@ endblock %} {% block styles %} {{ super() }}
           ></ul>
         </div>
       </section>
+
+      <section id="heatmap-card" class="tr-card tr-card-heatmap">
+        {% include "app/training/training_heatmap.html" %}
+      </section>
     </div>
 
     <div class="training-right">
-      <section class="tr-card tr-card-session">
+      <section id="session-card" class="tr-card tr-card-session">
         <div class="tr-card-header">
-          <h3 class="tr-card-title">Сьогоднішня сесія</h3>
+          <h3 class="tr-card-title">Сьогоднішнє тренування</h3>
+          <button id="tr-edit-plan" class="tr-btn tr-btn-primary">План</button>
         </div>
+
+        <div
+          id="today-session-container"
+          class="tr-session-exercise-list"
+        ></div>
 
         <div class="tr-session-info">
-          <p id="tr-session-title" class="tr-session-title">
-            Немає активної сесії
-          </p>
-          <span id="tr-session-type" class="tr-session-type">—</span>
+          <input
+            id="tr-workout-title"
+            class="tr-input"
+            placeholder="Назва тренування"
+          />
         </div>
 
-        <div class="tr-session-actions">
-          <button id="tr-start-session" class="tr-btn tr-btn-primary">
-            Почати
-          </button>
+        <div class="tr-session-actions-compact">
           <button id="tr-add-exercise" class="tr-btn tr-btn-primary">
             Додати вправу
           </button>
-          <button id="tr-finish-session" class="tr-btn tr-btn-danger">
-            Завершити
+          <button id="tr-save-workout" class="tr-btn tr-btn-primary">
+            Зберегти
           </button>
         </div>
 
-        <div id="tr-exercise-list" class="tr-exercise-list"></div>
+        <div
+          id="tr-workout-exercise-list"
+          class="tr-session-exercise-list"
+        ></div>
       </section>
     </div>
   </div>
 </div>
 
-{% include "app/training/modals/modal_add_exercise.html" %} {% include
-"app/training/modals/modal_start_session.html" %} {% include
-"app/training/modals/modal_finish_session.html" %} {% include
-"app/training/modals/modal_strength_test.html" %}
+{% include "app/training/modals/training_session_modals.html" %} {% include
+"app/training/modals/training_exercise_modals.html" %} {% include
+"app/training/modals/training_misc_modals.html" %} {% include
+"app/training/modals/training_strength_test_modal.html" %}
 
+<script src="{{ url_for('static', filename='js/training/modal_engine.js') }}"></script>
 <script src="{{ url_for('static', filename='js/training/main.js') }}"></script>
 <script src="{{ url_for('static', filename='js/training/exercises.js') }}"></script>
 <script src="{{ url_for('static', filename='js/training/session.js') }}"></script>
-<script src="{{ url_for('static', filename='js/training/heatmap.js') }}"></script>
 <script src="{{ url_for('static', filename='js/training/strength_test.js') }}"></script>
-
+<script src="{{ url_for('static', filename='js/training/heatmap.js') }}"></script>
 {% endblock %}
