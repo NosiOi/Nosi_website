@@ -75,7 +75,56 @@ function renderRecommendations(data) {
 }
 
 let allExercises = [];
+let currentPlan = { name: "Мій план", days: {} };
 let currentWorkout = [];
+
+const daysOrder = ["mon","tue","wed","thu","fri","sat","sun"];
+
+function ensurePlanStructure() {
+    if (!currentPlan.days) currentPlan.days = {};
+    daysOrder.forEach(k => {
+        if (!currentPlan.days[k]) currentPlan.days[k] = { exercises: [] };
+    });
+}
+
+function getTodayKey() {
+    return ["sun","mon","tue","wed","thu","fri","sat"][new Date().getDay()];
+}
+
+function loadPlan() {
+    TrainingAPI.getPlans().then(plans => {
+        if (!plans.length) {
+            currentPlan = { name: "Мій план", days: {} };
+        } else {
+            const active = plans.find(p => p.is_active) || plans[0];
+            currentPlan = { name: active.name || "Мій план", days: active.days || {} };
+        }
+        ensurePlanStructure();
+        syncWorkoutWithPlanToday();
+    }).catch(() => {
+        currentPlan = { name: "Мій план", days: {} };
+        ensurePlanStructure();
+        syncWorkoutWithPlanToday();
+    });
+}
+
+function syncWorkoutWithPlanToday() {
+    const dayKey = getTodayKey();
+    const day = currentPlan.days[dayKey] || { exercises: [] };
+    currentWorkout = [];
+    day.exercises.forEach(item => {
+        const exObj = allExercises.find(e => e.id === item.exercise.id);
+        if (!exObj) return;
+        currentWorkout.push({
+            exercise: exObj,
+            sets: item.sets ?? 3,
+            reps: item.reps ?? "8-12",
+            load: item.load ?? 0,
+            done: false
+        });
+    });
+    renderWorkoutList();
+}
 
 function renderWorkoutList() {
     const list = document.getElementById("tr-workout-exercise-list");
@@ -208,11 +257,16 @@ document.addEventListener("click", e => {
     }
 });
 
+window.refreshPlanData = function() {
+    loadPlan();
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     renderCurrentDate();
 
     TrainingAPI.getExercises().then(data => {
         allExercises = data.items || data || [];
+        loadPlan();
     });
 
     TrainingAPI.getAnalytics().then(data => {
@@ -266,6 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (titleInput) titleInput.value = "";
                 renderWorkoutList();
                 TrainingAPI.getHeatmap().then(() => {});
+                loadPlan();
             }).finally(() => {
                 btn.disabled = false;
             });

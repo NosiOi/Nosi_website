@@ -6,7 +6,6 @@ const PlanModal = (() => {
     const exercisesContainer = document.querySelector(".tr-plan-exercises");
     const addExerciseBtn = document.querySelector(".tr-plan-add-exercise");
 
-    let allExercises = [];
     let currentPlan = { name: "Мій план", days: {} };
     let activeDay = "mon";
 
@@ -20,15 +19,19 @@ const PlanModal = (() => {
     }
 
     function open() {
-        TrainingAPI.getExercises().then(data => {
-            allExercises = data.items || data || [];
-        });
+        TrainingAPI.getPlans().then(plans => {
+            if (!plans.length) {
+                currentPlan = { name: "Мій план", days: {} };
+            } else {
+                const active = plans.find(p => p.is_active) || plans[0];
+                currentPlan = { name: active.name || "Мій план", days: active.days || {} };
+            }
 
-        currentPlan = { name: "Мій план", days: {} };
-        ensureStructure();
-        renderDays();
-        setActiveDay(getTodayKey());
-        modal.classList.add("open");
+            ensureStructure();
+            renderDays();
+            setActiveDay("mon");
+            modal.classList.add("open");
+        });
     }
 
     function close() {
@@ -176,6 +179,8 @@ const PlanModal = (() => {
             }));
         });
 
+        payload.is_active = true;
+
         const text = saveBtn.querySelector(".btn-text");
         const loader = saveBtn.querySelector(".btn-loader");
         text.classList.add("hidden");
@@ -185,6 +190,9 @@ const PlanModal = (() => {
             .then(() => {
                 loader.classList.add("hidden");
                 text.classList.remove("hidden");
+                if (window.refreshPlanData) {
+                    window.refreshPlanData();
+                }
                 close();
             })
             .catch(() => {
