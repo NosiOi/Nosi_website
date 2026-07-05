@@ -74,129 +74,9 @@ function renderRecommendations(data) {
     }
 }
 
-const daysOrder = ["mon","tue","wed","thu","fri","sat","sun"];
 let allExercises = [];
-let currentPlan = { name: "Мій план", days: {} };
 let currentWorkout = [];
 
-function getTodayKey() {
-    return ["sun","mon","tue","wed","thu","fri","sat"][new Date().getDay()];
-}
-
-function ensurePlanStructure() {
-    if (!currentPlan) currentPlan = { name: "Мій план", days: {} };
-    if (!currentPlan.days) currentPlan.days = {};
-    daysOrder.forEach(k => {
-        if (!currentPlan.days[k]) currentPlan.days[k] = { exercises: [] };
-    });
-}
-
-function updateTodaySession() {
-    const container = document.getElementById("today-session-container");
-    if (!container) return;
-    TrainingAPI.getTodaySession().then(data => {
-        container.innerHTML = "";
-        if (!data || !data.exercises || !data.exercises.length) {
-            const empty = document.createElement("div");
-            empty.className = "tr-plan-day-empty";
-            empty.textContent = "Сьогодні немає запланованих вправ";
-            container.appendChild(empty);
-            return;
-        }
-        data.exercises.forEach(ex => {
-            const row = document.createElement("div");
-            row.className = "today-exercise-item";
-            row.innerHTML = `
-                <div class="today-ex-name">${ex.name}</div>
-                <div class="today-ex-meta">${ex.sets}×${ex.reps}, вага ${ex.load} кг</div>
-            `;
-            container.appendChild(row);
-        });
-    });
-}
-
-function syncWorkoutWithPlanToday() {
-    ensurePlanStructure();
-    const dayKey = getTodayKey();
-    const day = currentPlan.days[dayKey] || { exercises: [] };
-    day.exercises.forEach(item => {
-        const exId = item.exercise?.id || item.exercise_id || item.id;
-        if (!exId) return;
-        const exists = currentWorkout.some(w => w.exercise && w.exercise.id === exId);
-        if (exists) return;
-        const exObj = allExercises.find(e => e.id === exId);
-        if (!exObj) return;
-        currentWorkout.push({
-            exercise: exObj,
-            sets: item.sets ?? 3,
-            reps: item.reps ?? "8-12",
-            load: item.load ?? 0,
-            done: false
-        });
-    });
-    renderWorkoutList();
-}
-
-window.refreshPlanData = function() {
-    TrainingAPI.getPlans()
-        .then(plans => {
-            if (!plans.length) {
-                currentPlan = { name: "Мій план", days: {} };
-            } else {
-                const active = plans.find(p => p.is_active) || plans[0];
-                currentPlan = { name: active.name || "Мій план", days: active.days || {} };
-            }
-            ensurePlanStructure();
-            syncWorkoutWithPlanToday();
-            updateTodaySession();
-        })
-        .catch(() => {
-            currentPlan = { name: "Мій план", days: {} };
-            ensurePlanStructure();
-            syncWorkoutWithPlanToday();
-            updateTodaySession();
-        });
-};
-
-function openExercisePicker(callback) {
-    const modal = document.getElementById("tr-exercise-picker-modal");
-    const list = document.getElementById("tr-ex-list");
-    const search = document.getElementById("tr-ex-search");
-    if (!modal || !list) return;
-    const renderList = items => {
-        list.innerHTML = "";
-        items.forEach(ex => {
-            const row = document.createElement("div");
-            row.className = "tr-ex-modal-item";
-            row.textContent = ex.name;
-            row.onclick = () => {
-                callback(ex);
-                modal.classList.remove("open");
-            };
-            list.appendChild(row);
-        });
-    };
-    renderList(allExercises);
-    if (search) {
-        search.value = "";
-        search.oninput = () => {
-            const q = search.value.trim().toLowerCase();
-            if (!q) {
-                renderList(allExercises);
-            } else {
-                renderList(allExercises.filter(ex => ex.name.toLowerCase().includes(q)));
-            }
-        };
-    }
-    modal.classList.add("open");
-}
-
-document.addEventListener("click", e => {
-    if (e.target && e.target.matches("[data-close-exercise-picker]")) {
-        const modal = document.getElementById("tr-exercise-picker-modal");
-        if (modal) modal.classList.remove("open");
-    }
-});
 function renderWorkoutList() {
     const list = document.getElementById("tr-workout-exercise-list");
     if (!list) return;
@@ -287,6 +167,47 @@ function renderWorkoutList() {
     });
 }
 
+function openExercisePicker(callback) {
+    const modal = document.getElementById("tr-exercise-picker-modal");
+    const list = document.getElementById("tr-ex-list");
+    const search = document.getElementById("tr-ex-search");
+    if (!modal || !list) return;
+
+    const renderList = items => {
+        list.innerHTML = "";
+        items.forEach(ex => {
+            const row = document.createElement("div");
+            row.className = "tr-ex-modal-item";
+            row.textContent = ex.name;
+            row.onclick = () => {
+                callback(ex);
+                modal.classList.remove("open");
+            };
+            list.appendChild(row);
+        });
+    };
+
+    renderList(allExercises);
+
+    if (search) {
+        search.value = "";
+        search.oninput = () => {
+            const q = search.value.trim().toLowerCase();
+            if (!q) renderList(allExercises);
+            else renderList(allExercises.filter(ex => ex.name.toLowerCase().includes(q)));
+        };
+    }
+
+    modal.classList.add("open");
+}
+
+document.addEventListener("click", e => {
+    if (e.target && e.target.matches("[data-close-exercise-picker]")) {
+        const modal = document.getElementById("tr-exercise-picker-modal");
+        if (modal) modal.classList.remove("open");
+    }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     renderCurrentDate();
 
@@ -301,25 +222,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     TrainingAPI.getRecommendations().then(renderRecommendations);
-
-    TrainingAPI.getPlans()
-        .then(plans => {
-            if (!plans.length) {
-                currentPlan = { name: "Мій план", days: {} };
-            } else {
-                const active = plans.find(p => p.is_active) || plans[0];
-                currentPlan = { name: active.name || "Мій план", days: active.days || {} };
-            }
-            ensurePlanStructure();
-            syncWorkoutWithPlanToday();
-            updateTodaySession();
-        })
-        .catch(() => {
-            currentPlan = { name: "Мій план", days: {} };
-            ensurePlanStructure();
-            syncWorkoutWithPlanToday();
-            updateTodaySession();
-        });
 
     const addExercise = document.getElementById("tr-add-exercise");
     const saveWorkout = document.getElementById("tr-save-workout");
@@ -364,7 +266,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (titleInput) titleInput.value = "";
                 renderWorkoutList();
                 TrainingAPI.getHeatmap().then(() => {});
-                updateTodaySession();
             }).finally(() => {
                 btn.disabled = false;
             });
@@ -373,7 +274,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderWorkoutList();
 });
-
-function syncWorkoutWithPlanToday() {
-    return;
-}

@@ -24,19 +24,11 @@ const PlanModal = (() => {
             allExercises = data.items || data || [];
         });
 
-        TrainingAPI.getPlans().then(plans => {
-            if (!plans.length) {
-                currentPlan = { name: "Мій план", days: {} };
-            } else {
-                const active = plans.find(p => p.is_active) || plans[0];
-                currentPlan = { name: active.name || "Мій план", days: active.days || {} };
-            }
-
-            ensureStructure();
-            renderDays();
-            setActiveDay(getTodayKey());
-            modal.classList.add("open");
-        });
+        currentPlan = { name: "Мій план", days: {} };
+        ensureStructure();
+        renderDays();
+        setActiveDay(getTodayKey());
+        modal.classList.add("open");
     }
 
     function close() {
@@ -191,9 +183,6 @@ const PlanModal = (() => {
 
         TrainingAPI.savePlan(payload)
             .then(() => {
-                if (window.refreshPlanData) {
-                    window.refreshPlanData();
-                }
                 loader.classList.add("hidden");
                 text.classList.remove("hidden");
                 close();
