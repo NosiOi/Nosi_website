@@ -1,6 +1,5 @@
 from datetime import datetime
 from myapp.app import db
-import json
 import uuid
 
 exercise_muscle = db.Table(
@@ -49,6 +48,9 @@ class Exercise(db.Model):
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
 
+    muscles_primary = db.Column(db.JSON, default=[])
+    muscles_secondary = db.Column(db.JSON, default=[])
+
     muscles = db.relationship(
         "Muscle",
         secondary=exercise_muscle,
@@ -64,21 +66,6 @@ class Exercise(db.Model):
         super().__init__(*args, **kwargs)
 
     def to_dict(self):
-        primary = []
-        secondary = []
-
-        if hasattr(self, "exercise_muscles") and self.exercise_muscles:
-            for em in self.exercise_muscles:
-                if not em.muscle:
-                    continue
-                if getattr(em, "is_primary", False):
-                    primary.append(em.muscle.slug)
-                else:
-                    secondary.append(em.muscle.slug)
-        else:
-            for m in self.muscles:
-                primary.append(m.slug)
-
         return {
             "id": self.id,
             "slug": self.slug,
@@ -88,8 +75,8 @@ class Exercise(db.Model):
             "location": self.location,
             "movement_pattern": self.movement_pattern,
             "risk_level": self.risk_level,
-            "muscles_primary": primary,
-            "muscles_secondary": secondary,
+            "muscles_primary": self.muscles_primary or [],
+            "muscles_secondary": self.muscles_secondary or [],
         }
 
     def __repr__(self):
