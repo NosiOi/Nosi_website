@@ -1,6 +1,7 @@
 from myapp.app import db
 from myapp.app.models.training_session import TrainingSession, SessionExercise
 from myapp.app.services.training_engine_service import TrainingEngineService
+from myapp.app.training_engine.models.exercise import Exercise
 
 
 class TrainingSessionService:
@@ -65,15 +66,45 @@ class TrainingSessionService:
     @staticmethod
     def _compute_session_load(session):
         total = 0
+
         for se in session.exercises:
+            ex = Exercise.query.get(se.exercise_id)
+            if not ex:
+                continue
+
             sets = se.sets_done or se.sets_planned or 0
             reps_raw = se.reps_done or se.reps_planned or "0"
             try:
                 reps = int(str(reps_raw).split("-")[0])
             except Exception:
                 reps = 0
-            load = (se.load_done or se.load_planned or 0) * sets * max(reps, 1)
-            total += load
+            load = se.load_done or se.load_planned or 0
+            rpe = se.rpe or 6
+
+            primary = len(getattr(ex, "muscles_primary", []))
+            secondary = len(getattr(ex, "muscles_secondary", []))
+
+            muscle_factor = primary * 1.0 + secondary * 0.5
+            difficulty_factor = ex.difficulty * 0.8 + 1.0
+
+            if load > 0:
+                intensity_factor = (load / (load + reps + 1)) * 1.2
+            else:
+                intensity_factor = (reps / (reps + 10)) * 0.8
+
+            rpe_factor = (rpe / 10) ** 1.3
+
+            volume = sets * reps * (load + 1)
+
+            exercise_load = (
+                volume
+                * muscle_factor
+                * difficulty_factor
+                * intensity_factor
+                * rpe_factor
+            )
+            total += exercise_load
+
         return total
 
     @staticmethod
