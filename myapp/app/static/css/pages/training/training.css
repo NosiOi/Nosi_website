@@ -277,8 +277,8 @@ body {
     content: "";
     position: sticky;
     top: 0;
-    height: 20px;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+    height: 28px;
+    background: linear-gradient(to bottom, rgba(17, 20, 28, 0.9), rgba(17, 20, 28, 0));
     z-index: 5;
 }
 
@@ -286,8 +286,8 @@ body {
     content: "";
     position: sticky;
     bottom: 0;
-    height: 20px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+    height: 28px;
+    background: linear-gradient(to top, rgba(17, 20, 28, 0.9), rgba(17, 20, 28, 0));
     z-index: 5;
 }
 
