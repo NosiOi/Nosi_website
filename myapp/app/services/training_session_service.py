@@ -72,17 +72,21 @@ class TrainingSessionService:
             if not ex:
                 continue
 
+            primary_muscles = ex.muscles_primary or []
+            secondary_muscles = ex.muscles_secondary or []
+
+            primary = len(primary_muscles)
+            secondary = len(secondary_muscles)
+
             sets = se.sets_done or se.sets_planned or 0
             reps_raw = se.reps_done or se.reps_planned or "0"
             try:
                 reps = int(str(reps_raw).split("-")[0])
             except Exception:
                 reps = 0
+
             load = se.load_done or se.load_planned or 0
             rpe = se.rpe or 6
-
-            primary = len(getattr(ex, "muscles_primary", []))
-            secondary = len(getattr(ex, "muscles_secondary", []))
 
             muscle_factor = primary * 1.0 + secondary * 0.5
             difficulty_factor = ex.difficulty * 0.8 + 1.0
