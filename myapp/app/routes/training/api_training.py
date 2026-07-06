@@ -54,13 +54,7 @@ def _plan_days_struct(raw):
 
 
 def _session_load(session):
-    total = 0
-    for se in session.exercises:
-        sets = se.sets_done or se.sets_planned or 0
-        reps = int(str(se.reps_done or se.reps_planned or "0").split("-")[0])
-        load = (se.load_done or se.load_planned or 0) * sets * max(reps, 1)
-        total += load
-    return total
+    return TrainingSessionService._compute_session_load(session)
 
 
 @bp.route("/muscles")
@@ -292,19 +286,39 @@ def heatmap():
             day = s.started_at.date()
             loads[day] = loads.get(day, 0) + _session_load(s)
 
+        perf = current_user.performance_state
+        pushups = getattr(perf, "pushups", 0) if perf else 0
+        squats = getattr(perf, "squats", 0) if perf else 0
+        situps = getattr(perf, "situps", 0) if perf else 0
+        user_level = (
+            (pushups + squats + situps) / 3 if (pushups or squats or situps) else 0
+        )
+
+        if user_level < 10:
+            user_mult = 1.4
+        elif user_level < 30:
+            user_mult = 1.0
+        else:
+            user_mult = 0.7
+
+        base_max = 5000
+        max_load = base_max * user_mult
+
         days = []
         d = start
         today = dt.date.today()
 
         while d <= end:
             load = loads.get(d, 0)
-            if load == 0:
+            percent = min(100, int((load / max_load) * 100)) if max_load > 0 else 0
+
+            if percent == 0:
                 level = 0
-            elif load < 1000:
+            elif percent < 20:
                 level = 1
-            elif load < 3000:
+            elif percent < 40:
                 level = 2
-            elif load < 6000:
+            elif percent < 70:
                 level = 3
             else:
                 level = 4
@@ -313,6 +327,7 @@ def heatmap():
                 {
                     "date": d.strftime("%Y-%m-%d"),
                     "load": int(load),
+                    "percent": percent,
                     "level": level,
                     "is_today": d == today,
                 }
