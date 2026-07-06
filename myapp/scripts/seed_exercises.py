@@ -95,15 +95,20 @@ def run_seed():
                 location=it.get("location", "any"),
                 movement_pattern=it.get("movement_pattern"),
                 risk_level=it.get("risk_level", 1),
+                muscles_primary=it.get("muscles_primary", []),
+                muscles_secondary=it.get("muscles_secondary", []),
                 progression=json.dumps(it.get("progression", [])),
                 regression=json.dumps(it.get("regression", [])),
             )
             db.session.add(ex)
             db.session.flush()
 
-            for mslug in it.get("muscles_primary", []) + it.get(
-                "muscles_secondary", []
-            ):
+            for mslug in it.get("muscles_primary", []):
+                m = Muscle.query.filter_by(slug=mslug).first()
+                if m and m not in ex.muscles:
+                    ex.muscles.append(m)
+
+            for mslug in it.get("muscles_secondary", []):
                 m = Muscle.query.filter_by(slug=mslug).first()
                 if m and m not in ex.muscles:
                     ex.muscles.append(m)
