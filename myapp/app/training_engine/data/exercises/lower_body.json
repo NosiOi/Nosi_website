@@ -1,49 +1,120 @@
 [
     {
-        "name": "Присідання зі штангою",
-        "slug": "barbell-squat",
-        "description": "Базова вправа для всіх м'язів ніг.",
-        "difficulty": 5,
-        "location": "gym",
-        "movement_pattern": "squat",
-        "risk_level": 4,
+        "name": "Присідання",
+        "slug": "squat",
+        "difficulty": 3,
+        "movement_pattern": "lower-body",
+        "risk_level": 2,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
             "quads"
         ],
         "muscles_secondary": [
             "glutes",
-            "hamstrings"
+            "core"
         ],
-        "equipment": [
-            "barbell"
-        ]
+        "max_additional_load_kg": 350,
+        "muscle_load_profile": {
+            "quads": 0.5,
+            "glutes": 0.3,
+            "core": 0.2
+        }
     },
     {
-        "name": "Фронтальні присідання",
-        "slug": "front-squat",
-        "description": "Акцент на квадрицепси.",
-        "difficulty": 5,
-        "location": "gym",
-        "movement_pattern": "squat",
-        "risk_level": 4,
+        "name": "Присідання до лави",
+        "slug": "box-squat",
+        "difficulty": 3,
+        "movement_pattern": "lower-body",
+        "risk_level": 2,
+        "equipment": [
+            "barbell"
+        ],
         "muscles_primary": [
             "quads"
         ],
         "muscles_secondary": [
-            "core"
+            "glutes"
         ],
-        "equipment": [
-            "barbell"
-        ]
+        "max_additional_load_kg": 350,
+        "muscle_load_profile": {
+            "quads": 0.55,
+            "glutes": 0.45
+        }
     },
     {
-        "name": "Румунська тяга",
-        "slug": "romanian-deadlift",
-        "description": "Сильна вправа для задньої поверхні стегна.",
-        "difficulty": 4,
-        "location": "gym",
-        "movement_pattern": "hinge",
-        "risk_level": 3,
+        "name": "Випади",
+        "slug": "lunges",
+        "difficulty": 2,
+        "movement_pattern": "lower-body",
+        "risk_level": 2,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "quads"
+        ],
+        "muscles_secondary": [
+            "glutes"
+        ],
+        "max_additional_load_kg": 120,
+        "muscle_load_profile": {
+            "quads": 0.55,
+            "glutes": 0.45
+        }
+    },
+    {
+        "name": "Кроки на платформу",
+        "slug": "step-ups",
+        "difficulty": 2,
+        "movement_pattern": "lower-body",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "quads"
+        ],
+        "muscles_secondary": [
+            "glutes"
+        ],
+        "max_additional_load_kg": 100,
+        "muscle_load_profile": {
+            "quads": 0.6,
+            "glutes": 0.4
+        }
+    },
+    {
+        "name": "Ягодичний міст",
+        "slug": "glute-bridge",
+        "difficulty": 2,
+        "movement_pattern": "lower-body",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "glutes"
+        ],
+        "muscles_secondary": [
+            "hamstrings"
+        ],
+        "max_additional_load_kg": 200,
+        "muscle_load_profile": {
+            "glutes": 0.7,
+            "hamstrings": 0.3
+        }
+    },
+    {
+        "name": "Румунська тяга з гантелями",
+        "slug": "rdl-dumbbells",
+        "difficulty": 3,
+        "movement_pattern": "lower-body",
+        "risk_level": 2,
+        "equipment": [
+            "dumbbells"
+        ],
         "muscles_primary": [
             "hamstrings"
         ],
@@ -51,216 +122,83 @@
             "glutes",
             "lower-back"
         ],
-        "equipment": [
-            "barbell"
-        ]
+        "max_additional_load_kg": 160,
+        "muscle_load_profile": {
+            "hamstrings": 0.5,
+            "glutes": 0.3,
+            "lower-back": 0.2
+        }
     },
     {
-        "name": "Станова тяга",
-        "slug": "deadlift",
-        "description": "Базова вправа для всього тіла.",
-        "difficulty": 5,
-        "location": "gym",
-        "movement_pattern": "hinge",
-        "risk_level": 5,
-        "muscles_primary": [
-            "hamstrings"
-        ],
-        "muscles_secondary": [
-            "glutes",
-            "back"
-        ],
-        "equipment": [
-            "barbell"
-        ]
-    },
-    {
-        "name": "Випади вперед",
-        "slug": "lunges",
-        "description": "Універсальна вправа для ніг.",
-        "difficulty": 3,
-        "location": "any",
-        "movement_pattern": "lunge",
-        "risk_level": 2,
-        "muscles_primary": [
-            "quads"
-        ],
-        "muscles_secondary": [
-            "glutes"
-        ],
-        "equipment": [
-            "bodyweight"
-        ]
-    },
-    {
-        "name": "Болгарські спліт-присідання",
-        "slug": "bulgarian-split-squat",
-        "description": "Сильна одностороння вправа.",
-        "difficulty": 4,
-        "location": "any",
-        "movement_pattern": "lunge",
-        "risk_level": 3,
-        "muscles_primary": [
-            "quads"
-        ],
-        "muscles_secondary": [
-            "glutes"
-        ],
-        "equipment": [
-            "dumbbells"
-        ]
-    },
-    {
-        "name": "Жим ногами",
-        "slug": "leg-press",
-        "description": "Безпечна альтернатива присіданням.",
-        "difficulty": 2,
-        "location": "gym",
-        "movement_pattern": "squat",
-        "risk_level": 1,
-        "muscles_primary": [
-            "quads"
-        ],
-        "muscles_secondary": [
-            "glutes"
-        ],
-        "equipment": [
-            "machine"
-        ]
-    },
-    {
-        "name": "Згинання ніг лежачи",
+        "name": "Згинання ніг",
         "slug": "leg-curl",
-        "description": "Ізоляція задньої поверхні стегна.",
-        "difficulty": 1,
-        "location": "gym",
-        "movement_pattern": "accessory",
+        "difficulty": 2,
+        "movement_pattern": "lower-body",
         "risk_level": 1,
+        "equipment": [
+            "machine"
+        ],
         "muscles_primary": [
             "hamstrings"
         ],
         "muscles_secondary": [],
-        "equipment": [
-            "machine"
-        ]
+        "max_additional_load_kg": 120,
+        "muscle_load_profile": {
+            "hamstrings": 1.0
+        }
     },
     {
-        "name": "Розгинання ніг сидячи",
+        "name": "Розгинання ніг",
         "slug": "leg-extension",
-        "description": "Ізоляція квадрицепсів.",
-        "difficulty": 1,
-        "location": "gym",
-        "movement_pattern": "accessory",
+        "difficulty": 2,
+        "movement_pattern": "lower-body",
         "risk_level": 1,
+        "equipment": [
+            "machine"
+        ],
         "muscles_primary": [
             "quads"
         ],
         "muscles_secondary": [],
-        "equipment": [
-            "machine"
-        ]
+        "max_additional_load_kg": 120,
+        "muscle_load_profile": {
+            "quads": 1.0
+        }
     },
     {
-        "name": "Підйоми на носки стоячи",
-        "slug": "standing-calf-raise",
-        "description": "Розвиток литкових м'язів.",
+        "name": "Підйоми на носки",
+        "slug": "calf-raise",
         "difficulty": 1,
-        "location": "any",
-        "movement_pattern": "accessory",
+        "movement_pattern": "lower-body",
         "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
             "calves"
         ],
         "muscles_secondary": [],
-        "equipment": [
-            "bodyweight"
-        ]
+        "max_additional_load_kg": 150,
+        "muscle_load_profile": {
+            "calves": 1.0
+        }
     },
     {
-        "name": "Підйоми на носки сидячи",
-        "slug": "seated-calf-raise",
-        "description": "Акцент на камбалоподібний м'яз.",
+        "name": "Відведення ноги назад",
+        "slug": "kickback",
         "difficulty": 1,
-        "location": "gym",
-        "movement_pattern": "accessory",
+        "movement_pattern": "lower-body",
         "risk_level": 1,
-        "muscles_primary": [
-            "calves"
-        ],
-        "muscles_secondary": [],
         "equipment": [
             "machine"
-        ]
-    },
-    {
-        "name": "Хіп-траст",
-        "slug": "hip-thrust",
-        "description": "Найкраща вправа для сідниць.",
-        "difficulty": 3,
-        "location": "gym",
-        "movement_pattern": "hinge",
-        "risk_level": 2,
-        "muscles_primary": [
-            "glutes"
         ],
-        "muscles_secondary": [
-            "hamstrings"
-        ],
-        "equipment": [
-            "barbell"
-        ]
-    },
-    {
-        "name": "Місток для сідниць",
-        "slug": "glute-bridge",
-        "description": "Легка активаційна вправа.",
-        "difficulty": 1,
-        "location": "any",
-        "movement_pattern": "hinge",
-        "risk_level": 1,
         "muscles_primary": [
             "glutes"
         ],
         "muscles_secondary": [],
-        "equipment": [
-            "bodyweight"
-        ]
-    },
-    {
-        "name": "Ходьба на степ-платформу",
-        "slug": "step-ups",
-        "description": "Одностороння вправа для ніг.",
-        "difficulty": 2,
-        "location": "any",
-        "movement_pattern": "lunge",
-        "risk_level": 1,
-        "muscles_primary": [
-            "quads"
-        ],
-        "muscles_secondary": [
-            "glutes"
-        ],
-        "equipment": [
-            "bodyweight"
-        ]
-    },
-    {
-        "name": "Сумо-присідання",
-        "slug": "sumo-squat",
-        "description": "Акцент на внутрішню поверхню стегна.",
-        "difficulty": 2,
-        "location": "any",
-        "movement_pattern": "squat",
-        "risk_level": 1,
-        "muscles_primary": [
-            "glutes"
-        ],
-        "muscles_secondary": [
-            "quads",
-            "hamstrings"
-        ],
-        "equipment": [
-            "dumbbells"
-        ]
+        "max_additional_load_kg": 80,
+        "muscle_load_profile": {
+            "glutes": 1.0
+        }
     }
 ]

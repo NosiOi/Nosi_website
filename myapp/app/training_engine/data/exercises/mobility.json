@@ -1,170 +1,243 @@
 [
     {
-        "name": "Котик-корова",
-        "slug": "cat-cow",
-        "description": "Розігрів та мобілізація хребта.",
+        "name": "Нахили шиї",
+        "slug": "neck-tilts",
         "difficulty": 1,
-        "location": "any",
         "movement_pattern": "mobility",
         "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
-            "spine"
+            "neck"
         ],
         "muscles_secondary": [],
-        "equipment": [
-            "bodyweight"
-        ]
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "neck": 1.0
+        }
     },
     {
-        "name": "Розтяжка грудних м'язів у дверях",
-        "slug": "doorway-chest-stretch",
-        "description": "Відкриття грудної клітки.",
-        "difficulty": 1,
-        "location": "any",
-        "movement_pattern": "mobility",
-        "risk_level": 1,
-        "muscles_primary": [
-            "chest"
-        ],
-        "muscles_secondary": [],
-        "equipment": [
-            "bodyweight"
-        ]
-    },
-    {
-        "name": "Глибокий випад з поворотом",
-        "slug": "lunge-twist",
-        "description": "Мобільність тазу та хребта.",
-        "difficulty": 2,
-        "location": "any",
-        "movement_pattern": "mobility",
-        "risk_level": 1,
-        "muscles_primary": [
-            "hip-flexors"
-        ],
-        "muscles_secondary": [
-            "core"
-        ],
-        "equipment": [
-            "bodyweight"
-        ]
-    },
-    {
-        "name": "Розтяжка підколінних сухожиль",
-        "slug": "hamstring-stretch",
-        "description": "Покращує гнучкість задньої поверхні стегна.",
-        "difficulty": 1,
-        "location": "any",
-        "movement_pattern": "mobility",
-        "risk_level": 1,
-        "muscles_primary": [
-            "hamstrings"
-        ],
-        "muscles_secondary": [],
-        "equipment": [
-            "bodyweight"
-        ]
-    },
-    {
-        "name": "Розтяжка квадрицепса стоячи",
-        "slug": "quad-stretch",
-        "description": "Розслаблення передньої поверхні стегна.",
-        "difficulty": 1,
-        "location": "any",
-        "movement_pattern": "mobility",
-        "risk_level": 1,
-        "muscles_primary": [
-            "quads"
-        ],
-        "muscles_secondary": [],
-        "equipment": [
-            "bodyweight"
-        ]
-    },
-    {
-        "name": "Поза голуба",
-        "slug": "pigeon-pose",
-        "description": "Глибока розтяжка сідниць.",
-        "difficulty": 2,
-        "location": "any",
-        "movement_pattern": "mobility",
-        "risk_level": 1,
-        "muscles_primary": [
-            "glutes"
-        ],
-        "muscles_secondary": [
-            "hip-flexors"
-        ],
-        "equipment": [
-            "bodyweight"
-        ]
-    },
-    {
-        "name": "Кругові рухи плечима",
+        "name": "Колові рухи плечима",
         "slug": "shoulder-circles",
-        "description": "Мобілізація плечового суглоба.",
         "difficulty": 1,
-        "location": "any",
         "movement_pattern": "mobility",
         "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
             "shoulders"
         ],
         "muscles_secondary": [],
-        "equipment": [
-            "bodyweight"
-        ]
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "shoulders": 1.0
+        }
     },
     {
-        "name": "Розтяжка литок",
-        "slug": "calf-stretch",
-        "description": "Покращує рухливість гомілковостопу.",
+        "name": "Колові рухи руками",
+        "slug": "arm-circles",
         "difficulty": 1,
-        "location": "any",
         "movement_pattern": "mobility",
         "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "shoulders"
+        ],
+        "muscles_secondary": [
+            "upper-back"
+        ],
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "shoulders": 0.7,
+            "upper-back": 0.3
+        }
+    },
+    {
+        "name": "Кішка-корова",
+        "slug": "cat-cow",
+        "difficulty": 1,
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "spine"
+        ],
+        "muscles_secondary": [
+            "core"
+        ],
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "spine": 0.8,
+            "core": 0.2
+        }
+    },
+    {
+        "name": "Thread the Needle",
+        "slug": "thread-the-needle",
+        "difficulty": 1,
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "upper-back"
+        ],
+        "muscles_secondary": [
+            "shoulders"
+        ],
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "upper-back": 0.7,
+            "shoulders": 0.3
+        }
+    },
+    {
+        "name": "Повороти грудного відділу",
+        "slug": "thoracic-rotation",
+        "difficulty": 1,
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "spine"
+        ],
+        "muscles_secondary": [
+            "core"
+        ],
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "spine": 0.75,
+            "core": 0.25
+        }
+    },
+    {
+        "name": "Розтягування грудних",
+        "slug": "chest-stretch",
+        "difficulty": 1,
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "chest"
+        ],
+        "muscles_secondary": [
+            "shoulders"
+        ],
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "chest": 0.8,
+            "shoulders": 0.2
+        }
+    },
+    {
+        "name": "Розтягування згиначів стегна",
+        "slug": "hip-flexor-stretch",
+        "difficulty": 1,
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "hip-flexors"
+        ],
+        "muscles_secondary": [
+            "quads"
+        ],
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "hip-flexors": 0.7,
+            "quads": 0.3
+        }
+    },
+    {
+        "name": "Розтягування задньої поверхні стегна",
+        "slug": "hamstring-stretch",
+        "difficulty": 1,
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "hamstrings"
+        ],
+        "muscles_secondary": [],
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "hamstrings": 1.0
+        }
+    },
+    {
+        "name": "Розтягування квадрицепса",
+        "slug": "quad-stretch",
+        "difficulty": 1,
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "quads"
+        ],
+        "muscles_secondary": [],
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "quads": 1.0
+        }
+    },
+    {
+        "name": "Розтягування литок",
+        "slug": "calf-stretch",
+        "difficulty": 1,
+        "movement_pattern": "mobility",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
             "calves"
         ],
         "muscles_secondary": [],
-        "equipment": [
-            "bodyweight"
-        ]
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "calves": 1.0
+        }
     },
     {
-        "name": "Поза дитини",
-        "slug": "child-pose",
-        "description": "Розслаблення спини та тазу.",
-        "difficulty": 1,
-        "location": "any",
+        "name": "World's Greatest Stretch",
+        "slug": "worlds-greatest-stretch",
+        "difficulty": 2,
         "movement_pattern": "mobility",
         "risk_level": 1,
-        "muscles_primary": [
-            "lower-back"
-        ],
-        "muscles_secondary": [
-            "glutes"
-        ],
         "equipment": [
             "bodyweight"
-        ]
-    },
-    {
-        "name": "Кобра",
-        "slug": "cobra-stretch",
-        "description": "Розкриття грудної клітки та розтяжка преса.",
-        "difficulty": 1,
-        "location": "any",
-        "movement_pattern": "mobility",
-        "risk_level": 1,
+        ],
         "muscles_primary": [
-            "abs"
+            "hip-flexors"
         ],
         "muscles_secondary": [
-            "spine"
+            "hamstrings",
+            "glutes",
+            "core"
         ],
-        "equipment": [
-            "bodyweight"
-        ]
+        "max_additional_load_kg": 0,
+        "muscle_load_profile": {
+            "hip-flexors": 0.4,
+            "hamstrings": 0.25,
+            "glutes": 0.2,
+            "core": 0.15
+        }
     }
 ]

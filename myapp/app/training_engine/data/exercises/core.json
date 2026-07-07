@@ -2,173 +2,202 @@
     {
         "name": "Планка",
         "slug": "plank",
-        "description": "Статична вправа для стабілізації корпусу.",
         "difficulty": 2,
-        "location": "any",
         "movement_pattern": "core",
         "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
             "core"
         ],
         "muscles_secondary": [],
-        "equipment": [
-            "bodyweight"
-        ]
-    },
-    {
-        "name": "Скручування",
-        "slug": "crunches",
-        "description": "Класична вправа на верхній прес.",
-        "difficulty": 1,
-        "location": "any",
-        "movement_pattern": "core",
-        "risk_level": 1,
-        "muscles_primary": [
-            "abs"
-        ],
-        "muscles_secondary": [],
-        "equipment": [
-            "bodyweight"
-        ]
-    },
-    {
-        "name": "Підйом ніг у висі",
-        "slug": "hanging-leg-raise",
-        "description": "Сильна вправа на нижній прес.",
-        "difficulty": 4,
-        "location": "gym",
-        "movement_pattern": "core",
-        "risk_level": 3,
-        "muscles_primary": [
-            "abs"
-        ],
-        "muscles_secondary": [
-            "hip-flexors"
-        ],
-        "equipment": [
-            "bar"
-        ]
-    },
-    {
-        "name": "Велосипед",
-        "slug": "bicycle-crunch",
-        "description": "Активує косі м'язи та верхній прес.",
-        "difficulty": 2,
-        "location": "any",
-        "movement_pattern": "core",
-        "risk_level": 1,
-        "muscles_primary": [
-            "obliques"
-        ],
-        "muscles_secondary": [
-            "abs"
-        ],
-        "equipment": [
-            "bodyweight"
-        ]
+        "max_additional_load_kg": 60,
+        "muscle_load_profile": {
+            "core": 1.0
+        }
     },
     {
         "name": "Бічна планка",
         "slug": "side-plank",
-        "description": "Стабілізація та розвиток косих м'язів.",
         "difficulty": 2,
-        "location": "any",
         "movement_pattern": "core",
         "risk_level": 1,
-        "muscles_primary": [
-            "obliques"
-        ],
-        "muscles_secondary": [
-            "core"
-        ],
         "equipment": [
             "bodyweight"
-        ]
+        ],
+        "muscles_primary": [
+            "obliques"
+        ],
+        "muscles_secondary": [
+            "core"
+        ],
+        "max_additional_load_kg": 40,
+        "muscle_load_profile": {
+            "obliques": 0.7,
+            "core": 0.3
+        }
     },
     {
-        "name": "Підйом корпусу на римському стільці",
-        "slug": "roman-chair-situp",
-        "description": "Посилене навантаження на прес.",
-        "difficulty": 3,
-        "location": "gym",
+        "name": "Скручування",
+        "slug": "crunches",
+        "difficulty": 1,
         "movement_pattern": "core",
-        "risk_level": 2,
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
             "abs"
         ],
         "muscles_secondary": [],
-        "equipment": [
-            "machine"
-        ]
+        "max_additional_load_kg": 40,
+        "muscle_load_profile": {
+            "abs": 1.0
+        }
     },
     {
-        "name": "Анти-ротаційна тяга (Pallof Press)",
-        "slug": "pallof-press",
-        "description": "Сильна вправа для стабілізації корпусу.",
-        "difficulty": 3,
-        "location": "gym",
+        "name": "Велосипед",
+        "slug": "bicycle-crunch",
+        "difficulty": 2,
         "movement_pattern": "core",
         "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "obliques"
+        ],
+        "muscles_secondary": [
+            "abs"
+        ],
+        "max_additional_load_kg": 40,
+        "muscle_load_profile": {
+            "obliques": 0.6,
+            "abs": 0.4
+        }
+    },
+    {
+        "name": "Dead Bug",
+        "slug": "dead-bug",
+        "difficulty": 2,
+        "movement_pattern": "core",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
             "core"
         ],
         "muscles_secondary": [
-            "obliques"
+            "hip-flexors"
         ],
-        "equipment": [
-            "machine"
-        ]
+        "max_additional_load_kg": 20,
+        "muscle_load_profile": {
+            "core": 0.7,
+            "hip-flexors": 0.3
+        }
     },
     {
-        "name": "Скручування на канаті",
-        "slug": "cable-crunch",
-        "description": "Вправа на прес з додатковою вагою.",
-        "difficulty": 3,
-        "location": "gym",
+        "name": "Bird Dog",
+        "slug": "bird-dog",
+        "difficulty": 2,
         "movement_pattern": "core",
-        "risk_level": 2,
-        "muscles_primary": [
-            "abs"
-        ],
-        "muscles_secondary": [],
+        "risk_level": 1,
         "equipment": [
-            "machine"
-        ]
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "lower-back"
+        ],
+        "muscles_secondary": [
+            "core"
+        ],
+        "max_additional_load_kg": 20,
+        "muscle_load_profile": {
+            "lower-back": 0.6,
+            "core": 0.4
+        }
     },
     {
         "name": "Підйом ніг лежачи",
         "slug": "lying-leg-raise",
-        "description": "Ефективна вправа на нижній прес.",
         "difficulty": 2,
-        "location": "any",
         "movement_pattern": "core",
         "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
             "abs"
         ],
         "muscles_secondary": [
             "hip-flexors"
         ],
-        "equipment": [
-            "bodyweight"
-        ]
+        "max_additional_load_kg": 40,
+        "muscle_load_profile": {
+            "abs": 0.7,
+            "hip-flexors": 0.3
+        }
     },
     {
-        "name": "Супермен",
+        "name": "Superman",
         "slug": "superman",
-        "description": "Зміцнює поперек і стабілізатори корпусу.",
         "difficulty": 1,
-        "location": "any",
         "movement_pattern": "core",
         "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
             "lower-back"
         ],
         "muscles_secondary": [
             "glutes"
         ],
+        "max_additional_load_kg": 20,
+        "muscle_load_profile": {
+            "lower-back": 0.7,
+            "glutes": 0.3
+        }
+    },
+    {
+        "name": "Pallof Press",
+        "slug": "pallof-press",
+        "difficulty": 3,
+        "movement_pattern": "core",
+        "risk_level": 1,
         "equipment": [
-            "bodyweight"
-        ]
+            "machine"
+        ],
+        "muscles_primary": [
+            "core"
+        ],
+        "muscles_secondary": [
+            "obliques"
+        ],
+        "max_additional_load_kg": 80,
+        "muscle_load_profile": {
+            "core": 0.6,
+            "obliques": 0.4
+        }
+    },
+    {
+        "name": "Cable Crunch",
+        "slug": "cable-crunch",
+        "difficulty": 3,
+        "movement_pattern": "core",
+        "risk_level": 2,
+        "equipment": [
+            "machine"
+        ],
+        "muscles_primary": [
+            "abs"
+        ],
+        "muscles_secondary": [],
+        "max_additional_load_kg": 100,
+        "muscle_load_profile": {
+            "abs": 1.0
+        }
     }
 ]

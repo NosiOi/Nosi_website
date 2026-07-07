@@ -1,182 +1,105 @@
 [
     {
-        "name": "Бурпі",
+        "name": "Burpee",
         "slug": "burpee",
-        "description": "Функціональна вправа для всього тіла.",
         "difficulty": 3,
-        "location": "any",
         "movement_pattern": "full-body",
         "risk_level": 2,
-        "muscles_primary": [
-            "full-body"
-        ],
-        "muscles_secondary": [
-            "core"
-        ],
         "equipment": [
             "bodyweight"
-        ]
-    },
-    {
-        "name": "Тяга штанги з підривом",
-        "slug": "power-clean",
-        "description": "Вибухова вправа для всього тіла.",
-        "difficulty": 5,
-        "location": "gym",
-        "movement_pattern": "full-body",
-        "risk_level": 5,
+        ],
         "muscles_primary": [
-            "full-body"
+            "legs"
         ],
         "muscles_secondary": [
-            "back",
+            "core",
+            "shoulders"
+        ],
+        "max_additional_load_kg": 40,
+        "muscle_load_profile": {
+            "legs": 0.5,
+            "core": 0.3,
+            "shoulders": 0.2
+        }
+    },
+    {
+        "name": "Mountain Climbers",
+        "slug": "mountain-climbers",
+        "difficulty": 2,
+        "movement_pattern": "full-body",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "core"
+        ],
+        "muscles_secondary": [
             "legs",
             "shoulders"
         ],
-        "equipment": [
-            "barbell"
-        ]
+        "max_additional_load_kg": 20,
+        "muscle_load_profile": {
+            "core": 0.6,
+            "legs": 0.25,
+            "shoulders": 0.15
+        }
     },
     {
-        "name": "Турецький підйом",
-        "slug": "turkish-get-up",
-        "description": "Стабілізація та сила всього тіла.",
-        "difficulty": 5,
-        "location": "any",
+        "name": "Jumping Jacks",
+        "slug": "jumping-jacks",
+        "difficulty": 1,
         "movement_pattern": "full-body",
-        "risk_level": 4,
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "legs"
+        ],
+        "muscles_secondary": [
+            "shoulders",
+            "core"
+        ],
+        "max_additional_load_kg": 20,
+        "muscle_load_profile": {
+            "legs": 0.5,
+            "shoulders": 0.3,
+            "core": 0.2
+        }
+    },
+    {
+        "name": "Bear Crawl",
+        "slug": "bear-crawl",
+        "difficulty": 3,
+        "movement_pattern": "full-body",
+        "risk_level": 2,
+        "equipment": [
+            "bodyweight"
+        ],
         "muscles_primary": [
             "core"
         ],
         "muscles_secondary": [
             "shoulders",
-            "glutes"
+            "legs"
         ],
-        "equipment": [
-            "kettlebell"
-        ]
+        "max_additional_load_kg": 40,
+        "muscle_load_profile": {
+            "core": 0.5,
+            "shoulders": 0.3,
+            "legs": 0.2
+        }
     },
     {
-        "name": "Гоблет-присідання",
-        "slug": "goblet-squat",
-        "description": "Фулбоді вправа з акцентом на ноги.",
-        "difficulty": 2,
-        "location": "any",
+        "name": "Farmer Walk",
+        "slug": "farmer-walk",
+        "difficulty": 3,
         "movement_pattern": "full-body",
         "risk_level": 1,
-        "muscles_primary": [
-            "quads"
-        ],
-        "muscles_secondary": [
-            "core",
-            "glutes"
-        ],
-        "equipment": [
-            "dumbbell"
-        ]
-    },
-    {
-        "name": "Тяга гантелі до підборіддя",
-        "slug": "dumbbell-high-pull",
-        "description": "Функціональний рух для плечей і спини.",
-        "difficulty": 3,
-        "location": "any",
-        "movement_pattern": "full-body",
-        "risk_level": 2,
-        "muscles_primary": [
-            "shoulders"
-        ],
-        "muscles_secondary": [
-            "back",
-            "core"
-        ],
         "equipment": [
             "dumbbells"
-        ]
-    },
-    {
-        "name": "Жим штанги стоячи з підривом",
-        "slug": "push-press",
-        "description": "Силовий рух для плечей і ніг.",
-        "difficulty": 4,
-        "location": "gym",
-        "movement_pattern": "full-body",
-        "risk_level": 3,
-        "muscles_primary": [
-            "shoulders"
         ],
-        "muscles_secondary": [
-            "legs",
-            "core"
-        ],
-        "equipment": [
-            "barbell"
-        ]
-    },
-    {
-        "name": "Тяга саней",
-        "slug": "sled-pull",
-        "description": "Силова та кардіо вправа.",
-        "difficulty": 3,
-        "location": "gym",
-        "movement_pattern": "full-body",
-        "risk_level": 1,
-        "muscles_primary": [
-            "legs"
-        ],
-        "muscles_secondary": [
-            "back",
-            "core"
-        ],
-        "equipment": [
-            "sled"
-        ]
-    },
-    {
-        "name": "Перетягування канату",
-        "slug": "battle-rope",
-        "description": "Кардіо та сила верхнього тіла.",
-        "difficulty": 3,
-        "location": "gym",
-        "movement_pattern": "full-body",
-        "risk_level": 1,
-        "muscles_primary": [
-            "shoulders"
-        ],
-        "muscles_secondary": [
-            "core",
-            "arms"
-        ],
-        "equipment": [
-            "battle-rope"
-        ]
-    },
-    {
-        "name": "Стрибки на тумбу",
-        "slug": "box-jump",
-        "description": "Вибухова вправа для ніг.",
-        "difficulty": 3,
-        "location": "any",
-        "movement_pattern": "full-body",
-        "risk_level": 2,
-        "muscles_primary": [
-            "legs"
-        ],
-        "muscles_secondary": [
-            "core"
-        ],
-        "equipment": [
-            "box"
-        ]
-    },
-    {
-        "name": "Фермерська хода",
-        "slug": "farmers-walk",
-        "description": "Сильна вправа для хвата, корпусу та ніг.",
-        "difficulty": 3,
-        "location": "any",
-        "movement_pattern": "full-body",
-        "risk_level": 1,
         "muscles_primary": [
             "core"
         ],
@@ -184,45 +107,57 @@
             "forearms",
             "legs"
         ],
-        "equipment": [
-            "dumbbells"
-        ]
+        "max_additional_load_kg": 200,
+        "muscle_load_profile": {
+            "core": 0.5,
+            "forearms": 0.3,
+            "legs": 0.2
+        }
     },
     {
-        "name": "Тяга гирі між ногами",
-        "slug": "kettlebell-swing",
-        "description": "Функціональна вправа для задньої ланки.",
-        "difficulty": 3,
-        "location": "any",
+        "name": "Squat to Press",
+        "slug": "squat-to-press",
+        "difficulty": 4,
         "movement_pattern": "full-body",
-        "risk_level": 2,
+        "risk_level": 3,
+        "equipment": [
+            "dumbbells"
+        ],
         "muscles_primary": [
-            "hamstrings"
+            "legs"
+        ],
+        "muscles_secondary": [
+            "shoulders",
+            "core"
+        ],
+        "max_additional_load_kg": 120,
+        "muscle_load_profile": {
+            "legs": 0.55,
+            "shoulders": 0.3,
+            "core": 0.15
+        }
+    },
+    {
+        "name": "Wall Sit",
+        "slug": "wall-sit",
+        "difficulty": 2,
+        "movement_pattern": "full-body",
+        "risk_level": 1,
+        "equipment": [
+            "bodyweight"
+        ],
+        "muscles_primary": [
+            "quads"
         ],
         "muscles_secondary": [
             "glutes",
             "core"
         ],
-        "equipment": [
-            "kettlebell"
-        ]
-    },
-    {
-        "name": "Ходьба у планці",
-        "slug": "plank-walk",
-        "description": "Стабілізація та навантаження на плечі.",
-        "difficulty": 2,
-        "location": "any",
-        "movement_pattern": "full-body",
-        "risk_level": 1,
-        "muscles_primary": [
-            "core"
-        ],
-        "muscles_secondary": [
-            "shoulders"
-        ],
-        "equipment": [
-            "bodyweight"
-        ]
+        "max_additional_load_kg": 100,
+        "muscle_load_profile": {
+            "quads": 0.6,
+            "glutes": 0.25,
+            "core": 0.15
+        }
     }
 ]
