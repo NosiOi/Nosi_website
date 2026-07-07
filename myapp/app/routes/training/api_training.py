@@ -89,13 +89,14 @@ def exercises():
         per_page = int(request.args.get("per_page", 50))
 
         if muscle:
-            q = q.join(Exercise.muscles).filter(
-                func.lower(Muscle.slug) == muscle.lower()
+            q = q.filter(
+                Exercise.muscles_primary.contains([muscle])
+                | Exercise.muscles_secondary.contains([muscle])
             )
+
         if equipment:
-            q = q.join(Exercise.equipment).filter(
-                func.lower(TEEquipment.name) == equipment.lower()
-            )
+            q = q.filter(Exercise.equipment.contains([equipment]))
+
         if qstr:
             q = q.filter(Exercise.name.ilike(f"%{qstr}%"))
 
@@ -301,8 +302,7 @@ def heatmap():
         else:
             user_mult = 0.7
 
-        base_max = 5000
-        max_load = base_max * user_mult
+        max_load = max(loads.values()) if loads else 0
 
         days = []
         d = start
