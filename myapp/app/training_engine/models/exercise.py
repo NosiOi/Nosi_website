@@ -1,33 +1,7 @@
 from datetime import datetime
-from myapp.app import db
 import uuid
-
-exercise_muscle = db.Table(
-    "te_exercise_muscle",
-    db.Column(
-        "exercise_id",
-        db.String(250),
-        db.ForeignKey("te_exercises.id"),
-        primary_key=True,
-    ),
-    db.Column(
-        "muscle_id", db.Integer, db.ForeignKey("te_muscles.id"), primary_key=True
-    ),
-    db.Column("is_primary", db.Boolean, default=False),
-)
-
-exercise_equipment = db.Table(
-    "te_exercise_equipment",
-    db.Column(
-        "exercise_id",
-        db.String(250),
-        db.ForeignKey("te_exercises.id"),
-        primary_key=True,
-    ),
-    db.Column(
-        "equipment_id", db.Integer, db.ForeignKey("te_equipment.id"), primary_key=True
-    ),
-)
+from sqlalchemy.dialects.postgresql import JSONB
+from myapp.app import db
 
 
 class Exercise(db.Model):
@@ -42,13 +16,12 @@ class Exercise(db.Model):
     movement_pattern = db.Column(db.String(50), nullable=True)
     risk_level = db.Column(db.Integer, default=1)
 
-    muscles_primary = db.Column(db.JSON, default=[])
-    muscles_secondary = db.Column(db.JSON, default=[])
-
-    equipment = db.Column(db.JSON, default=[])
+    muscles_primary = db.Column(JSONB, default=list)
+    muscles_secondary = db.Column(JSONB, default=list)
+    equipment = db.Column(JSONB, default=list)
 
     max_additional_load_kg = db.Column(db.Integer, nullable=True)
-    muscle_load_profile = db.Column(db.JSON, nullable=True)
+    muscle_load_profile = db.Column(JSONB, nullable=True)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(
