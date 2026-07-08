@@ -1,6 +1,7 @@
 import math
 from dataclasses import dataclass
 from myapp.app.training_engine.models.exercise import Exercise
+from myapp.app.training_engine.models.performance_state import PerformanceState
 
 
 @dataclass
@@ -112,7 +113,9 @@ class TrainingLoadService:
         ffmi = TrainingLoadService.ffmi(w, h, age, sex)
         bmr = TrainingLoadService.bmr(w, h, age, sex)
 
-        perf = user.performance_state
+        perf = user.performance_states.order_by(
+            PerformanceState.created_at.desc()
+        ).first()
         push = getattr(perf, "pushups", 0) if perf else 0
         squat = getattr(perf, "squats", 0) if perf else 0
         sit = getattr(perf, "situps", 0) if perf else 0
