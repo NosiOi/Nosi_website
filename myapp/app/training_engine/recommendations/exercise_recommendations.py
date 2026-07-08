@@ -1,6 +1,13 @@
 from typing import List, Dict
 from myapp.app.training_engine.models.exercise import Exercise
-from myapp.app.training_engine.models.muscle import Muscle
+
+MUSCLE_MAP = {
+    "core_endurance": "core",
+    "hip_stability": "hip-flexors",
+    "shoulder_control": "shoulders",
+    "thoracic_mobility": "upper-back",
+    "ankle_stability": "calves",
+}
 
 
 class ExerciseRecommendations:
@@ -10,7 +17,12 @@ class ExerciseRecommendations:
         result = {}
 
         for muscle_slug in weak_points or []:
-            q = Exercise.query.join(Exercise.muscles).filter(Muscle.slug == muscle_slug)
+            muscle_slug = MUSCLE_MAP.get(muscle_slug, muscle_slug)
+
+            q = Exercise.query.filter(
+                Exercise.muscles_primary.contains([muscle_slug])
+                | Exercise.muscles_secondary.contains([muscle_slug])
+            )
 
             if environment:
                 q = q.filter(Exercise.location.in_([environment, "any"]))
