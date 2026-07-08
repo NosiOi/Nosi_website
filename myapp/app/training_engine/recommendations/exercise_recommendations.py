@@ -11,10 +11,9 @@ MUSCLE_MAP = {
 
 
 class ExerciseRecommendations:
-
     @staticmethod
     def for_weak_points(weak_points: List[str], environment: str) -> Dict[str, List]:
-        result = {}
+        result: Dict[str, List] = {}
 
         for muscle_slug in weak_points or []:
             muscle_slug = MUSCLE_MAP.get(muscle_slug, muscle_slug)
