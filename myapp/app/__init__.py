@@ -28,10 +28,7 @@ def create_app():
     from myapp.app.training_engine.models.exercise import Exercise
     from myapp.app.training_engine.models.muscle import Muscle
     from myapp.app.training_engine.models.equipment import TEEquipment
-    from myapp.app.training_engine.models.exercise import (
-        exercise_muscle,
-        exercise_equipment,
-    )
+    from myapp.app.training_engine.models.exercise import Exercise
 
     migrate.init_app(app, db)
     mail.init_app(app)
