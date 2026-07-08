@@ -10,7 +10,6 @@ from myapp.app.services.training_session_service import TrainingSessionService
 from myapp.app.models.training_session import TrainingSession, SessionExercise
 from myapp.app.training_engine.models.training_plan import TrainingPlan
 from myapp.app.training_engine.models.performance_state import PerformanceState
-from sqlalchemy import func
 import datetime as dt
 
 bp = Blueprint("api_training", __name__, url_prefix="/api/training")
@@ -39,8 +38,7 @@ def _plan_days_struct(raw):
     for key, items in raw.items():
         day_ex = []
         for ex in items:
-            ex_id = ex["exercise"]["id"]
-            obj = Exercise.query.get(ex_id)
+            obj = Exercise.query.get(ex["exercise"]["id"])
             day_ex.append(
                 {
                     "exercise": {"id": obj.id, "name": obj.name},
@@ -51,10 +49,6 @@ def _plan_days_struct(raw):
             )
         result[key] = {"exercises": day_ex}
     return result
-
-
-def _session_load(session):
-    return TrainingSessionService._compute_session_load(session)
 
 
 @bp.route("/muscles")
@@ -148,14 +142,13 @@ def today():
             "muscles": {},
             "plan": [],
         }
-
         exercises_raw = []
 
         if active:
             payload["sessionId"] = str(active.id)
             payload["title"] = "Активна сесія"
             for se in active.exercises:
-                ex_obj = Exercise.query.filter_by(id=se.exercise_id).first()
+                ex_obj = Exercise.query.get(se.exercise_id)
                 if not ex_obj:
                     continue
                 exercises_raw.append(
@@ -170,8 +163,7 @@ def today():
             plan = _active_plan(current_user)
             day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
             for ex in day["exercises"]:
-                ex_id = ex["exercise"]["id"]
-                ex_obj = Exercise.query.get(ex_id)
+                ex_obj = Exercise.query.get(ex["exercise"]["id"])
                 if not ex_obj:
                     continue
                 exercises_raw.append(
@@ -182,25 +174,27 @@ def today():
                         "load": ex.get("load") or 0,
                     }
                 )
-
             payload["title"] = "Рекомендована сесія"
             payload["plan"] = [{"id": plan.id, "name": plan.name}]
 
         filtered = []
         for item in exercises_raw:
             ex = item["exercise"]
-            if any(m.slug.lower() in avoid for m in ex.muscles):
+            muscles_all = (ex.muscles_primary or []) + (ex.muscles_secondary or [])
+            if any(m.lower() in avoid for m in muscles_all):
                 continue
-            if no_eq and any(e.name.lower() in no_eq for e in ex.equipment):
+            eq_list = ex.equipment or []
+            if no_eq and any(e.lower() in no_eq for e in eq_list):
                 continue
             filtered.append(item)
 
         muscles = {}
         for item in filtered:
             ex = item["exercise"]
-            per = 100 / len(ex.muscles) if ex.muscles else 0
-            for m in ex.muscles:
-                muscles[m.slug] = muscles.get(m.slug, 0) + per
+            muscles_all = (ex.muscles_primary or []) + (ex.muscles_secondary or [])
+            per = 100 / len(muscles_all) if muscles_all else 0
+            for m in muscles_all:
+                muscles[m] = muscles.get(m, 0) + per
 
         total = sum(muscles.values()) or 1
         payload["muscles"] = {k: round(v / total, 3) for k, v in muscles.items()}
@@ -250,8 +244,7 @@ def today_session():
         day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
 
         for item in day["exercises"]:
-            ex_id = item["exercise"]["id"]
-            ex = Exercise.query.get(ex_id)
+            ex = Exercise.query.get(item["exercise"]["id"])
             if not ex:
                 continue
             result["exercises"].append(
@@ -280,45 +273,44 @@ def heatmap():
             TrainingSession.user_id == current_user.id,
             TrainingSession.started_at >= dt.datetime.combine(start, dt.time.min),
             TrainingSession.started_at <= dt.datetime.combine(end, dt.time.max),
-        )
+        ).order_by(TrainingSession.started_at.asc())
 
         loads = {}
         for s in sessions:
             day = s.started_at.date()
-            loads[day] = loads.get(day, 0) + _session_load(s)
+            loads[day] = loads.get(
+                day, 0
+            ) + TrainingSessionService._compute_session_load(s)
 
-        perf = current_user.performance_state
-        pushups = getattr(perf, "pushups", 0) if perf else 0
-        squats = getattr(perf, "squats", 0) if perf else 0
-        situps = getattr(perf, "situps", 0) if perf else 0
-        user_level = (
-            (pushups + squats + situps) / 3 if (pushups or squats or situps) else 0
-        )
+        today = dt.date.today()
+        all_days = sorted(loads.keys())
 
-        if user_level < 10:
-            user_mult = 1.4
-        elif user_level < 30:
-            user_mult = 1.0
-        else:
-            user_mult = 0.7
+        acute_days = [day for day in all_days if (today - day).days <= 7]
+        chronic_days = [day for day in all_days if (today - day).days <= 28]
 
-        max_load = max(loads.values()) if loads else 0
+        acute_load = sum(loads.get(day, 0) for day in acute_days)
+        chronic_load = sum(loads.get(day, 0) for day in chronic_days)
+
+        baseline = 150
+        stabilized_chronic = chronic_load + baseline
+
+        acwr = acute_load / stabilized_chronic
+        acwr_percent = min(200, int(acwr * 100))
 
         days = []
         d = start
-        today = dt.date.today()
 
         while d <= end:
             load = loads.get(d, 0)
-            percent = min(100, int((load / max_load) * 100)) if max_load > 0 else 0
+            percent = acwr_percent if load > 0 else 0
 
             if percent == 0:
                 level = 0
-            elif percent < 20:
+            elif percent < 80:
                 level = 1
-            elif percent < 40:
+            elif percent < 130:
                 level = 2
-            elif percent < 70:
+            elif percent < 150:
                 level = 3
             else:
                 level = 4
@@ -466,7 +458,9 @@ def update_session_exercise(session_id, exercise_id):
         data = request.get_json() or {}
 
         session = TrainingSession.query.filter_by(
-            id=session_id, user_id=current_user.id, status="active"
+            id=session_id,
+            user_id=current_user.id,
+            status="active",
         ).first_or_404()
 
         se = TrainingSessionService.update_exercise(session, exercise_id, data)
@@ -501,8 +495,7 @@ def start_session():
             return jsonify({"id": existing.id})
 
         session = TrainingSessionService.start_session(
-            current_user,
-            fatigue_before=fatigue_before,
+            current_user, fatigue_before=fatigue_before
         )
 
         return jsonify({"id": session.id})
@@ -518,7 +511,9 @@ def finish_session(session_id):
         fatigue_after = data.get("fatigue_after")
 
         session = TrainingSession.query.filter_by(
-            id=session_id, user_id=current_user.id, status="active"
+            id=session_id,
+            user_id=current_user.id,
+            status="active",
         ).first_or_404()
 
         TrainingSessionService.finish_session(session, fatigue_after)
@@ -652,7 +647,6 @@ def recommendations():
                 "nutrition": nut,
             }
         )
-
     except Exception as e:
         return _error(e)
 
@@ -689,6 +683,5 @@ def strength_test():
                 },
             }
         )
-
     except Exception as e:
         return _error(e)
