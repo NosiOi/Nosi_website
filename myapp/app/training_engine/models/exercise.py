@@ -41,25 +41,18 @@ class Exercise(db.Model):
     location = db.Column(db.String(30), default="any")
     movement_pattern = db.Column(db.String(50), nullable=True)
     risk_level = db.Column(db.Integer, default=1)
-    progression = db.Column(db.Text, nullable=True)
-    regression = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
 
     muscles_primary = db.Column(db.JSON, default=[])
     muscles_secondary = db.Column(db.JSON, default=[])
 
-    muscles = db.relationship(
-        "Muscle",
-        secondary=exercise_muscle,
-        backref=db.backref("exercises", lazy="dynamic"),
-    )
-    equipment = db.relationship(
-        "TEEquipment",
-        secondary=exercise_equipment,
-        backref=db.backref("exercises", lazy="dynamic"),
+    equipment = db.Column(db.JSON, default=[])
+
+    max_additional_load_kg = db.Column(db.Integer, nullable=True)
+    muscle_load_profile = db.Column(db.JSON, nullable=True)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
 
     def __init__(self, *args, **kwargs):
@@ -77,6 +70,9 @@ class Exercise(db.Model):
             "risk_level": self.risk_level,
             "muscles_primary": self.muscles_primary or [],
             "muscles_secondary": self.muscles_secondary or [],
+            "equipment": self.equipment or [],
+            "max_additional_load_kg": self.max_additional_load_kg,
+            "muscle_load_profile": self.muscle_load_profile,
         }
 
     def __repr__(self):
