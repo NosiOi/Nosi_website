@@ -104,7 +104,7 @@ class User(db.Model, UserMixin):
 
     performance_states = db.relationship(
         "PerformanceState",
-        backref="user",
+        back_populates="user",
         lazy="dynamic",
         cascade="all, delete-orphan",
         foreign_keys="PerformanceState.user_id",
