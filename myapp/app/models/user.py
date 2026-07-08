@@ -20,7 +20,6 @@ class User(db.Model, UserMixin):
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
 
-    # -------- TRAINING ENGINE FIELDS --------
     age = db.Column(db.Integer, nullable=True)
     sex = db.Column(db.String(20), default="unspecified")
     weight = db.Column(db.Float, nullable=True)
@@ -35,14 +34,8 @@ class User(db.Model, UserMixin):
     weak_points = db.Column(db.JSON, default=list)
     strong_points = db.Column(db.JSON, default=list)
 
-    performance_state_id = db.Column(
-        db.Integer, db.ForeignKey("te_performance_state.id")
-    )
     fatigue_state_id = db.Column(db.Integer, db.ForeignKey("te_fatigue_state.id"))
 
-    performance_state = db.relationship(
-        "PerformanceState", back_populates="user", uselist=False
-    )
     fatigue_state = db.relationship(
         "FatigueState", back_populates="user", uselist=False
     )
@@ -107,6 +100,14 @@ class User(db.Model, UserMixin):
         cascade="all, delete-orphan",
         lazy="dynamic",
         foreign_keys="UserPreference.user_id",
+    )
+
+    performance_states = db.relationship(
+        "PerformanceState",
+        backref="user",
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+        foreign_keys="PerformanceState.user_id",
     )
 
     def set_password(self, password):
