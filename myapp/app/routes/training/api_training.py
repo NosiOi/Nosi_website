@@ -569,7 +569,9 @@ def day_details(date):
 @login_required
 def analytics():
     try:
-        perf = current_user.performance_state
+        perf = current_user.performance_states.order_by(
+            PerformanceState.created_at.desc()
+        ).first()
         rec = current_user.fatigue_state
 
         performance = {
