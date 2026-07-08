@@ -1,6 +1,6 @@
 from myapp.app.training_engine.models.exercise import Exercise
 from myapp.app.models.training_session import TrainingSession
-from myapp.app.models.performance_state import PerformanceState
+from myapp.app.training_engine.models.performance_state import PerformanceState
 import datetime as dt
 
 
