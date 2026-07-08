@@ -1,9 +1,11 @@
 from myapp.app import db
 
+
 class PerformanceState(db.Model):
     __tablename__ = "te_performance_state"
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     pushups = db.Column(db.Integer, default=0)
     squats = db.Column(db.Integer, default=0)
@@ -14,4 +16,6 @@ class PerformanceState(db.Model):
     weight = db.Column(db.Float, nullable=True)
     training_load = db.Column(db.Float, default=0.0)
 
-    user = db.relationship("User", back_populates="performance_state", uselist=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    user = db.relationship("User", back_populates="performance_states")
