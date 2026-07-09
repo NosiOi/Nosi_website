@@ -99,19 +99,21 @@ class TrainingSessionService:
     def update_training_load_from_session(session, user):
         total_load = TrainingSessionService._compute_session_load(session)
 
-        if not user.performance_state:
+        last_perf = user.performance_states.order_by(
+            PerformanceState.created_at.desc()
+        ).first()
+
+        if not last_perf:
             ps = PerformanceState(
                 user_id=user.id,
                 training_load=total_load,
                 weight=user.weight,
             )
             db.session.add(ps)
-            db.session.flush()
-            user.performance_state_id = ps.id
-        else:
-            ps = user.performance_state
-            ps.training_load = (ps.training_load or 0) + total_load
+            db.session.commit()
+            return
 
+        last_perf.training_load = (last_perf.training_load or 0) + total_load
         db.session.commit()
 
     @staticmethod
