@@ -6,25 +6,23 @@ class TrainingSession(db.Model):
     __tablename__ = "training_sessions"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-
-    started_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    started_at = db.Column(db.DateTime)
     finished_at = db.Column(db.DateTime)
+    status = db.Column(db.String(20))
 
-    status = db.Column(db.String(20), default="active")
+    fatigue_before = db.Column(db.Integer)
+    fatigue_after = db.Column(db.Integer)
 
-    fatigue_before = db.Column(db.Float)
-    fatigue_after = db.Column(db.Float)
+    internal_load = db.Column(db.Float, default=0)
+    muscle_loads = db.Column(db.JSON, default={})
 
     rpe_avg = db.Column(db.Float)
 
     user = db.relationship("User", back_populates="training_sessions")
 
     exercises = db.relationship(
-        "SessionExercise",
-        backref="session",
-        cascade="all, delete-orphan",
-        lazy=True
+        "SessionExercise", back_populates="session", cascade="all, delete-orphan"
     )
 
 
@@ -32,7 +30,9 @@ class SessionExercise(db.Model):
     __tablename__ = "session_exercises"
 
     id = db.Column(db.Integer, primary_key=True)
-    session_id = db.Column(db.Integer, db.ForeignKey("training_sessions.id"), nullable=False)
+    session_id = db.Column(
+        db.Integer, db.ForeignKey("training_sessions.id"), nullable=False
+    )
 
     exercise_id = db.Column(db.String(64), nullable=False)
 
@@ -46,3 +46,5 @@ class SessionExercise(db.Model):
     load_done = db.Column(db.Float)
 
     rpe = db.Column(db.Float)
+
+    session = db.relationship("TrainingSession", back_populates="exercises")
