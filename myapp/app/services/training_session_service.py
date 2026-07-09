@@ -92,7 +92,9 @@ class TrainingSessionService:
 
             TrainingLoadService.compute_muscle_load(ex, internal, muscle_loads)
 
+        session.internal_load = total_internal
         session.muscle_loads = muscle_loads
+        db.session.commit()
         return total_internal
 
     @staticmethod
