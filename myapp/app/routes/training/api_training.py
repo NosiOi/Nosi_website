@@ -9,6 +9,8 @@ from myapp.app.services.training_engine_service import TrainingEngineService
 from myapp.app.services.training_session_service import TrainingSessionService
 from myapp.app.models.training_session import TrainingSession, SessionExercise
 from myapp.app.training_engine.models.training_plan import TrainingPlan
+from myapp.app.services.training_load_index_service import compute_daily_load_index
+from myapp.app.services.training_session_service import TrainingSessionService
 from myapp.app.training_engine.models.performance_state import PerformanceState
 import datetime as dt
 
@@ -269,61 +271,49 @@ def heatmap():
         start = dt.date(year, 1, 1)
         end = dt.date(year, 12, 31)
 
-        sessions = TrainingSession.query.filter(
-            TrainingSession.user_id == current_user.id,
-            TrainingSession.started_at >= dt.datetime.combine(start, dt.time.min),
-            TrainingSession.started_at <= dt.datetime.combine(end, dt.time.max),
-        ).order_by(TrainingSession.started_at.asc())
-
-        loads = {}
-        for s in sessions:
-            day = s.started_at.date()
-            loads[day] = loads.get(
-                day, 0
-            ) + TrainingSessionService._compute_session_load(s)
-
-        today = dt.date.today()
-        all_days = sorted(loads.keys())
-
-        acute_days = [day for day in all_days if (today - day).days <= 7]
-        chronic_days = [day for day in all_days if (today - day).days <= 28]
-
-        acute_load = sum(loads.get(day, 0) for day in acute_days)
-        chronic_load = sum(loads.get(day, 0) for day in chronic_days)
-
-        baseline = 150
-        stabilized_chronic = chronic_load + baseline
-
-        acwr = acute_load / stabilized_chronic
-        acwr_percent = min(200, int(acwr * 100))
+        sessions = (
+            TrainingSession.query.filter(
+                TrainingSession.user_id == current_user.id,
+                TrainingSession.started_at >= dt.datetime.combine(start, dt.time.min),
+                TrainingSession.started_at <= dt.datetime.combine(end, dt.time.max),
+            )
+            .order_by(TrainingSession.started_at.asc())
+            .all()
+        )
 
         days = []
         d = start
+        today = dt.date.today()
 
         while d <= end:
-            load = loads.get(d, 0)
-            percent = acwr_percent if load > 0 else 0
+            day_sessions = [s for s in sessions if s.started_at.date() == d]
+            load_today = sum(s.internal_load or 0 for s in day_sessions)
 
-            if percent == 0:
-                level = 0
-            elif percent < 80:
-                level = 1
-            elif percent < 130:
-                level = 2
-            elif percent < 150:
-                level = 3
-            else:
-                level = 4
+            if d > today or not day_sessions:
+                days.append(
+                    {
+                        "date": d.strftime("%Y-%m-%d"),
+                        "load": int(load_today),
+                        "percent": 0,
+                        "level": 0,
+                        "is_today": d == today,
+                    }
+                )
+                d += dt.timedelta(days=1)
+                continue
+
+            idx = compute_daily_load_index(current_user, sessions, d)
 
             days.append(
                 {
                     "date": d.strftime("%Y-%m-%d"),
-                    "load": int(load),
-                    "percent": percent,
-                    "level": level,
+                    "load": int(load_today),
+                    "percent": idx["percent"],
+                    "level": idx["level"],
                     "is_today": d == today,
                 }
             )
+
             d += dt.timedelta(days=1)
 
         return jsonify({"days": days})
@@ -445,8 +435,15 @@ def complete_session():
             )
 
         db.session.commit()
+
+        db.session.refresh(session)
+
+        TrainingSessionService._compute_session_load(session)
+        db.session.commit()
+
         TrainingSessionService.update_training_load_from_session(session, current_user)
         return jsonify({"id": session.id})
+
     except Exception as e:
         return _error(e)
 
