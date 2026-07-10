@@ -184,7 +184,7 @@ def _compute_volume(ex: Exercise, sets: int, reps: float) -> float:
     if "планк" in name or "plank" in name or "wall sit" in name:
         seconds = reps if reps > 0 else 30.0
         # simple scaling for isometric work
-        return float(sets) * (seconds / 5.0)
+        return float(sets) * ((seconds / 7.0) ** 0.85)
 
     # sublinear volume so high reps do not break the model
     reps = max(reps, 0.0)
