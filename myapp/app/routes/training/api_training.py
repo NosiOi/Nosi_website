@@ -5,11 +5,32 @@ from myapp.app.training_engine.models.exercise import Exercise
 from myapp.app.training_engine.models.muscle import Muscle
 from myapp.app.training_engine.models.equipment import TEEquipment
 from myapp.app.training_engine.models.user_pref import UserPreference
-from myapp.app.services.training_engine_service import TrainingEngineService
 from myapp.app.services.training_session_service import TrainingSessionService
+from myapp.app.services.training_load_index_service import compute_daily_load_index
+from myapp.app.training_engine.training_analysis.recommendations_engine import (
+    build_recommendations,
+)
+from myapp.app.training_engine.training_analysis.analyzers.muscles import (
+    analyse_muscles,
+)
+from myapp.app.training_engine.training_analysis.analyzers.patterns import (
+    analyse_patterns,
+)
+from myapp.app.training_engine.training_analysis.analyzers.progression import (
+    analyse_progression,
+)
+from myapp.app.training_engine.training_analysis.analyzers.load import analyse_load
+from myapp.app.training_engine.training_analysis.analyzers.recovery import (
+    analyse_recovery,
+)
+from myapp.app.training_engine.training_analysis.analyzers.diversity import (
+    analyse_diversity,
+)
+from myapp.app.training_engine.training_analysis.analyzers.frequency import (
+    analyse_frequency,
+)
 from myapp.app.models.training_session import TrainingSession, SessionExercise
 from myapp.app.training_engine.models.training_plan import TrainingPlan
-from myapp.app.services.training_load_index_service import compute_daily_load_index
 from myapp.app.services.training_session_service import TrainingSessionService
 from myapp.app.training_engine.models.performance_state import PerformanceState
 import datetime as dt
