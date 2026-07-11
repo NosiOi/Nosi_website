@@ -29,8 +29,13 @@ def analyse_frequency(
     total = len(names)
     unique = len(set(names))
 
+    counts = {}
+    for name in names:
+        counts[name] = counts.get(name, 0) + 1
+
     return {
         "total": total,
         "unique": unique,
+        "counts": counts,  # ← додано
         "message": "frequency analysed",
     }
