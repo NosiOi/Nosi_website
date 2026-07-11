@@ -1,5 +1,6 @@
 from typing import List
 from datetime import date, timedelta
+from myapp.app.training_engine.models.exercise import Exercise
 from myapp.app.training_engine.training_analysis.dto import DiversityResult
 from myapp.app.training_engine.training_analysis.constants import (
     LOW_DIVERSITY_THRESHOLD,
@@ -21,8 +22,10 @@ def analyse_diversity(
 
     for s in window:
         for se in s.exercises or []:
-            if se.exercise_name:
-                names.append(se.exercise_name)
+            # FIX: SessionExercise has no exercise_name, so we fetch Exercise
+            ex = Exercise.query.get(se.exercise_id)
+            if ex:
+                names.append(ex.name)
 
     total = len(names)
     unique = len(set(names))

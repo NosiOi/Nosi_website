@@ -18,16 +18,19 @@ def analyse_frequency(
         if s.started_at and start <= s.started_at.date() <= target_day
     ]
 
-    counts: Dict[str, int] = {}
+    names: List[str] = []
 
     for s in window:
         for se in s.exercises or []:
             ex = exercise_map.get(se.exercise_id)
-            if not ex:
-                continue
+            if ex:
+                names.append(ex.name)
 
-            prim = primary_muscles(ex)
-            for m in prim:
-                counts[m] = counts.get(m, 0) + 1
+    total = len(names)
+    unique = len(set(names))
 
-    return {"counts": counts, "message": "muscle frequency analysed"}
+    return {
+        "total": total,
+        "unique": unique,
+        "message": "frequency analysed",
+    }
