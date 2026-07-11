@@ -9,9 +9,13 @@ class TrainingDay:
     environment: Optional[List[str]] = None
     exercises: List[Dict[str, Any]] = field(default_factory=list)
 
-    def add_exercise(self, exercise=None, sets=3, reps="8-12", **kwargs):
-        entry = {"exercise": exercise, "sets": sets, "reps": reps}
-        entry.update(kwargs)
+    def add_exercise(self, exercise=None, sets=3, reps="8-12", load=0):
+        entry = {
+            "exercise": exercise,
+            "sets": sets,
+            "reps": reps,
+            "load": load,
+        }
         self.exercises.append(entry)
 
     @classmethod
@@ -37,7 +41,7 @@ class TrainingDay:
                     ),
                     "sets": ex["sets"],
                     "reps": ex["reps"],
-                    "load": ex.get("load"),
+                    "load": ex.get("load", 0),
                 }
                 for ex in self.exercises
             ],

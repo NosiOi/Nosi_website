@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Dict
 from myapp.app import db
 from sqlalchemy.dialects.postgresql import JSONB
-from myapp.app.training_engine.models.training_day import TrainingDay
 
 
 class TrainingPlan(db.Model):
@@ -24,19 +23,7 @@ class TrainingPlan(db.Model):
 
     owner = db.relationship("User", back_populates="training_plans", lazy="joined")
 
-    def add_day(self, key: str, day: TrainingDay):
-        """
-        Додає день у JSON форматі.
-        """
-        if not self.days:
-            self.days = {}
-
-        self.days[key] = day.to_dict()
-
     def to_dict(self) -> Dict:
-        """
-        Повертає повністю готовий словник для фронтенду.
-        """
         return {
             "id": self.id,
             "user_id": self.user_id,
