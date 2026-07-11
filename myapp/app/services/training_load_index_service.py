@@ -178,6 +178,31 @@ def _relative_weight(ex: Exercise, load: float, user_weight: float) -> float:
 
 
 def _compute_volume(ex: Exercise, sets: int, reps: float) -> float:
+    # normalize reps safely
+    if isinstance(reps, str):
+        # handle formats like "8-12"
+        if "-" in reps:
+            try:
+                reps = float(reps.split("-")[0])
+            except Exception:
+                reps = 0.0
+        else:
+            try:
+                reps = float(reps)
+            except Exception:
+                reps = 0.0
+    else:
+        try:
+            reps = float(reps)
+        except Exception:
+            reps = 0.0
+
+    # normalize sets
+    try:
+        sets = float(sets)
+    except Exception:
+        sets = 0.0
+
     # volume for normal and isometric exercises
     name = (ex.name or "").lower()
 
