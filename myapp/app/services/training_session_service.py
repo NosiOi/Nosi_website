@@ -2,7 +2,6 @@ from datetime import datetime
 
 from myapp.app import db
 from myapp.app.models.training_session import TrainingSession, SessionExercise
-from myapp.app.services.training_engine_service import TrainingEngineService
 from myapp.app.services.training_load_service import TrainingLoadService
 from myapp.app.training_engine.models.exercise import Exercise
 from myapp.app.training_engine.models.performance_state import PerformanceState
@@ -11,28 +10,12 @@ from myapp.app.training_engine.models.performance_state import PerformanceState
 class TrainingSessionService:
     @staticmethod
     def start_session(user, fatigue_before=None):
-        plan = TrainingEngineService.generate_plan(user, week=1)
-        day_key = next(iter(plan.days.keys()))
-        day = plan.days[day_key]
-
         session = TrainingSession(
             user_id=user.id,
             fatigue_before=fatigue_before,
             status="active",
         )
         db.session.add(session)
-        db.session.flush()
-
-        for ex in day["exercises"]:
-            se = SessionExercise(
-                session_id=session.id,
-                exercise_id=ex["exercise"]["id"],
-                sets_planned=ex.get("sets") or 0,
-                reps_planned=ex.get("reps"),
-                load_planned=ex.get("load") or 0,
-            )
-            db.session.add(se)
-
         db.session.commit()
         return session
 
