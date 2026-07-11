@@ -37,9 +37,11 @@ function renderStrengthTestResults(perf) {
 function renderRecommendations(data) {
     const weak = document.getElementById("tr-weak-points");
     const ex = document.getElementById("tr-exercise-recommendations");
-    const rec = document.getElementById("tr-recovery-recommendations");
-    const nut = document.getElementById("tr-nutrition-recommendations");
+    const balance = document.getElementById("tr-balance-recommendations");
+    const strength = document.getElementById("tr-strength-progress");
+
     const safeArr = v => Array.isArray(v) ? v : (v ? [v] : []);
+
     if (weak) {
         weak.innerHTML = "";
         safeArr(data.weak_points).forEach(w => {
@@ -48,6 +50,7 @@ function renderRecommendations(data) {
             weak.appendChild(li);
         });
     }
+
     if (ex) {
         ex.innerHTML = "";
         safeArr(data.exercise_recommendations).forEach(r => {
@@ -56,20 +59,22 @@ function renderRecommendations(data) {
             ex.appendChild(li);
         });
     }
-    if (rec) {
-        rec.innerHTML = "";
-        safeArr(data.recovery).forEach(r => {
+
+    if (balance) {
+        balance.innerHTML = "";
+        safeArr(data.balance).forEach(r => {
             const li = document.createElement("li");
             li.textContent = r;
-            rec.appendChild(li);
+            balance.appendChild(li);
         });
     }
-    if (nut) {
-        nut.innerHTML = "";
-        safeArr(data.nutrition).forEach(r => {
+
+    if (strength) {
+        strength.innerHTML = "";
+        safeArr(data.strength_progress).forEach(r => {
             const li = document.createElement("li");
             li.textContent = r;
-            nut.appendChild(li);
+            strength.appendChild(li);
         });
     }
 }
