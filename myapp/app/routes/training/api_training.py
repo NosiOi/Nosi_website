@@ -10,28 +10,8 @@ from myapp.app.services.training_load_index_service import compute_daily_load_in
 from myapp.app.training_engine.training_analysis.recommendations_engine import (
     build_recommendations,
 )
-from myapp.app.training_engine.training_analysis.analyzers.muscles import (
-    analyse_muscles,
-)
-from myapp.app.training_engine.training_analysis.analyzers.patterns import (
-    analyse_patterns,
-)
-from myapp.app.training_engine.training_analysis.analyzers.progression import (
-    analyse_progression,
-)
-from myapp.app.training_engine.training_analysis.analyzers.load import analyse_load
-from myapp.app.training_engine.training_analysis.analyzers.recovery import (
-    analyse_recovery,
-)
-from myapp.app.training_engine.training_analysis.analyzers.diversity import (
-    analyse_diversity,
-)
-from myapp.app.training_engine.training_analysis.analyzers.frequency import (
-    analyse_frequency,
-)
 from myapp.app.models.training_session import TrainingSession, SessionExercise
 from myapp.app.training_engine.models.training_plan import TrainingPlan
-from myapp.app.services.training_session_service import TrainingSessionService
 from myapp.app.training_engine.models.performance_state import PerformanceState
 import datetime as dt
 
@@ -49,7 +29,7 @@ def _active_plan(user):
         .order_by(TrainingPlan.id.desc())
         .first()
     )
-    return plan or TrainingEngineService.generate_plan(user)
+    return plan
 
 
 def _today_key():
@@ -184,6 +164,9 @@ def today():
                 )
         else:
             plan = _active_plan(current_user)
+            if not plan:
+                return jsonify({"error": "no_active_plan"}), 400
+
             day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
             for ex in day["exercises"]:
                 ex_obj = Exercise.query.get(ex["exercise"]["id"])
@@ -264,6 +247,9 @@ def today_session():
             return jsonify(result)
 
         plan = _active_plan(current_user)
+        if not plan:
+            return jsonify({"exercises": []})
+
         day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
 
         for item in day["exercises"]:
@@ -612,12 +598,14 @@ def analytics():
             "hydration": getattr(rec, "hydration", 2.0),
         }
 
-        result = TrainingEngineService.compute_analytics(performance, recovery)
-
-        result["raw_performance"] = {
-            "pushups": performance["pushups"],
-            "squats": performance["squats"],
-            "situps": performance["situps"],
+        result = {
+            "performance": performance,
+            "recovery": recovery,
+            "raw_performance": {
+                "pushups": performance["pushups"],
+                "squats": performance["squats"],
+                "situps": performance["situps"],
+            },
         }
 
         return jsonify(result)
@@ -630,27 +618,19 @@ def analytics():
 @login_required
 def recommendations():
     try:
-        from myapp.app.services.recommendation_engine_service import (
-            RecommendationEngineService,
+        sessions = (
+            TrainingSession.query.filter_by(user_id=current_user.id)
+            .order_by(TrainingSession.started_at.desc())
+            .all()
         )
 
-        engine = RecommendationEngineService(current_user)
-
-        weak = engine.compute_weak_muscle_groups()
-        ex = engine.compute_exercise_recommendations(weak)
-        balance = engine.compute_muscle_balance()
-        strength = engine.compute_strength_progress()
-
-        return jsonify(
-            {
-                "weak_points": weak,
-                "exercise_recommendations": ex,
-                "balance": balance,
-                "strength_progress": strength,
-                "recovery": [],
-                "nutrition": [],
-            }
+        result = build_recommendations(
+            user=current_user,
+            sessions=sessions,
+            target_day=dt.date.today(),
         )
+
+        return jsonify(result)
     except Exception as e:
         return _error(e)
 
