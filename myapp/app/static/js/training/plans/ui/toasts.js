@@ -1,3 +1,5 @@
+let timeoutId;
+
 export function showToast(message) {
     let toast = document.getElementById("tr-plan-toast");
     if (!toast) {
@@ -8,5 +10,6 @@ export function showToast(message) {
     }
     toast.textContent = message;
     toast.classList.add("visible");
-    setTimeout(() => toast.classList.remove("visible"), 2000);
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => toast.classList.remove("visible"), 2000);
 }
