@@ -19,18 +19,26 @@ export function createCounterField(label, iconSvg, value, onChange) {
     const input = field.querySelector(".tr-plan-counter-input");
 
     minus.onclick = () => {
-        const v = Math.max(0, Number(input.value) - 1);
-        input.value = v;
-        onChange(v);
+        const val = Number(input.value);
+        if (Number.isNaN(val)) return;
+        const next = Math.max(0, val - 1);
+        input.value = next;
+        onChange(next);
     };
 
     plus.onclick = () => {
-        const v = Number(input.value) + 1;
-        input.value = v;
-        onChange(v);
+        const val = Number(input.value);
+        if (Number.isNaN(val)) return;
+        const next = val + 1;
+        input.value = next;
+        onChange(next);
     };
 
-    input.oninput = () => onChange(Number(input.value));
+    input.oninput = () => {
+        const val = Number(input.value);
+        if (Number.isNaN(val)) return;
+        onChange(val);
+    };
 
     return field;
 }
@@ -57,14 +65,18 @@ export function createRepsField(value, onChange) {
 
     minus.onclick = () => {
         const num = Number(input.value);
-        if (!isNaN(num)) input.value = Math.max(0, num - 1);
-        onChange(input.value);
+        if (Number.isNaN(num)) return;
+        const next = Math.max(0, num - 1);
+        input.value = next;
+        onChange(next);
     };
 
     plus.onclick = () => {
         const num = Number(input.value);
-        if (!isNaN(num)) input.value = num + 1;
-        onChange(input.value);
+        if (Number.isNaN(num)) return;
+        const next = num + 1;
+        input.value = next;
+        onChange(next);
     };
 
     input.oninput = () => onChange(input.value);
