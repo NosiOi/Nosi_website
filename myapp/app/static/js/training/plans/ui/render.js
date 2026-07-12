@@ -1,23 +1,26 @@
 import { state } from "../state.js";
-import { createExerciseCard } from "./cards/exerciseCard.js";
+import { dom } from "../dom.js";
+import { createExerciseCard } from "./exerciseCard.js";
 import { updateSummary } from "./summary.js";
 
-export function renderExercises(container, openPicker) {
-    container.innerHTML = "";
+export function renderExercises(openPicker) {
+    dom.container.innerHTML = "";
     const list = state.days[state.currentDay];
 
-    const emptyState = document.getElementById("tr-plan-empty");
     if (!list.length) {
-        emptyState.classList.add("visible");
+        dom.emptyState.classList.add("visible");
         updateSummary(list);
         return;
     }
 
-    emptyState.classList.remove("visible");
+    dom.emptyState.classList.remove("visible");
+
+    const rerender = () => renderExercises(openPicker);
 
     list.forEach((ex, index) => {
-        const card = createExerciseCard(ex, index, list, () => renderExercises(container, openPicker), openPicker);
-        container.appendChild(card);
+        dom.container.appendChild(
+            createExerciseCard(ex, index, list, rerender, openPicker)
+        );
     });
 
     updateSummary(list);
