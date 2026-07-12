@@ -5,7 +5,7 @@ import { updateSummary } from "./summary.js";
 
 export function renderExercises(openPicker) {
     dom.container.innerHTML = "";
-    const list = state.days[state.currentDay];
+    const list = state.days[state.currentDay] ?? [];
 
     if (!list.length) {
         dom.emptyState.classList.add("visible");
