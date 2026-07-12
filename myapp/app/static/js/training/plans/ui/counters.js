@@ -9,7 +9,7 @@ export function createCounterField(label, iconSvg, value, onChange) {
         </div>
         <div class="tr-plan-counter">
             <button class="tr-plan-counter-btn tr-plan-counter-minus">−</button>
-            <input type="number" class="tr-plan-counter-input" value="${value}">
+            <input type="number" class="tr-plan-counter-input" value="${value}" min="0">
             <button class="tr-plan-counter-btn tr-plan-counter-plus">+</button>
         </div>
     `;
@@ -54,7 +54,7 @@ export function createRepsField(value, onChange) {
         </div>
         <div class="tr-plan-counter">
             <button class="tr-plan-counter-btn tr-plan-counter-minus">−</button>
-            <input type="text" class="tr-plan-counter-input tr-plan-reps-input" value="${value}" placeholder="Наприклад: 10 або 8–12">
+            <input type="text" class="tr-plan-counter-input tr-plan-reps-input" value="${value}">
             <button class="tr-plan-counter-btn tr-plan-counter-plus">+</button>
         </div>
     `;
