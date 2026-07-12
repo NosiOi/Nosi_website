@@ -19,12 +19,17 @@ export async function savePlan() {
     loader?.classList.remove("hidden");
 
     try {
-        const saved = await TrainingAPI.savePlan(payload);
+        const saved = window.trainingStore.plan?.id
+            ? await TrainingAPI.updatePlan(window.trainingStore.plan.id, payload)
+            : await TrainingAPI.savePlan(payload);
+
         window.trainingStore.plan = saved;
+
         const normalized = normalize(saved.days || {});
         Object.keys(normalized).forEach(day => {
             state.days[day] = normalized[day];
         });
+
         showToast("План збережено");
         setTimeout(() => dom.modal.classList.remove("open"), 600);
     } catch {
