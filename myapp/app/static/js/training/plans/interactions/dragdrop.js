@@ -22,11 +22,16 @@ export function enableDrag(card, index, list, rerender) {
     card.addEventListener("drop", e => {
         e.preventDefault();
         card.classList.remove("tr-plan-card-drag-over");
+
         const from = Number(e.dataTransfer.getData("index"));
         const to = index;
+
         if (Number.isNaN(from) || Number.isNaN(to)) return;
+        if (from === to) return;
+
         const item = list.splice(from, 1)[0];
         if (!item) return;
+
         list.splice(to, 0, item);
         rerender();
     });
