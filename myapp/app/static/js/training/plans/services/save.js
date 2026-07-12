@@ -1,33 +1,37 @@
 import { state, normalize } from "../state.js";
-import { savePlanAPI } from "./api.js";
 import { showToast } from "../ui/toast.js";
+import { TrainingAPI } from "../../api.js";
+import { dom } from "../dom.js";
 
-export async function savePlan(name, modal) {
-    const btn = document.getElementById("tr-plan-save");
+export async function savePlan() {
+    const btn = dom.saveBtn;
     const text = btn.querySelector(".btn-text");
     const loader = btn.querySelector(".btn-loader");
 
     const payload = {
-        name: name || "Мій план",
+        name: dom.titleInput.value || "Мій план",
         is_active: true,
         days: state.days
     };
 
     btn.disabled = true;
-    text.classList.add("hidden");
-    loader.classList.remove("hidden");
+    text?.classList.add("hidden");
+    loader?.classList.remove("hidden");
 
     try {
-        const saved = await savePlanAPI(payload);
+        const saved = await TrainingAPI.savePlan(payload);
         window.trainingStore.plan = saved;
-        state.days = normalize(saved.days || {});
+        const normalized = normalize(saved.days || {});
+        Object.keys(normalized).forEach(day => {
+            state.days[day] = normalized[day];
+        });
         showToast("План збережено");
-        setTimeout(() => modal.classList.remove("open"), 600);
+        setTimeout(() => dom.modal.classList.remove("open"), 600);
     } catch {
         showToast("Помилка збереження");
     } finally {
         btn.disabled = false;
-        loader.classList.add("hidden");
-        text.classList.remove("hidden");
+        loader?.classList.add("hidden");
+        text?.classList.remove("hidden");
     }
 }
