@@ -36,6 +36,8 @@ export function createExerciseCard(ex, index, list, rerender, openPicker) {
         <div class="tr-plan-card-body"></div>
     `;
 
+    const nameBtn = card.querySelector(".tr-plan-ex-name");
+    const deleteBtn = card.querySelector(".tr-plan-card-delete");
     const body = card.querySelector(".tr-plan-card-body");
 
     const reps = createRepsField(ex.reps, v => ex.reps = v);
@@ -46,9 +48,9 @@ export function createExerciseCard(ex, index, list, rerender, openPicker) {
     body.appendChild(sets);
     body.appendChild(load);
 
-    card.querySelector(".tr-plan-ex-name").onclick = () => openPicker(ex, rerender);
+    nameBtn.onclick = () => openPicker(ex, rerender);
 
-    card.querySelector(".tr-plan-card-delete").onclick = () => {
+    deleteBtn.onclick = () => {
         list.splice(index, 1);
         rerender();
     };
