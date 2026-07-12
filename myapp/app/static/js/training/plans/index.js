@@ -1,31 +1,22 @@
 import { initState, state } from "./state.js";
+import { dom } from "./dom.js";
 import { renderExercises } from "./ui/render.js";
 import { savePlan } from "./services/save.js";
 import { openExercisePicker } from "../exercise_picker.js";
 
 export function initPlanModal() {
-    const modal = document.getElementById("tr-plan-modal");
-    const saveBtn = document.getElementById("tr-plan-save");
-    const titleInput = document.getElementById("tr-plan-title");
-    const dayButtons = document.querySelectorAll(".tr-plan-day");
-    const container = document.querySelector(".tr-plan-exercises");
-    const addBtn = document.querySelector(".tr-plan-add-exercise");
-    const emptyAddBtn = document.querySelector(".tr-plan-empty-add");
-    const helpToggle = document.getElementById("tr-plan-help-toggle");
-    const helpPopover = document.getElementById("tr-plan-help");
-
     initState();
 
-    dayButtons.forEach(btn => {
+    dom.dayButtons.forEach(btn => {
         btn.onclick = () => {
             state.currentDay = btn.dataset.day;
-            dayButtons.forEach(b => b.classList.remove("active"));
+            dom.dayButtons.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
-            renderExercises(container, openExercisePicker);
+            renderExercises(openExercisePicker);
         };
     });
 
-    addBtn.onclick = () => {
+    dom.addBtn.onclick = () => {
         openExercisePicker(ex => {
             state.days[state.currentDay].push({
                 exercise: ex,
@@ -33,30 +24,27 @@ export function initPlanModal() {
                 reps: "8–12",
                 load: 0
             });
-            renderExercises(container, openExercisePicker);
+            renderExercises(openExercisePicker);
         });
     };
 
-    emptyAddBtn.onclick = () => addBtn.click();
+    dom.emptyAddBtn.onclick = () => dom.addBtn.click();
 
-    helpToggle.onclick = () => {
-        helpPopover.classList.toggle("open");
-    };
+    dom.helpToggle.onclick = () =>
+        dom.helpPopover.classList.toggle("open");
 
-    saveBtn.onclick = () => savePlan(titleInput.value, modal);
+    dom.saveBtn.onclick = () => savePlan();
 
-    const openBtn = document.getElementById("tr-edit-plan");
-    if (openBtn) {
-        openBtn.onclick = () => {
+    if (dom.openBtn) {
+        dom.openBtn.onclick = () => {
             initState(true);
-            titleInput.value = window.trainingStore.plan?.name || "Мій план";
-            renderExercises(container, openExercisePicker);
-            modal.classList.add("open");
+            dom.titleInput.value = window.trainingStore.plan?.name || "Мій план";
+            renderExercises(openExercisePicker);
+            dom.modal.classList.add("open");
         };
     }
 
-    const closeBtns = document.querySelectorAll("[data-close-plan]");
-    closeBtns.forEach(btn => {
-        btn.onclick = () => modal.classList.remove("open");
+    dom.closeBtns.forEach(btn => {
+        btn.onclick = () => dom.modal.classList.remove("open");
     });
 }
