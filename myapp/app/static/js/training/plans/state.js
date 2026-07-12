@@ -13,7 +13,7 @@ export function initState(loadExisting = false) {
     }
 }
 
-export function normalize(raw) {
+export function normalize(raw = {}) {
     const out = {};
     DAYS.forEach(day => {
         const val = raw[day];
