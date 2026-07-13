@@ -3,13 +3,16 @@
     <h3>Активність за рік</h3>
 
     <div class="tr-heatmap-controls">
+      <label class="sr-only" for="tr-heatmap-year">Рік</label>
       <select id="tr-heatmap-year" class="tr-select">
         <option value="2026">2026</option>
         <option value="2025">2025</option>
         <option value="2024">2024</option>
       </select>
 
-      <button id="tr-open-calendar" class="tr-btn small">Календар</button>
+      <button type="button" id="tr-open-calendar" class="tr-btn small">
+        Календар
+      </button>
     </div>
   </div>
 
@@ -19,25 +22,42 @@
     <span>Вер</span><span>Жов</span><span>Лис</span><span>Гру</span>
   </div>
 
-  <div id="training-heatmap" class="tr-heatmap-grid"></div>
+  <div id="training-heatmap" class="tr-heatmap-grid">
+    <div class="tr-loading">Завантаження…</div>
+  </div>
 
-  <div class="tr-heatmap-legend">
-    <span>Менше</span>
-    <div class="tr-legend-box l1"></div>
-    <div class="tr-legend-box l2"></div>
-    <div class="tr-legend-box l3"></div>
-    <div class="tr-legend-box l4"></div>
-    <span>Більше</span>
+  <div class="tr-heatmap-legend" role="list">
+    <span role="listitem">Менше</span>
+    <div class="tr-legend-box l1" aria-hidden="true"></div>
+    <div class="tr-legend-box l2" aria-hidden="true"></div>
+    <div class="tr-legend-box l3" aria-hidden="true"></div>
+    <div class="tr-legend-box l4" aria-hidden="true"></div>
+    <span role="listitem">Більше</span>
   </div>
 </div>
 
-<div id="tr-calendar-modal" class="tr-modal">
+<div
+  id="tr-calendar-modal"
+  class="tr-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="cal-month-title"
+>
   <div class="tr-modal-content tr-calendar-modern">
     <div class="tr-calendar-header">
-      <button id="cal-prev" class="tr-cal-nav-btn">&larr;</button>
+      <button
+        type="button"
+        id="cal-prev"
+        class="tr-cal-nav-btn"
+        aria-label="Попередній місяць"
+      >
+        &larr;
+      </button>
 
       <div class="tr-cal-title-block">
         <div id="cal-month-title" class="tr-cal-month"></div>
+
+        <label class="sr-only" for="cal-year-select">Рік</label>
         <select id="cal-year-select" class="tr-cal-year-select">
           <option value="2026">2026</option>
           <option value="2025">2025</option>
@@ -45,27 +65,62 @@
         </select>
       </div>
 
-      <button id="cal-next" class="tr-cal-nav-btn">&rarr;</button>
-      <button class="tr-modal-close tr-cal-close" data-close-calendar>
+      <button
+        type="button"
+        id="cal-next"
+        class="tr-cal-nav-btn"
+        aria-label="Наступний місяць"
+      >
+        &rarr;
+      </button>
+
+      <button
+        type="button"
+        class="tr-modal-close tr-cal-close"
+        data-close-calendar
+        aria-label="Закрити"
+      >
         &times;
       </button>
     </div>
 
-    <div class="tr-calendar-grid" id="tr-calendar-grid"></div>
+    <div id="tr-calendar-grid" class="tr-calendar-grid">
+      <div class="tr-loading">Завантаження…</div>
+    </div>
   </div>
 </div>
 
-<div id="tr-day-details-modal" class="tr-modal">
+<div
+  id="tr-day-details-modal"
+  class="tr-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="tr-day-details-title"
+>
   <div class="tr-modal-content">
     <div class="tr-modal-header">
-      <h3 id="tr-day-details-title"></h3>
-      <button class="tr-modal-close" data-close-day-details>&times;</button>
+      <h3 id="tr-day-details-title">Деталі тренування</h3>
+
+      <button
+        type="button"
+        class="tr-modal-close"
+        data-close-day-details
+        aria-label="Закрити"
+      >
+        &times;
+      </button>
     </div>
 
-    <div id="tr-day-details-body" class="tr-modal-body"></div>
+    <div id="tr-day-details-body" class="tr-modal-body">
+      <p>Завантаження…</p>
+    </div>
 
     <div class="tr-modal-footer">
-      <button class="tr-btn tr-btn-primary" data-close-day-details>
+      <button
+        type="button"
+        class="tr-btn tr-btn-primary"
+        data-close-day-details
+      >
         Закрити
       </button>
     </div>
