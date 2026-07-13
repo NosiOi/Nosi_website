@@ -1,8 +1,8 @@
-<div id="tr-exercise-picker-modal" class="tr-modal">
+<div id="tr-modal-picker" class="tr-modal">
   <div class="tr-modal-content tr-modal-wide">
     <div class="tr-modal-header">
       <h3>Вибір вправи</h3>
-      <button class="tr-modal-close" data-close-exercise-picker>&times;</button>
+      <button class="tr-modal-close" data-close-picker>&times;</button>
     </div>
 
     <div class="tr-modal-body">
@@ -10,13 +10,21 @@
         <input id="tr-ex-search" class="tr-input" placeholder="Пошук вправ" />
       </div>
 
+      <div class="tr-ex-categories">
+        <button class="tr-ex-cat" data-cat="all">Усі</button>
+        <button class="tr-ex-cat" data-cat="chest">Груди</button>
+        <button class="tr-ex-cat" data-cat="back">Спина</button>
+        <button class="tr-ex-cat" data-cat="legs">Ноги</button>
+        <button class="tr-ex-cat" data-cat="shoulders">Плечі</button>
+        <button class="tr-ex-cat" data-cat="arms">Руки</button>
+        <button class="tr-ex-cat" data-cat="core">Кор</button>
+      </div>
+
       <div id="tr-ex-list" class="tr-ex-modal-list"></div>
     </div>
 
     <div class="tr-modal-footer">
-      <button class="tr-btn tr-btn-ghost" data-close-exercise-picker>
-        Закрити
-      </button>
+      <button class="tr-btn tr-btn-ghost" data-close-picker>Закрити</button>
     </div>
   </div>
 </div>
