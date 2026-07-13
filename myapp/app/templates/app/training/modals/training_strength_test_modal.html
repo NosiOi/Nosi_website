@@ -1,19 +1,15 @@
-<div id="modal-strength-test" class="tr-modal">
-  <div class="tr-modal-content">
+<div id="tr-modal-strength" class="tr-modal">
+  <div class="tr-modal-content tr-modal-narrow">
     <div class="tr-modal-header">
-      <div class="tr-strength-title-row">
-        <h3>Тест сили</h3>
-
-        <div class="tr-help-icon" id="strength-help">?</div>
-        <div class="tr-help-tooltip" id="strength-help-tip">
-          Оновлюй тест сили раз на 2–4 тижні, щоб отримувати точні рекомендації.
-        </div>
-      </div>
-
-      <button class="tr-modal-close" data-close-strength-test>&times;</button>
+      <h3>Тест сили</h3>
+      <button class="tr-modal-close" data-close-strength>&times;</button>
     </div>
 
     <div class="tr-modal-body tr-strength-body">
+      <p class="tr-strength-desc">
+        Виконайте максимальну кількість повторень без пауз.
+      </p>
+
       <div class="tr-strength-field">
         <label for="st_pushups">Віджимання</label>
         <input id="st_pushups" type="number" min="0" class="tr-input" />
@@ -36,10 +32,7 @@
     </div>
 
     <div class="tr-modal-footer">
-      <button class="tr-btn tr-btn-ghost" data-close-strength-test>
-        Скасувати
-      </button>
-
+      <button class="tr-btn tr-btn-ghost" data-close-strength>Скасувати</button>
       <button id="strength-test-submit" class="tr-btn tr-btn-primary">
         <span class="btn-text">Зберегти</span>
         <span class="btn-loader hidden"></span>
