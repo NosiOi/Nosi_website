@@ -39,9 +39,16 @@ def _today_key():
 def _plan_days_struct(raw):
     result = {}
     for key, items in raw.items():
+
+        if isinstance(items, dict) and "exercises" in items:
+            items = items["exercises"]
+
         day_ex = []
         for ex in items:
             obj = Exercise.query.get(ex["exercise"]["id"])
+            if not obj:
+                continue
+
             day_ex.append(
                 {
                     "exercise": {"id": obj.id, "name": obj.name},
@@ -50,7 +57,9 @@ def _plan_days_struct(raw):
                     "load": ex.get("load") or 0,
                 }
             )
+
         result[key] = {"exercises": day_ex}
+
     return result
 
 
@@ -164,8 +173,8 @@ def today():
                 )
         else:
             plan = _active_plan(current_user)
-            if not plan:
-                return jsonify({"error": "no_active_plan"}), 400
+            if not plan or not plan.days:
+                return jsonify(payload)
 
             day = plan.days.get(_today_key()) or next(iter(plan.days.values()))
             for ex in day["exercises"]:
