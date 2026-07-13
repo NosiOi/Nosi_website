@@ -1,9 +1,11 @@
 {% extends "app/base_app.html" %} {% block title %}Тренування — Nosi Fit{%
 endblock %} {% block styles %} {{ super() }}
+
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/training/training.css') }}"
 />
+
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/training/modals/modal_calendar.css') }}"
@@ -36,10 +38,21 @@ endblock %} {% block styles %} {{ super() }}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/training/modals/modal_exercise_picker.css') }}"
 />
+
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/training/heatmap.css') }}"
 />
+
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/modals/plan/modal.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/modals/plan/cards.css') }}"
+/>
+
 {% endblock %} {% block body_class %}training-page{% endblock %} {% block body
 %}
 <div class="training-page-wrapper">
@@ -60,7 +73,11 @@ endblock %} {% block styles %} {{ super() }}
       <section class="tr-card tr-card-strength">
         <div class="tr-card-header">
           <h3 class="tr-card-title">Тест сили</h3>
-          <button id="tr-strength-open" class="tr-btn tr-btn-primary">
+          <button
+            id="tr-strength-open"
+            class="tr-btn tr-btn-primary"
+            type="button"
+          >
             Тест
           </button>
         </div>
@@ -122,7 +139,9 @@ endblock %} {% block styles %} {{ super() }}
       <section id="session-card" class="tr-card tr-card-session">
         <div class="tr-card-header">
           <h3 class="tr-card-title">Сьогоднішнє тренування</h3>
-          <button id="tr-edit-plan" class="tr-btn tr-btn-primary">План</button>
+          <button id="tr-edit-plan" class="tr-btn tr-btn-primary" type="button">
+            План
+          </button>
         </div>
 
         <div
@@ -139,10 +158,18 @@ endblock %} {% block styles %} {{ super() }}
         </div>
 
         <div class="tr-session-actions-compact">
-          <button id="tr-add-exercise" class="tr-btn tr-btn-primary">
+          <button
+            id="tr-add-exercise"
+            class="tr-btn tr-btn-primary"
+            type="button"
+          >
             Додати вправу
           </button>
-          <button id="tr-save-workout" class="tr-btn tr-btn-primary">
+          <button
+            id="tr-save-workout"
+            class="tr-btn tr-btn-primary"
+            type="button"
+          >
             Зберегти
           </button>
         </div>
@@ -155,16 +182,14 @@ endblock %} {% block styles %} {{ super() }}
     </div>
   </div>
 </div>
+{% include "app/training/modals/training_misc_modals.html" %} {% include
+"app/training/modals/training_strength_test_modal.html" %} {% include
+"app/training/modals/plan/modal.html" %} {% include
+"app/training/modals/training_exercise_modals.html" %}
 
-{% include "app/training/modals/training_session_modals.html" %} {% include
-"app/training/modals/training_exercise_modals.html" %} {% include
-"app/training/modals/training_misc_modals.html" %} {% include
-"app/training/modals/training_strength_test_modal.html" %}
+<script
+  type="module"
+  src="{{ url_for('static', filename='js/training/main.js') }}"
+></script>
 
-<script src="{{ url_for('static', filename='js/training/modal_engine.js') }}"></script>
-<script src="{{ url_for('static', filename='js/training/main.js') }}"></script>
-<script src="{{ url_for('static', filename='js/training/exercises.js') }}"></script>
-<script src="{{ url_for('static', filename='js/training/session.js') }}"></script>
-<script src="{{ url_for('static', filename='js/training/strength_test.js') }}"></script>
-<script src="{{ url_for('static', filename='js/training/heatmap.js') }}"></script>
 {% endblock %}
