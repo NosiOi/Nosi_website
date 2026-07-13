@@ -1,5 +1,3 @@
-import { trainingStore } from "./store.js";
-
 export function renderCurrentDate() {
     const el = document.getElementById("current-date");
     if (!el) return;
@@ -12,18 +10,27 @@ export function renderCurrentDate() {
 }
 
 export function renderAnalytics(data) {
-    const map = {
-        "tr-performance": data.performance,
-        "tr-recovery": data.recovery,
-        "tr-strength": data.strength,
-        "tr-endurance": data.endurance,
-        "tr-mobility": data.mobility,
-        "tr-fatigue": data.fatigue
-    };
-    Object.entries(map).forEach(([id, val]) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = val != null ? Math.round(val) : "—";
-    });
+    const perf = data.performance || {};
+    const rec = data.recovery || {};
+
+    const perfEl = document.getElementById("tr-performance");
+    const recEl = document.getElementById("tr-recovery");
+
+    if (perfEl) {
+        const avgPerf =
+            (perf.pushups || 0) +
+            (perf.squats || 0) +
+            (perf.situps || 0);
+        perfEl.textContent = avgPerf ? Math.round(avgPerf / 3) : "—";
+    }
+
+    if (recEl) {
+        const avgRec =
+            (rec.sleep || 0) -
+            (rec.stress || 0) -
+            (rec.soreness || 0);
+        recEl.textContent = avgRec ? Math.round(avgRec) : "—";
+    }
 }
 
 export function renderStrengthTestResults(perf) {
