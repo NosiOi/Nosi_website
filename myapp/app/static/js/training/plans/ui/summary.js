@@ -1,25 +1,25 @@
 import { state } from "../state.js";
-import { dom } from "../dom.js";
-import { formatSets, formatCount } from "../utils.js";
 
-export function updateSummary(list) {
-    const count = formatCount(list);
-    const sets = formatSets(list);
+export function updateSummary() {
+    const day = state.currentDay;
+    const items = state.days[day] || [];
 
-    dom.summaryCount.textContent = `${count} вправ`;
-    dom.summarySets.textContent = `${sets} підходів`;
+    const count = items.length;
+    const sets = items.reduce((acc, item) => acc + (item.sets || 0), 0);
 
-    dom.daySummary.textContent = count ? `${count} вправ, ${sets} підходів` : "План порожній";
+    document.getElementById("tr-plan-summary-count").textContent = `${count} вправ`;
+    document.getElementById("tr-plan-summary-sets").textContent = `${sets} підходів`;
 
     updateBadges();
 }
 
-function updateBadges() {
-    dom.dayButtons.forEach(btn => {
-        const day = btn.dataset.day;
-        const badge = btn.querySelector(".tr-plan-day-badge");
+export function updateBadges() {
+    Object.keys(state.days).forEach(day => {
+        const badge = document.querySelector(`[data-day-badge="${day}"]`);
         if (!badge) return;
-        const count = state.days[day].length;
+
+        const count = state.days[day]?.length || 0;
+
         if (count > 0) {
             badge.textContent = count;
             badge.classList.add("visible");
