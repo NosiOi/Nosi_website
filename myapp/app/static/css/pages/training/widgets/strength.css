@@ -1,0 +1,38 @@
+.tr-card-strength {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: sticky;
+    top: 20px;
+}
+
+.tr-strength-results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.tr-strength-result-box {
+    background: var(--card-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 10px;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.tr-strength-result-box:hover {
+    border-color: var(--accent);
+}
+
+.tr-strength-result-box h4 {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+}
+
+.tr-strength-result-box span {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--accent);
+}
