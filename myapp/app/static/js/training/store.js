@@ -1,5 +1,11 @@
 export const trainingStore = {
     exercises: [],
-    plan: { name: "Мій план", days: {} },
-    workout: []
+    workout: [],
+    plan: null,
+    sessionId: null,
+    currentPlanDay: "mon",
+    recommendations: null,
+    loading: false
 };
+
+window.trainingStore = trainingStore;
