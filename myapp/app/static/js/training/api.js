@@ -1,44 +1,112 @@
+const BASE = "/api/training";
+
+async function jsonFetch(url, options = {}) {
+    const r = await fetch(url, {
+        headers: { "Content-Type": "application/json" },
+        ...options
+    });
+
+    let data = {};
+    try {
+        data = await r.json();
+    } catch (_) {
+        data = {};
+    }
+
+    if (!r.ok) {
+        throw new Error(data.message || `HTTP ${r.status}`);
+    }
+
+    return data;
+}
+
 export const TrainingAPI = {
-    async getExercises() {
-        const r = await fetch("/api/training/exercises");
-        return r.json();
+    getExercises(params = {}) {
+        const q = new URLSearchParams(params).toString();
+        const url = q ? `${BASE}/exercises?${q}` : `${BASE}/exercises`;
+        return jsonFetch(url);
     },
 
-    async getPlans() {
-        const r = await fetch("/api/training/plans");
-        return r.json();
+    getPlans() {
+        return jsonFetch(`${BASE}/plans`);
     },
 
-    async savePlan(payload) {
-        const r = await fetch("/api/training/plans/save", {
+    savePlan(payload) {
+        return jsonFetch(`${BASE}/plans`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         });
-        return r.json();
     },
 
-    async completeSession(payload) {
-        const r = await fetch("/api/training/session/complete", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+    updatePlan(id, payload) {
+        return jsonFetch(`${BASE}/plans/${id}`, {
+            method: "PUT",
             body: JSON.stringify(payload)
         });
-        return r.json();
     },
 
-    async getAnalytics() {
-        const r = await fetch("/api/training/analytics");
-        return r.json();
+    deletePlan(id) {
+        return jsonFetch(`${BASE}/plans/${id}`, {
+            method: "DELETE"
+        });
     },
 
-    async getRecommendations() {
-        const r = await fetch("/api/training/recommendations");
-        return r.json();
+    completeSession(payload) {
+        return jsonFetch(`${BASE}/sessions/complete`, {
+            method: "POST",
+            body: JSON.stringify(payload)
+        });
     },
 
-    async getHeatmap(year = new Date().getFullYear()) {
-        const r = await fetch(`/api/training/heatmap?year=${year}`);
-        return r.json();
+    startSession(payload) {
+        return jsonFetch(`${BASE}/sessions/start`, {
+            method: "POST",
+            body: JSON.stringify(payload)
+        });
+    },
+
+    finishSession(sessionId, payload) {
+        return jsonFetch(`${BASE}/sessions/${sessionId}/finish`, {
+            method: "POST",
+            body: JSON.stringify(payload)
+        });
+    },
+
+    updateSessionExercise(sessionId, exerciseId, payload) {
+        return jsonFetch(`${BASE}/sessions/${sessionId}/exercise/${exerciseId}`, {
+            method: "POST",
+            body: JSON.stringify(payload)
+        });
+    },
+
+    getAnalytics() {
+        return jsonFetch(`${BASE}/analytics`);
+    },
+
+    getRecommendations() {
+        return jsonFetch(`${BASE}/recommendations`);
+    },
+
+    getHeatmap(year = new Date().getFullYear()) {
+        return jsonFetch(`${BASE}/heatmap?year=${year}`);
+    },
+
+    strengthTest(payload) {
+        return jsonFetch(`${BASE}/strength-test`, {
+            method: "POST",
+            body: JSON.stringify(payload)
+        });
+    },
+
+    getToday() {
+        return jsonFetch(`${BASE}/today`);
+    },
+
+    getTodaySession() {
+        return jsonFetch(`${BASE}/today-session`);
+    },
+
+    getDayDetails(date) {
+        return jsonFetch(`${BASE}/day/${date}`);
     }
 };
