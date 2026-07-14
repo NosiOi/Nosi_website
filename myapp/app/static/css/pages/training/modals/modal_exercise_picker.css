@@ -14,7 +14,7 @@
     padding: 12px 14px;
     background: var(--card-soft);
     color: var(--text);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-soft);
     border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 14px;
