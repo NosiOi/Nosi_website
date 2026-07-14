@@ -1,25 +1,40 @@
 import { DAYS } from "./constants.js";
 
 export const state = {
-    currentDay: "mon",
-    days: {}
+    days: {},
+    currentDay: "mon"
 };
 
-export function initState(loadExisting = false) {
-    if (loadExisting && window.trainingStore.plan?.days) {
-        state.days = normalize(window.trainingStore.plan.days);
-    } else {
-        state.days = normalize({});
-    }
+export function normalize(days) {
+    const normalized = {};
+
+    DAYS.forEach(d => {
+        const arr = Array.isArray(days[d.key]) ? days[d.key] : [];
+
+        normalized[d.key] = arr.map(item => ({
+            exercise: item.exercise,
+            sets: Number(item.sets) || 0,
+            reps: item.reps || "8–12",
+            load: Number(item.load) || 0
+        }));
+    });
+
+    return normalized;
 }
 
-export function normalize(raw = {}) {
-    const out = {};
-    DAYS.forEach(day => {
-        const val = raw[day];
-        if (Array.isArray(val)) out[day] = val;
-        else if (val && Array.isArray(val.exercises)) out[day] = val.exercises;
-        else out[day] = [];
+export function initState(reset = false) {
+    const plan = window.trainingStore.plan;
+
+    if (!reset && plan && plan.days) {
+        state.days = normalize(plan.days);
+        state.currentDay = "mon";
+        return;
+    }
+
+    state.days = {};
+    DAYS.forEach(d => {
+        state.days[d.key] = [];
     });
-    return out;
+
+    state.currentDay = "mon";
 }
