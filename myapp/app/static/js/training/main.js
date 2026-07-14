@@ -3,23 +3,54 @@ import { trainingStore } from "./store.js";
 import { renderCurrentDate, renderAnalytics, renderStrengthTestResults } from "./dashboard.js";
 import { loadPlan } from "./plans.js";
 import { renderWorkoutList } from "./workout.js";
+import { initExercisePicker } from "./exercise_picker.js";
 import { openExercisePicker } from "./exercise_picker.js";
 import { initSession } from "./session.js";
 import { initPlanModal } from "./plan_modal.js";
+import { renderRecommendations } from "./recommendations.js";
+import { initHeatmap } from "./heatmap.js";
+import { initStrengthTest } from "./strength_test.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     renderCurrentDate();
 
-    const exData = await TrainingAPI.getExercises();
-    trainingStore.exercises = exData.items || exData || [];
+    await Promise.all([
+        loadPlan(),
 
-    await loadPlan();
+        TrainingAPI.getExercises()
+            .then(data => {
+                trainingStore.exercises = Array.isArray(data?.items)
+                    ? data.items
+                    : Array.isArray(data)
+                        ? data
+                        : [];
+            })
+            .catch(() => {
+                trainingStore.exercises = [];
+            }),
 
-    const analytics = await TrainingAPI.getAnalytics();
-    renderAnalytics(analytics);
-    renderStrengthTestResults(analytics.raw_performance || analytics.performance_raw || analytics);
+        TrainingAPI.getAnalytics()
+            .then(data => {
+                renderAnalytics(data);
 
-    TrainingAPI.getRecommendations().then(renderRecommendations);
+                renderStrengthTestResults(
+                    data?.raw_performance ??
+                    data?.performance_raw ??
+                    data?.performance ??
+                    null
+                );
+            })
+            .catch(() => {}),
+
+        TrainingAPI.getRecommendations()
+            .then(data => {
+                trainingStore.recommendations = data;
+                renderRecommendations(data);
+            })
+            .catch(() => {
+                trainingStore.recommendations = null;
+            })
+    ]);
 
     const addExercise = document.getElementById("tr-add-exercise");
     if (addExercise) {
@@ -32,12 +63,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                     load: 0,
                     done: false
                 });
+
                 renderWorkoutList();
             });
         };
     }
 
     initSession();
-    initPlanModal();
+    initExercisePicker();
+    setTimeout(() => initPlanModal(), 0);
     renderWorkoutList();
+    initHeatmap();
+    initStrengthTest();
 });
