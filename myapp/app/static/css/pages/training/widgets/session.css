@@ -93,10 +93,6 @@
     text-align: center;
 }
 
-.tr-input-field[type="number"] {
-    -moz-appearance: textfield;
-}
-
 .tr-input-field[type="number"]::-webkit-outer-spin-button,
 .tr-input-field[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
