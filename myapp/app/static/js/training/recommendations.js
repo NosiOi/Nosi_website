@@ -1,124 +1,83 @@
 const safeArr = v => Array.isArray(v) ? v : (v ? [v] : []);
 
-function loadRecommendations() {
-    fetch("/api/training/recommendations")
-        .then(r => r.json())
-        .then(data => renderRecommendationsBlock(data))
-        .catch(() => console.error("Failed to load recommendations"));
+export function renderRecommendations(data) {
+    renderWeakPoints(data.muscles || {});
+    renderRecommendedExercises(data.recommended_exercises || []);
+    renderBalance(data.muscles || {});
 }
 
-function renderRecommendationsBlock(data) {
-    renderRecommendedExercises(data.recommended_exercises);
-    renderMuscleSummary(data.muscles);
-    renderPatternSummary(data.patterns);
-    renderRecoverySummary(data.recovery);
-    renderLoadSummary(data.load);
-    renderDiversitySummary(data.diversity);
-    renderFrequencySummary(data.frequency);
+function renderWeakPoints(muscles) {
+    const box = document.getElementById("tr-weak-points");
+    if (!box) return;
+    box.innerHTML = "";
+    safeArr(muscles.weak).slice(0, 5).forEach(m => {
+        const badge = document.createElement("span");
+        badge.className = "tr-rec-badge";
+        badge.textContent = m;
+        box.appendChild(badge);
+    });
+}
+
+function mapReasonText(r) {
+    const t = String(r).toLowerCase();
+    if (t.includes("weak muscle group")) return "Покращує слабкі м’язи";
+    if (t.includes("weak movement pattern")) return "Покращує техніку руху";
+    if (t.includes("mobility")) return "Покращує мобільність";
+    return r;
 }
 
 function renderRecommendedExercises(list) {
-    const box = document.getElementById("rec-exercises");
-    if (!box) return;
+    const col1 = document.getElementById("tr-exercise-col-1");
+    const col2 = document.getElementById("tr-exercise-col-2");
 
-    box.innerHTML = "";
+    if (!col1 || !col2) return;
 
-    safeArr(list).forEach(item => {
-        const div = document.createElement("div");
-        div.className = "rec-item";
+    col1.innerHTML = "";
+    col2.innerHTML = "";
 
-        const name = document.createElement("div");
-        name.className = "rec-name";
-        name.textContent = item.exercise;
+    const items = safeArr(list).slice(0, 4);
 
-        const score = document.createElement("div");
-        score.className = "rec-score";
-        score.textContent = item.score;
+    items.forEach((item, i) => {
+        const wrap = document.createElement("div");
+        wrap.className = "tr-rec-exercise";
 
-        const reasons = document.createElement("ul");
-        reasons.className = "rec-reasons";
-        safeArr(item.reasons).forEach(r => {
-            const li = document.createElement("li");
-            li.textContent = r;
-            reasons.appendChild(li);
-        });
+        const title = document.createElement("div");
+        title.className = "tr-rec-ex-title";
+        title.textContent = item.exercise;
 
-        div.append(name, score, reasons);
-        box.appendChild(div);
+        const desc = document.createElement("div");
+        desc.className = "tr-rec-ex-desc";
+        const firstReason = safeArr(item.reasons)[0] || "";
+        desc.textContent = mapReasonText(firstReason);
+
+        wrap.appendChild(title);
+        wrap.appendChild(desc);
+
+        if (i < 2) col1.appendChild(wrap);
+        else col2.appendChild(wrap);
     });
 }
 
-function renderMuscleSummary(muscles) {
-    const box = document.getElementById("rec-muscles");
-    if (!box) return;
+function renderBalance(muscles) {
+    const balancedBox = document.getElementById("tr-balance-balanced");
+    const overloadedBox = document.getElementById("tr-balance-overloaded");
 
-    box.innerHTML = "";
+    if (!balancedBox || !overloadedBox) return;
 
-    safeArr(muscles.details).forEach(m => {
-        const li = document.createElement("li");
-        li.textContent = `${m.muscle}: ${m.score.toFixed(2)}`;
-        box.appendChild(li);
+    balancedBox.innerHTML = "";
+    overloadedBox.innerHTML = "";
+
+    safeArr(muscles.balanced).slice(0, 3).forEach(m => {
+        const row = document.createElement("div");
+        row.className = "tr-balance-item";
+        row.innerHTML = `<span>${m}</span><span>🟢 Збалансовані</span>`;
+        balancedBox.appendChild(row);
+    });
+
+    safeArr(muscles.overloaded).slice(0, 3).forEach(m => {
+        const row = document.createElement("div");
+        row.className = "tr-balance-item";
+        row.innerHTML = `<span>${m}</span><span>🔴 Перевантажені</span>`;
+        overloadedBox.appendChild(row);
     });
 }
-
-function renderPatternSummary(patterns) {
-    const box = document.getElementById("rec-patterns");
-    if (!box) return;
-
-    box.innerHTML = "";
-
-    safeArr(patterns.details).forEach(p => {
-        const li = document.createElement("li");
-        li.textContent = `${p.pattern}: ${p.score.toFixed(2)}`;
-        box.appendChild(li);
-    });
-}
-
-function renderRecoverySummary(recovery) {
-    const box = document.getElementById("rec-recovery");
-    if (!box) return;
-
-    box.innerHTML = `
-        <li>Sleep: ${recovery.sleep}</li>
-        <li>Stress: ${recovery.stress}</li>
-        <li>Soreness: ${recovery.soreness}</li>
-        <li>Hydration: ${recovery.hydration}</li>
-    `;
-}
-
-function renderLoadSummary(load) {
-    const box = document.getElementById("rec-load");
-    if (!box) return;
-
-    box.innerHTML = `
-        <li>Total load: ${load.total_load.toFixed(1)}</li>
-        <li>Average load: ${load.avg_load.toFixed(1)}</li>
-        <li>Peak load: ${load.peak_load.toFixed(1)}</li>
-    `;
-}
-
-function renderDiversitySummary(div) {
-    const box = document.getElementById("rec-diversity");
-    if (!box) return;
-
-    box.innerHTML = `
-        <li>Status: ${div.status}</li>
-        <li>Score: ${div.score.toFixed(2)}</li>
-        <li>Unique exercises: ${div.unique_exercises}</li>
-        <li>Total exercises: ${div.total_exercises}</li>
-    `;
-}
-
-function renderFrequencySummary(freq) {
-    const box = document.getElementById("rec-frequency");
-    if (!box) return;
-
-    box.innerHTML = `
-        <li>Total: ${freq.total}</li>
-        <li>Unique: ${freq.unique}</li>
-    `;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadRecommendations();
-});
