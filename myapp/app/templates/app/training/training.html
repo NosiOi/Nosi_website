@@ -1,58 +1,9 @@
 {% extends "app/base_app.html" %} {% block title %}Тренування — Nosi Fit{%
 endblock %} {% block styles %} {{ super() }}
-
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/training/training.css') }}"
 />
-
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals/modal_calendar.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals/modal_base.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals/modal_exercise.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals/modal_session.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals/modal_confirm.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals/modal_history.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals/modal_strength.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals/modal_exercise_picker.css') }}"
-/>
-
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/heatmap.css') }}"
-/>
-
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals/plan/modal.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/modals/plan/cards.css') }}"
-/>
-
 {% endblock %} {% block body_class %}training-page{% endblock %} {% block body
 %}
 <div class="training-page-wrapper">
@@ -70,6 +21,47 @@ endblock %} {% block styles %} {{ super() }}
 
   <div class="training-main-grid">
     <div class="training-left">
+      <section class="tr-card tr-card-session">
+        <div class="tr-card-header">
+          <h3 class="tr-card-title">Сьогоднішнє тренування</h3>
+          <button id="tr-edit-plan" class="tr-btn tr-btn-primary" type="button">
+            План
+          </button>
+        </div>
+
+        <div class="tr-session-info">
+          <input id="tr-workout-title" placeholder="Назва тренування" />
+        </div>
+
+        <div class="tr-session-actions-compact">
+          <button
+            id="tr-add-exercise"
+            class="tr-btn tr-btn-secondary"
+            type="button"
+          >
+            + Додати вправу
+          </button>
+          <button
+            id="tr-save-workout"
+            class="tr-btn tr-btn-primary"
+            type="button"
+          >
+            Зберегти тренування
+          </button>
+        </div>
+
+        <div
+          id="tr-workout-exercise-list"
+          class="tr-session-exercise-list"
+        ></div>
+      </section>
+
+      <section class="tr-card tr-card-heatmap">
+        {% include "app/training/training_heatmap.html" %}
+      </section>
+    </div>
+
+    <div class="training-right">
       <section class="tr-card tr-card-strength">
         <div class="tr-card-header">
           <h3 class="tr-card-title">Тест сили</h3>
@@ -78,7 +70,7 @@ endblock %} {% block styles %} {{ super() }}
             class="tr-btn tr-btn-primary"
             type="button"
           >
-            Тест
+            Пройти тест
           </button>
         </div>
 
@@ -103,86 +95,36 @@ endblock %} {% block styles %} {{ super() }}
           <h3 class="tr-card-title">Рекомендації</h3>
         </div>
 
-        <div class="tr-recommendations-block">
-          <h4>Слабкі місця</h4>
-          <ul id="tr-weak-points" class="tr-recommendations-list"></ul>
+        <div class="tr-rec-horizontal">
+          <div class="tr-rec-row">
+            <h4>Слабкі місця</h4>
+            <div id="tr-weak-points" class="tr-rec-badges"></div>
+          </div>
+
+          <div class="tr-rec-row">
+            <h4>Рекомендовані вправи</h4>
+            <div class="tr-rec-exercises-grid">
+              <div id="tr-exercise-col-1" class="tr-rec-exercises"></div>
+              <div id="tr-exercise-col-2" class="tr-rec-exercises"></div>
+            </div>
+          </div>
+
+          <div class="tr-rec-row">
+            <h4>Баланс м’язів</h4>
+            <div class="tr-balance-grid">
+              <div class="tr-balance-col" id="tr-balance-balanced"></div>
+              <div class="tr-balance-col" id="tr-balance-overloaded"></div>
+            </div>
+          </div>
         </div>
-
-        <div class="tr-recommendations-block">
-          <h4>Рекомендовані вправи</h4>
-          <ul
-            id="tr-exercise-recommendations"
-            class="tr-recommendations-list"
-          ></ul>
-        </div>
-
-        <div class="tr-recommendations-block">
-          <h4>Баланс м’язів</h4>
-          <ul
-            id="tr-balance-recommendations"
-            class="tr-recommendations-list"
-          ></ul>
-        </div>
-
-        <div class="tr-recommendations-block">
-          <h4>Прогрес сили</h4>
-          <ul id="tr-strength-progress" class="tr-recommendations-list"></ul>
-        </div>
-      </section>
-
-      <section id="heatmap-card" class="tr-card tr-card-heatmap">
-        {% include "app/training/training_heatmap.html" %}
-      </section>
-    </div>
-
-    <div class="training-right">
-      <section id="session-card" class="tr-card tr-card-session">
-        <div class="tr-card-header">
-          <h3 class="tr-card-title">Сьогоднішнє тренування</h3>
-          <button id="tr-edit-plan" class="tr-btn tr-btn-primary" type="button">
-            План
-          </button>
-        </div>
-
-        <div
-          id="today-session-container"
-          class="tr-session-exercise-list"
-        ></div>
-
-        <div class="tr-session-info">
-          <input
-            id="tr-workout-title"
-            class="tr-input"
-            placeholder="Назва тренування"
-          />
-        </div>
-
-        <div class="tr-session-actions-compact">
-          <button
-            id="tr-add-exercise"
-            class="tr-btn tr-btn-primary"
-            type="button"
-          >
-            Додати вправу
-          </button>
-          <button
-            id="tr-save-workout"
-            class="tr-btn tr-btn-primary"
-            type="button"
-          >
-            Зберегти
-          </button>
-        </div>
-
-        <div
-          id="tr-workout-exercise-list"
-          class="tr-session-exercise-list"
-        ></div>
       </section>
     </div>
   </div>
 </div>
-{% include "app/training/modals/training_misc_modals.html" %} {% include
+
+{% include "app/training/modals/training_calendar_modal.html" %} {% include
+"app/training/modals/training_day_details_modal.html" %} {% include
+"app/training/modals/training_misc_modals.html" %} {% include
 "app/training/modals/training_strength_test_modal.html" %} {% include
 "app/training/modals/plan/modal.html" %} {% include
 "app/training/modals/training_exercise_modals.html" %}
@@ -191,5 +133,4 @@ endblock %} {% block styles %} {{ super() }}
   type="module"
   src="{{ url_for('static', filename='js/training/main.js') }}"
 ></script>
-
 {% endblock %}
