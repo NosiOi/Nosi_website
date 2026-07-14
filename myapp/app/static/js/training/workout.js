@@ -1,32 +1,20 @@
 import { trainingStore } from "./store.js";
 
 export function renderWorkoutList() {
-    const list = document.getElementById("tr-workout-exercise-list");
-    if (!list) return;
-
-    list.innerHTML = "";
-
-    if (!trainingStore.workout.length) {
-        const empty = document.createElement("div");
-        empty.className = "tr-plan-day-empty";
-        empty.textContent = "Додай вправи у тренування";
-        list.appendChild(empty);
-        return;
-    }
+    const box = document.getElementById("tr-workout-exercise-list");
+    if (!box) return;
+    box.innerHTML = "";
 
     const sorted = [...trainingStore.workout].sort((a, b) => {
-        return (a.done ? 1 : 0) - (b.done ? 1 : 0);
+        if (a.done && !b.done) return 1;
+        if (!a.done && b.done) return -1;
+        return 0;
     });
 
     sorted.forEach(item => {
-        const idx = trainingStore.workout.indexOf(item);
-
         const row = document.createElement("div");
         row.className = "tr-session-ex-row";
         if (item.done) row.classList.add("tr-ex-done");
-
-        const left = document.createElement("div");
-        left.className = "tr-session-ex-left";
 
         const name = document.createElement("div");
         name.className = "tr-session-ex-name";
@@ -35,57 +23,85 @@ export function renderWorkoutList() {
         const inputs = document.createElement("div");
         inputs.className = "tr-session-ex-inputs";
 
-        const setsBox = document.createElement("input");
-        setsBox.type = "number";
-        setsBox.min = "1";
-        setsBox.value = item.sets;
-        setsBox.className = "tr-ex-sets";
-        setsBox.oninput = () => {
-            if (!item.done) item.sets = parseInt(setsBox.value) || 1;
+        const makeInlineBlock = (labelText, initialValue, onChange, isRange = false) => {
+            const wrap = document.createElement("div");
+            wrap.className = "tr-input-inline";
+
+            const input = document.createElement("input");
+            input.className = "tr-input-field";
+            input.value = initialValue;
+            input.oninput = () => onChange(input.value);
+
+            const arrows = document.createElement("div");
+            arrows.className = "tr-input-arrows";
+
+            const up = document.createElement("div");
+            up.className = "tr-arrow tr-arrow-up";
+            up.onclick = () => {
+                const val = input.value;
+                if (isRange) {
+                    const [a, b] = val.split("-").map(Number);
+                    const nv = `${a + 1}-${b + 1}`;
+                    input.value = nv;
+                    onChange(nv);
+                } else {
+                    const nv = (parseInt(val, 10) || 0) + 1;
+                    input.value = nv;
+                    onChange(nv);
+                }
+            };
+
+            const down = document.createElement("div");
+            down.className = "tr-arrow tr-arrow-down";
+            down.onclick = () => {
+                const val = input.value;
+                if (isRange) {
+                    const [a, b] = val.split("-").map(Number);
+                    const na = Math.max(1, a - 1);
+                    const nb = Math.max(na, b - 1);
+                    const nv = `${na}-${nb}`;
+                    input.value = nv;
+                    onChange(nv);
+                } else {
+                    const nv = Math.max(0, (parseInt(val, 10) || 0) - 1);
+                    input.value = nv;
+                    onChange(nv);
+                }
+            };
+
+            const label = document.createElement("span");
+            label.className = "tr-input-inline-label";
+            label.textContent = labelText;
+
+            arrows.appendChild(up);
+            arrows.appendChild(down);
+            wrap.appendChild(input);
+            wrap.appendChild(arrows);
+            wrap.appendChild(label);
+
+            return wrap;
         };
 
-        const repsBox = document.createElement("input");
-        repsBox.type = "text";
-        repsBox.value = item.reps;
-        repsBox.className = "tr-ex-reps";
-        repsBox.oninput = () => {
-            if (!item.done) item.reps = repsBox.value || "8-12";
-        };
+        const setsBlock = makeInlineBlock("підх.", item.sets, v => item.sets = parseInt(v, 10) || 0);
+        const repsBlock = makeInlineBlock("повт.", item.reps, v => item.reps = v, true);
+        const loadBlock = makeInlineBlock("кг", item.load, v => item.load = parseFloat(v) || 0);
 
-        const loadBox = document.createElement("input");
-        loadBox.type = "number";
-        loadBox.min = "0";
-        loadBox.step = "0.5";
-        loadBox.value = item.load;
-        loadBox.className = "tr-ex-load";
-        loadBox.oninput = () => {
-            if (!item.done) item.load = parseFloat(loadBox.value) || 0;
-        };
+        inputs.appendChild(setsBlock);
+        inputs.appendChild(repsBlock);
+        inputs.appendChild(loadBlock);
 
-        inputs.append(setsBox, repsBox, loadBox);
-        left.append(name, inputs);
-
-        const right = document.createElement("div");
-        right.className = "tr-session-ex-right";
-
-        const doneBox = document.createElement("div");
-        doneBox.className = "tr-ex-check";
-        if (item.done) doneBox.classList.add("checked");
-        doneBox.onclick = () => {
+        const check = document.createElement("div");
+        check.className = "tr-ex-check";
+        if (item.done) check.classList.add("checked");
+        check.onclick = () => {
             item.done = !item.done;
             renderWorkoutList();
         };
 
-        const del = document.createElement("button");
-        del.className = "tr-btn tr-btn-danger";
-        del.textContent = "×";
-        del.onclick = () => {
-            trainingStore.workout.splice(idx, 1);
-            renderWorkoutList();
-        };
+        row.appendChild(name);
+        row.appendChild(inputs);
+        row.appendChild(check);
 
-        right.append(doneBox, del);
-        row.append(left, right);
-        list.appendChild(row);
+        box.appendChild(row);
     });
 }
