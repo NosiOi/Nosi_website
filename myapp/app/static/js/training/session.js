@@ -1,38 +1,58 @@
+import { TrainingAPI } from "./api.js";
 import { trainingStore } from "./store.js";
 import { renderWorkoutList } from "./workout.js";
-import { loadPlan } from "./plans.js";
 
 export function initSession() {
-    const saveWorkout = document.getElementById("tr-save-workout");
-    if (!saveWorkout) return;
+    const saveBtn = document.getElementById("tr-save-workout");
+    const titleInput = document.getElementById("tr-workout-title");
 
-    saveWorkout.onclick = () => {
-        if (!trainingStore.workout.length) return;
+    if (saveBtn) {
+        saveBtn.onclick = async () => {
+            trainingStore.workout.forEach(item => {
+                item.done = true;
+            });
 
-        const titleInput = document.getElementById("tr-workout-title");
-        const title = titleInput ? titleInput.value.trim() : "";
+            const payload = {
+                title: titleInput?.value || null,
+                exercises: trainingStore.workout.map(item => ({
+                    exercise: { id: item.exercise.id },
+                    sets: item.sets,
+                    reps: item.reps,
+                    load: item.load
+                }))
+            };
 
-        const payloadExercises = trainingStore.workout.map(item => ({
-            exercise: { id: item.exercise.id },
-            sets: item.sets ?? 3,
-            reps: item.reps ?? "8-12",
-            load: item.load ?? 0
-        }));
+            try {
+                const res = await TrainingAPI.completeSession(payload);
+                trainingStore.sessionId = res.id;
 
-        const btn = saveWorkout;
-        btn.disabled = true;
+                showSavedToast();
 
-        TrainingAPI.completeSession({
-            title,
-            exercises: payloadExercises
-        }).then(() => {
-            trainingStore.workout = [];
-            if (titleInput) titleInput.value = "";
-            renderWorkoutList();
-            TrainingAPI.getHeatmap().then(() => {});
-            loadPlan();
-        }).finally(() => {
-            btn.disabled = false;
-        });
-    };
+                trainingStore.workout.sort((a, b) => {
+                    if (a.done && !b.done) return 1;
+                    if (!a.done && b.done) return -1;
+                    return 0;
+                });
+
+                renderWorkoutList();
+            } catch (_) {}
+        };
+    }
+}
+
+function showSavedToast() {
+    const toast = document.createElement("div");
+    toast.className = "tr-toast-saved";
+    toast.textContent = "Тренування збережене";
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("show");
+    }, 10);
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
 }
