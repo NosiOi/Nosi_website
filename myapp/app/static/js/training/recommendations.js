@@ -1,4 +1,29 @@
+import { ICONS } from "/static/js/icons/icons.js";
+
 const safeArr = v => Array.isArray(v) ? v : (v ? [v] : []);
+
+const MUSCLE_NAMES = {
+    spine: "Хребет",
+    traps: "Трапеції",
+    abs: "Прес",
+    obliques: "Косі м’язи живота",
+    "hip-flexors": "Згиначі стегна",
+    chest: "Груди",
+    back: "Спина",
+    glutes: "Сідниці",
+    quads: "Квадрицепси",
+    shoulders: "Плечі",
+    triceps: "Трицепс",
+    core: "Кор",
+    legs: "Ноги"
+};
+
+const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+const translateMuscle = m => {
+    const key = String(m).toLowerCase();
+    return MUSCLE_NAMES[key] || capitalize(m);
+};
 
 export function renderRecommendations(data) {
     renderWeakPoints(data.muscles || {});
@@ -9,53 +34,35 @@ export function renderRecommendations(data) {
 function renderWeakPoints(muscles) {
     const box = document.getElementById("tr-weak-points");
     if (!box) return;
-    box.innerHTML = "";
-    safeArr(muscles.weak).slice(0, 5).forEach(m => {
-        const badge = document.createElement("span");
-        badge.className = "tr-rec-badge";
-        badge.textContent = m;
-        box.appendChild(badge);
-    });
-}
 
-function mapReasonText(r) {
-    const t = String(r).toLowerCase();
-    if (t.includes("weak muscle group")) return "Покращує слабкі м’язи";
-    if (t.includes("weak movement pattern")) return "Покращує техніку руху";
-    if (t.includes("mobility")) return "Покращує мобільність";
-    return r;
+    const items = safeArr(muscles.weak).slice(0, 6);
+
+    box.innerHTML = items
+        .map(m => `<div class="tr-weak-item">${translateMuscle(m)}</div>`)
+        .join("");
 }
 
 function renderRecommendedExercises(list) {
-    const col1 = document.getElementById("tr-exercise-col-1");
-    const col2 = document.getElementById("tr-exercise-col-2");
+    const box = document.getElementById("tr-rec-grid");
+    if (!box) return;
 
-    if (!col1 || !col2) return;
+    const items = safeArr(list).slice(0, 3);
 
-    col1.innerHTML = "";
-    col2.innerHTML = "";
-
-    const items = safeArr(list).slice(0, 4);
-
-    items.forEach((item, i) => {
-        const wrap = document.createElement("div");
-        wrap.className = "tr-rec-exercise";
-
-        const title = document.createElement("div");
-        title.className = "tr-rec-ex-title";
-        title.textContent = item.exercise;
-
-        const desc = document.createElement("div");
-        desc.className = "tr-rec-ex-desc";
-        const firstReason = safeArr(item.reasons)[0] || "";
-        desc.textContent = mapReasonText(firstReason);
-
-        wrap.appendChild(title);
-        wrap.appendChild(desc);
-
-        if (i < 2) col1.appendChild(wrap);
-        else col2.appendChild(wrap);
-    });
+    box.innerHTML = items
+        .map(item => {
+            const reason = safeArr(item.reasons)[0] || "";
+            const reasonText = capitalize(reason);
+            return `
+                <div class="tr-rec-line-item">
+                    <div class="tr-rec-line-item-top">
+                        ${ICONS.exercise}
+                        <span>${item.exercise}</span>
+                    </div>
+                    <div class="tr-rec-item-tag">${reasonText}</div>
+                </div>
+            `;
+        })
+        .join("");
 }
 
 function renderBalance(muscles) {
@@ -64,20 +71,23 @@ function renderBalance(muscles) {
 
     if (!balancedBox || !overloadedBox) return;
 
-    balancedBox.innerHTML = "";
-    overloadedBox.innerHTML = "";
+    balancedBox.innerHTML = safeArr(muscles.balanced)
+        .slice(0, 3)
+        .map(
+            m =>
+                `<div class="tr-balance-item tr-balance-item-balanced">${ICONS.balanced}<span>${translateMuscle(
+                    m
+                )}</span></div>`
+        )
+        .join("");
 
-    safeArr(muscles.balanced).slice(0, 3).forEach(m => {
-        const row = document.createElement("div");
-        row.className = "tr-balance-item";
-        row.innerHTML = `<span>${m}</span><span>🟢 Збалансовані</span>`;
-        balancedBox.appendChild(row);
-    });
-
-    safeArr(muscles.overloaded).slice(0, 3).forEach(m => {
-        const row = document.createElement("div");
-        row.className = "tr-balance-item";
-        row.innerHTML = `<span>${m}</span><span>🔴 Перевантажені</span>`;
-        overloadedBox.appendChild(row);
-    });
+    overloadedBox.innerHTML = safeArr(muscles.overloaded)
+        .slice(0, 3)
+        .map(
+            m =>
+                `<div class="tr-balance-item tr-balance-item-overloaded">${ICONS.overloaded}<span>${translateMuscle(
+                    m
+                )}</span></div>`
+        )
+        .join("");
 }
