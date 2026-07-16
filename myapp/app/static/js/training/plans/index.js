@@ -7,6 +7,8 @@ import { openExercisePicker } from "../exercise_picker.js";
 
 function renderDays() {
     const container = document.getElementById("tr-plan-days");
+    if (!container) return;
+
     container.innerHTML = "";
 
     DAYS.forEach(day => {
@@ -24,17 +26,21 @@ function renderDays() {
 }
 
 export function initPlanModal() {
+    if (!dom.modal) return;
+
     renderDays();
     initState();
 
-    dom.dayButtons.forEach(btn => {
-        btn.onclick = () => {
-            state.currentDay = btn.dataset.day;
-            dom.dayButtons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            renderExercises(openExercisePicker);
-        };
-    });
+    if (dom.dayButtons) {
+        dom.dayButtons.forEach(btn => {
+            btn.onclick = () => {
+                state.currentDay = btn.dataset.day;
+                dom.dayButtons.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                renderExercises(openExercisePicker);
+            };
+        });
+    }
 
     if (dom.addBtn) {
         dom.addBtn.onclick = () => {
@@ -73,7 +79,9 @@ export function initPlanModal() {
         };
     }
 
-    dom.closeBtns.forEach(btn => {
-        btn.onclick = () => dom.modal.classList.remove("open");
-    });
+    if (dom.closeBtns) {
+        dom.closeBtns.forEach(btn => {
+            btn.onclick = () => dom.modal.classList.remove("open");
+        });
+    }
 }
