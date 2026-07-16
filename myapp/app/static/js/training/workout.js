@@ -29,9 +29,6 @@ export function renderWorkoutList() {
         row.className = "tr-session-ex-row";
         if (item.done) row.classList.add("tr-ex-done");
 
-        const left = document.createElement("div");
-        left.className = "tr-session-ex-left";
-
         const nameWrap = document.createElement("div");
         nameWrap.className = "tr-session-ex-name-wrap";
 
@@ -47,11 +44,6 @@ export function renderWorkoutList() {
             planIcon.innerHTML = ICONS.plan;
             nameWrap.appendChild(planIcon);
         }
-
-        left.appendChild(nameWrap);
-
-        const inputs = document.createElement("div");
-        inputs.className = "tr-session-ex-inputs";
 
         const makeInlineBlock = (labelText, initialValue, onChange, isRange = false, disabled = false) => {
             const wrap = document.createElement("div");
@@ -114,9 +106,7 @@ export function renderWorkoutList() {
             wrap.appendChild(arrows);
             wrap.appendChild(label);
 
-            if (disabled) {
-                wrap.classList.add("tr-input-inline-disabled");
-            }
+            if (disabled) wrap.classList.add("tr-input-inline-disabled");
 
             return wrap;
         };
@@ -127,12 +117,6 @@ export function renderWorkoutList() {
         const repsBlock = makeInlineBlock("повт.", item.reps, v => item.reps = v, true, disabled);
         const loadBlock = makeInlineBlock("кг", item.load, v => item.load = parseFloat(v) || 0, false, disabled);
 
-        inputs.appendChild(setsBlock);
-        inputs.appendChild(repsBlock);
-        inputs.appendChild(loadBlock);
-
-        left.appendChild(inputs);
-
         const check = document.createElement("div");
         check.className = "tr-ex-check";
         if (item.done) check.classList.add("checked");
@@ -141,7 +125,10 @@ export function renderWorkoutList() {
             renderWorkoutList();
         };
 
-        row.appendChild(left);
+        row.appendChild(nameWrap);
+        row.appendChild(repsBlock);
+        row.appendChild(setsBlock);
+        row.appendChild(loadBlock);
         row.appendChild(check);
 
         box.appendChild(row);
