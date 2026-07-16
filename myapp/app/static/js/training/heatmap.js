@@ -8,8 +8,6 @@ export function initHeatmap() {
     const yearSelect = document.getElementById("tr-heatmap-year");
     const yearSelectCal = document.getElementById("cal-year-select");
     const openCalendar = document.getElementById("tr-open-calendar");
-    const closeCalendar = document.querySelectorAll("[data-close-calendar]");
-    const closeDayDetails = document.querySelectorAll("[data-close-day-details]");
     const modal = document.getElementById("tr-calendar-modal");
 
     if (!yearSelect || !yearSelectCal || !openCalendar || !modal) return;
@@ -44,9 +42,13 @@ export function initHeatmap() {
     });
 
     openCalendar.addEventListener("click", () => modal.classList.add("open"));
+
+    const closeCalendar = document.querySelectorAll("[data-close-calendar]");
     closeCalendar.forEach(btn =>
         btn.addEventListener("click", () => modal.classList.remove("open"))
     );
+
+    const closeDayDetails = document.querySelectorAll("[data-close-day-details]");
     closeDayDetails.forEach(btn =>
         btn.addEventListener("click", () => {
             const m = document.getElementById("tr-day-details-modal");
@@ -91,18 +93,21 @@ export function initHeatmap() {
 function renderHeatmap(days) {
     const grid = document.getElementById("training-heatmap");
     if (!grid) return;
+
     grid.innerHTML = "";
 
     days.forEach(d => {
+        const level = Number(d.level) || 0;
+
         const cell = document.createElement("div");
         cell.className = "heatmap-cell";
-        cell.dataset.level = Number(d.level) || 0;
+        cell.dataset.level = level;
 
         if (d.is_today) cell.classList.add("today");
 
         const tooltip = document.createElement("div");
         tooltip.className = "heatmap-tooltip";
-        tooltip.textContent = `${d.percent}% навантаження (${Number(d.load) || 0} од.)`;
+        tooltip.textContent = `${d.percent || 0}% навантаження (${Number(d.load) || 0} од.)`;
 
         cell.appendChild(tooltip);
         grid.appendChild(cell);
@@ -140,7 +145,7 @@ function renderCalendarMonth() {
 
         const load = document.createElement("div");
         load.className = "tr-calendar-load";
-        load.textContent = `${d.percent}%`;
+        load.textContent = `${d.percent || 0}%`;
 
         item.appendChild(date);
         item.appendChild(load);
@@ -192,9 +197,9 @@ function openDayDetails(date) {
             modal.classList.add("open");
         })
         .catch(() => {
-            const body = document.getElementById("tr-day-details-body");
             const modal = document.getElementById("tr-day-details-modal");
             const title = document.getElementById("tr-day-details-title");
+            const body = document.getElementById("tr-day-details-body");
 
             if (title) title.textContent = "Помилка";
             if (body) body.innerHTML = "<p>Не вдалося завантажити дані.</p>";
