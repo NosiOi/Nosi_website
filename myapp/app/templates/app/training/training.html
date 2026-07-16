@@ -140,7 +140,11 @@ endblock %} {% block styles %} {{ super() }}
 </div>
 
 {% include "app/training/modals/training_calendar_modal.html" %} {% include
-"app/training/modals/training_day_details_modal.html" %}
+"app/training/modals/training_day_details_modal.html" %} {% include
+"app/training/modals/training_exercise_modals.html" %} {% include
+"app/training/modals/training_misc_modals.html" %} {% include
+"app/training/modals/training_strength_test_modal.html" %} {% include
+"app/training/modals/plan/modal.html" %}
 
 <script type="module">
   import { ICONS } from "/static/js/icons/icons.js";
