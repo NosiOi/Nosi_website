@@ -5,6 +5,7 @@ let pickerCallback = null;
 export function openExercisePicker(callback) {
     pickerCallback = callback;
     const modal = document.getElementById("tr-modal-picker");
+    if (!modal) return;
     modal.classList.add("open");
 }
 
@@ -13,6 +14,9 @@ export function initExercisePicker() {
     const list = document.getElementById("tr-ex-list");
     const search = document.getElementById("tr-ex-search");
     const cats = document.querySelectorAll(".tr-ex-cat");
+
+    if (!modal || !list || !search || !cats.length) return;
+
     const closeBtns = modal.querySelectorAll("[data-close-picker]");
 
     const renderList = items => {
