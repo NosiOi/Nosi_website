@@ -8,13 +8,11 @@ export function initSession() {
 
     if (saveBtn) {
         saveBtn.onclick = async () => {
-            trainingStore.workout.forEach(item => {
-                item.done = true;
-            });
+            const selected = trainingStore.workout.filter(item => item.done);
 
             const payload = {
                 title: titleInput?.value || null,
-                exercises: trainingStore.workout.map(item => ({
+                exercises: selected.map(item => ({
                     exercise: { id: item.exercise.id },
                     sets: item.sets,
                     reps: item.reps,
