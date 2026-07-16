@@ -4,6 +4,8 @@ import { DAYS } from "./constants.js";
 import { renderExercises } from "./ui/render.js";
 import { savePlan } from "./services/save.js";
 import { openExercisePicker } from "../exercise_picker.js";
+import { trainingStore } from "../store.js";
+import { renderWorkoutList } from "../workout.js";
 
 function renderDays() {
     const container = document.getElementById("tr-plan-days");
@@ -23,6 +25,37 @@ function renderDays() {
     });
 
     dom.dayButtons = container.querySelectorAll(".tr-plan-day");
+}
+
+function syncPlanToSession() {
+    const allExercises = [];
+    Object.keys(state.days).forEach(dayKey => {
+        const list = state.days[dayKey] || [];
+        list.forEach(item => {
+            allExercises.push(item);
+        });
+    });
+
+    trainingStore.workout = trainingStore.workout.filter(item => !item.fromPlan);
+
+    allExercises.forEach(item => {
+        trainingStore.workout.push({
+            exercise: item.exercise,
+            sets: item.sets,
+            reps: item.reps,
+            load: item.load,
+            done: true,
+            fromPlan: true
+        });
+    });
+
+    trainingStore.workout.sort((a, b) => {
+        if (a.done && !b.done) return 1;
+        if (!a.done && b.done) return -1;
+        return 0;
+    });
+
+    renderWorkoutList();
 }
 
 export function initPlanModal() {
@@ -67,7 +100,12 @@ export function initPlanModal() {
     }
 
     if (dom.saveBtn) {
-        dom.saveBtn.onclick = () => savePlan();
+        dom.saveBtn.onclick = async () => {
+            try {
+                await savePlan();
+                syncPlanToSession();
+            } catch (_) {}
+        };
     }
 
     if (dom.openBtn) {
