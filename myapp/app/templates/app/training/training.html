@@ -4,6 +4,14 @@ endblock %} {% block styles %} {{ super() }}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/training/training.css') }}"
 />
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/heatmap/heatmap.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/training/heatmap/calendar_widget.css') }}"
+/>
 {% endblock %} {% block body_class %}training-page{% endblock %} {% block body
 %}
 
@@ -130,6 +138,9 @@ endblock %} {% block styles %} {{ super() }}
     </div>
   </div>
 </div>
+
+{% include "app/training/modals/training_calendar_modal.html" %} {% include
+"app/training/modals/training_day_details_modal.html" %}
 
 <script type="module">
   import { ICONS } from "/static/js/icons/icons.js";
