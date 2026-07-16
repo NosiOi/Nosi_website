@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         TrainingAPI.getAnalytics()
             .then(data => {
                 renderAnalytics(data);
-
                 renderStrengthTestResults(
                     data?.raw_performance ??
                     data?.performance_raw ??
@@ -63,7 +62,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     load: 0,
                     done: false
                 });
-
                 renderWorkoutList();
             });
         };
@@ -71,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     initSession();
     initExercisePicker();
-    setTimeout(() => initPlanModal(), 0);
+    initPlanModal();
     renderWorkoutList();
     initHeatmap();
     initStrengthTest();
