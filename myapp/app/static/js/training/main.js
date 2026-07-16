@@ -3,8 +3,7 @@ import { trainingStore } from "./store.js";
 import { renderCurrentDate, renderAnalytics, renderStrengthTestResults } from "./dashboard.js";
 import { loadPlan } from "./plans.js";
 import { renderWorkoutList } from "./workout.js";
-import { initExercisePicker } from "./exercise_picker.js";
-import { openExercisePicker } from "./exercise_picker.js";
+import { initExercisePicker, openExercisePicker } from "./exercise_picker.js";
 import { initSession } from "./session.js";
 import { initPlanModal } from "./plan_modal.js";
 import { renderRecommendations } from "./recommendations.js";
@@ -60,7 +59,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     sets: 3,
                     reps: "8-12",
                     load: 0,
-                    done: false
+                    done: false,
+                    fromPlan: false
                 });
                 renderWorkoutList();
             });
