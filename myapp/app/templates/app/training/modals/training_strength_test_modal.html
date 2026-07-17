@@ -6,35 +6,74 @@
     </div>
 
     <div class="tr-modal-body tr-strength-body">
-      <p class="tr-strength-desc">
-        Виконайте максимальну кількість повторень без пауз.
-      </p>
+      <p class="tr-strength-desc">Максимум повторень без пауз.</p>
 
       <div class="tr-strength-field">
-        <label for="st_pushups">Віджимання</label>
-        <input id="st_pushups" type="number" min="0" class="tr-input" />
+        <label for="st_pushups">
+          <span class="tr-strength-icon"></span>
+          Віджимання
+        </label>
+
+        <div class="tr-strength-input-box">
+          <div class="tr-arrow-up" data-inc="st_pushups"></div>
+          <input
+            id="st_pushups"
+            type="number"
+            min="0"
+            class="tr-strength-input"
+          />
+          <div class="tr-arrow-down" data-dec="st_pushups"></div>
+        </div>
       </div>
 
       <div class="tr-strength-field">
-        <label for="st_squats">Присідання</label>
-        <input id="st_squats" type="number" min="0" class="tr-input" />
+        <label for="st_squats">
+          <span class="tr-strength-icon"></span>
+          Присідання
+        </label>
+
+        <div class="tr-strength-input-box">
+          <div class="tr-arrow-up" data-inc="st_squats"></div>
+          <input
+            id="st_squats"
+            type="number"
+            min="0"
+            class="tr-strength-input"
+          />
+          <div class="tr-arrow-down" data-dec="st_squats"></div>
+        </div>
       </div>
 
       <div class="tr-strength-field">
-        <label for="st_situps">Скручування</label>
-        <input id="st_situps" type="number" min="0" class="tr-input" />
+        <label for="st_situps">
+          <span class="tr-strength-icon"></span>
+          Скручування
+        </label>
+
+        <div class="tr-strength-input-box">
+          <div class="tr-arrow-up" data-inc="st_situps"></div>
+          <input
+            id="st_situps"
+            type="number"
+            min="0"
+            class="tr-strength-input"
+          />
+          <div class="tr-arrow-down" data-dec="st_situps"></div>
+        </div>
       </div>
+
+      <div id="strength-error" class="tr-strength-error hidden"></div>
 
       <div id="strength-success" class="tr-strength-success hidden">
         <div class="checkmark"></div>
-        <p>Дані збережено</p>
+        <p>Тест збережено. Рекомендації оновлено</p>
       </div>
     </div>
 
     <div class="tr-modal-footer">
       <button class="tr-btn tr-btn-ghost" data-close-strength>Скасувати</button>
       <button id="strength-test-submit" class="tr-btn tr-btn-primary">
-        <span class="btn-text">Зберегти</span>
+        <span class="btn-text">Завершити тест</span>
         <span class="btn-loader hidden"></span>
       </button>
     </div>
