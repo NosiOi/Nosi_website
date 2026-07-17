@@ -34,7 +34,7 @@ endblock %} {% block styles %} {{ super() }}
         <div class="tr-card-header">
           <h3 class="tr-card-title">Сьогоднішнє тренування</h3>
           <button id="tr-edit-plan" class="tr-btn tr-btn-primary" type="button">
-            План
+            План тренувань
           </button>
         </div>
 
@@ -148,6 +148,8 @@ endblock %} {% block styles %} {{ super() }}
 "app/training/modals/training_day_details_modal.html" %} {% include
 "app/training/modals/plan/modal.html" %}
 
+<script type="module" src="/static/js/icons/icons.js"></script>
+
 <script type="module">
   import { ICONS } from "/static/js/icons/icons.js";
   document.getElementById("tr-icon-weak").innerHTML = ICONS.weak;
@@ -155,8 +157,8 @@ endblock %} {% block styles %} {{ super() }}
   document.getElementById("tr-icon-balance").innerHTML = ICONS.balance;
 </script>
 
-<script
-  type="module"
+<script type="module" src="{{ url_for('static', filename='js/training/main.js') }}"></script>
+
   src="{{ url_for('static', filename='js/training/main.js') }}"
 ></script>
 
