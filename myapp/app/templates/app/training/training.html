@@ -4,27 +4,29 @@ endblock %} {% block styles %} {{ super() }}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/training/training.css') }}"
 />
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/heatmap/heatmap.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/training/heatmap/calendar_widget.css') }}"
-/>
 {% endblock %} {% block body_class %}training-page{% endblock %} {% block body
 %}
 
 <div class="training-page-wrapper">
-  <div class="training-header-row">
+  <div class="training-header">
     <div class="training-header-left">
-      <h1 class="page-title">Тренування</h1>
-      <div class="page-subtitle">
-        Сьогоднішнє тренування, прогрес та рекомендації
+      <div class="training-header-icon-box">
+        <span class="training-header-icon" id="training-header-icon"></span>
+      </div>
+
+      <div class="training-header-text">
+        <h1 class="training-title">Тренування</h1>
+        <div class="training-subtitle">
+          Плануйте тренування • Аналізуйте прогрес • Отримуйте рекомендації
+        </div>
       </div>
     </div>
+
     <div class="training-header-right">
-      <div class="date-display" id="current-date"></div>
+      <div class="training-header-info">
+        <div class="training-header-label">Сьогодні</div>
+        <div id="current-date" class="training-header-value"></div>
+      </div>
     </div>
   </div>
 
@@ -155,10 +157,11 @@ endblock %} {% block styles %} {{ super() }}
   document.getElementById("tr-icon-weak").innerHTML = ICONS.weak;
   document.getElementById("tr-icon-recommended").innerHTML = ICONS.recommended;
   document.getElementById("tr-icon-balance").innerHTML = ICONS.balance;
+  document.getElementById("training-header-icon").innerHTML = ICONS.exercise;
 </script>
 
-<script type="module" src="{{ url_for('static', filename='js/training/main.js') }}"></script>
-
+<script
+  type="module"
   src="{{ url_for('static', filename='js/training/main.js') }}"
 ></script>
 
