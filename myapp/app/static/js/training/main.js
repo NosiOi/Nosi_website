@@ -8,7 +8,7 @@ import { initSession } from "./session.js";
 import { initPlanModal } from "./plan_modal.js";
 import { renderRecommendations } from "./recommendations.js";
 import { initHeatmap } from "./heatmap.js";
-import { initStrengthTest } from "./strength_test.js";
+import { initStrengthTest, injectIcons, setupArrows } from "./strength_test.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     renderCurrentDate();
@@ -73,4 +73,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderWorkoutList();
     initHeatmap();
     initStrengthTest();
+    injectIcons();
+    setupArrows();
 });
