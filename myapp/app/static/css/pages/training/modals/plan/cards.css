@@ -102,6 +102,7 @@
     gap: 6px;
 }
 
+/* LABEL ROW */
 .tr-plan-field-label-row {
     display: flex;
     align-items: center;
@@ -119,50 +120,66 @@
     color: var(--text-muted);
 }
 
-.tr-plan-counter {
+.tr-input-inline {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
+    background: var(--surface-input);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-md);
+    padding: 4px 6px;
 }
 
-.tr-plan-counter-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--card-soft);
+.tr-input-field {
+    width: 40px;
+    background: transparent;
+    border: none;
     color: var(--text);
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.tr-input-field[type="number"]::-webkit-outer-spin-button,
+.tr-input-field[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.tr-input-arrows {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tr-arrow {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    background: var(--surface-hover);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: var(--transition);
 }
 
-.tr-plan-counter-btn:hover {
+.tr-arrow-up::before,
+.tr-arrow-down::before {
+    content: "";
+    border: 5px solid transparent;
+}
+
+.tr-arrow-up::before {
+    border-bottom-color: var(--accent);
+}
+
+.tr-arrow-down::before {
+    border-top-color: var(--accent);
+}
+
+.tr-arrow:hover {
     background: var(--accent-soft);
-    color: #000;
-    border-color: var(--accent);
-}
-
-.tr-plan-counter-input {
-    flex: 1;
-    min-width: 0;
-    padding: 8px 12px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    background: var(--card-soft);
-    color: var(--text);
-    font-size: 13px;
-    text-align: center;
-    transition: var(--transition);
-}
-
-.tr-plan-counter-input:focus {
-    border-color: var(--accent);
-    outline: none;
-    box-shadow: 0 0 0 1px rgba(255, 212, 59, 0.35);
 }
 
 .tr-plan-card-dragging {
@@ -173,4 +190,14 @@
 .tr-plan-card-drag-over {
     border-color: var(--accent);
     box-shadow: 0 0 0 1px rgba(255, 212, 59, 0.35);
+}
+
+.tr-plan-counter-input[type="number"]::-webkit-inner-spin-button,
+.tr-plan-counter-input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.tr-plan-counter-input[type="number"] {
+    -moz-appearance: textfield;
 }
