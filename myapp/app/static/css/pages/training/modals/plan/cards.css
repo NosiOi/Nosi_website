@@ -199,5 +199,6 @@
 }
 
 .tr-plan-counter-input[type="number"] {
+    appearance: textfield;
     -moz-appearance: textfield;
 }
