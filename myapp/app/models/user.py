@@ -47,13 +47,6 @@ class User(db.Model, UserMixin):
         cascade="all, delete-orphan",
     )
 
-    recovery_plan = db.relationship(
-        "RecoveryPlan",
-        back_populates="user",
-        uselist=False,
-        cascade="all, delete-orphan",
-    )
-
     user_equipment = db.relationship(
         "UserEquipment",
         back_populates="user",
