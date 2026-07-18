@@ -1,0 +1,2 @@
+class SleepService:
+    pass
