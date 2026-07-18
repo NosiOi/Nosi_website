@@ -1,0 +1,44 @@
+{% extends "app/base_app.html" %} {% block title %}Recovery — Nosi Fit{%
+endblock %} {% block styles %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/recovery/recovery.css') }}"
+/>
+{% endblock %} {% block body_class %}recovery-page{% endblock %} {% block body
+%}
+
+<div class="recovery-page-wrapper">
+  {% include "app/recovery/header.html" %}
+
+  <div class="recovery-main-grid">
+    <section class="rc-card rc-card-sleep">
+      {% include "app/recovery/widgets/sleep.html" %}
+    </section>
+
+    <section class="rc-card rc-card-score">
+      {% include "app/recovery/widgets/score.html" %}
+    </section>
+
+    <section class="rc-card rc-card-habits">
+      {% include "app/recovery/widgets/habits.html" %}
+    </section>
+
+    <section class="rc-card rc-card-recommendations">
+      {% include "app/recovery/widgets/recommendations.html" %}
+    </section>
+
+    <section class="rc-card rc-card-heatmap">
+      {% include "app/recovery/recovery_heatmap.html" %}
+    </section>
+  </div>
+</div>
+
+{% include "app/recovery/modals/sleep_modal.html" %} {% include
+"app/recovery/modals/habit_modal.html" %}
+
+<script
+  type="module"
+  src="{{ url_for('static', filename='js/recovery/main.js') }}"
+></script>
+
+{% endblock %}
