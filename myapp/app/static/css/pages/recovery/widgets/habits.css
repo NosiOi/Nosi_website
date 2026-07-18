@@ -1,0 +1,12 @@
+.rc-habits-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.rc-habit-card {
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background: var(--surface-input);
+    cursor: pointer;
+}
