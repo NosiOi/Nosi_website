@@ -1,0 +1,18 @@
+.recovery-page-wrapper {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.recovery-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.rc-card {
+    background: var(--card-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 20px;
+}
