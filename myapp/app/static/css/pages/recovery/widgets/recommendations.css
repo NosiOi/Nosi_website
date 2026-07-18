@@ -1,0 +1,11 @@
+.rc-rec-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rc-rec-item {
+    padding: 12px;
+    background: var(--surface-input);
+    border-radius: var(--radius-md);
+}
