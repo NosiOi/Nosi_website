@@ -44,3 +44,8 @@
     font-size: 13px;
     color: var(--text-muted);
 }
+
+.recovery-header-icon svg {
+    width: 24px;
+    height: 24px;
+}
