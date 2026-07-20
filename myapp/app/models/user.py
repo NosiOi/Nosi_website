@@ -47,6 +47,14 @@ class User(db.Model, UserMixin):
         cascade="all, delete-orphan",
     )
 
+    sleep_entries = db.relationship(
+        "SleepEntry",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="dynamic",
+        foreign_keys="SleepEntry.user_id",
+    )
+
     user_equipment = db.relationship(
         "UserEquipment",
         back_populates="user",
