@@ -55,6 +55,30 @@ class User(db.Model, UserMixin):
         foreign_keys="SleepEntry.user_id",
     )
 
+    recovery_habits = db.relationship(
+        "UserRecoveryHabit",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="dynamic",
+        foreign_keys="UserRecoveryHabit.user_id",
+    )
+
+    recovery_habit_logs = db.relationship(
+        "RecoveryHabitLog",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="dynamic",
+        foreign_keys="RecoveryHabitLog.user_id",
+    )
+
+    daily_recovery_snapshots = db.relationship(
+        "DailyRecoverySnapshot",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="dynamic",
+        foreign_keys="DailyRecoverySnapshot.user_id",
+    )
+
     user_equipment = db.relationship(
         "UserEquipment",
         back_populates="user",
