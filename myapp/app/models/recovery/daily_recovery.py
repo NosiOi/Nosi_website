@@ -8,7 +8,9 @@ class DailyRecovery(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    user = db.relationship("User", back_populates="daily_recovery")
+    user = db.relationship(
+        "User", back_populates="daily_recovery", cascade="all, delete-orphan"
+    )
 
     date = db.Column(db.Date, nullable=False)
 
@@ -18,3 +20,8 @@ class DailyRecovery(db.Model):
     recovery_score = db.Column(db.Integer, nullable=True)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    __table_args__ = (db.UniqueConstraint("user_id", "date", name="uq_daily_recovery"),)
