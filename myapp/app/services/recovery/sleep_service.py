@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from myapp.app import db
 from myapp.app.models.recovery.sleep_entry import SleepEntry
+from myapp.app.services.recovery.constants import SLEEP_EXCELLENT, SLEEP_GOOD, SLEEP_OK
 
 
 class SleepService:
@@ -8,11 +9,11 @@ class SleepService:
         return int((end - start).total_seconds() // 60)
 
     def calculate_sleep_score(self, duration):
-        if duration >= 480:
+        if duration >= SLEEP_EXCELLENT:
             return 100
-        if duration >= 420:
+        if duration >= SLEEP_GOOD:
             return 85
-        if duration >= 360:
+        if duration >= SLEEP_OK:
             return 70
         if duration >= 300:
             return 50
@@ -40,7 +41,7 @@ class SleepService:
         )
 
     def get_sleep_history(self, user_id, days=30):
-        cutoff = datetime.now(timezone.utc).date() - timedelta(days=days)
+        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
         return (
             SleepEntry.query.filter(
                 SleepEntry.user_id == user_id, SleepEntry.sleep_start >= cutoff
