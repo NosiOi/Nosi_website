@@ -1,15 +1,14 @@
 import os
 from dotenv import load_dotenv
-
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-load_dotenv(os.path.join(BASE_DIR, ".env"))
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_mail import Mail
 from authlib.integrations.flask_client import OAuth
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -24,12 +23,6 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
-
-    from myapp.app.training_engine.models.exercise import Exercise
-    from myapp.app.training_engine.models.muscle import Muscle
-    from myapp.app.training_engine.models.equipment import TEEquipment
-    from myapp.app.training_engine.models.exercise import Exercise
-
     migrate.init_app(app, db)
     mail.init_app(app)
     oauth.init_app(app)
@@ -87,13 +80,14 @@ def create_app():
     from myapp.app.routes.profile.delete_account_request import delete_request_bp
     from myapp.app.routes.profile.delete_account_confirm import delete_confirm_bp
     from myapp.app.routes.profile.delete_account_final import delete_final_bp
-
     from myapp.app.routes.profile.oauth_disconnect import oauth_disconnect_bp
 
     from myapp.app.routes.training.api_training import bp as training_api_bp
     from myapp.app.routes.onboarding_api import onboarding_api
     from myapp.app.routes.equipment_api import equipment_api
     from myapp.app.routes.injury_api import injury_api
+
+    from myapp.app.routes.recovery.recovery_api import recovery_bp
 
     app.register_blueprint(google_bp)
     app.register_blueprint(github_bp)
@@ -120,12 +114,13 @@ def create_app():
     app.register_blueprint(delete_request_bp)
     app.register_blueprint(delete_confirm_bp)
     app.register_blueprint(delete_final_bp)
-
     app.register_blueprint(oauth_disconnect_bp)
 
     app.register_blueprint(training_api_bp)
     app.register_blueprint(onboarding_api)
     app.register_blueprint(equipment_api)
     app.register_blueprint(injury_api)
+
+    app.register_blueprint(recovery_bp)
 
     return app
