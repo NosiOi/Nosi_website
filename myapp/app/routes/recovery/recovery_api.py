@@ -66,12 +66,9 @@ def add_habit():
     if user_id is None or habit_id is None:
         return jsonify({"error": "user_id and habit_id are required"}), 400
 
-    habit = habit_service.add_user_habit(user_id, habit_id)
+    habit, created = habit_service.add_user_habit(user_id, habit_id)
 
-    created = habit.created if hasattr(habit, "created") else False
-    status = 201 if created else 200
-
-    return jsonify({"id": habit.id}), status
+    return jsonify({"id": habit.id}), 201 if created else 200
 
 
 @recovery_bp.delete("/habits/<int:user_habit_id>")
