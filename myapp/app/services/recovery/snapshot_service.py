@@ -8,6 +8,21 @@ class SnapshotService:
     def __init__(self):
         self.scores = RecoveryScoreService()
 
+    def update_snapshot(
+        self,
+        snapshot,
+        sleep_score,
+        habit_score,
+        training_score,
+        energy_score,
+        recovery_score,
+    ):
+        snapshot.sleep_score = sleep_score
+        snapshot.habit_score = habit_score
+        snapshot.training_score = training_score
+        snapshot.energy_score = energy_score
+        snapshot.recovery_score = recovery_score
+
     def generate_snapshot(self, user_id, last_training_days):
         today = date.today()
 
@@ -25,11 +40,14 @@ class SnapshotService:
             user_id=user_id, date=today
         ).first()
         if snapshot:
-            snapshot.sleep_score = sleep_score
-            snapshot.habit_score = habit_score
-            snapshot.training_score = training_score
-            snapshot.energy_score = energy_score
-            snapshot.recovery_score = recovery_score
+            self.update_snapshot(
+                snapshot,
+                sleep_score,
+                habit_score,
+                training_score,
+                energy_score,
+                recovery_score,
+            )
         else:
             snapshot = DailyRecoverySnapshot(
                 user_id=user_id,
