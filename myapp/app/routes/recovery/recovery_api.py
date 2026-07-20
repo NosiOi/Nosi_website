@@ -29,7 +29,7 @@ def add_sleep():
     sleep_start = data.get("sleep_start")
     sleep_end = data.get("sleep_end")
 
-    if not user_id or not sleep_start or not sleep_end:
+    if user_id is None or sleep_start is None or sleep_end is None:
         return (
             jsonify({"error": "user_id, sleep_start and sleep_end are required"}),
             400,
@@ -38,8 +38,11 @@ def add_sleep():
     try:
         start_dt = parse_iso(sleep_start)
         end_dt = parse_iso(sleep_end)
-    except Exception:
+    except ValueError:
         return jsonify({"error": "Invalid datetime format"}), 400
+
+    if end_dt <= start_dt:
+        return jsonify({"error": "sleep_end must be after sleep_start"}), 400
 
     entry = sleep_service.add_sleep(user_id, start_dt, end_dt)
     return (
@@ -60,17 +63,21 @@ def add_habit():
     user_id = data.get("user_id")
     habit_id = data.get("habit_id")
 
-    if not user_id or not habit_id:
+    if user_id is None or habit_id is None:
         return jsonify({"error": "user_id and habit_id are required"}), 400
 
     habit = habit_service.add_user_habit(user_id, habit_id)
-    return jsonify({"id": habit.id}), 201
+
+    created = habit.created if hasattr(habit, "created") else False
+    status = 201 if created else 200
+
+    return jsonify({"id": habit.id}), status
 
 
 @recovery_bp.delete("/habits/<int:user_habit_id>")
 def remove_habit(user_habit_id):
     habit = habit_service.remove_user_habit(user_habit_id)
-    if not habit:
+    if habit is None:
         return jsonify({"error": "habit not found"}), 404
     return jsonify({"removed": user_habit_id}), 200
 
@@ -80,11 +87,11 @@ def log_habit():
     data = request.get_json(silent=True) or {}
     user_habit_id = data.get("user_habit_id")
 
-    if not user_habit_id:
+    if user_habit_id is None:
         return jsonify({"error": "user_habit_id is required"}), 400
 
     log = habit_service.log_habit(user_habit_id)
-    if not log:
+    if log is None:
         return jsonify({"error": "user_habit not found"}), 404
 
     return jsonify({"logged": log.id}), 200
@@ -95,7 +102,7 @@ def generate_snapshot():
     data = request.get_json(silent=True) or {}
     user_id = data.get("user_id")
 
-    if not user_id:
+    if user_id is None:
         return jsonify({"error": "user_id is required"}), 400
 
     last_training_days = data.get("last_training_days", 0)
@@ -112,15 +119,16 @@ def generate_snapshot():
 @recovery_bp.get("/snapshot/<int:user_id>")
 def get_snapshot(user_id):
     snapshot = stats_service.get_last_snapshot(user_id)
-    if not snapshot:
+    if snapshot is None:
         return jsonify({"snapshot": None}), 200
     return jsonify(snapshot.to_dict()), 200
 
 
 @recovery_bp.get("/heatmap/<int:user_id>")
 def get_heatmap(user_id):
+    raw_days = request.args.get("days", 30)
     try:
-        days = int(request.args.get("days", 30))
+        days = int(raw_days)
     except ValueError:
         return jsonify({"error": "days must be integer"}), 400
 
@@ -129,7 +137,7 @@ def get_heatmap(user_id):
         jsonify(
             [
                 {
-                    "date": str(s.date),
+                    "date": s.date.isoformat(),
                     "recovery_score": s.recovery_score,
                     "energy_score": s.energy_score,
                 }
@@ -143,7 +151,7 @@ def get_heatmap(user_id):
 @recovery_bp.get("/recommendations/<int:user_id>")
 def get_recommendations(user_id):
     snapshot = stats_service.get_last_snapshot(user_id)
-    if not snapshot:
+    if snapshot is None:
         return jsonify({"recovery_score": None, "recommendations": []}), 200
 
     recs = RecommendationService.get_recommendations(
