@@ -6,7 +6,7 @@ class RecoveryHabit(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    name = db.Column(db.String(128), nullable=False)
+    name = db.Column(db.String(128), nullable=False, unique=True)
     icon = db.Column(db.String(64), nullable=True)
     category = db.Column(db.String(64), nullable=True)
 
@@ -14,4 +14,6 @@ class RecoveryHabit(db.Model):
     sort_order = db.Column(db.Integer, default=0, nullable=False)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
 
-    user_habits = db.relationship("UserRecoveryHabit", back_populates="habit")
+    user_habits = db.relationship(
+        "UserRecoveryHabit", back_populates="habit", cascade="all, delete-orphan"
+    )
