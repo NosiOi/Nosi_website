@@ -3,15 +3,18 @@ from myapp.app.services.recovery.habit_service import HabitService
 
 
 class RecoveryScoreService:
+    def __init__(self):
+        self.sleep_service = SleepService()
+        self.habit_service = HabitService()
+
     def calculate_sleep_score(self, user_id):
-        sleep_service = SleepService()
-        sleep = sleep_service.get_last_sleep(user_id)
+        sleep = self.sleep_service.get_last_sleep(user_id)
         if not sleep:
             return 0
-        return sleep_service.calculate_sleep_score(sleep.duration_minutes)
+        return self.sleep_service.calculate_sleep_score(sleep.duration_minutes)
 
     def calculate_habit_score(self, user_id):
-        logs = HabitService().get_today_logs(user_id)
+        logs = self.habit_service.get_today_logs(user_id)
         if not logs:
             return 0
         completed = sum(1 for log in logs if log.completed)
