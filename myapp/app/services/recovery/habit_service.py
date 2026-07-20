@@ -21,6 +21,8 @@ class HabitService:
             user_id=user_id, habit_id=habit_id
         ).first()
         if existing:
+            existing.is_active = True
+            db.session.commit()
             return existing
         habit = UserRecoveryHabit(user_id=user_id, habit_id=habit_id)
         db.session.add(habit)
