@@ -12,9 +12,6 @@ from myapp.app.models.nutrition.user_weight import UserWeight
 from myapp.app.models.nutrition.saved_meal import SavedMeal
 from myapp.app.models.nutrition.user_water import UserWater
 
-# Recovery subsystem
-from myapp.app.models.recovery.plan import RecoveryPlan
-
 # Training Session Engine
 from myapp.app.models.training_session import TrainingSession, SessionExercise
 from myapp.app.training_engine.models.user_pref import UserPreference
@@ -24,3 +21,10 @@ from myapp.app.models.user_profile import UserProfile
 from myapp.app.models.user_goals import UserTrainingGoals
 from myapp.app.models.injury import Injury
 from myapp.app.models.user_injury import UserInjury
+
+# Recovery subsystem
+from myapp.app.models.recovery.sleep_entry import SleepEntry
+from myapp.app.models.recovery.habit import RecoveryHabit
+from myapp.app.models.recovery.user_habit import UserRecoveryHabit
+from myapp.app.models.recovery.habit_log import RecoveryHabitLog
+from myapp.app.models.recovery.daily_recovery_snapshot import DailyRecoverySnapshot
