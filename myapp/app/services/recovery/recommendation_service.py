@@ -1,5 +1,6 @@
 class RecommendationService:
-    def get_recommendations(self, sleep_score, habit_score, recovery_score):
+    @staticmethod
+    def get_recommendations(sleep_score, habit_score, recovery_score):
         recs = []
         if sleep_score < 60:
             recs.append("Try to sleep at least 8 hours today")
@@ -9,4 +10,4 @@ class RecommendationService:
             recs.append("Focus on hydration and light activity")
         if recovery_score > 85:
             recs.append("You are fully recovered and ready for intense training")
-        return recs
+        return recs[:3]
