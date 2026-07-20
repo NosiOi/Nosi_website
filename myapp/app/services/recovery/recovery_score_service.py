@@ -1,5 +1,11 @@
 from myapp.app.services.recovery.sleep_service import SleepService
 from myapp.app.services.recovery.habit_service import HabitService
+from myapp.app.services.recovery.constants import (
+    SLEEP_WEIGHT,
+    TRAINING_WEIGHT,
+    HABIT_WEIGHT,
+    ENERGY_WEIGHT,
+)
 
 
 class RecoveryScoreService:
@@ -31,14 +37,18 @@ class RecoveryScoreService:
         return 60
 
     def calculate_energy_score(self, sleep_score, habit_score, training_score):
-        return int(sleep_score * 0.4 + training_score * 0.4 + habit_score * 0.2)
+        return int(
+            sleep_score * SLEEP_WEIGHT
+            + training_score * TRAINING_WEIGHT
+            + habit_score * HABIT_WEIGHT
+        )
 
     def calculate_recovery_score(
         self, sleep_score, habit_score, training_score, energy_score
     ):
         return int(
-            sleep_score * 0.4
-            + habit_score * 0.2
-            + training_score * 0.3
-            + energy_score * 0.1
+            sleep_score * SLEEP_WEIGHT
+            + habit_score * HABIT_WEIGHT
+            + training_score * TRAINING_WEIGHT
+            + energy_score * ENERGY_WEIGHT
         )
