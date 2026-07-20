@@ -23,11 +23,12 @@ class HabitService:
         if existing:
             existing.is_active = True
             db.session.commit()
-            return existing
+            return existing, False
+
         habit = UserRecoveryHabit(user_id=user_id, habit_id=habit_id)
         db.session.add(habit)
         db.session.commit()
-        return habit
+        return habit, True
 
     def remove_user_habit(self, user_habit_id):
         habit = UserRecoveryHabit.query.get(user_habit_id)
@@ -41,10 +42,12 @@ class HabitService:
         habit = UserRecoveryHabit.query.get(user_habit_id)
         if not habit:
             return None
+
         today = date.today()
         log = RecoveryHabitLog.query.filter_by(
             user_habit_id=user_habit_id, date=today
         ).first()
+
         if log:
             log.completed = True
             log.completed_at = db.func.now()
@@ -56,6 +59,7 @@ class HabitService:
                 completed_at=db.func.now(),
             )
             db.session.add(log)
+
         db.session.commit()
         return log
 
