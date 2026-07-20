@@ -7,10 +7,14 @@ class SleepEntry(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    user = db.relationship("User", back_populates="sleep_entries")
+    user_id = db.Column(
+        db.Integer, db.ForeignKey("users.id"), nullable=False, index=True
+    )
+    user = db.relationship(
+        "User", back_populates="sleep_entries", cascade="all, delete-orphan"
+    )
 
-    sleep_start = db.Column(db.DateTime, nullable=False)
+    sleep_start = db.Column(db.DateTime, nullable=False, index=True)
     sleep_end = db.Column(db.DateTime, nullable=False)
 
     duration_minutes = db.Column(db.Integer, nullable=False)
@@ -18,8 +22,7 @@ class SleepEntry(db.Model):
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(
-        db.DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        nullable=False,
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
+
+    __table_args__ = (db.Index("idx_sleep_user_date", "user_id", "sleep_start"),)
