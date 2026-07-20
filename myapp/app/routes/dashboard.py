@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 
-dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/dashboard")
+dashboard_bp = Blueprint("dashboard", url_prefix="/dashboard")
 
 
 @dashboard_bp.route("/")
@@ -19,13 +19,13 @@ def training_page():
 @dashboard_bp.route("/nutrition")
 @login_required
 def nutrition_page():
-    return render_template("app/nutrition/nutrition.html")
+    return render_template("app/nutrition/nutrition.html", user=current_user)
 
 
 @dashboard_bp.route("/recovery")
 @login_required
 def recovery_page():
-    return render_template("app/recovery.html", user=current_user)
+    return render_template("app/recovery/recovery.html", user=current_user)
 
 
 @dashboard_bp.route("/assessment")
@@ -56,9 +56,7 @@ def training_explanation_page():
 @login_required
 def profile_page():
     return render_template(
-        "app/profile/profile.html",
-        user=current_user,
-        profile=current_user.profile
+        "app/profile/profile.html", user=current_user, profile=current_user.profile
     )
 
 
