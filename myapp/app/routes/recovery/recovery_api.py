@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from flask import Blueprint, request, jsonify
 from myapp.app.services.recovery import (
     SleepService,
@@ -16,23 +16,10 @@ snapshot_service = SnapshotService()
 stats_service = StatsService()
 
 
-def parse_iso(dt):
+def parse_iso(dt: str) -> datetime:
     if dt.endswith("Z"):
         dt = dt.replace("Z", "+00:00")
     return datetime.fromisoformat(dt)
-
-
-def snapshot_to_dict(snapshot):
-    return {
-        "id": snapshot.id,
-        "date": str(snapshot.date),
-        "sleep_score": snapshot.sleep_score,
-        "habit_score": snapshot.habit_score,
-        "training_score": snapshot.training_score,
-        "energy_score": snapshot.energy_score,
-        "recovery_score": snapshot.recovery_score,
-        "updated_at": snapshot.updated_at.isoformat() if snapshot.updated_at else None,
-    }
 
 
 @recovery_bp.post("/sleep")
@@ -112,11 +99,13 @@ def generate_snapshot():
         return jsonify({"error": "user_id is required"}), 400
 
     last_training_days = data.get("last_training_days", 0)
+
+    today = date.today()
+    existed_before = stats_service.get_daily_snapshot(user_id, today)
+
     snapshot = snapshot_service.generate_snapshot(user_id, last_training_days)
 
-    existed = StatsService().get_daily_snapshot(user_id, snapshot.date)
-    status = 200 if existed else 201
-
+    status = 200 if existed_before else 201
     return jsonify({"id": snapshot.id}), status
 
 
@@ -125,7 +114,7 @@ def get_snapshot(user_id):
     snapshot = stats_service.get_last_snapshot(user_id)
     if not snapshot:
         return jsonify({"snapshot": None}), 200
-    return jsonify(snapshot_to_dict(snapshot)), 200
+    return jsonify(snapshot.to_dict()), 200
 
 
 @recovery_bp.get("/heatmap/<int:user_id>")
