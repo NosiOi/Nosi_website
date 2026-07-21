@@ -65,10 +65,12 @@ block styles %}
 
 {% include "app/recovery/modals/sleep_modal.html" %} {% include
 "app/recovery/modals/habit_modal.html" %} {% endblock %} {% block scripts %}
-<script src="{{ url_for('static', filename='js/recovery/api.js') }}"></script>
-<script src="{{ url_for('static', filename='js/recovery/sleep.js') }}"></script>
-<script src="{{ url_for('static', filename='js/recovery/habits.js') }}"></script>
-<script src="{{ url_for('static', filename='js/recovery/heatmap.js') }}"></script>
-<script src="{{ url_for('static', filename='js/recovery/recommendations.js') }}"></script>
-<script src="{{ url_for('static', filename='js/recovery/dashboard.js') }}"></script>
+<script>
+  window.USER_ID = "{{ user.id }}";
+</script>
+
+<script
+  type="module"
+  src="{{ url_for('static', filename='js/recovery/main.js') }}"
+></script>
 {% endblock %}
