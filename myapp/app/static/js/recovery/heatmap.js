@@ -7,6 +7,7 @@ export function renderHeatmapWidget(heatmap) {
         return;
     }
 
+    // TODO: render calendar heatmap instead of simple summary
     el.innerHTML = `
         <div class="heatmap-card">
             <h3>Історія відновлення</h3>
