@@ -1,17 +1,25 @@
-<div id="rc-modal-sleep" class="rc-modal">
-  <div class="rc-modal-content">
-    <h3>Sleep Entry</h3>
+<div id="sleep-modal" class="modal hidden">
+  <div class="modal-content sleep-modal-content">
+    <header class="modal-header">
+      <h2>Додати сон</h2>
+      <button class="modal-close" id="close-sleep-modal">&times;</button>
+    </header>
 
-    <div class="rc-modal-body">
-      <label>Sleep start</label>
-      <input id="rc-sleep-start" type="time" />
+    <div class="modal-body">
+      <label for="sleep-start">Початок сну</label>
+      <input type="datetime-local" id="sleep-start" class="modal-input" />
 
-      <label>Sleep end</label>
-      <input id="rc-sleep-end" type="time" />
+      <label for="sleep-end">Кінець сну</label>
+      <input type="datetime-local" id="sleep-end" class="modal-input" />
+
+      <div id="sleep-modal-error" class="modal-error hidden"></div>
     </div>
 
-    <div class="rc-modal-footer">
-      <button id="rc-sleep-save" class="rc-btn rc-btn-primary">Save</button>
-    </div>
+    <footer class="modal-footer">
+      <button class="cmp-btn-secondary" id="cancel-sleep-modal">
+        Скасувати
+      </button>
+      <button class="cmp-btn-primary" id="submit-sleep-modal">Зберегти</button>
+    </footer>
   </div>
 </div>
