@@ -1,5 +1,6 @@
 /* Base */
 @import "./header.css";
+@import "./widgets/common.css";
 
 /* Widgets */
 @import "./widgets/sleep.css";
@@ -9,5 +10,28 @@
 @import "./widgets/recommendations.css";
 
 /* Modals */
-@import "./modals/modal_sleep.css";
-@import "./modals/modal_habit.css";
+@import "./modals/modal.css";
+
+/* Page layout */
+.recovery-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+}
+
+.recovery-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hidden {
+    display: none !important;
+}
