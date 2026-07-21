@@ -10,8 +10,16 @@ async function request(url, options = {}) {
     });
 
     if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `HTTP ${res.status}`);
+        let message = `HTTP ${res.status}`;
+        try {
+            const error = await res.json();
+            if (error && error.error) {
+                message = error.error;
+            }
+        } catch (_) {
+            // fallback to default message
+        }
+        throw new Error(message);
     }
 
     return res.json();
