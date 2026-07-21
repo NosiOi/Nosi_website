@@ -1,1 +1,25 @@
-<div id="recovery-heatmap" class="recovery-heatmap"></div>
+{% extends "app/base_app.html" %} {% block title %}Історія відновлення{%
+endblock %} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/recovery/heatmap_full.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="heatmap-full-container">
+  <header class="heatmap-full-header">
+    <h1>Історія відновлення</h1>
+    <p class="subtitle">Календар відновлення за останні дні</p>
+  </header>
+
+  <section class="heatmap-full-section">
+    <div id="heatmap-full-widget" class="heatmap-full-widget">
+      <!-- JS add heatmap -->
+    </div>
+  </section>
+</div>
+{% endblock %} {% block scripts %}
+<script
+  type="module"
+  src="{{ url_for('static', filename='js/recovery/heatmap_full.js') }}"
+></script>
+{% endblock %}
