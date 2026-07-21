@@ -1,11 +1,11 @@
-import { initSleep } from "./sleep.js";
-import { initHabits } from "./habits.js";
-import { initRecommendations } from "./recommendations.js";
-import { initRecoveryHeatmap } from "./heatmap.js";
+import { initRecoveryDashboard } from "./dashboard.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    initSleep();
-    initHabits();
-    initRecommendations();
-    initRecoveryHeatmap();
+    const userId = window.USER_ID; // ми передамо його з Flask
+    if (!userId) {
+        console.error("USER_ID не знайдено");
+        return;
+    }
+
+    initRecoveryDashboard(userId);
 });
