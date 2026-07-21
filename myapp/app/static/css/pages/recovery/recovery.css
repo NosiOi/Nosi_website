@@ -1,22 +1,13 @@
-.recovery-page-wrapper {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 24px;
-}
+/* Base */
+@import "./header.css";
 
-.recovery-main-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
+/* Widgets */
+@import "./widgets/sleep.css";
+@import "./widgets/habits.css";
+@import "./widgets/score.css";
+@import "./widgets/heatmap.css";
+@import "./widgets/recommendations.css";
 
-.rc-card {
-    background: var(--card-soft);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md);
-    padding: 20px;
-}
-
-.recovery-page-wrapper {
-    padding: 20px;
-}
+/* Modals */
+@import "./modals/modal_sleep.css";
+@import "./modals/modal_habit.css";
