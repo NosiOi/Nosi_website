@@ -1,50 +1,68 @@
+const API_BASE = "/api/recovery";
+
+async function request(url, options = {}) {
+    const res = await fetch(url, {
+        headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+        },
+        ...options
+    });
+
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `HTTP ${res.status}`);
+    }
+
+    return res.json();
+}
+
 export const RecoveryAPI = {
-    async getSnapshot(userId) {
-        const res = await fetch(`/api/recovery/snapshot/${userId}`);
-        return res.json();
+    getSnapshot(userId) {
+        return request(`${API_BASE}/snapshot/${userId}`);
     },
 
-    async getHeatmap(userId, days = 30) {
-        const res = await fetch(`/api/recovery/heatmap/${userId}?days=${days}`);
-        return res.json();
+    getHeatmap(userId, days = 30) {
+        return request(`${API_BASE}/heatmap/${userId}?days=${days}`);
     },
 
-    async getRecommendations(userId) {
-        const res = await fetch(`/api/recovery/recommendations/${userId}`);
-        return res.json();
+    getRecommendations(userId) {
+        return request(`${API_BASE}/recommendations/${userId}`);
     },
 
-    async addSleep(userId, sleepStart, sleepEnd) {
-        const res = await fetch(`/api/recovery/sleep`, {
+    addSleep(userId, sleepStart, sleepEnd) {
+        return request(`${API_BASE}/sleep`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user_id: userId, sleep_start: sleepStart, sleep_end: sleepEnd })
+            body: JSON.stringify({
+                user_id: userId,
+                sleep_start: sleepStart,
+                sleep_end: sleepEnd
+            })
         });
-        return res.json();
     },
 
-    async addHabit(userId, habitId) {
-        const res = await fetch(`/api/recovery/habits`, {
+    addHabit(userId, habitId) {
+        return request(`${API_BASE}/habits`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user_id: userId, habit_id: habitId })
+            body: JSON.stringify({
+                user_id: userId,
+                habit_id: habitId
+            })
         });
-        return res.json();
     },
 
-    async removeHabit(userHabitId) {
-        const res = await fetch(`/api/recovery/habits/${userHabitId}`, {
+    removeHabit(userHabitId) {
+        return request(`${API_BASE}/habits/${userHabitId}`, {
             method: "DELETE"
         });
-        return res.json();
     },
 
-    async logHabit(userHabitId) {
-        const res = await fetch(`/api/recovery/habits/logs`, {
+    logHabit(userHabitId) {
+        return request(`${API_BASE}/habits/logs`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user_habit_id: userHabitId })
+            body: JSON.stringify({
+                user_habit_id: userHabitId
+            })
         });
-        return res.json();
     }
 };
