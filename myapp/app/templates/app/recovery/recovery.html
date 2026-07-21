@@ -1,74 +1,52 @@
-{% extends "app/base_app.html" %} {% block title %}Recovery{% endblock %} {%
+{% extends "app/base_app.html" %} {% block title %}Відновлення{% endblock %} {%
 block styles %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/recovery/recovery.css') }}"
 />
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/recovery/widgets/sleep.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/recovery/widgets/habits.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/recovery/widgets/score.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/recovery/widgets/heatmap.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/recovery/widgets/recommendations.css') }}"
-/>
 {% endblock %} {% block content %}
-<div class="recovery-container">
+<div id="recovery-app" class="recovery-container" data-user-id="{{ user.id }}">
   <header class="recovery-header">
-    <h1>Recovery</h1>
-    <p class="subtitle">Daily recovery overview</p>
+    <h1>Відновлення</h1>
+    <p class="subtitle">Щоденний огляд стану відновлення</p>
   </header>
 
   <section id="sleep-section" class="recovery-section">
     <div class="section-header">
-      <h2>Sleep</h2>
-      <button class="cmp-btn-primary" id="open-sleep-modal">Log Sleep</button>
+      <h2>Сон</h2>
+      <button class="cmp-btn-primary" id="open-sleep-modal">Додати сон</button>
     </div>
     <div id="sleep-widget"></div>
   </section>
 
   <section id="habits-section" class="recovery-section">
     <div class="section-header">
-      <h2>Habits</h2>
-      <button class="cmp-btn-primary" id="open-habit-modal">Add Habit</button>
+      <h2>Звички</h2>
+      <button class="cmp-btn-primary" id="open-habit-modal">
+        Додати звичку
+      </button>
     </div>
     <div id="habits-widget"></div>
   </section>
 
   <section id="score-section" class="recovery-section">
-    <h2>Recovery Score</h2>
+    <h2>Загальний показник відновлення</h2>
     <div id="score-widget"></div>
   </section>
 
   <section id="heatmap-section" class="recovery-section">
-    <h2>Recovery Heatmap</h2>
+    <h2>Історія відновлення</h2>
     <div id="heatmap-widget"></div>
   </section>
 
   <section id="recommendations-section" class="recovery-section">
-    <h2>Recommendations</h2>
+    <h2>Рекомендації</h2>
     <div id="recommendations-widget"></div>
   </section>
 </div>
 
 {% include "app/recovery/modals/sleep_modal.html" %} {% include
 "app/recovery/modals/habit_modal.html" %} {% endblock %} {% block scripts %}
-<script>
-  window.USER_ID = "{{ user.id }}";
-</script>
-
 <script
   type="module"
   src="{{ url_for('static', filename='js/recovery/main.js') }}"
