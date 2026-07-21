@@ -9,12 +9,19 @@ export function renderSleepWidget(snapshot) {
 
     const score = snapshot.sleep_score;
     const durationMinutes = snapshot.sleep_duration_minutes ?? null;
+    const sleepStart = snapshot.sleep_start ?? null;
+    const sleepEnd = snapshot.sleep_end ?? null;
 
     let durationText = "";
     if (durationMinutes != null) {
         const hours = Math.floor(durationMinutes / 60);
         const minutes = durationMinutes % 60;
-        durationText = `${hours}h ${minutes}m`;
+        durationText = `${hours} год ${minutes} хв`;
+    }
+
+    let timeRangeText = "";
+    if (sleepStart && sleepEnd) {
+        timeRangeText = `${sleepStart} → ${sleepEnd}`;
     }
 
     el.innerHTML = `
@@ -22,6 +29,7 @@ export function renderSleepWidget(snapshot) {
             <h3>Сон</h3>
             <p>Оцінка: <strong>${score}</strong></p>
             ${durationText ? `<p>Тривалість: <strong>${durationText}</strong></p>` : ""}
+            ${timeRangeText ? `<p>Період: <strong>${timeRangeText}</strong></p>` : ""}
         </div>
     `;
 }
