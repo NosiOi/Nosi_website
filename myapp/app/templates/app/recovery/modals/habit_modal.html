@@ -1,11 +1,24 @@
-<div id="rc-modal-habit" class="rc-modal">
-  <div class="rc-modal-content">
-    <h3>Select Habit</h3>
+<div id="habit-modal" class="modal hidden">
+  <div class="modal-content habit-modal-content">
+    <header class="modal-header">
+      <h2>Додати звичку</h2>
+      <button class="modal-close" id="close-habit-modal">&times;</button>
+    </header>
 
-    <div id="rc-habit-list" class="rc-habit-list"></div>
+    <div class="modal-body">
+      <label for="habit-select">Оберіть звичку</label>
+      <select id="habit-select" class="modal-input">
+        <!-- JS add list habits -->
+      </select>
 
-    <div class="rc-modal-footer">
-      <button id="rc-habit-save" class="rc-btn rc-btn-primary">Save</button>
+      <div id="habit-modal-error" class="modal-error hidden"></div>
     </div>
+
+    <footer class="modal-footer">
+      <button class="cmp-btn-secondary" id="cancel-habit-modal">
+        Скасувати
+      </button>
+      <button class="cmp-btn-primary" id="submit-habit-modal">Додати</button>
+    </footer>
   </div>
 </div>
