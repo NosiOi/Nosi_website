@@ -1,15 +1,17 @@
-.rc-sleep-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.sleep-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
-.rc-sleep-value {
+.sleep-card h3 {
+    margin-bottom: 12px;
     font-size: 20px;
     font-weight: 600;
 }
 
-.rc-sleep-label {
-    font-size: 12px;
-    color: var(--text-muted);
+.sleep-card p {
+    margin-bottom: 8px;
+    font-size: 15px;
 }
