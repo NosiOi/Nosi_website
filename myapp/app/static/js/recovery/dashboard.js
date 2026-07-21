@@ -5,6 +5,36 @@ import { renderHeatmapWidget } from "./heatmap.js";
 import { renderRecommendationsWidget } from "./recommendations.js";
 import { renderScoreWidget } from "./score.js";
 
+const state = {
+    snapshot: null,
+    heatmap: null,
+    recommendations: null
+};
+
+function setLoading() {
+    renderSleepWidget(null, { loading: true });
+    renderHabitsWidget(null, { loading: true });
+    renderScoreWidget(null, { loading: true });
+    renderHeatmapWidget(null, { loading: true });
+    renderRecommendationsWidget(null, { loading: true });
+}
+
+function setError() {
+    renderSleepWidget(null, { error: true });
+    renderHabitsWidget(null, { error: true });
+    renderScoreWidget(null, { error: true });
+    renderHeatmapWidget(null, { error: true });
+    renderRecommendationsWidget(null, { error: true });
+}
+
+function renderAll() {
+    renderSleepWidget(state.snapshot);
+    renderHabitsWidget(state.snapshot);
+    renderScoreWidget(state.snapshot);
+    renderHeatmapWidget(state.heatmap);
+    renderRecommendationsWidget(state.recommendations);
+}
+
 async function loadSnapshot(userId) {
     try {
         return await RecoveryAPI.getSnapshot(userId);
@@ -33,6 +63,8 @@ async function loadRecommendations(userId) {
 }
 
 export async function refreshRecoveryDashboard(userId) {
+    setLoading();
+
     const [snapshotResult, heatmapResult, recommendationsResult] =
         await Promise.allSettled([
             loadSnapshot(userId),
@@ -49,11 +81,16 @@ export async function refreshRecoveryDashboard(userId) {
             ? recommendationsResult.value
             : null;
 
-    renderSleepWidget(snapshot);
-    renderHabitsWidget(snapshot);
-    renderScoreWidget(snapshot);
-    renderHeatmapWidget(heatmap);
-    renderRecommendationsWidget(recommendations);
+    state.snapshot = snapshot;
+    state.heatmap = heatmap;
+    state.recommendations = recommendations;
+
+    if (!snapshot && !heatmap && !recommendations) {
+        setError();
+        return;
+    }
+
+    renderAll();
 }
 
 export async function initRecoveryDashboard(userId) {
@@ -61,5 +98,6 @@ export async function initRecoveryDashboard(userId) {
         await refreshRecoveryDashboard(userId);
     } catch (err) {
         console.error("Recovery dashboard init error:", err);
+        setError();
     }
 }
