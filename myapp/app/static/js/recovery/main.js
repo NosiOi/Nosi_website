@@ -7,9 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const userId = root.dataset.userId;
-    if (!userId) {
-        console.error("User ID not found in recovery-app dataset");
+    const rawUserId = root.dataset.userId;
+    const userId = Number(rawUserId);
+
+    if (!rawUserId || Number.isNaN(userId)) {
+        console.error("User ID not found or invalid in recovery-app dataset");
         return;
     }
 
