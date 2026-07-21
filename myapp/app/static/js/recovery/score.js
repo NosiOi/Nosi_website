@@ -1,3 +1,10 @@
+function getScoreClass(score) {
+    if (score == null) return "score-neutral";
+    if (score < 40) return "score-low";
+    if (score < 70) return "score-medium";
+    return "score-high";
+}
+
 export function renderScoreWidget(snapshot) {
     const el = document.getElementById("score-widget");
     if (!el) return;
@@ -13,9 +20,11 @@ export function renderScoreWidget(snapshot) {
     const trainingScore = snapshot.training_score ?? null;
     const energyScore = snapshot.energy_score ?? null;
 
+    const scoreClass = getScoreClass(recoveryScore);
+
     el.innerHTML = `
-        <div class="score-card">
-            <h3>Загальний Recovery Score</h3>
+        <div class="score-card ${scoreClass}">
+            <h3>Загальний показник відновлення</h3>
             <p class="score-main">
                 <strong>${recoveryScore ?? "—"}</strong>
             </p>
