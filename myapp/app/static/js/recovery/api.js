@@ -1,63 +1,87 @@
 const API_BASE = "/api/recovery";
+const DEFAULT_TIMEOUT_MS = 10000;
 
-async function request(url, options = {}) {
-    const res = await fetch(url, {
-        headers: {
-            "Content-Type": "application/json",
-            ...(options.headers || {})
-        },
-        ...options
-    });
+async function request(url, options = {}, timeoutMs = DEFAULT_TIMEOUT_MS) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-    if (!res.ok) {
-        let message = `HTTP ${res.status}`;
-        try {
-            const contentType = res.headers.get("content-type") || "";
-            if (contentType.includes("application/json")) {
-                const error = await res.json();
-                if (error && error.error) {
-                    message = error.error;
+    try {
+        const res = await fetch(url, {
+            headers: {
+                "Content-Type": "application/json",
+                ...(options.headers || {})
+            },
+            signal: controller.signal,
+            ...options
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+            let message = `HTTP ${res.status}`;
+            try {
+                const contentType = res.headers.get("content-type") || "";
+                if (contentType.includes("application/json")) {
+                    const error = await res.json();
+                    if (error && error.error) {
+                        message = error.error;
+                    }
+                } else {
+                    const text = await res.text();
+                    if (text) {
+                        message = text;
+                    }
                 }
-            } else {
-                const text = await res.text();
-                if (text) {
-                    message = text;
-                }
+            } catch (_) {
+                // keep default message
             }
-        } catch (_) {
-            // keep default message
+            throw new Error(message);
         }
-        throw new Error(message);
-    }
 
-    const contentType = res.headers.get("content-type") || "";
-    if (contentType.includes("application/json")) {
-        return res.json();
-    }
+        const contentType = res.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+            return res.json();
+        }
 
-    // no JSON body (e.g. 204)
-    return null;
+        return null;
+    } catch (err) {
+        if (err.name === "AbortError") {
+            throw new Error("Request timeout");
+        }
+        throw err;
+    }
 }
+
+const ENDPOINTS = {
+    snapshot: (userId) => `${API_BASE}/snapshot/${userId}`,
+    heatmap: (userId, days) => `${API_BASE}/heatmap/${userId}?days=${days}`,
+    recommendations: (userId) => `${API_BASE}/recommendations/${userId}`,
+    habits: (userId) => `${API_BASE}/habits/${userId}`,
+    sleep: () => `${API_BASE}/sleep`,
+    addHabit: () => `${API_BASE}/habits`,
+    removeHabit: (userHabitId) => `${API_BASE}/habits/${userHabitId}`,
+    logHabit: () => `${API_BASE}/habits/logs`
+};
 
 export const RecoveryAPI = {
     getSnapshot(userId) {
-        return request(`${API_BASE}/snapshot/${userId}`);
+        return request(ENDPOINTS.snapshot(userId));
     },
 
     getHeatmap(userId, days = 30) {
-        return request(`${API_BASE}/heatmap/${userId}?days=${days}`);
+        return request(ENDPOINTS.heatmap(userId, days));
     },
 
     getRecommendations(userId) {
-        return request(`${API_BASE}/recommendations/${userId}`);
+        return request(ENDPOINTS.recommendations(userId));
     },
 
     getHabits(userId) {
-        return request(`${API_BASE}/habits/${userId}`);
+        return request(ENDPOINTS.habits(userId));
     },
 
     addSleep(userId, sleepStart, sleepEnd) {
-        return request(`${API_BASE}/sleep`, {
+        return request(ENDPOINTS.sleep(), {
             method: "POST",
             body: JSON.stringify({
                 user_id: userId,
@@ -68,7 +92,7 @@ export const RecoveryAPI = {
     },
 
     addHabit(userId, habitId) {
-        return request(`${API_BASE}/habits`, {
+        return request(ENDPOINTS.addHabit(), {
             method: "POST",
             body: JSON.stringify({
                 user_id: userId,
@@ -78,13 +102,13 @@ export const RecoveryAPI = {
     },
 
     removeHabit(userHabitId) {
-        return request(`${API_BASE}/habits/${userHabitId}`, {
+        return request(ENDPOINTS.removeHabit(userHabitId), {
             method: "DELETE"
         });
     },
 
     logHabit(userHabitId) {
-        return request(`${API_BASE}/habits/logs`, {
+        return request(ENDPOINTS.logHabit(), {
             method: "POST",
             body: JSON.stringify({
                 user_habit_id: userHabitId
