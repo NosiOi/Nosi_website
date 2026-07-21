@@ -12,17 +12,31 @@ async function request(url, options = {}) {
     if (!res.ok) {
         let message = `HTTP ${res.status}`;
         try {
-            const error = await res.json();
-            if (error && error.error) {
-                message = error.error;
+            const contentType = res.headers.get("content-type") || "";
+            if (contentType.includes("application/json")) {
+                const error = await res.json();
+                if (error && error.error) {
+                    message = error.error;
+                }
+            } else {
+                const text = await res.text();
+                if (text) {
+                    message = text;
+                }
             }
         } catch (_) {
-            // fallback to default message
+            // keep default message
         }
         throw new Error(message);
     }
 
-    return res.json();
+    const contentType = res.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+        return res.json();
+    }
+
+    // no JSON body (e.g. 204)
+    return null;
 }
 
 export const RecoveryAPI = {
@@ -36,6 +50,10 @@ export const RecoveryAPI = {
 
     getRecommendations(userId) {
         return request(`${API_BASE}/recommendations/${userId}`);
+    },
+
+    getHabits(userId) {
+        return request(`${API_BASE}/habits/${userId}`);
     },
 
     addSleep(userId, sleepStart, sleepEnd) {
