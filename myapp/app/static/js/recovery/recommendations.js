@@ -1,10 +1,12 @@
 import { RECOVERY_MESSAGES } from "./messages.js";
-
-function clearElement(el) {
-    while (el.firstChild) {
-        el.removeChild(el.firstChild);
-    }
-}
+import {
+    clearElement,
+    createCard,
+    createTitle,
+    createLoading,
+    createError,
+    createEmpty
+} from "./dom.js";
 
 export function renderRecommendationsWidget(data, options = {}) {
     const el = document.getElementById("recommendations-widget");
@@ -13,37 +15,24 @@ export function renderRecommendationsWidget(data, options = {}) {
     clearElement(el);
 
     if (options.loading) {
-        const loading = document.createElement("div");
-        loading.className = "loading";
-        loading.textContent = RECOVERY_MESSAGES.loading;
-        el.appendChild(loading);
+        el.appendChild(createLoading(RECOVERY_MESSAGES.loading));
         return;
     }
 
     if (options.error) {
-        const error = document.createElement("div");
-        error.className = "error";
-        error.textContent = RECOVERY_MESSAGES.error;
-        el.appendChild(error);
+        el.appendChild(createError(RECOVERY_MESSAGES.error));
         return;
     }
 
     const recommendations = data?.recommendations ?? null;
 
     if (!recommendations || !Array.isArray(recommendations) || recommendations.length === 0) {
-        const empty = document.createElement("div");
-        empty.className = "empty";
-        empty.textContent = RECOVERY_MESSAGES.recommendations.empty;
-        el.appendChild(empty);
+        el.appendChild(createEmpty(RECOVERY_MESSAGES.recommendations.empty));
         return;
     }
 
-    const card = document.createElement("div");
-    card.className = "recommendations-card";
-
-    const title = document.createElement("h3");
-    title.textContent = RECOVERY_MESSAGES.recommendations.title;
-    card.appendChild(title);
+    const card = createCard("recommendations-card");
+    card.appendChild(createTitle(RECOVERY_MESSAGES.recommendations.title));
 
     const list = document.createElement("ul");
 
