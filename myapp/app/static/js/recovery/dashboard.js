@@ -5,26 +5,21 @@ import { renderHeatmapWidget } from "./heatmap.js";
 import { renderRecommendationsWidget } from "./recommendations.js";
 import { renderScoreWidget } from "./score.js";
 
+const DEFAULT_HEATMAP_DAYS = 30;
+
 const state = {
     snapshot: null,
     heatmap: null,
-    recommendations: null
+    recommendations: null,
+    firstLoad: true
 };
 
-function setLoading() {
+function renderLoading() {
     renderSleepWidget(null, { loading: true });
     renderHabitsWidget(null, { loading: true });
     renderScoreWidget(null, { loading: true });
     renderHeatmapWidget(null, { loading: true });
     renderRecommendationsWidget(null, { loading: true });
-}
-
-function setError() {
-    renderSleepWidget(null, { error: true });
-    renderHabitsWidget(null, { error: true });
-    renderScoreWidget(null, { error: true });
-    renderHeatmapWidget(null, { error: true });
-    renderRecommendationsWidget(null, { error: true });
 }
 
 function renderAll() {
@@ -35,69 +30,35 @@ function renderAll() {
     renderRecommendationsWidget(state.recommendations);
 }
 
-async function loadSnapshot(userId) {
-    try {
-        return await RecoveryAPI.getSnapshot(userId);
-    } catch (err) {
-        console.error("Snapshot load error:", err);
-        return null;
-    }
-}
-
-async function loadHeatmap(userId) {
-    try {
-        return await RecoveryAPI.getHeatmap(userId, 30);
-    } catch (err) {
-        console.error("Heatmap load error:", err);
-        return null;
-    }
-}
-
-async function loadRecommendations(userId) {
-    try {
-        return await RecoveryAPI.getRecommendations(userId);
-    } catch (err) {
-        console.error("Recommendations load error:", err);
-        return null;
-    }
-}
-
 export async function refreshRecoveryDashboard(userId) {
-    setLoading();
+    if (state.firstLoad) {
+        renderLoading();
+    }
 
-    const [snapshotResult, heatmapResult, recommendationsResult] =
+    const [snapshotRes, heatmapRes, recommendationsRes] =
         await Promise.allSettled([
-            loadSnapshot(userId),
-            loadHeatmap(userId),
-            loadRecommendations(userId)
+            RecoveryAPI.getSnapshot(userId),
+            RecoveryAPI.getHeatmap(userId, DEFAULT_HEATMAP_DAYS),
+            RecoveryAPI.getRecommendations(userId)
         ]);
 
-    const snapshot =
-        snapshotResult.status === "fulfilled" ? snapshotResult.value : null;
-    const heatmap =
-        heatmapResult.status === "fulfilled" ? heatmapResult.value : null;
-    const recommendations =
-        recommendationsResult.status === "fulfilled"
-            ? recommendationsResult.value
-            : null;
+    state.snapshot = snapshotRes.status === "fulfilled" ? snapshotRes.value : null;
+    state.heatmap = heatmapRes.status === "fulfilled" ? heatmapRes.value : null;
+    state.recommendations =
+        recommendationsRes.status === "fulfilled" ? recommendationsRes.value : null;
 
-    state.snapshot = snapshot;
-    state.heatmap = heatmap;
-    state.recommendations = recommendations;
-
-    if (!snapshot && !heatmap && !recommendations) {
-        setError();
-        return;
-    }
+    state.firstLoad = false;
 
     renderAll();
 }
 
 export async function initRecoveryDashboard(userId) {
-    try {
-        await refreshRecoveryDashboard(userId);
-    } catch (err) {
-        console.error("Recovery dashboard init error:", err);
-        setError();
-    }
+    await refreshRecoveryDashboard(userId);
+}
+
+export function destroyRecoveryDashboard() {
+    state.snapshot = null;
+    state.heatmap = null;
+    state.recommendations = null;
+    state.firstLoad = true;
 }
