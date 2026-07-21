@@ -9,12 +9,23 @@ export function renderRecommendationsWidget(data) {
         return;
     }
 
-    const list = recommendations.map(r => `<li>${r}</li>`).join("");
+    const container = document.createElement("div");
+    container.className = "recommendations-card";
 
-    el.innerHTML = `
-        <div class="recommendations-card">
-            <h3>Рекомендації</h3>
-            <ul>${list}</ul>
-        </div>
-    `;
+    const title = document.createElement("h3");
+    title.textContent = "Рекомендації";
+    container.appendChild(title);
+
+    const list = document.createElement("ul");
+
+    recommendations.forEach((text) => {
+        const li = document.createElement("li");
+        li.textContent = text;
+        list.appendChild(li);
+    });
+
+    container.appendChild(list);
+
+    el.innerHTML = "";
+    el.appendChild(container);
 }
