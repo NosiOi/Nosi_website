@@ -2,12 +2,14 @@ export function renderRecommendationsWidget(data) {
     const el = document.getElementById("recommendations-widget");
     if (!el) return;
 
-    if (!data || !data.recommendations) {
+    const recommendations = data?.recommendations ?? null;
+
+    if (!recommendations || !Array.isArray(recommendations) || recommendations.length === 0) {
         el.innerHTML = `<div class="empty">Немає рекомендацій</div>`;
         return;
     }
 
-    const list = data.recommendations.map(r => `<li>${r}</li>`).join("");
+    const list = recommendations.map(r => `<li>${r}</li>`).join("");
 
     el.innerHTML = `
         <div class="recommendations-card">
