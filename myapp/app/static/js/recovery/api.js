@@ -56,17 +56,6 @@ const ENDPOINTS = {
     snapshot: (userId) => `${API_BASE}/snapshot/${userId}`,
     heatmap: (userId, days) => `${API_BASE}/heatmap/${userId}?days=${days}`,
     recommendations: (userId) => `${API_BASE}/recommendations/${userId}`,
-    habits: (userId) => `${API_BASE}/habits/${userId}`,
-    sleep: () => `${API_BASE}/sleep`,
-    addHabit: () => `${API_BASE}/habits`,
-    removeHabit: (userHabitId) => `${API_BASE}/habits/${userHabitId}`,
-    logHabit: () => `${API_BASE}/habits/logs`
-};
-
-const ENDPOINTS = {
-    snapshot: (userId) => `${API_BASE}/snapshot/${userId}`,
-    heatmap: (userId, days) => `${API_BASE}/heatmap/${userId}?days=${days}`,
-    recommendations: (userId) => `${API_BASE}/recommendations/${userId}`,
     sleep: () => `${API_BASE}/sleep`,
     addHabit: () => `${API_BASE}/habits`,
     removeHabit: (userHabitId) => `${API_BASE}/habits/${userHabitId}`,
