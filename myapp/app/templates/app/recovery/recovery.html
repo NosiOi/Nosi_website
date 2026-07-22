@@ -5,44 +5,58 @@ block styles %}
   href="{{ url_for('static', filename='css/pages/recovery/recovery.css') }}"
 />
 {% endblock %} {% block body %}
-<div id="recovery-app" class="recovery-container" data-user-id="{{ user.id }}">
+<div id="recovery-app" class="recovery-root" data-user-id="{{ user.id }}">
   <header class="recovery-header">
     <h1>Відновлення</h1>
     <p class="subtitle">Щоденний огляд стану відновлення</p>
   </header>
 
-  <section id="sleep-section" class="recovery-section">
-    <div class="section-header">
-      <h2>Сон</h2>
-      <button class="cmp-btn-primary" id="open-sleep-modal">Додати сон</button>
+  <div class="recovery-grid">
+    <div class="recovery-left">
+      <section id="habits-section" class="block-habits">
+        <div class="section-header">
+          <h2>Звички</h2>
+          <button class="cmp-btn-primary" id="open-habit-modal">
+            Додати звичку
+          </button>
+        </div>
+        <div id="habits-widget"></div>
+      </section>
+
+      <section id="heatmap-section" class="block-heatmap">
+        <div class="section-header">
+          <h2>Історія відновлення</h2>
+        </div>
+        <div id="heatmap-widget"></div>
+      </section>
     </div>
-    <div id="sleep-widget"></div>
-  </section>
 
-  <section id="habits-section" class="recovery-section">
-    <div class="section-header">
-      <h2>Звички</h2>
-      <button class="cmp-btn-primary" id="open-habit-modal">
-        Додати звичку
-      </button>
+    <div class="recovery-right">
+      <section id="sleep-section" class="block-sleep">
+        <div class="section-header">
+          <h2>Сон</h2>
+          <button class="cmp-btn-primary" id="open-sleep-modal">
+            Додати сон
+          </button>
+        </div>
+        <div id="sleep-widget"></div>
+      </section>
+
+      <section id="score-section" class="block-score">
+        <div class="section-header">
+          <h2>Загальний показник</h2>
+        </div>
+        <div id="score-widget"></div>
+      </section>
+
+      <section id="recommendations-section" class="block-recommendations">
+        <div class="section-header">
+          <h2>Рекомендації</h2>
+        </div>
+        <div id="recommendations-widget"></div>
+      </section>
     </div>
-    <div id="habits-widget"></div>
-  </section>
-
-  <section id="score-section" class="recovery-section">
-    <h2>Загальний показник відновлення</h2>
-    <div id="score-widget"></div>
-  </section>
-
-  <section id="heatmap-section" class="recovery-section">
-    <h2>Історія відновлення</h2>
-    <div id="heatmap-widget"></div>
-  </section>
-
-  <section id="recommendations-section" class="recovery-section">
-    <h2>Рекомендації</h2>
-    <div id="recommendations-widget"></div>
-  </section>
+  </div>
 </div>
 
 {% include "app/recovery/modals/sleep_modal.html" %} {% include
