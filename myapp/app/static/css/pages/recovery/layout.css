@@ -10,9 +10,32 @@
 
 .recovery-grid {
     display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(320px, 2fr);
-    grid-template-rows: auto auto auto auto auto;
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+        "habits sleep"
+        "habits score"
+        "heatmap recommendations";
     gap: 32px;
+}
+
+.panel-habits {
+    grid-area: habits;
+}
+
+.panel-sleep {
+    grid-area: sleep;
+}
+
+.panel-score {
+    grid-area: score;
+}
+
+.panel-recommendations {
+    grid-area: recommendations;
+}
+
+.panel-heatmap {
+    grid-area: heatmap;
 }
 
 .widget-card {
@@ -21,26 +44,8 @@
     padding: 24px;
     border: 1px solid var(--nf-border-soft);
     box-shadow: var(--nf-shadow-blue);
-}
-
-.panel-habits {
-    min-height: 300px;
-}
-
-.panel-heatmap {
-    min-height: 250px;
-}
-
-.panel-sleep {
-    min-height: 150px;
-}
-
-.panel-score {
-    min-height: 190px;
-}
-
-.panel-recommendations {
-    min-height: 280px;
+    display: flex;
+    flex-direction: column;
 }
 
 .section-header {
