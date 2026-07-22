@@ -1,14 +1,19 @@
 .recovery-header {
-    margin-bottom: 32px;
+    background: radial-gradient(circle at top left, rgba(0, 194, 255, 0.25), transparent),
+        radial-gradient(circle at top right, rgba(255, 212, 59, 0.18), transparent);
+    border-radius: var(--nf-radius-lg);
+    padding: 20px 24px;
+    border: 1px solid var(--nf-border-subtle);
+    box-shadow: var(--nf-shadow-soft);
 }
 
 .recovery-header h1 {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
-    margin-bottom: 4px;
+    color: var(--nf-text-main);
 }
 
 .recovery-header .subtitle {
-    font-size: 16px;
-    color: #666;
+    font-size: 15px;
+    color: var(--nf-text-muted);
 }
