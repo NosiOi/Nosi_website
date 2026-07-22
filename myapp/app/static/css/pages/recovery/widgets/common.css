@@ -1,24 +1,19 @@
+.loading,
+.error,
+.empty {
+    padding: 16px;
+    border-radius: 8px;
+    background: #f7f7f7;
+    text-align: center;
+    font-size: 15px;
+}
+
 .widget-card {
     background: var(--nf-surface);
     border-radius: var(--nf-radius-lg);
     padding: 24px;
     border: 1px solid var(--nf-border-soft);
     box-shadow: var(--nf-shadow-blue);
-}
-
-.loading,
-.error,
-.empty {
-    padding: 16px;
-    border-radius: var(--nf-radius-md);
-    background: var(--nf-surface-soft);
-    text-align: center;
-    font-size: 15px;
-    color: var(--nf-text-muted);
-}
-
-.small-btn {
-    height: 34px;
-    padding: 0 14px;
-    border-radius: var(--nf-radius-pill);
+    display: flex;
+    flex-direction: column;
 }

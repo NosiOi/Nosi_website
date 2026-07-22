@@ -28,7 +28,7 @@
 .rc-select {
     padding: 5px 9px;
     border-radius: var(--nf-radius-sm);
-    border: 1px solid var(--nf-border-input);
+    border: 1px solid var(--nf-border-soft);
     background: var(--nf-surface-soft);
     color: var(--nf-text-main);
     font-size: 12px;
@@ -54,6 +54,7 @@
     background: #0b0f18;
     position: relative;
     transition: var(--nf-transition-fast);
+    cursor: pointer;
 }
 
 .rc-heatmap-cell[data-level="0"] {
@@ -87,9 +88,7 @@
 }
 
 .rc-heatmap-tooltip {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -130%);
+    position: fixed;
     background: var(--nf-surface-deep);
     border: 1px solid var(--nf-border-soft);
     padding: 4px 8px;
@@ -100,9 +99,10 @@
     pointer-events: none;
     opacity: 0;
     transition: var(--nf-transition-fast);
+    z-index: 50;
 }
 
-.rc-heatmap-cell:hover .rc-heatmap-tooltip {
+.rc-heatmap-tooltip.visible {
     opacity: 1;
 }
 
