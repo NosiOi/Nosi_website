@@ -12,8 +12,8 @@ block styles %}
       <p class="subtitle">Щоденний огляд стану відновлення</p>
     </div>
     <div class="header-score">
-      <span class="header-score-label">Відновлення</span>
       <span class="header-score-value" id="header-score-value">—</span>
+      <span class="header-score-label">Recovery Score</span>
     </div>
   </header>
 
@@ -56,10 +56,7 @@ block styles %}
     </section>
 
     <section id="heatmap-section" class="panel-heatmap widget-card">
-      <div class="section-header">
-        <h2>Історія відновлення</h2>
-      </div>
-      <div id="heatmap-widget" class="panel-content"></div>
+      {% include "app/recovery/recovery_heatmap.html" %}
     </section>
   </div>
 </div>
@@ -69,5 +66,9 @@ block styles %}
 <script
   type="module"
   src="{{ url_for('static', filename='js/recovery/main.js') }}"
+></script>
+<script
+  type="module"
+  src="{{ url_for('static', filename='js/recovery/heatmap.js') }}"
 ></script>
 {% endblock %}
