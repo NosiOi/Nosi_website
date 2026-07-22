@@ -1,25 +1,29 @@
-{% extends "app/base_app.html" %} {% block title %}Історія відновлення{%
-endblock %} {% block styles %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/recovery/heatmap_full.css') }}"
-/>
-{% endblock %} {% block content %}
-<div class="heatmap-full-container">
-  <header class="heatmap-full-header">
-    <h1>Історія відновлення</h1>
-    <p class="subtitle">Календар відновлення за останні дні</p>
-  </header>
+<div class="rc-heatmap-container">
+  <div class="rc-heatmap-header">
+    <h3>Історія відновлення</h3>
 
-  <section class="heatmap-full-section">
-    <div id="heatmap-full-widget" class="heatmap-full-widget">
-      <!-- JS add heatmap -->
+    <div class="rc-heatmap-controls">
+      <label class="sr-only" for="rc-heatmap-year">Рік</label>
+      <select id="rc-heatmap-year" class="rc-select">
+        <option value="2026">2026</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+      </select>
+
+      <button type="button" id="rc-open-calendar" class="rc-btn rc-btn-sm">
+        Календар
+      </button>
     </div>
-  </section>
+  </div>
+
+  <div id="recovery-heatmap" class="rc-heatmap-grid"></div>
+
+  <div class="rc-heatmap-legend">
+    <span>Менше</span>
+    <div class="legend-box level-1"></div>
+    <div class="legend-box level-2"></div>
+    <div class="legend-box level-3"></div>
+    <div class="legend-box level-4"></div>
+    <span>Більше</span>
+  </div>
 </div>
-{% endblock %} {% block scripts %}
-<script
-  type="module"
-  src="{{ url_for('static', filename='js/recovery/heatmap_full.js') }}"
-></script>
-{% endblock %}
