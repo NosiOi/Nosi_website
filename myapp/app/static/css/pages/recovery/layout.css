@@ -4,40 +4,40 @@
     padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 32px;
 }
 
 .recovery-grid {
     display: grid;
-    grid-template-columns: 3fr 2fr;
-    gap: 24px;
+    grid-template-columns: 60% 40%;
+    gap: 32px;
 }
 
 .recovery-left,
 .recovery-right {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 28px;
 }
 
 .block-habits {
-    flex: 7;
+    min-height: 420px;
 }
 
 .block-heatmap {
-    flex: 3;
+    min-height: 360px;
 }
 
 .block-sleep {
-    flex: 1;
+    min-height: 200px;
 }
 
 .block-score {
-    flex: 1.2;
+    min-height: 260px;
 }
 
 .block-recommendations {
-    flex: 1.8;
+    min-height: 320px;
 }
 
 .section-header {

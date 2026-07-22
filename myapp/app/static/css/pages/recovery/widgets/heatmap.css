@@ -1,16 +1,14 @@
 .heatmap-card {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    padding: 16px;
 }
 
-.heatmap-card h3 {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--nf-text-main);
-}
-
-.heatmap-card p {
-    font-size: 15px;
-    color: var(--nf-text-soft);
+.heatmap-cell {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--nf-radius-sm);
+    background: var(--nf-surface-soft);
+    border: 1px solid var(--nf-border-soft);
 }

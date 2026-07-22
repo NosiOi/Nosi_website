@@ -7,8 +7,14 @@ block styles %}
 {% endblock %} {% block body %}
 <div id="recovery-app" class="recovery-root" data-user-id="{{ user.id }}">
   <header class="recovery-header">
-    <h1>Відновлення</h1>
-    <p class="subtitle">Щоденний огляд стану відновлення</p>
+    <div class="header-left">
+      <h1>Відновлення</h1>
+      <p class="subtitle">Щоденний огляд стану відновлення</p>
+    </div>
+    <div class="header-score">
+      <span class="header-score-value" id="header-score-value">84</span>
+      <span class="header-score-label">Recovery Score</span>
+    </div>
   </header>
 
   <div class="recovery-grid">
@@ -44,7 +50,7 @@ block styles %}
 
       <section id="score-section" class="block-score">
         <div class="section-header">
-          <h2>Загальний показник</h2>
+          <h2>Показники</h2>
         </div>
         <div id="score-widget"></div>
       </section>

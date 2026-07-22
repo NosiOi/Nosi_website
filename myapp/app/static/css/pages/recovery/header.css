@@ -1,19 +1,38 @@
 .recovery-header {
-    background: radial-gradient(circle at top left, rgba(0, 194, 255, 0.25), transparent),
-        radial-gradient(circle at top right, rgba(255, 212, 59, 0.18), transparent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px;
     border-radius: var(--nf-radius-lg);
-    padding: 20px 24px;
+    background: linear-gradient(135deg, rgba(0, 194, 255, 0.25), rgba(155, 93, 229, 0.25));
     border: 1px solid var(--nf-border-subtle);
     box-shadow: var(--nf-shadow-soft);
 }
 
-.recovery-header h1 {
+.header-left h1 {
     font-size: 28px;
     font-weight: 700;
     color: var(--nf-text-main);
 }
 
-.recovery-header .subtitle {
+.header-left .subtitle {
     font-size: 15px;
+    color: var(--nf-text-muted);
+}
+
+.header-score {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.header-score-value {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--nf-blue);
+}
+
+.header-score-label {
+    font-size: 14px;
     color: var(--nf-text-muted);
 }
