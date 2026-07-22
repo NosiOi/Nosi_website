@@ -21,7 +21,3 @@ class RecoveryHabit(db.Model):
     premium_only = db.Column(db.Boolean, nullable=False, default=False)
     sort_order = db.Column(db.Integer, nullable=False, default=0)
     is_active = db.Column(db.Boolean, nullable=False, default=True)
-
-    user_habits = db.relationship(
-        "UserRecoveryHabit", back_populates="habit", cascade="all, delete-orphan"
-    )
