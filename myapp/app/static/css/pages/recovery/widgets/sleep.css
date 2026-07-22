@@ -1,13 +1,7 @@
-.sleep-card {
+.sleep-content {
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
-
-.sleep-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--nf-text-main);
 }
 
 .sleep-time {

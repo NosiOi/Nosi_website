@@ -1,13 +1,7 @@
-.score-card {
+.score-content {
     display: flex;
     flex-direction: column;
     gap: 16px;
-}
-
-.score-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--nf-text-main);
 }
 
 .score-total {

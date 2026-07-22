@@ -6,13 +6,6 @@
     overflow-y: auto;
 }
 
-.habits-card h3 {
-    margin-bottom: 8px;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--nf-text-main);
-}
-
 .habit-item {
     display: flex;
     align-items: center;

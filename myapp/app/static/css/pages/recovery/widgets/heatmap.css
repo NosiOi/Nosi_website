@@ -4,13 +4,14 @@
     gap: 18px;
 }
 
-.heatmap-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--nf-text-main);
+.heatmap-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 6px;
 }
 
-.heatmap-grid {
+.heatmap-week {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 6px;
