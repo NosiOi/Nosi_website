@@ -1,0 +1,53 @@
+.recovery-root {
+    max-width: var(--nf-max-width);
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.recovery-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 24px;
+}
+
+.recovery-left,
+.recovery-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.block-habits {
+    flex: 7;
+}
+
+.block-heatmap {
+    flex: 3;
+}
+
+.block-sleep {
+    flex: 1;
+}
+
+.block-score {
+    flex: 1.2;
+}
+
+.block-recommendations {
+    flex: 1.8;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--nf-text-main);
+}
