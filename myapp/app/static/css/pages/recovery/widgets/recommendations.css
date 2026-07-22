@@ -1,23 +1,21 @@
 .recommendations-content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     max-height: 300px;
     overflow-y: auto;
 }
 
-.recommendations-content li {
+.recommendation-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--nf-border-soft);
+    gap: 10px;
+    background: var(--nf-surface-soft);
+    padding: 12px;
+    border-radius: var(--nf-radius-md);
+    border: 1px solid var(--nf-border-soft);
     font-size: 15px;
     color: var(--nf-text-main);
-}
-
-.recommendations-content li:last-child {
-    border-bottom: none;
 }
 
 .recommendation-icon {
