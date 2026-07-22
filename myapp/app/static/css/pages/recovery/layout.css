@@ -5,11 +5,12 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
+    min-height: 100%;
 }
 
 .recovery-grid {
     display: grid;
-    grid-template-columns: 60% 40%;
+    grid-template-columns: 3fr 2fr;
     gap: 32px;
 }
 
@@ -21,29 +22,30 @@
 }
 
 .block-habits {
-    min-height: 420px;
+    min-height: 340px;
 }
 
 .block-heatmap {
-    min-height: 360px;
+    min-height: 280px;
 }
 
 .block-sleep {
-    min-height: 200px;
+    min-height: 170px;
 }
 
 .block-score {
-    min-height: 260px;
+    min-height: 220px;
 }
 
 .block-recommendations {
-    min-height: 320px;
+    min-height: 250px;
 }
 
 .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 16px;
 }
 
 .section-header h2 {

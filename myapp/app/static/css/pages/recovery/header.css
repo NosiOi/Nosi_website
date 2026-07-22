@@ -30,6 +30,7 @@
     font-size: 48px;
     font-weight: 800;
     color: var(--nf-blue);
+    line-height: 1;
 }
 
 .header-score-label {

@@ -1,13 +1,17 @@
 .heatmap-card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.heatmap-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 6px;
-    padding: 16px;
 }
 
 .heatmap-cell {
-    width: 100%;
-    aspect-ratio: 1;
+    height: 22px;
     border-radius: var(--nf-radius-sm);
     background: var(--nf-surface-soft);
     border: 1px solid var(--nf-border-soft);
