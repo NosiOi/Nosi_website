@@ -1,24 +1,17 @@
-<div id="habit-modal" class="modal hidden">
-  <div class="modal-content habit-modal-content">
-    <header class="modal-header">
-      <h2>Додати звичку</h2>
-      <button class="modal-close" id="close-habit-modal">&times;</button>
-    </header>
-
-    <div class="modal-body">
-      <label for="habit-select">Оберіть звичку</label>
-      <select id="habit-select" class="modal-input">
-        <!-- JS add list habits -->
-      </select>
-
-      <div id="habit-modal-error" class="modal-error hidden"></div>
+<div class="recovery-modal-backdrop" id="habit-modal-backdrop" hidden>
+  <div class="recovery-modal">
+    <div class="recovery-modal-header">
+      <span class="recovery-modal-title">Додати звичку</span>
+      <button id="close-habit-modal" class="cmp-btn-primary">Закрити</button>
     </div>
 
-    <footer class="modal-footer">
-      <button class="cmp-btn-secondary" id="cancel-habit-modal">
-        Скасувати
-      </button>
-      <button class="cmp-btn-primary" id="submit-habit-modal">Додати</button>
-    </footer>
+    <div
+      class="recovery-modal-body habit-modal-list"
+      id="habit-modal-list"
+    ></div>
+
+    <div class="recovery-modal-footer">
+      <button id="save-habit" class="cmp-btn-primary">Зберегти</button>
+    </div>
   </div>
 </div>
