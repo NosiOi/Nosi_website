@@ -1,15 +1,36 @@
 .recommendations-card {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
+    max-height: 220px;
+    overflow-y: auto;
 }
 
-.recommendation-item {
+.recommendations-card h3 {
+    margin-bottom: 4px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--nf-text-main);
+}
+
+.recommendations-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recommendations-card li {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 16px;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--nf-border-soft);
+    font-size: 15px;
     color: var(--nf-text-main);
+}
+
+.recommendations-card li:last-child {
+    border-bottom: none;
 }
 
 .recommendation-icon {

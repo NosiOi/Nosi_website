@@ -4,9 +4,15 @@
     align-items: center;
     padding: 28px;
     border-radius: var(--nf-radius-lg);
-    background: linear-gradient(135deg, rgba(0, 194, 255, 0.25), rgba(155, 93, 229, 0.25));
+    background: linear-gradient(135deg, rgba(0, 194, 255, 0.15), rgba(155, 93, 229, 0.18));
     border: 1px solid var(--nf-border-subtle);
     box-shadow: var(--nf-shadow-soft);
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .header-left h1 {
@@ -24,6 +30,12 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    gap: 4px;
+}
+
+.header-score-label {
+    font-size: 14px;
+    color: var(--nf-text-muted);
 }
 
 .header-score-value {
@@ -31,9 +43,4 @@
     font-weight: 800;
     color: var(--nf-blue);
     line-height: 1;
-}
-
-.header-score-label {
-    font-size: 14px;
-    color: var(--nf-text-muted);
 }

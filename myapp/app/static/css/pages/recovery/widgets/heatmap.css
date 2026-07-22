@@ -4,6 +4,12 @@
     gap: 18px;
 }
 
+.heatmap-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--nf-text-main);
+}
+
 .heatmap-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -15,4 +21,5 @@
     border-radius: var(--nf-radius-sm);
     background: var(--nf-surface-soft);
     border: 1px solid var(--nf-border-soft);
+    cursor: pointer;
 }

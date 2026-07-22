@@ -12,24 +12,24 @@ block styles %}
       <p class="subtitle">Щоденний огляд стану відновлення</p>
     </div>
     <div class="header-score">
-      <span class="header-score-value" id="header-score-value">—</span>
       <span class="header-score-label">Recovery Score</span>
+      <span class="header-score-value" id="header-score-value">—</span>
     </div>
   </header>
 
   <div class="recovery-grid">
     <div class="recovery-left">
-      <section id="habits-section" class="block-habits">
+      <section id="habits-section" class="block-habits widget-card">
         <div class="section-header">
           <h2>Звички</h2>
           <button class="cmp-btn-primary" id="open-habit-modal">
-            Додати звичку
+            + Додати
           </button>
         </div>
         <div id="habits-widget"></div>
       </section>
 
-      <section id="heatmap-section" class="block-heatmap">
+      <section id="heatmap-section" class="block-heatmap widget-card">
         <div class="section-header">
           <h2>Історія відновлення</h2>
         </div>
@@ -38,24 +38,27 @@ block styles %}
     </div>
 
     <div class="recovery-right">
-      <section id="sleep-section" class="block-sleep">
+      <section id="sleep-section" class="block-sleep widget-card">
         <div class="section-header">
           <h2>Сон</h2>
           <button class="cmp-btn-primary" id="open-sleep-modal">
-            Додати сон
+            + Додати
           </button>
         </div>
         <div id="sleep-widget"></div>
       </section>
 
-      <section id="score-section" class="block-score">
+      <section id="score-section" class="block-score widget-card">
         <div class="section-header">
           <h2>Показники</h2>
         </div>
         <div id="score-widget"></div>
       </section>
 
-      <section id="recommendations-section" class="block-recommendations">
+      <section
+        id="recommendations-section"
+        class="block-recommendations widget-card"
+      >
         <div class="section-header">
           <h2>Рекомендації</h2>
         </div>

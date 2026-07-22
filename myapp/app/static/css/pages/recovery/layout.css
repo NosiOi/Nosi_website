@@ -18,27 +18,27 @@
 .recovery-right {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 24px;
 }
 
 .block-habits {
-    min-height: 340px;
+    min-height: 300px;
 }
 
 .block-heatmap {
-    min-height: 280px;
+    min-height: 250px;
 }
 
 .block-sleep {
-    min-height: 170px;
+    min-height: 150px;
 }
 
 .block-score {
-    min-height: 220px;
+    min-height: 190px;
 }
 
 .block-recommendations {
-    min-height: 250px;
+    min-height: 220px;
 }
 
 .section-header {
@@ -46,6 +46,8 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--nf-border-soft);
 }
 
 .section-header h2 {
