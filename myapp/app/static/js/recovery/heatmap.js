@@ -4,13 +4,17 @@ let HEATMAP_DATA = [];
 let CURRENT_YEAR = new Date().getFullYear();
 
 export function initRecoveryHeatmap() {
+    const root = document.getElementById("recovery-app");
     const yearSelect = document.getElementById("rc-heatmap-year");
     const openCalendar = document.getElementById("rc-open-calendar");
     const modal = document.getElementById("rc-calendar-modal");
     const grid = document.getElementById("recovery-heatmap");
     const tooltip = document.getElementById("rc-heatmap-tooltip");
 
-    if (!yearSelect || !openCalendar || !grid || !tooltip) return;
+    if (!root || !yearSelect || !openCalendar || !grid || !tooltip) return;
+
+    const userId = Number(root.dataset.userId || 0);
+    if (!userId) return;
 
     const nowYear = new Date().getFullYear();
     yearSelect.innerHTML = "";
@@ -26,9 +30,9 @@ export function initRecoveryHeatmap() {
     const load = () => {
         CURRENT_YEAR = Number(yearSelect.value);
 
-        RecoveryAPI.getHeatmap(window.USER_ID, 365)
+        RecoveryAPI.getHeatmap(userId, CURRENT_YEAR)
             .then(data => {
-                HEATMAP_DATA = Array.isArray(data) ? data : [];
+                HEATMAP_DATA = Array.isArray(data?.days) ? data.days : [];
                 renderRecoveryHeatmap(HEATMAP_DATA, grid, tooltip);
             })
             .catch(() => {
@@ -66,11 +70,11 @@ export function renderRecoveryHeatmap(days, grid, tooltip) {
     days.forEach(d => {
         const date = new Date(d.date);
         const dayOfWeek = date.getDay();
-        const weekOfYear = getWeekIndex(date);
-        const level = Number(d.recovery_score) || 0;
+        const weekIndex = getWeekIndex(date);
+        const level = Number(d.level) || 0;
 
-        if (weekOfYear >= 0 && weekOfYear < weeks.length) {
-            weeks[weekOfYear][dayOfWeek] = {
+        if (weekIndex >= 0 && weekIndex < weeks.length) {
+            weeks[weekIndex][dayOfWeek] = {
                 level,
                 date: d.date,
                 score: d.recovery_score
@@ -100,7 +104,7 @@ export function renderRecoveryHeatmap(days, grid, tooltip) {
                     tooltip.classList.remove("visible");
                 });
 
-                cell.addEventListener("click", () => openRecoveryDay(cellData.date));
+                cell.addEventListener("click", () => openRecoveryDay(cellData.date, tooltip));
             }
 
             grid.appendChild(cell);
@@ -116,15 +120,22 @@ function positionTooltip(event, tooltip) {
 }
 
 function getWeekIndex(date) {
-    const start = new Date(date.getFullYear(), 0, 1);
-    const dayOfYear =
-        Math.floor((date - start) / (1000 * 60 * 60 * 24)) + 1;
-    const startDay = start.getDay();
-    return Math.floor((dayOfYear + startDay) / 7);
+    const yearStart = new Date(date.getFullYear(), 0, 1);
+    const dayOffset = (yearStart.getDay() + 6) % 7;
+    const firstWeekStart = new Date(yearStart);
+    firstWeekStart.setDate(yearStart.getDate() - dayOffset);
+
+    const diffDays = Math.floor((date - firstWeekStart) / (1000 * 60 * 60 * 24));
+    return Math.floor(diffDays / 7);
 }
 
 function openRecoveryDay(date) {
-    RecoveryAPI.getSnapshot(window.USER_ID, date)
+    const root = document.getElementById("recovery-app");
+    if (!root) return;
+    const userId = Number(root.dataset.userId || 0);
+    if (!userId) return;
+
+    RecoveryAPI.getSnapshot(userId, date)
         .then(snapshot => {
             const modal = document.getElementById("rc-day-details-modal");
             const title = document.getElementById("rc-day-details-title");

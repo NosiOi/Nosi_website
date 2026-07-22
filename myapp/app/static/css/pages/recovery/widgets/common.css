@@ -3,9 +3,10 @@
 .empty {
     padding: 16px;
     border-radius: 8px;
-    background: #f7f7f7;
+    background: var(--nf-surface-soft);
     text-align: center;
     font-size: 15px;
+    color: var(--nf-text-muted);
 }
 
 .widget-card {
