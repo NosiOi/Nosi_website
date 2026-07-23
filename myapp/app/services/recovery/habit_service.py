@@ -20,6 +20,7 @@ class HabitService:
         existing = UserRecoveryHabit.query.filter_by(
             user_id=user_id, habit_id=habit_id
         ).first()
+
         if existing:
             existing.is_active = True
             db.session.commit()
@@ -66,8 +67,10 @@ class HabitService:
     def get_today_logs(self, user_id):
         habits = self.get_user_habits(user_id)
         ids = [h.id for h in habits]
+
         if not ids:
             return []
+
         return RecoveryHabitLog.query.filter(
             RecoveryHabitLog.user_habit_id.in_(ids),
             RecoveryHabitLog.date == date.today(),
