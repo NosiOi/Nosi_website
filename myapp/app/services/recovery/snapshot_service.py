@@ -39,6 +39,7 @@ class SnapshotService:
         snapshot = DailyRecoverySnapshot.query.filter_by(
             user_id=user_id, date=today
         ).first()
+
         if snapshot:
             self.update_snapshot(
                 snapshot,
