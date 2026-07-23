@@ -115,7 +115,16 @@ def generate_snapshot():
 
 @recovery_bp.get("/snapshot/<int:user_id>")
 def get_snapshot(user_id):
-    snapshot = stats_service.get_last_snapshot(user_id)
+    raw_date = request.args.get("date")
+    if raw_date:
+        try:
+            dt = datetime.fromisoformat(raw_date).date()
+        except ValueError:
+            return jsonify({"error": "Invalid date format"}), 400
+        snapshot = stats_service.get_daily_snapshot(user_id, dt)
+    else:
+        snapshot = stats_service.get_last_snapshot(user_id)
+
     if snapshot is None:
         return jsonify({"snapshot": None}), 200
     return jsonify(snapshot.to_dict()), 200
@@ -123,23 +132,27 @@ def get_snapshot(user_id):
 
 @recovery_bp.get("/heatmap/<int:user_id>")
 def get_heatmap(user_id):
-    raw_days = request.args.get("days", 30)
+    raw_year = request.args.get("year")
     try:
-        days = int(raw_days)
+        year = int(raw_year) if raw_year is not None else date.today().year
     except ValueError:
-        return jsonify({"error": "days must be integer"}), 400
+        return jsonify({"error": "year must be integer"}), 400
 
-    heatmap = stats_service.get_heatmap(user_id, days)
+    heatmap = stats_service.get_heatmap(user_id, year)
+
     return (
         jsonify(
-            [
-                {
-                    "date": s.date.isoformat(),
-                    "recovery_score": s.recovery_score,
-                    "energy_score": s.energy_score,
-                }
-                for s in heatmap
-            ]
+            {
+                "days": [
+                    {
+                        "date": s.date.isoformat(),
+                        "recovery_score": s.recovery_score,
+                        "energy_score": s.energy_score,
+                        "level": getattr(s, "level", 0),
+                    }
+                    for s in heatmap
+                ]
+            }
         ),
         200,
     )
