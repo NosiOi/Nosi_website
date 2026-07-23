@@ -6,21 +6,58 @@
       <label class="sr-only" for="rc-heatmap-year">Рік</label>
       <select id="rc-heatmap-year" class="rc-select"></select>
 
-      <button type="button" id="rc-open-calendar" class="rc-btn rc-btn-sm">
+      <button
+        type="button"
+        id="rc-open-calendar"
+        class="cmp-btn-primary cmp-btn-sm"
+      >
         Календар
       </button>
     </div>
   </div>
 
   <div id="recovery-heatmap" class="rc-heatmap-grid"></div>
-  <div id="rc-heatmap-tooltip" class="rc-heatmap-tooltip"></div>
 
   <div class="rc-heatmap-legend">
-    <span>Менше</span>
+    <span>Нижчий</span>
     <div class="legend-box level-1"></div>
     <div class="legend-box level-2"></div>
     <div class="legend-box level-3"></div>
     <div class="legend-box level-4"></div>
-    <span>Більше</span>
+    <span>Вищий</span>
+  </div>
+
+  <div id="rc-heatmap-tooltip" class="rc-heatmap-tooltip"></div>
+</div>
+
+<div id="rc-calendar-modal" class="rc-calendar-modal" data-close-calendar>
+  <div class="rc-calendar-dialog">
+    <div class="rc-calendar-header">
+      <h3 id="rc-calendar-title">Календар відновлення</h3>
+      <button
+        type="button"
+        class="cmp-btn-secondary cmp-btn-sm"
+        data-close-calendar
+      >
+        Закрити
+      </button>
+    </div>
+    <div id="rc-calendar-body" class="rc-calendar-body"></div>
+  </div>
+</div>
+
+<div id="rc-day-details-modal" class="rc-day-details-modal">
+  <div class="rc-day-details-dialog">
+    <div class="rc-day-details-header">
+      <h3 id="rc-day-details-title"></h3>
+      <button
+        type="button"
+        class="cmp-btn-secondary cmp-btn-sm"
+        data-close-day-details
+      >
+        Закрити
+      </button>
+    </div>
+    <div id="rc-day-details-body" class="rc-day-details-body"></div>
   </div>
 </div>

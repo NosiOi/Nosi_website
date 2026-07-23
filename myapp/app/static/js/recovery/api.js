@@ -32,9 +32,7 @@ async function request(url, options = {}, timeoutMs = DEFAULT_TIMEOUT_MS) {
                         message = text;
                     }
                 }
-            } catch (_) {
-                // keep default message
-            }
+            } catch (_) {}
             throw new Error(message);
         }
 
@@ -53,8 +51,11 @@ async function request(url, options = {}, timeoutMs = DEFAULT_TIMEOUT_MS) {
 }
 
 const ENDPOINTS = {
-    snapshot: (userId) => `${API_BASE}/snapshot/${userId}`,
-    heatmap: (userId, days) => `${API_BASE}/heatmap/${userId}?days=${days}`,
+    snapshot: (userId, date) =>
+        date
+            ? `${API_BASE}/snapshot/${userId}?date=${encodeURIComponent(date)}`
+            : `${API_BASE}/snapshot/${userId}`,
+    heatmap: (userId, year) => `${API_BASE}/heatmap/${userId}?year=${year}`,
     recommendations: (userId) => `${API_BASE}/recommendations/${userId}`,
     sleep: () => `${API_BASE}/sleep`,
     addHabit: () => `${API_BASE}/habits`,
@@ -63,12 +64,12 @@ const ENDPOINTS = {
 };
 
 export const RecoveryAPI = {
-    getSnapshot(userId) {
-        return request(ENDPOINTS.snapshot(userId));
+    getSnapshot(userId, date = null) {
+        return request(ENDPOINTS.snapshot(userId, date));
     },
 
-    getHeatmap(userId, days = 30) {
-        return request(ENDPOINTS.heatmap(userId, days));
+    getHeatmap(userId, year) {
+        return request(ENDPOINTS.heatmap(userId, year));
     },
 
     getRecommendations(userId) {
