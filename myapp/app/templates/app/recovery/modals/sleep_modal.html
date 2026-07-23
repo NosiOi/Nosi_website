@@ -2,16 +2,34 @@
   <div class="recovery-modal">
     <div class="recovery-modal-header">
       <span class="recovery-modal-title">Додати сон</span>
-      <button id="close-sleep-modal" class="cmp-btn-primary">Закрити</button>
+      <button
+        id="close-sleep-modal"
+        class="cmp-btn-secondary cmp-btn-sm"
+        type="button"
+      >
+        Закрити
+      </button>
     </div>
 
     <div class="recovery-modal-body sleep-modal-inputs">
-      <input type="datetime-local" id="sleep-start-input" />
-      <input type="datetime-local" id="sleep-end-input" />
+      <div class="sleep-field">
+        <label for="sleep-start-input">Початок сну</label>
+        <input
+          type="datetime-local"
+          id="sleep-start-input"
+          class="sleep-input"
+        />
+      </div>
+      <div class="sleep-field">
+        <label for="sleep-end-input">Кінець сну</label>
+        <input type="datetime-local" id="sleep-end-input" class="sleep-input" />
+      </div>
     </div>
 
     <div class="recovery-modal-footer">
-      <button id="save-sleep" class="cmp-btn-primary">Зберегти</button>
+      <button id="save-sleep" class="cmp-btn-primary cmp-btn-sm" type="button">
+        Зберегти
+      </button>
     </div>
   </div>
 </div>
