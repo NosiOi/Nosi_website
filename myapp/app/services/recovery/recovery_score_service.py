@@ -29,10 +29,12 @@ class RecoveryScoreService:
 
     def calculate_training_score(self, last_training_days):
         if last_training_days == 0:
-            return 50
+            return 40
         if last_training_days == 1:
-            return 80
+            return 70
         if last_training_days == 2:
+            return 85
+        if last_training_days == 3:
             return 100
         return 60
 
