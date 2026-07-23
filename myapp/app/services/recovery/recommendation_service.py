@@ -58,7 +58,7 @@ class RecommendationService:
                 {
                     "text": "Ви повністю відновлені — можна тренуватись інтенсивно",
                     "priority": "low",
-                    "icon": "energy",
+                    "icon": "heart_pulse",
                 }
             )
 
