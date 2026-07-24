@@ -20,10 +20,12 @@
     background: var(--nf-surface-soft);
     border-radius: var(--nf-radius-pill);
     overflow: hidden;
+    position: relative;
 }
 
 .sleep-score-fill {
     height: 100%;
+    border-radius: inherit;
     transition: width 0.3s ease;
 }
 
