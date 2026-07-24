@@ -5,7 +5,7 @@ import { renderRecoveryHeatmap } from "./heatmap.js";
 import { renderRecommendationsWidget } from "./recommendations.js";
 import { renderScoreWidget } from "./score.js";
 
-const DEFAULT_HEATMAP_DAYS = 30;
+const CURRENT_YEAR = new Date().getFullYear();
 
 const state = {
     snapshot: null,
@@ -54,7 +54,7 @@ export async function refreshRecoveryDashboard(userId) {
     const [snapshotRes, heatmapRes, recommendationsRes] =
         await Promise.allSettled([
             RecoveryAPI.getSnapshot(userId),
-            RecoveryAPI.getHeatmap(userId, DEFAULT_HEATMAP_DAYS),
+            RecoveryAPI.getHeatmap(userId, CURRENT_YEAR),
             RecoveryAPI.getRecommendations(userId)
         ]);
 
