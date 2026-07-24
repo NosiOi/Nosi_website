@@ -3,43 +3,41 @@ import {
     clearElement,
     createCard,
     createTitle,
-    createLoading,
+    createEmpty,
     createError,
-    createEmpty
+    createLoading
 } from "./dom.js";
 
 function getSleepStatus(minutes) {
     if (!minutes || minutes <= 0) return "Немає даних";
-
     if (minutes >= 480) return "Відмінний сон";
     if (minutes >= 420) return "Добрий сон";
     if (minutes >= 360) return "Достатній сон";
     return "Недосип";
 }
 
-function getSleepRecencyLabel(snapshotDateIso) {
+function getScoreColor(score) {
+    if (score >= 90) return "var(--nf-green)";
+    if (score >= 75) return "var(--nf-blue)";
+    if (score >= 60) return "var(--nf-yellow)";
+    return "var(--nf-red)";
+}
+
+function getRecencyLabel(snapshotDateIso) {
     if (!snapshotDateIso) return "";
 
-    const snapshotDate = new Date(snapshotDateIso);
+    const snap = new Date(snapshotDateIso);
     const today = new Date();
 
-    const snap = new Date(
-        snapshotDate.getFullYear(),
-        snapshotDate.getMonth(),
-        snapshotDate.getDate()
-    );
-    const now = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate()
-    );
+    const s = new Date(snap.getFullYear(), snap.getMonth(), snap.getDate());
+    const t = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-    const diffDays = Math.round((now - snap) / (1000 * 60 * 60 * 24));
+    const diff = Math.round((t - s) / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 0) return "Останній запис: сьогодні";
-    if (diffDays === 1) return "Останній запис: вчора";
+    if (diff === 0) return "Останній запис: сьогодні";
+    if (diff === 1) return "Останній запис: вчора";
 
-    return `Останній запис: ${snapshotDate.toLocaleDateString("uk-UA", {
+    return `Останній запис: ${snap.toLocaleDateString("uk-UA", {
         day: "numeric",
         month: "long",
         year: "numeric"
@@ -85,17 +83,11 @@ export function renderSleepWidget(snapshot, options = {}) {
     const start = new Date(snapshot.sleep_start);
     const end = new Date(snapshot.sleep_end);
 
-    const startStr = start.toLocaleTimeString("uk-UA", {
-        hour: "2-digit",
-        minute: "2-digit"
-    });
-    const endStr = end.toLocaleTimeString("uk-UA", {
-        hour: "2-digit",
-        minute: "2-digit"
-    });
+    const startStr = start.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
+    const endStr = end.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
 
     const statusText = getSleepStatus(snapshot.sleep_duration_minutes);
-    const recencyText = getSleepRecencyLabel(snapshot.date);
+    const recencyText = getRecencyLabel(snapshot.date);
 
     const durationEl = document.createElement("div");
     durationEl.className = "sleep-duration";
@@ -111,6 +103,12 @@ export function renderSleepWidget(snapshot, options = {}) {
     const fill = document.createElement("div");
     fill.className = "sleep-score-fill";
     fill.style.width = `${snapshot.sleep_score}%`;
+    fill.style.background = getScoreColor(snapshot.sleep_score);
+
+    const scoreLabel = document.createElement("div");
+    scoreLabel.className = "sleep-score-label";
+    scoreLabel.textContent = `${snapshot.sleep_score}%`;
+
     bar.appendChild(fill);
 
     const statusEl = document.createElement("div");
@@ -124,10 +122,9 @@ export function renderSleepWidget(snapshot, options = {}) {
     content.appendChild(durationEl);
     content.appendChild(rangeEl);
     content.appendChild(bar);
+    content.appendChild(scoreLabel);
     content.appendChild(statusEl);
-    if (recencyText) {
-        content.appendChild(metaEl);
-    }
+    content.appendChild(metaEl);
 
     card.appendChild(content);
     el.appendChild(card);
