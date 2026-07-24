@@ -29,46 +29,50 @@ block styles %}
   </div>
 
   <div class="recovery-grid">
-    <section id="habits-section" class="panel-habits widget-card">
-      <div class="section-header">
-        <h2>Звички</h2>
-        <button class="cmp-btn-primary cmp-btn-sm" id="open-habit-modal">
-          + Додати
-        </button>
-      </div>
-      <div id="habits-widget" class="panel-content"></div>
-    </section>
+    <div class="recovery-left">
+      <section id="habits-section" class="panel-habits widget-card">
+        <div class="section-header">
+          <h2>Звички</h2>
+          <button class="cmp-btn-primary cmp-btn-sm" id="open-habit-modal">
+            + Додати
+          </button>
+        </div>
+        <div id="habits-widget" class="panel-content"></div>
+      </section>
 
-    <section id="sleep-section" class="panel-sleep widget-card">
-      <div class="section-header">
-        <h2>Сон</h2>
-        <button class="cmp-btn-primary cmp-btn-sm" id="open-sleep-modal">
-          + Додати
-        </button>
-      </div>
-      <div id="sleep-widget" class="panel-content"></div>
-    </section>
+      <section id="heatmap-section" class="panel-heatmap widget-card">
+        {% include "app/recovery/recovery_heatmap.html" %}
+      </section>
+    </div>
 
-    <section id="score-section" class="panel-score widget-card">
-      <div class="section-header">
-        <h2>Показники</h2>
-      </div>
-      <div id="score-widget" class="panel-content"></div>
-    </section>
+    <div class="recovery-right">
+      <section id="sleep-section" class="panel-sleep widget-card">
+        <div class="section-header">
+          <h2>Сон</h2>
+          <button class="cmp-btn-primary cmp-btn-sm" id="open-sleep-modal">
+            + Додати
+          </button>
+        </div>
+        <div id="sleep-widget" class="panel-content"></div>
+      </section>
 
-    <section
-      id="recommendations-section"
-      class="panel-recommendations widget-card"
-    >
-      <div class="section-header">
-        <h2>Рекомендації</h2>
-      </div>
-      <div id="recommendations-widget" class="panel-content"></div>
-    </section>
+      <section
+        id="recommendations-section"
+        class="panel-recommendations widget-card"
+      >
+        <div class="section-header">
+          <h2>Рекомендації</h2>
+        </div>
+        <div id="recommendations-widget" class="panel-content"></div>
+      </section>
 
-    <section id="heatmap-section" class="panel-heatmap widget-card">
-      {% include "app/recovery/recovery_heatmap.html" %}
-    </section>
+      <section id="score-section" class="panel-score widget-card">
+        <div class="section-header">
+          <h2>Показники</h2>
+        </div>
+        <div id="score-widget" class="panel-content"></div>
+      </section>
+    </div>
   </div>
 </div>
 
