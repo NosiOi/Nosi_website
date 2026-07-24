@@ -1,5 +1,5 @@
-import { RecoveryAPI } from "./api.js";
-import { refreshRecoveryDashboard } from "./dashboard.js";
+import { RecoveryAPI } from "../api.js";
+import { refreshRecoveryDashboard } from "../dashboard.js";
 
 export function initSleepModal(userId) {
     const backdrop = document.getElementById("sleep-modal-backdrop");
