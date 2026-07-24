@@ -1,18 +1,27 @@
 import { initRecoveryDashboard } from "./dashboard.js";
+import { ICONS } from "../icons/icons.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const root = document.getElementById("recovery-app");
-    if (!root) {
-        console.error("Recovery root element not found");
-        return;
-    }
+    if (!root) return;
 
     const rawUserId = root.dataset.userId;
     const userId = Number(rawUserId);
+    if (!rawUserId || Number.isNaN(userId)) return;
 
-    if (!rawUserId || Number.isNaN(userId)) {
-        console.error("User ID not found or invalid in recovery-app dataset");
-        return;
+    const iconBox = document.getElementById("recovery-header-icon");
+    if (iconBox) {
+        iconBox.innerHTML = ICONS.bed_single;
+    }
+
+    const dateEl = document.getElementById("recovery-header-date");
+    if (dateEl) {
+        const now = new Date();
+        dateEl.textContent = now.toLocaleDateString("uk-UA", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
     }
 
     initRecoveryDashboard(userId);
