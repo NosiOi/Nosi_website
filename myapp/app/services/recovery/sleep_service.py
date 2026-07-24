@@ -1,34 +1,21 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from myapp.app import db
 from myapp.app.models.recovery.sleep_entry import SleepEntry
-from myapp.app.services.recovery.constants import SLEEP_EXCELLENT, SLEEP_GOOD, SLEEP_OK
 
 
 class SleepService:
-    def calculate_duration(self, start, end):
-        return int((end - start).total_seconds() // 60)
+    def add_sleep(self, user_id, start_dt, end_dt):
+        duration = int((end_dt - start_dt).total_seconds() // 60)
+        quality_score = self.calculate_sleep_score(duration)
 
-    def calculate_sleep_score(self, duration):
-        if duration >= SLEEP_EXCELLENT:
-            return 100
-        if duration >= SLEEP_GOOD:
-            return 85
-        if duration >= SLEEP_OK:
-            return 70
-        if duration >= 300:
-            return 50
-        return 30
-
-    def add_sleep(self, user_id, sleep_start, sleep_end):
-        duration = self.calculate_duration(sleep_start, sleep_end)
-        score = self.calculate_sleep_score(duration)
         entry = SleepEntry(
             user_id=user_id,
-            sleep_start=sleep_start,
-            sleep_end=sleep_end,
+            sleep_start=start_dt,
+            sleep_end=end_dt,
             duration_minutes=duration,
-            quality_score=score,
+            quality_score=quality_score,
         )
+
         db.session.add(entry)
         db.session.commit()
         return entry
@@ -40,12 +27,24 @@ class SleepService:
             .first()
         )
 
-    def get_sleep_history(self, user_id, days=30):
-        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
-        return (
-            SleepEntry.query.filter(
-                SleepEntry.user_id == user_id, SleepEntry.sleep_start >= cutoff
-            )
-            .order_by(SleepEntry.sleep_start.desc())
-            .all()
-        )
+    def calculate_sleep_score(self, duration_minutes):
+        if duration_minutes >= 480:
+            return 95
+        if duration_minutes >= 420:
+            return 85
+        if duration_minutes >= 360:
+            return 70
+        if duration_minutes >= 300:
+            return 55
+        return 40
+
+    def get_sleep_data(self, entry):
+        if not entry:
+            return {"sleep_score": 0, "duration": None, "start": None, "end": None}
+
+        return {
+            "sleep_score": entry.quality_score,
+            "duration": entry.duration_minutes,
+            "start": entry.sleep_start,
+            "end": entry.sleep_end,
+        }
