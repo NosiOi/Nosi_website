@@ -38,8 +38,8 @@ class SleepService:
         if duration_minutes >= max_minutes:
             return 100
 
-        ratio = (duration_minutes - min_minutes) / (max_minutes - max_minutes + 240)
         ratio = (duration_minutes - min_minutes) / (max_minutes - min_minutes)
+
         return int(40 + ratio * 60)
 
     def get_sleep_data(self, entry):
