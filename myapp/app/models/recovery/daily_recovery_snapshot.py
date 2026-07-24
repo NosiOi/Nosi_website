@@ -12,6 +12,10 @@ class DailyRecoverySnapshot(db.Model):
     date = db.Column(db.Date, nullable=False, index=True)
 
     sleep_score = db.Column(db.Integer, nullable=False)
+    sleep_duration_minutes = db.Column(db.Integer, nullable=True)
+    sleep_start = db.Column(db.DateTime, nullable=True)
+    sleep_end = db.Column(db.DateTime, nullable=True)
+
     habit_score = db.Column(db.Integer, nullable=False)
     training_score = db.Column(db.Integer, nullable=False)
     energy_score = db.Column(db.Integer, nullable=False)
@@ -29,6 +33,9 @@ class DailyRecoverySnapshot(db.Model):
             "id": self.id,
             "date": self.date.isoformat(),
             "sleep_score": self.sleep_score,
+            "sleep_duration_minutes": self.sleep_duration_minutes,
+            "sleep_start": self.sleep_start.isoformat() if self.sleep_start else None,
+            "sleep_end": self.sleep_end.isoformat() if self.sleep_end else None,
             "habit_score": self.habit_score,
             "training_score": self.training_score,
             "energy_score": self.energy_score,
