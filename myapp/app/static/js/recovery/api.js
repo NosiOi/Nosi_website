@@ -102,6 +102,16 @@ export const RecoveryAPI = {
             method: "DELETE"
         });
     },
+    
+    generateSnapshot(userId, lastTrainingDays = 0) {
+        return request(`${API_BASE}/snapshot`, {
+            method: "POST",
+            body: JSON.stringify({
+                user_id: userId,
+                last_training_days: lastTrainingDays
+            })
+        });
+    },
 
     logHabit(userHabitId) {
         return request(ENDPOINTS.logHabit(), {
