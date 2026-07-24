@@ -57,21 +57,27 @@ export function initSleepModal(userId) {
             return;
         }
 
-        const res = await RecoveryAPI.addSleep(
-            userId,
-            startDt.toISOString(),
-            endDt.toISOString()
-        );
+        saveBtn.disabled = true;
 
-        if (res?.error) {
-            alert(res.error);
-            return;
+        try {
+            const res = await RecoveryAPI.addSleep(
+                userId,
+                startDt.toISOString(),
+                endDt.toISOString()
+            );
+
+            if (res?.error) {
+                alert(res.error);
+                return;
+            }
+
+            await RecoveryAPI.generateSnapshot(userId);
+            await refreshRecoveryDashboard(userId);
+
+            close();
+        } finally {
+            saveBtn.disabled = false;
         }
-
-        await RecoveryAPI.generateSnapshot(userId);
-        await refreshRecoveryDashboard(userId);
-
-        close();
     };
 
     openBtn.addEventListener("click", open);
