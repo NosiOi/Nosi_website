@@ -1,18 +1,18 @@
 .recovery-root {
-    max-width: var(--nf-max-width);
+    max-width: 1600px;
     margin: 0 auto;
     padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
     min-height: 100%;
 }
 
 .recovery-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-auto-rows: min-content;
-    gap: 32px;
+    grid-template-columns: 58% 42%;
+    gap: 24px;
+    align-items: start;
 }
 
 .panel-habits {
@@ -33,14 +33,14 @@
     margin-top: 8px;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1400px) {
     .recovery-grid {
         grid-template-columns: 1fr;
-        grid-auto-rows: min-content;
-        gap: 24px;
     }
+}
 
-    .panel-habits {
-        grid-row: auto;
+@media (max-width: 900px) {
+    .recovery-grid {
+        grid-template-columns: 1fr;
     }
 }
