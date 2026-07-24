@@ -3,7 +3,6 @@ import {
     clearElement,
     createCard,
     createTitle,
-    createLabelValue,
     createLoading,
     createError,
     createEmpty
@@ -25,16 +24,41 @@ export function renderSleepWidget(snapshot, options = {}) {
         return;
     }
 
-    if (!snapshot || snapshot.sleep_score == null) {
+    if (!snapshot || snapshot.sleep_score == null || snapshot.sleep_duration_minutes == null) {
         el.appendChild(createEmpty(RECOVERY_MESSAGES.sleep.empty));
         return;
     }
 
     const card = createCard("sleep-card");
-    card.appendChild(createTitle(RECOVERY_MESSAGES.sleep.title));
-    card.appendChild(createLabelValue("Оцінка", snapshot.sleep_score));
 
-    // TODO(recovery): add duration and time range when API supports these fields
+    const durationHours = Math.floor(snapshot.sleep_duration_minutes / 60);
+    const durationMinutes = snapshot.sleep_duration_minutes % 60;
+
+    const start = new Date(snapshot.sleep_start);
+    const end = new Date(snapshot.sleep_end);
+
+    const startStr = start.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
+    const endStr = end.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
+
+    const status =
+        snapshot.sleep_duration_minutes >= 480 ? "Відмінний сон" :
+        snapshot.sleep_duration_minutes >= 420 ? "Добрий сон" :
+        snapshot.sleep_duration_minutes >= 360 ? "Достатній сон" :
+        "Недосип";
+
+    card.innerHTML = `
+        <div class="sleep-content">
+            <div class="sleep-duration">${durationHours} год ${durationMinutes} хв</div>
+
+            <div class="sleep-range">${startStr} → ${endStr}</div>
+
+            <div class="sleep-score-bar">
+                <div class="sleep-score-fill" style="width:${snapshot.sleep_score}%"></div>
+            </div>
+
+            <div class="sleep-status">${status}</div>
+        </div>
+    `;
 
     el.appendChild(card);
 }
