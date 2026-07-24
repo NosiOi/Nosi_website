@@ -1,4 +1,5 @@
 import { initRecoveryDashboard } from "./dashboard.js";
+import { initSleepModal } from "./modals/sleep_modal.js";
 import { ICONS } from "../icons/icons.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -10,9 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!rawUserId || Number.isNaN(userId)) return;
 
     const iconBox = document.getElementById("recovery-header-icon");
-    if (iconBox) {
-        iconBox.innerHTML = ICONS.bed_single;
-    }
+    if (iconBox) iconBox.innerHTML = ICONS.bed_single;
 
     const dateEl = document.getElementById("recovery-header-date");
     if (dateEl) {
@@ -24,5 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    initSleepModal(userId);
     initRecoveryDashboard(userId);
 });
