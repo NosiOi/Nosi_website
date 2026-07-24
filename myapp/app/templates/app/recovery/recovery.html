@@ -4,18 +4,33 @@ block styles %}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/recovery/recovery.css') }}"
 />
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/pages/recovery/header.css') }}"
+/>
 {% endblock %} {% block body %}
 <div id="recovery-app" class="recovery-root" data-user-id="{{ user.id }}">
-  <header class="recovery-header">
-    <div class="header-left">
-      <h1>Відновлення</h1>
-      <p class="subtitle">Щоденний огляд стану відновлення</p>
+  <div class="recovery-header">
+    <div class="recovery-header-left">
+      <div class="recovery-header-icon-box">
+        <span class="recovery-header-icon" id="recovery-header-icon"></span>
+      </div>
+
+      <div class="recovery-header-text">
+        <h1 class="recovery-title">Відновлення</h1>
+        <div class="recovery-subtitle">
+          Аналізуйте сон • Контролюйте звички • Слідкуйте за відновленням
+        </div>
+      </div>
     </div>
-    <div class="header-score">
-      <span class="header-score-label">Відновлення</span>
-      <span class="header-score-value" id="header-score-value">—</span>
+
+    <div class="recovery-header-right">
+      <div class="recovery-header-info">
+        <div class="recovery-header-label">Сьогодні</div>
+        <div id="recovery-header-date" class="recovery-header-value"></div>
+      </div>
     </div>
-  </header>
+  </div>
 
   <div class="recovery-grid">
     <section id="habits-section" class="panel-habits widget-card">
@@ -71,4 +86,22 @@ block styles %}
   type="module"
   src="{{ url_for('static', filename='js/recovery/heatmap.js') }}"
 ></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const iconBox = document.getElementById("recovery-header-icon");
+    if (iconBox) {
+      iconBox.innerHTML = `{{ ICONS.bed_single | safe }}`;
+    }
+
+    const dateEl = document.getElementById("recovery-header-date");
+    if (dateEl) {
+      const now = new Date();
+      dateEl.textContent = now.toLocaleDateString("uk-UA", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    }
+  });
+</script>
 {% endblock %}
