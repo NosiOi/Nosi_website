@@ -4,10 +4,6 @@ block styles %}
   rel="stylesheet"
   href="{{ url_for('static', filename='css/pages/recovery/recovery.css') }}"
 />
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/pages/recovery/header.css') }}"
-/>
 {% endblock %} {% block body %}
 <div id="recovery-app" class="recovery-root" data-user-id="{{ user.id }}">
   <div class="recovery-header">
@@ -86,22 +82,4 @@ block styles %}
   type="module"
   src="{{ url_for('static', filename='js/recovery/heatmap.js') }}"
 ></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const iconBox = document.getElementById("recovery-header-icon");
-    if (iconBox) {
-      iconBox.innerHTML = `{{ ICONS.bed_single | safe }}`;
-    }
-
-    const dateEl = document.getElementById("recovery-header-date");
-    if (dateEl) {
-      const now = new Date();
-      dateEl.textContent = now.toLocaleDateString("uk-UA", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      });
-    }
-  });
-</script>
 {% endblock %}
