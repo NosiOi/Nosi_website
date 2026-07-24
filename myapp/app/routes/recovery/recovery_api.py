@@ -127,7 +127,8 @@ def get_snapshot(user_id):
 
     if snapshot is None:
         return jsonify({"snapshot": None}), 200
-    return jsonify(snapshot.to_dict()), 200
+
+    return jsonify({"snapshot": snapshot.to_dict()}), 200
 
 
 @recovery_bp.get("/heatmap/<int:user_id>")
