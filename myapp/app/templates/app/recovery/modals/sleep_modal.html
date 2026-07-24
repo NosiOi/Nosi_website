@@ -6,6 +6,7 @@
         id="close-sleep-modal"
         class="cmp-btn-secondary cmp-btn-sm"
         type="button"
+        data-close-sleep
       >
         Закрити
       </button>
@@ -18,16 +19,27 @@
           type="datetime-local"
           id="sleep-start-input"
           class="sleep-input"
+          data-sleep-start
         />
       </div>
       <div class="sleep-field">
         <label for="sleep-end-input">Кінець сну</label>
-        <input type="datetime-local" id="sleep-end-input" class="sleep-input" />
+        <input
+          type="datetime-local"
+          id="sleep-end-input"
+          class="sleep-input"
+          data-sleep-end
+        />
       </div>
     </div>
 
     <div class="recovery-modal-footer">
-      <button id="save-sleep" class="cmp-btn-primary cmp-btn-sm" type="button">
+      <button
+        id="save-sleep"
+        class="cmp-btn-primary cmp-btn-sm"
+        type="button"
+        data-save-sleep
+      >
         Зберегти
       </button>
     </div>
