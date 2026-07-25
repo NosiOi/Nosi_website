@@ -20,7 +20,7 @@ export function initHabitModal(userId) {
             const row = document.createElement("div");
             row.className = "habit-row";
             row.dataset.habitId = h.id;
-            row.textContent = h.name;
+            row.textContent = `${h.name} (+${h.points})`;
             row.addEventListener("click", () => {
                 row.classList.toggle("selected");
             });
