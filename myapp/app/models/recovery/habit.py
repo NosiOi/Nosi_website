@@ -6,10 +6,18 @@ class RecoveryHabit(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
+    slug = db.Column(db.String(64), nullable=False, unique=True)
     name = db.Column(db.String(128), nullable=False, unique=True)
     icon = db.Column(db.String(64))
     category = db.Column(db.String(64))
     description = db.Column(db.String(256))
+
+    score = db.Column(db.Integer, nullable=False, default=0)
+    recommended_when = db.Column(db.JSON, nullable=False, default=list)
+
+    premium_only = db.Column(db.Boolean, nullable=False, default=False)
+    sort_order = db.Column(db.Integer, nullable=False, default=0)
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
 
     users = db.relationship(
         "UserRecoveryHabit",
@@ -17,7 +25,3 @@ class RecoveryHabit(db.Model):
         cascade="all, delete-orphan",
         lazy="dynamic",
     )
-
-    premium_only = db.Column(db.Boolean, nullable=False, default=False)
-    sort_order = db.Column(db.Integer, nullable=False, default=0)
-    is_active = db.Column(db.Boolean, nullable=False, default=True)
