@@ -1,6 +1,10 @@
 import { RecoveryAPI } from "../api.js";
 import { refreshRecoveryDashboard } from "../dashboard.js";
 
+function toggleHabit(row) {
+    row.classList.toggle("selected");
+}
+
 export function initHabitModal(userId) {
     const backdrop = document.getElementById("habit-modal-backdrop");
     const openBtn = document.getElementById("open-habit-modal");
@@ -21,9 +25,7 @@ export function initHabitModal(userId) {
             row.className = "habit-row";
             row.dataset.habitId = h.id;
             row.textContent = `${h.name} (+${h.points})`;
-            row.addEventListener("click", () => {
-                row.classList.toggle("selected");
-            });
+            row.addEventListener("click", () => toggleHabit(row));
             listBox.appendChild(row);
         });
     };
