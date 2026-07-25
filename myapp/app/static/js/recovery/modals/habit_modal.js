@@ -4,12 +4,17 @@ import { refreshRecoveryDashboard } from "../dashboard.js";
 let habitsCache = null;
 
 async function loadHabits() {
-    if (habitsCache) {
+    if (habitsCache !== null) {
         return habitsCache;
     }
 
-    const habits = await RecoveryAPI.getHabitsList();
-    habitsCache = Array.isArray(habits) ? habits : [];
+    try {
+        const habits = await RecoveryAPI.getHabitsList();
+        habitsCache = Array.isArray(habits) ? habits : [];
+    } catch {
+        habitsCache = [];
+    }
+
     return habitsCache;
 }
 
@@ -30,6 +35,12 @@ export function initHabitModal(userId) {
     closeBtn.addEventListener("click", close);
     saveBtn.addEventListener("click", save);
 
+    listBox.addEventListener("click", (event) => {
+        const row = event.target.closest(".habit-row");
+        if (!row) return;
+        toggleHabit(row);
+    });
+
     async function open() {
         backdrop.classList.add("open");
 
@@ -41,7 +52,6 @@ export function initHabitModal(userId) {
             row.className = "habit-row";
             row.dataset.habitId = habit.id;
             row.textContent = `${habit.name} (+${habit.points})`;
-            row.addEventListener("click", () => toggleHabit(row));
             listBox.appendChild(row);
         });
     }
