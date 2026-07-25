@@ -2,6 +2,7 @@ import { RecoveryAPI } from "../api.js";
 import { refreshRecoveryDashboard } from "../dashboard.js";
 
 let habitsCache = null;
+let initialized = false;
 
 async function loadHabits() {
     if (habitsCache !== null) {
@@ -23,6 +24,11 @@ function toggleHabit(row) {
 }
 
 export function initHabitModal(userId) {
+    if (initialized) {
+        return;
+    }
+    initialized = true;
+
     const backdrop = document.getElementById("habit-modal-backdrop");
     const openBtn = document.getElementById("open-habit-modal");
     const closeBtn = document.getElementById("close-habit-modal");
