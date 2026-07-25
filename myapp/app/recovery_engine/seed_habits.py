@@ -21,6 +21,9 @@ def run():
         with open(FILE_PATH, "r", encoding="utf-8") as f:
             habits = json.load(f)
 
+        created = 0
+        updated = 0
+
         for habit_data in habits:
             slug = habit_data.get("slug")
             if not slug:
@@ -31,6 +34,9 @@ def run():
             if habit is None:
                 habit = RecoveryHabit(slug=slug)
                 db.session.add(habit)
+                created += 1
+            else:
+                updated += 1
 
             habit.name = habit_data.get("name", slug)
             habit.description = habit_data.get("description")
@@ -46,7 +52,7 @@ def run():
             habit.is_archived = False
 
         db.session.commit()
-        print(f"Seeded {len(habits)} recovery habits")
+        print(f"Created {created}, updated {updated} recovery habits")
 
 
 if __name__ == "__main__":
