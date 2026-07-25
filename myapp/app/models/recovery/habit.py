@@ -14,6 +14,9 @@ class RecoveryHabit(db.Model):
     icon = db.Column(db.String(64))
 
     points = db.Column(db.Integer, nullable=False, default=0)
+    daily_limit = db.Column(db.Integer, nullable=False, default=1)
+    estimated_minutes = db.Column(db.Integer, nullable=False, default=0)
+
     recommended_when = db.Column(db.JSON, nullable=False, default=list)
 
     premium_only = db.Column(db.Boolean, nullable=False, default=False)
