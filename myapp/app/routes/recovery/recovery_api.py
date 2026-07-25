@@ -7,6 +7,7 @@ from myapp.app.services.recovery import (
     StatsService,
     RecommendationService,
 )
+from myapp.app.models.recovery.habit import RecoveryHabit
 
 recovery_bp = Blueprint("recovery", __name__, url_prefix="/api/recovery")
 
@@ -92,6 +93,32 @@ def log_habit():
         return jsonify({"error": "user_habit not found"}), 404
 
     return jsonify({"logged": log.id}), 200
+
+
+@recovery_bp.get("/habits/list")
+def get_habits_list():
+    habits = (
+        RecoveryHabit.query.filter_by(is_active=True)
+        .order_by(RecoveryHabit.sort_order.asc(), RecoveryHabit.id.asc())
+        .all()
+    )
+
+    return jsonify(
+        [
+            {
+                "id": h.id,
+                "slug": h.slug,
+                "name": h.name,
+                "description": h.description,
+                "category": h.category,
+                "score": h.score,
+                "icon": h.icon,
+                "recommended_when": h.recommended_when,
+                "premium_only": h.premium_only,
+            }
+            for h in habits
+        ]
+    )
 
 
 @recovery_bp.post("/snapshot")
