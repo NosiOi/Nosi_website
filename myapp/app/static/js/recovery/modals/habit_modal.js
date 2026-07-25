@@ -1,6 +1,18 @@
 import { RecoveryAPI } from "../api.js";
 import { refreshRecoveryDashboard } from "../dashboard.js";
 
+let habitsCache = null;
+
+async function loadHabits() {
+    if (habitsCache) {
+        return habitsCache;
+    }
+
+    const habits = await RecoveryAPI.getHabitsList();
+    habitsCache = Array.isArray(habits) ? habits : [];
+    return habitsCache;
+}
+
 function toggleHabit(row) {
     row.classList.toggle("selected");
 }
@@ -17,10 +29,10 @@ export function initHabitModal(userId) {
     const open = async () => {
         backdrop.classList.add("open");
 
-        const habits = await RecoveryAPI.getHabitsList();
+        const habits = await loadHabits();
         listBox.innerHTML = "";
 
-        habits.forEach(h => {
+        habits.forEach((h) => {
             const row = document.createElement("div");
             row.className = "habit-row";
             row.dataset.habitId = h.id;
@@ -47,7 +59,9 @@ export function initHabitModal(userId) {
         try {
             for (const row of selected) {
                 const habitId = Number(row.dataset.habitId);
-                await RecoveryAPI.addHabit(userId, habitId);
+                if (!Number.isNaN(habitId)) {
+                    await RecoveryAPI.addHabit(userId, habitId);
+                }
             }
 
             await RecoveryAPI.generateSnapshot(userId);
