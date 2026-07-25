@@ -25,6 +25,8 @@ def run():
                 category=h.get("category"),
                 points=h.get("points", 0),
                 icon=h.get("icon"),
+                daily_limit=h.get("daily_limit", 1),
+                estimated_minutes=h.get("estimated_minutes", 0),
                 recommended_when=h.get("recommended_when", []),
                 premium_only=h.get("premium_only", False),
                 sort_order=h.get("sort_order", 0),
