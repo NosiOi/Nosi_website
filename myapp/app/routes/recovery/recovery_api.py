@@ -58,18 +58,30 @@ def add_sleep():
     )
 
 
-@recovery_bp.post("/habits")
-def add_habit():
-    data = request.get_json(silent=True) or {}
-    user_id = data.get("user_id")
-    habit_id = data.get("habit_id")
+@recovery_bp.get("/habits")
+def get_habits():
+    habits = (
+        RecoveryHabit.query.filter_by(is_active=True)
+        .order_by(RecoveryHabit.sort_order.asc(), RecoveryHabit.id.asc())
+        .all()
+    )
 
-    if user_id is None or habit_id is None:
-        return jsonify({"error": "user_id and habit_id are required"}), 400
-
-    habit, created = habit_service.add_user_habit(user_id, habit_id)
-
-    return jsonify({"id": habit.id}), 201 if created else 200
+    return jsonify(
+        [
+            {
+                "id": h.id,
+                "slug": h.slug,
+                "name": h.name,
+                "description": h.description,
+                "category": h.category,
+                "points": h.points,
+                "icon": h.icon,
+                "recommended_when": h.recommended_when,
+                "premium_only": h.premium_only,
+            }
+            for h in habits
+        ]
+    )
 
 
 @recovery_bp.delete("/habits/<int:user_habit_id>")
