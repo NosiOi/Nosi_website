@@ -76,6 +76,8 @@ def get_habits():
                 "category": h.category,
                 "points": h.points,
                 "icon": h.icon,
+                "daily_limit": h.daily_limit,
+                "estimated_minutes": h.estimated_minutes,
                 "recommended_when": h.recommended_when,
                 "premium_only": h.premium_only,
             }
