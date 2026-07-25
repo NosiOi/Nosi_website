@@ -8,11 +8,12 @@ class RecoveryHabit(db.Model):
 
     slug = db.Column(db.String(64), nullable=False, unique=True)
     name = db.Column(db.String(128), nullable=False, unique=True)
-    icon = db.Column(db.String(64))
-    category = db.Column(db.String(64))
     description = db.Column(db.String(256))
 
-    score = db.Column(db.Integer, nullable=False, default=0)
+    category = db.Column(db.String(64))
+    icon = db.Column(db.String(64))
+
+    points = db.Column(db.Integer, nullable=False, default=0)
     recommended_when = db.Column(db.JSON, nullable=False, default=list)
 
     premium_only = db.Column(db.Boolean, nullable=False, default=False)
