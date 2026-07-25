@@ -2,6 +2,7 @@ import { RecoveryAPI } from "../api.js";
 import { refreshRecoveryDashboard } from "../dashboard.js";
 
 let habitsCache = null;
+let handlersAttached = false;
 
 async function loadHabits() {
     if (habitsCache) {
@@ -26,28 +27,35 @@ export function initHabitModal(userId) {
 
     if (!backdrop || !openBtn || !closeBtn || !saveBtn || !listBox) return;
 
-    const open = async () => {
+    if (!handlersAttached) {
+        openBtn.addEventListener("click", open);
+        closeBtn.addEventListener("click", close);
+        saveBtn.addEventListener("click", save);
+        handlersAttached = true;
+    }
+
+    async function open() {
         backdrop.classList.add("open");
 
         const habits = await loadHabits();
         listBox.innerHTML = "";
 
-        habits.forEach((h) => {
+        habits.forEach((habit) => {
             const row = document.createElement("div");
             row.className = "habit-row";
-            row.dataset.habitId = h.id;
-            row.textContent = `${h.name} (+${h.points})`;
+            row.dataset.habitId = habit.id;
+            row.textContent = `${habit.name} (+${habit.points})`;
             row.addEventListener("click", () => toggleHabit(row));
             listBox.appendChild(row);
         });
-    };
+    }
 
-    const close = () => {
+    function close() {
         backdrop.classList.remove("open");
         listBox.innerHTML = "";
-    };
+    }
 
-    const save = async () => {
+    async function save() {
         const selected = [...listBox.querySelectorAll(".habit-row.selected")];
         if (selected.length === 0) {
             alert("Оберіть хоча б одну звичку");
@@ -71,9 +79,5 @@ export function initHabitModal(userId) {
         } finally {
             saveBtn.disabled = false;
         }
-    };
-
-    openBtn.addEventListener("click", open);
-    closeBtn.addEventListener("click", close);
-    saveBtn.addEventListener("click", save);
+    }
 }
