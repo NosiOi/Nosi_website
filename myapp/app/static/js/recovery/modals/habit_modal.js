@@ -2,7 +2,6 @@ import { RecoveryAPI } from "../api.js";
 import { refreshRecoveryDashboard } from "../dashboard.js";
 
 let habitsCache = null;
-let handlersAttached = false;
 
 async function loadHabits() {
     if (habitsCache) {
@@ -27,12 +26,9 @@ export function initHabitModal(userId) {
 
     if (!backdrop || !openBtn || !closeBtn || !saveBtn || !listBox) return;
 
-    if (!handlersAttached) {
-        openBtn.addEventListener("click", open);
-        closeBtn.addEventListener("click", close);
-        saveBtn.addEventListener("click", save);
-        handlersAttached = true;
-    }
+    openBtn.addEventListener("click", open);
+    closeBtn.addEventListener("click", close);
+    saveBtn.addEventListener("click", save);
 
     async function open() {
         backdrop.classList.add("open");
