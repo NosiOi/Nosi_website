@@ -46,7 +46,7 @@ def run():
             habit.is_archived = False
 
         db.session.commit()
-        print("Habits seeded successfully")
+        print(f"Seeded {len(habits)} recovery habits")
 
 
 if __name__ == "__main__":
