@@ -60,7 +60,8 @@ const ENDPOINTS = {
     sleep: () => `${API_BASE}/sleep`,
     addHabit: () => `${API_BASE}/habits`,
     removeHabit: (userHabitId) => `${API_BASE}/habits/${userHabitId}`,
-    logHabit: () => `${API_BASE}/habits/logs`
+    logHabit: () => `${API_BASE}/habits/logs`,
+    habitsList: () => `${API_BASE}/habits/list`
 };
 
 export const RecoveryAPI = {
@@ -102,7 +103,7 @@ export const RecoveryAPI = {
             method: "DELETE"
         });
     },
-    
+
     generateSnapshot(userId, lastTrainingDays = 0) {
         return request(`${API_BASE}/snapshot`, {
             method: "POST",
@@ -120,5 +121,9 @@ export const RecoveryAPI = {
                 user_habit_id: userHabitId
             })
         });
+    },
+
+    getHabitsList() {
+        return request(ENDPOINTS.habitsList());
     }
 };
