@@ -1,11 +1,13 @@
 from datetime import date
-
 from myapp.app.models.recovery.daily_recovery_snapshot import DailyRecoverySnapshot
 
 
 class StatsService:
     def get_daily_snapshot(self, user_id, day):
-        return DailyRecoverySnapshot.query.filter_by(user_id=user_id, date=day).first()
+        return DailyRecoverySnapshot.query.filter_by(
+            user_id=user_id,
+            date=day,
+        ).first()
 
     def get_last_snapshot(self, user_id):
         return (
@@ -54,4 +56,4 @@ class StatsService:
         if not snapshots:
             return None
 
-        return round(sum(s.recovery_score for s in snapshots) / len(snapshots))
+        return round(sum(s.recovery_score or 0 for s in snapshots) / len(snapshots))
