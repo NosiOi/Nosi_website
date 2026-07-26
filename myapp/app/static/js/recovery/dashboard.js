@@ -14,7 +14,6 @@ const state = {
     firstLoad: true
 };
 
-// 🔧 Новий адаптер
 function renderHeatmapWidget(data, opts = {}) {
     const grid = document.getElementById("recovery-heatmap");
     const tooltip = document.getElementById("rc-heatmap-tooltip");

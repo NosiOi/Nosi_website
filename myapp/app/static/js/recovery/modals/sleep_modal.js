@@ -13,11 +13,11 @@ export function initSleepModal(userId) {
     if (!backdrop || !openBtn || !closeBtn || !saveBtn) return;
 
     const open = () => {
-        backdrop.hidden = false;
+        backdrop.classList.add("open");
     };
 
     const close = () => {
-        backdrop.hidden = true;
+        backdrop.classList.remove("open");
         startInput.value = "";
         endInput.value = "";
     };
