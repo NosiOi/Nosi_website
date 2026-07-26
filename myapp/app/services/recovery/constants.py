@@ -8,31 +8,32 @@ class RecoveryTrigger(StrEnum):
     SLEEP_DEFICIT = "sleep_deficit"
 
 
-class HabitCategory(StrEnum):
-    HYDRATION = "hydration"
-    SLEEP = "sleep"
-    ACTIVITY = "activity"
-    RECOVERY = "recovery"
-    LIFESTYLE = "lifestyle"
-    NUTRITION = "nutrition"
+# Sleep scoring
+BASE_SLEEP_SCORE = 95
+MAX_SLEEP_BONUS = 5
+MIN_SLEEP_SCORE = 40
+MAX_SLEEP_SCORE = 100
 
+# Sleep debt
+SLEEP_DEBT_DAYS = 5
+SLEEP_DEBT_DIVISOR = 20
 
-SLEEP_EXCELLENT = 480
-SLEEP_GOOD = 420
-SLEEP_OK = 360
-
+# Recovery weights
 SLEEP_WEIGHT = 0.45
 TRAINING_WEIGHT = 0.25
-HABIT_WEIGHT = 0.30
+HABIT_WEIGHT = 0.20
 
-# Training load thresholds (internal load index)
+# Energy weights
+ENERGY_SLEEP_WEIGHT = 0.75
+ENERGY_HABIT_WEIGHT = 0.25
+
+# Training load thresholds
 TRAINING_LOAD_LOW = 40
 TRAINING_LOAD_MEDIUM = 80
 TRAINING_LOAD_HIGH = 120
 TRAINING_LOAD_VERY_HIGH = 160
-TRAINING_LOAD_EXTREME = 200
+TRAINING_LOAD_VERY_HEAVY = 180
 
-# Sleep debt configuration
-SLEEP_DEBT_DAYS = 5
-SLEEP_DEBT_DIVISOR = 20
-SLEEP_DEFICIT_DIVISOR = 15
+# Penalties
+HEAVY_LOAD_RECOVERY_PENALTY = 10
+VERY_HEAVY_LOAD_RECOVERY_PENALTY = 20
