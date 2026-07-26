@@ -21,7 +21,7 @@ class RecommendationService:
                 }
             )
 
-        if training_score > 70 and sleep_score < 80:
+        if training_score > 75 and sleep_score < 80:
             recs.append(
                 {
                     "text": "Зменшити інтенсивність тренувань або додати день відпочинку",
