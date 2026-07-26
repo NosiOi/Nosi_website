@@ -34,7 +34,7 @@ def create_app():
     from myapp.app.models.oauth_account import OAuthAccount
     from myapp.app.models.recovery.habit import RecoveryHabit
     from myapp.app.models.recovery.user_habit import UserRecoveryHabit
-    from myapp.app.models.recovery.habit_log import UserRecoveryHabitLog
+    from myapp.app.models.recovery.habit_log import RecoveryHabitLog
 
     @login_manager.user_loader
     def load_user(user_id):
