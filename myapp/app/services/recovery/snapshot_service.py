@@ -1,4 +1,5 @@
 from datetime import date
+
 from myapp.app import db
 from myapp.app.models.recovery.daily_recovery_snapshot import DailyRecoverySnapshot
 from myapp.app.services.recovery.recovery_score_service import RecoveryScoreService
