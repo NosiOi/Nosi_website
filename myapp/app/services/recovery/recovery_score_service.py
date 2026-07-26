@@ -2,16 +2,25 @@ from myapp.app.services.recovery.sleep_service import SleepService
 from myapp.app.services.recovery.habit_service import HabitService
 from myapp.app.services.training_load_service import TrainingLoadService
 from myapp.app.services.recovery.constants import (
-    SLEEP_BASE_CHILD_MINUTES,
+    SLEEP_DEBT_DAYS,
+    SLEEP_DEBT_PENALTY_DIVISOR,
+    SLEEP_BASE_TEEN_MINUTES,
     SLEEP_BASE_ADULT_MINUTES,
     SLEEP_BASE_SENIOR_MINUTES,
-    HEAVY_LOAD_THRESHOLD,
-    VERY_HEAVY_LOAD_THRESHOLD,
-    SLEEP_DEBT_DAYS,
-    SLEEP_DEBT_DIVISOR,
+    TRAINING_LOAD_LOW,
+    TRAINING_LOAD_MEDIUM,
+    TRAINING_LOAD_HIGH,
+    TRAINING_LOAD_OPTIMAL,
+    TRAINING_LOAD_HEAVY,
+    TRAINING_LOAD_VERY_HEAVY,
     SLEEP_WEIGHT,
     TRAINING_WEIGHT,
     HABIT_WEIGHT,
+    ENERGY_WEIGHT,
+    ENERGY_SLEEP_WEIGHT,
+    ENERGY_HABIT_WEIGHT,
+    HEAVY_LOAD_RECOVERY_PENALTY,
+    VERY_HEAVY_LOAD_RECOVERY_PENALTY,
 )
 
 
@@ -21,50 +30,50 @@ class RecoveryScoreService:
         self.habit_service = HabitService()
         self.training_load = TrainingLoadService()
 
-    def _base_required_sleep_minutes(self, age):
-        if age < 18:
-            return SLEEP_BASE_CHILD_MINUTES
-        if age <= 64:
-            return SLEEP_BASE_ADULT_MINUTES
-        return SLEEP_BASE_SENIOR_MINUTES
-
     def _required_sleep_minutes(self, age, training_load, user_level):
-        base = self._base_required_sleep_minutes(age)
+        if age < 18:
+            base = SLEEP_BASE_TEEN_MINUTES
+        elif age <= 64:
+            base = SLEEP_BASE_ADULT_MINUTES
+        else:
+            base = SLEEP_BASE_SENIOR_MINUTES
 
-        if training_load > HEAVY_LOAD_THRESHOLD:
-            base += 30
-        if training_load > VERY_HEAVY_LOAD_THRESHOLD:
+        if training_load >= TRAINING_LOAD_VERY_HEAVY:
+            base += 60
+        elif training_load >= TRAINING_LOAD_HEAVY:
             base += 30
 
         level = (user_level or "beginner").lower()
         if level == "beginner":
-            base += 15
-        elif level == "advanced":
+            base += 20
+        elif level in ("advanced", "elite"):
             base -= 10
-        elif level == "elite":
-            base -= 15
 
         return base
 
-    def _get_sleep_debt(self, user_id, age):
+    def _sleep_debt_minutes(self, user_id, age, user_level):
         entries = self.sleep_service.get_last_days(user_id, SLEEP_DEBT_DAYS)
         if not entries:
             return 0
 
-        base_required = self._base_required_sleep_minutes(age)
-        total = 0
+        total_deficit = 0
         for e in entries:
-            total += max(0, base_required - (e.duration_minutes or 0))
+            load = self.training_load.get_daily_load_for_date(
+                user_id, e.sleep_start.date()
+            )
+            required = self._required_sleep_minutes(age, load, user_level)
+            total_deficit += max(0, required - (e.duration_minutes or 0))
 
-        return total // max(1, len(entries))
+        return total_deficit
 
     def calculate_sleep_score(self, user_id):
-        sleep = self.sleep_service.get_last_sleep(user_id)
-        if not sleep:
+        entry = self.sleep_service.get_last_sleep(user_id)
+        if not entry:
             return 0
-        user = sleep.user
+
+        user = entry.user
         age = self.sleep_service.get_age(user)
-        return self.sleep_service.calculate_sleep_score(sleep.duration_minutes, age)
+        return self.sleep_service.calculate_sleep_score(entry.duration_minutes, age)
 
     def calculate_habit_score(self, user_id):
         logs = self.habit_service.get_today_logs(user_id)
@@ -76,55 +85,68 @@ class RecoveryScoreService:
 
     def calculate_training_score(self, user_id):
         load = self.training_load.get_daily_load(user_id)
-        if load <= 40:
+
+        if load <= TRAINING_LOAD_LOW:
             return 30
-        if load <= 80:
+        if load <= TRAINING_LOAD_MEDIUM:
             return 60
-        if load <= 120:
+        if load <= TRAINING_LOAD_HIGH:
             return 80
-        if load <= 160:
-            return 85
-        if load <= 200:
+        if load <= TRAINING_LOAD_OPTIMAL:
+            return 90
+        if load <= TRAINING_LOAD_VERY_HEAVY:
             return 70
         return 50
 
     def calculate_energy_score(self, sleep_score, habit_score):
-        return int(sleep_score * 0.75 + habit_score * 0.25)
+        base = sleep_score * ENERGY_SLEEP_WEIGHT + habit_score * ENERGY_HABIT_WEIGHT
+        return int(max(0, min(100, base)))
 
     def calculate_recovery_score(
-        self, user_id, sleep_score, habit_score, training_score
+        self,
+        user_id,
+        sleep_score,
+        habit_score,
+        training_score,
+        energy_score,
     ):
         last_sleep = self.sleep_service.get_last_sleep(user_id)
-        user = last_sleep.user if last_sleep else None
-        age = self.sleep_service.get_age(user)
+        if last_sleep:
+            user = last_sleep.user
+            age = self.sleep_service.get_age(user)
+        else:
+            user = None
+            age = 30
 
-        load = self.training_load.get_daily_load(user_id)
-        level = self.training_load.get_user_level(user_id)
+        level = getattr(user, "experience", "beginner") if user else "beginner"
+        load_today = self.training_load.get_daily_load(user_id)
 
-        required_today = self._required_sleep_minutes(age, load, level)
-        slept_today = last_sleep.duration_minutes if last_sleep else 0
+        required_minutes = self._required_sleep_minutes(age, load_today, level)
+        slept_minutes = last_sleep.duration_minutes if last_sleep else 0
 
-        sleep_ratio = 0
-        if required_today > 0 and slept_today > 0:
-            sleep_ratio = max(0, min(1.2, slept_today / required_today))
-        sleep_component = int(100 * sleep_ratio)
+        if required_minutes <= 0:
+            sleep_component = sleep_score
+        else:
+            sleep_ratio = max(0.0, min(1.2, slept_minutes / required_minutes))
+            sleep_component = int(max(0, min(100, sleep_ratio * 100)))
 
-        debt = self._get_sleep_debt(user_id, age)
+        debt_minutes = self._sleep_debt_minutes(user_id, age, level)
+        debt_penalty = debt_minutes // SLEEP_DEBT_PENALTY_DIVISOR
 
-        fatigue_penalty = 0
-        if load > HEAVY_LOAD_THRESHOLD:
-            fatigue_penalty += 10
-        if load > VERY_HEAVY_LOAD_THRESHOLD:
-            fatigue_penalty += 15
-        fatigue_penalty += debt // SLEEP_DEBT_DIVISOR
+        load_penalty = 0
+        if load_today >= TRAINING_LOAD_VERY_HEAVY:
+            load_penalty += VERY_HEAVY_LOAD_RECOVERY_PENALTY
+        elif load_today >= TRAINING_LOAD_HEAVY:
+            load_penalty += HEAVY_LOAD_RECOVERY_PENALTY
 
         base = int(
-            sleep_score * SLEEP_WEIGHT
-            + habit_score * HABIT_WEIGHT
+            sleep_component * SLEEP_WEIGHT
             + training_score * TRAINING_WEIGHT
+            + habit_score * HABIT_WEIGHT
+            + energy_score * ENERGY_WEIGHT
         )
 
-        combined = int((base + sleep_component) / 2)
+        total_penalty = load_penalty + debt_penalty
+        final = max(0, min(100, base - total_penalty))
 
-        final = max(0, min(100, combined - fatigue_penalty))
         return final
