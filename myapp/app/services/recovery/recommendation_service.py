@@ -15,30 +15,40 @@ class RecommendationService:
 
         recs = []
 
-        if recovery_score < 50:
-            recs.append(
-                {
-                    "text": "Рівень відновлення низький — зменшити навантаження та сфокусуватись на сні й базових звичках",
-                    "priority": "high",
-                    "icon": "alert",
-                    "trigger": RecoveryTrigger.LOW_RECOVERY.value,
-                }
-            )
-
         if sleep_score < 70:
             recs.append(
                 {
-                    "text": "Лягти спати раніше та збільшити тривалість сну до рекомендованого діапазону",
+                    "text": "Лягти спати раніше та наблизити тривалість сну до вашої оптимальної норми.",
                     "priority": "high",
                     "icon": "moon",
                     "trigger": RecoveryTrigger.SLEEP_DEFICIT.value,
                 }
             )
 
-        if training_score > 80 and recovery_score < 70:
+        if recovery_score < 50:
             recs.append(
                 {
-                    "text": "Після інтенсивного тренування додати день відпочинку або легку активність замість важких вправ",
+                    "text": "Рівень відновлення низький — сфокусуйся на сні, гідратації та зменшенні навантаження.",
+                    "priority": "high",
+                    "icon": "water",
+                    "trigger": RecoveryTrigger.LOW_RECOVERY.value,
+                }
+            )
+
+        if energy_score < 60:
+            recs.append(
+                {
+                    "text": "Обрати легку активність: прогулянку, розтяжку або мобілізацію замість важкого тренування.",
+                    "priority": "medium",
+                    "icon": "rest",
+                    "trigger": RecoveryTrigger.LOW_ENERGY.value,
+                }
+            )
+
+        if training_score >= 80 and recovery_score < 70:
+            recs.append(
+                {
+                    "text": "Після інтенсивного тренування варто додати день відпочинку або знизити навантаження.",
                     "priority": "high",
                     "icon": "training",
                     "trigger": RecoveryTrigger.AFTER_TRAINING.value,
@@ -48,30 +58,20 @@ class RecommendationService:
         if habit_score < 50:
             recs.append(
                 {
-                    "text": "Виконати хоча б одну звичку для відновлення: гідратація, розтяжка, прогулянка або дихальні вправи",
+                    "text": "Виконати хоча б одну базову звичку для відновлення (сон, вода, розтяжка, ходьба).",
                     "priority": "medium",
                     "icon": "habits",
                     "trigger": RecoveryTrigger.RECOVERY.value,
                 }
             )
 
-        if energy_score < 60:
+        if recovery_score > 85 and sleep_score >= 80 and energy_score >= 75:
             recs.append(
                 {
-                    "text": "Сконцентруватися на легкій активності, прогулянці або розтяжці замість інтенсивних тренувань",
-                    "priority": "medium",
-                    "icon": "rest",
-                    "trigger": RecoveryTrigger.LOW_ENERGY.value,
-                }
-            )
-
-        if recovery_score > 85 and sleep_score >= 80 and training_score <= 70:
-            recs.append(
-                {
-                    "text": "Рівень відновлення високий — можна планувати інтенсивне тренування з акцентом на прогрес",
+                    "text": "Рівень відновлення високий — можна планувати інтенсивне тренування.",
                     "priority": "low",
                     "icon": "heart_pulse",
-                    "trigger": RecoveryTrigger.AFTER_TRAINING.value,
+                    "trigger": RecoveryTrigger.RECOVERY.value,
                 }
             )
 
