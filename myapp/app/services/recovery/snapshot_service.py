@@ -30,19 +30,19 @@ class SnapshotService:
         snapshot.energy_score = energy_score
         snapshot.recovery_score = recovery_score
 
-    def generate_snapshot(self, user_id, last_training_days):
+    def generate_snapshot(self, user_id):
         today = date.today()
 
         sleep_entry = self.sleep_service.get_last_sleep(user_id)
         sleep_data = self.sleep_service.get_sleep_data(sleep_entry)
 
         habit_score = self.scores.calculate_habit_score(user_id)
-        training_score = self.scores.calculate_training_score(last_training_days)
+        training_score = self.scores.calculate_training_score(user_id)
         energy_score = self.scores.calculate_energy_score(
-            sleep_data["sleep_score"], habit_score, training_score
+            user_id, sleep_data["sleep_score"], habit_score
         )
         recovery_score = self.scores.calculate_recovery_score(
-            sleep_data["sleep_score"], habit_score, training_score, energy_score
+            user_id, sleep_data["sleep_score"], habit_score, training_score
         )
 
         snapshot = DailyRecoverySnapshot.query.filter_by(
