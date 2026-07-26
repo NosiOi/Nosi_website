@@ -1,95 +1,45 @@
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 from typing import Optional, List
 
 from myapp.app import db
 from myapp.app.models.recovery.sleep_entry import SleepEntry
 from myapp.app.models.user import User
-
-# Sleep scoring constants
-SLEEP_MIN_HOURS = 4.0
-SLEEP_MAX_HOURS = 11.0
-
-SLEEP_SCORE_MIN = 40
-SLEEP_SCORE_MAX = 100
-
-SLEEP_DEFICIT_PENALTY_PER_HOUR = 18
-SLEEP_SURPLUS_PENALTY_PER_HOUR = 12
+from myapp.app.services.recovery.constants import (
+    BASE_SLEEP_SCORE,
+    MAX_SLEEP_BONUS,
+    MIN_SLEEP_SCORE,
+    MAX_SLEEP_SCORE,
+    SLEEP_DEBT_DAYS,
+)
 
 
 class SleepService:
+    """Service for sleep scoring and sleep history."""
+
+    def get_user(self, user_id: int) -> Optional[User]:
+        return db.session.get(User, user_id)
+
     def add_sleep(
-        self,
-        user_id: int,
-        sleep_start: datetime,
-        sleep_end: datetime,
+        self, user_id: int, sleep_start: datetime, sleep_end: datetime
     ) -> SleepEntry:
-        duration = sleep_end - sleep_start
-        duration_minutes = int(duration.total_seconds() // 60)
+        if sleep_end <= sleep_start:
+            raise ValueError("sleep_end must be later than sleep_start")
 
-        user: Optional[User] = db.session.get(User, user_id)
-        age = self.get_age(user)
+        user = self.get_user(user_id)
+        if not user:
+            raise ValueError("User not found")
 
-        sleep_score = self.calculate_sleep_score(duration_minutes, age)
+        duration_minutes = int((sleep_end - sleep_start).total_seconds() // 60)
 
         entry = SleepEntry(
             user_id=user_id,
             sleep_start=sleep_start,
             sleep_end=sleep_end,
             duration_minutes=duration_minutes,
-            quality_score=sleep_score,
         )
-
         db.session.add(entry)
         db.session.commit()
-
         return entry
-
-    def get_age(self, user: Optional[User]) -> int:
-        if not user or not getattr(user, "birth_date", None):
-            return 30
-
-        today: date = date.today()
-        birth: date = user.birth_date
-
-        return (
-            today.year
-            - birth.year
-            - ((today.month, today.day) < (birth.month, birth.day))
-        )
-
-    def calculate_sleep_score(self, duration_minutes: int, age: int) -> int:
-        hours = duration_minutes / 60.0
-
-        if age < 18:
-            target_min = 8.0
-            target_max = 10.0
-        elif age <= 64:
-            target_min = 7.0
-            target_max = 9.0
-        else:
-            target_min = 7.0
-            target_max = 8.0
-
-        if hours < SLEEP_MIN_HOURS:
-            return 30
-        if hours > SLEEP_MAX_HOURS:
-            return 40
-
-        if target_min <= hours <= target_max:
-            # Slight bonus for being close to the middle of the range
-            center = (target_min + target_max) / 2.0
-            distance = abs(hours - center)
-            bonus = max(0, int(5 - distance * 2))
-            return min(SLEEP_SCORE_MAX, 95 + bonus)
-
-        if hours < target_min:
-            deficit = target_min - hours
-            penalty = deficit * SLEEP_DEFICIT_PENALTY_PER_HOUR
-            return max(SLEEP_SCORE_MIN, int(95 - penalty))
-
-        surplus = hours - target_max
-        penalty = surplus * SLEEP_SURPLUS_PENALTY_PER_HOUR
-        return max(45, int(95 - penalty))
 
     def get_last_sleep(self, user_id: int) -> Optional[SleepEntry]:
         return (
@@ -98,7 +48,9 @@ class SleepService:
             .first()
         )
 
-    def get_last_days(self, user_id: int, days: int) -> List[SleepEntry]:
+    def get_last_days(
+        self, user_id: int, days: int = SLEEP_DEBT_DAYS
+    ) -> List[SleepEntry]:
         cutoff = datetime.utcnow() - timedelta(days=days)
         return (
             SleepEntry.query.filter(
@@ -108,3 +60,29 @@ class SleepService:
             .order_by(SleepEntry.sleep_end.desc())
             .all()
         )
+
+    def calculate_sleep_score(self, duration_minutes: int) -> int:
+        hours = duration_minutes / 60.0
+
+        if hours <= 4.0:
+            return MIN_SLEEP_SCORE
+        if hours >= 8.0:
+            return MAX_SLEEP_SCORE
+
+        ratio = (hours - 4.0) / 4.0
+        score = MIN_SLEEP_SCORE + ratio * (BASE_SLEEP_SCORE - MIN_SLEEP_SCORE)
+
+        if 8.0 < hours <= 9.0:
+            score += MAX_SLEEP_BONUS
+
+        return max(MIN_SLEEP_SCORE, min(MAX_SLEEP_SCORE, int(score)))
+
+    def calculate_sleep_debt_minutes(self, user_id: int, required_minutes: int) -> int:
+        entries = self.get_last_days(user_id)
+        if not entries:
+            return 0
+
+        total_deficit = sum(
+            max(0, required_minutes - e.duration_minutes) for e in entries
+        )
+        return total_deficit // len(entries)
