@@ -1,8 +1,8 @@
 from myapp.app.services.training_load_service import TrainingLoadService
 from myapp.app.services.recovery.constants import (
+    TRAINING_LOAD_HEAVY,
+    TRAINING_LOAD_VERY_HEAVY,
     RecoveryTrigger,
-    HEAVY_LOAD_THRESHOLD,
-    VERY_HEAVY_LOAD_THRESHOLD,
 )
 
 
@@ -33,30 +33,30 @@ class RecommendationService:
                 }
             )
 
-        if daily_load > HEAVY_LOAD_THRESHOLD and recovery_score < 75:
+        if daily_load >= TRAINING_LOAD_HEAVY and recovery_score < 80:
             recs.append(
                 {
-                    "text": "Зменшити інтенсивність тренувань або додати день відпочинку після важкого навантаження",
+                    "text": "Після важкого тренування варто зменшити інтенсивність або додати день відпочинку",
                     "priority": "high",
                     "icon": "training",
-                    "trigger": RecoveryTrigger.AFTER_TRAINING.value,
+                    "trigger": RecoveryTrigger.AFTER_HEAVY_TRAINING.value,
                 }
             )
 
         if habit_score < 50:
             recs.append(
                 {
-                    "text": "Виконати хоча б одну базову звичку для відновлення (вода, розтяжка, ходьба)",
+                    "text": "Виконати хоча б одну базову звичку для відновлення (вода, розтяжка, прогулянка)",
                     "priority": "medium",
                     "icon": "habits",
-                    "trigger": RecoveryTrigger.RECOVERY.value,
+                    "trigger": RecoveryTrigger.LOW_RECOVERY.value,
                 }
             )
 
         if energy_score < 60:
             recs.append(
                 {
-                    "text": "Сконцентруватися на легкій активності, прогулянці або розтяжці замість важкого тренування",
+                    "text": "Сконцентруватися на легкій активності, прогулянці або розтяжці замість важких тренувань",
                     "priority": "medium",
                     "icon": "rest",
                     "trigger": RecoveryTrigger.LOW_ENERGY.value,
@@ -76,14 +76,14 @@ class RecommendationService:
         if (
             recovery_score > 85
             and sleep_score >= 80
-            and daily_load <= HEAVY_LOAD_THRESHOLD
+            and daily_load < TRAINING_LOAD_HEAVY
         ):
             recs.append(
                 {
                     "text": "Рівень відновлення високий — можна планувати інтенсивне тренування",
                     "priority": "low",
                     "icon": "heart_pulse",
-                    "trigger": RecoveryTrigger.AFTER_TRAINING.value,
+                    "trigger": RecoveryTrigger.AFTER_HEAVY_TRAINING.value,
                 }
             )
 
