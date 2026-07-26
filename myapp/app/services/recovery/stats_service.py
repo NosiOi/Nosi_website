@@ -45,7 +45,7 @@ class StatsService:
 
     def get_weekly_stats(self, user_id):
         today = date.today()
-        cutoff = date.fromordinal(today.toordinal() - 7)
+        cutoff = today.fromordinal(today.toordinal() - 7)
         snapshots = DailyRecoverySnapshot.query.filter(
             DailyRecoverySnapshot.user_id == user_id,
             DailyRecoverySnapshot.date >= cutoff,
