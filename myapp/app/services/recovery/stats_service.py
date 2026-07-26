@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date
 
 from myapp.app.models.recovery.daily_recovery_snapshot import DailyRecoverySnapshot
 
@@ -44,7 +44,8 @@ class StatsService:
         return snapshots
 
     def get_weekly_stats(self, user_id):
-        cutoff = date.today() - timedelta(days=7)
+        today = date.today()
+        cutoff = date.fromordinal(today.toordinal() - 7)
         snapshots = DailyRecoverySnapshot.query.filter(
             DailyRecoverySnapshot.user_id == user_id,
             DailyRecoverySnapshot.date >= cutoff,
