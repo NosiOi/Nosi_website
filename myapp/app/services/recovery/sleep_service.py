@@ -34,6 +34,14 @@ class SleepService:
             .first()
         )
 
+    def get_last_days(self, user_id, days):
+        return (
+            SleepEntry.query.filter_by(user_id=user_id)
+            .order_by(SleepEntry.sleep_start.desc())
+            .limit(days)
+            .all()
+        )
+
     def get_sleep_data(self, entry):
         if not entry:
             return {
@@ -43,16 +51,17 @@ class SleepService:
                 "end": None,
             }
 
-        user = User.query.get(entry.user_id)
-        age = self._get_age(user)
-        sleep_score = self._calculate_sleep_score(entry.duration_minutes, age)
-
         return {
-            "sleep_score": sleep_score,
-            "duration": entry.duration_minutes,
+            "sleep_score": entry.quality_score or 0,
+            "duration": entry.duration_minutes or 0,
             "start": entry.sleep_start,
             "end": entry.sleep_end,
         }
+
+    def calculate_sleep_score(self, duration_minutes, age=None):
+        if age is None:
+            age = 30
+        return self._calculate_sleep_score(duration_minutes, age)
 
     def _get_age(self, user):
         if not user or not getattr(user, "birth_date", None):
@@ -83,15 +92,13 @@ class SleepService:
             return 40
 
         if target_min <= hours <= target_max:
-            center = (target_min + target_max) / 2.0
-            distance = abs(hours - center)
-            return max(85, int(100 - distance * 4))
+            return 95 + int(min(hours - target_min, target_max - hours) * 2)
 
         if hours < target_min:
             deficit = target_min - hours
             penalty = deficit * 18
-            return max(40, int(90 - penalty))
+            return max(40, int(95 - penalty))
 
         surplus = hours - target_max
         penalty = surplus * 12
-        return max(45, int(90 - penalty))
+        return max(45, int(95 - penalty))
